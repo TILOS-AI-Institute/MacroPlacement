@@ -73,7 +73,10 @@ createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
 floorPlan -r 1.0 $util 10 10 10 10
-placeDesign
+
+## Macro Placement ##
+planDesign
+refinePlace
 
 ## Creating Pin Blcokage for lower and upper pin layers ##
 createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
