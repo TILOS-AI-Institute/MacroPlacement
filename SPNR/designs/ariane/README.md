@@ -87,7 +87,7 @@ Innovus required a configuration file to run the macro placement flow. We use *p
 2. For each macro, valid orientation, and spacing rules can be provided under the **MACRO** section. For example, we set valid macro orientation as *R0* for our run, horizontal spacing as *10um*, and vertical spacing as *5um*. Also, when you provide the cell name (ref name, not instance name) add the *isCell=true* option.
 
 Below is the screenshot of the Ariane SP\&R database with 136 memory macros using Cadence flow.  
-<img src="./screenshoots/Ariane136_Innovus_SPNR.png" alt="ariane136_cadence" width="400"/>  
+<img src="./screenshoots/Ariane136_Innovus_Genus.png" alt="ariane136_cadence" width="400"/>  
 
 ### **Using OpenROAD-flow-scripts:**
 Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). To run SP&R using OpenROAD tools follow the below mentioned steps:  
