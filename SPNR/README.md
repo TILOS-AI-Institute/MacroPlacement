@@ -71,7 +71,7 @@ We implement Ariane design on the Nangate45 platform using commercial tools Genu
   
 
 ### **Using Cadence Genus and Innovus:**
-All the required scripts are available for each *design* in the *./designs/<design_name>/scripts/<cadence|OpenROAD>/* directory.  
+All the required scripts are available for each *design* in the *./designs/<design_name>/scripts/cadence/* directory.  
 **Synthesis:** run_genus.tcl contains the setup for synthesis using Genus. It reads the .sv files based on the list in *./designs/<design_name>/scripts/cadence/rtl_list.tcl* (changing the order of the file may cause errors in the run.). The timing constraints are provided in *./designs/<design_name>/scripts/constrains/<design_name>.sdc* file. To launch the synthesis run please use the below command
 ```
 genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
@@ -82,6 +82,10 @@ We also generated synthesized netlist using Synopsys Design compiler. This netli
 ```
 innovus -64 -init run_invs.tcl -log log/run.log
 ```  
+Innovus required a configuration file to run the macro placement flow. We use *proto_design -constraints mp_config.tcl* command to run the macro placement flow. The configuration file *mp_config.tcl* is available in the *./designs/ariane/scripts/cadence/* directory. Some details of the configuration files are given below
+1. Provide the memory hierarchy name under the **SEED** section. If you do not provide the memory hierarchy here, then the macro placement rule related to that memory may be overlooked.
+2. For each macro, valid orientation, and spacing rules can be provided under the **MACRO** section. For example, we set valid macro orientation as *R0* for our run, horizontal spacing as *10um*, and vertical spacing as *5um*. Also, when you provide the cell name (ref name, not instance name) add the *isCell=true* option.
+
 Below is the screenshot of the Ariane SP\&R database with 136 memory macros using Cadence flow.  
 <img src="./screenshoots/Ariane136_Innovus_SPNR.png" alt="ariane136_cadence" width="400"/>  
 
