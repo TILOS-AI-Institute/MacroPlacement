@@ -1,7 +1,7 @@
 # **Synthesis, Place \& Route (SP\&R):**
 Here we provide the setups to run SP&R of Ariane and mempool_tile designs on Nangate45 using commercial and open-source tools.  
 Here is the detials of the available designs
-1. [Ariane](./designs/ariane/README.md): Provides the flow details to generate a post-routed database from the Ariane netlist available here using Cadence Genus and Innovus and OpenROAD and Yosys tools. Also, we provide detailed description to control the memory configuration of the synthesized netlist.  
+1. [Ariane](./designs/ariane/README.md): Provides the flow details to generate a post-routed database from the Ariane netlist available [here](https://github.com/lowRISC/ariane) using Cadence Genus and Innovus and OpenROAD and Yosys tools. Also, we provide detailed description to control the memory configuration of the synthesized netlist.  
 2. [mempool_tile](./design/../designs/mempool_tile/README.md):
   
 Here is teh details of the directory structure:
