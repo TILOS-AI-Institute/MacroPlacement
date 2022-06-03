@@ -1,14 +1,14 @@
 # **Synthesis, Place \& Route (SP\&R):**
 Here we provide the setups to run SP&R of Ariane design with 136 macros on Nangate45 using commercial and open-source tools. First, we provide the steps for netlist preparation and then discuss the SP&R flow. Here is the content of the rest of the file:
   - [**Netlist Preparation**](#netlist-preparation)
-    - [**Araine design with 16bit memory macros**](#araine-design-with-16bit-memory-macros)
+    - [**Ariane design with 16bit memory macros**](#ariane-design-with-16bit-memory-macros)
   - [**SP\&R Flow**](#spr-flow)
     - [**Cadence tools**](#using-cadence-genus-and-innovus)
     - [**OpenROAD tools**](#using-openroad-flow-scripts)
 
-## **Netlist Preparation:**  
+## **Netlist Preparation:**
 
-### **Araine design with 16bit memory macros:**
+### **Ariane design with 16bit memory macros:**
 We use the Ariane netlist available in [this](https://github.com/lowRISC/ariane) GitHub repository to synthesize the Ariane design. All the required System-Verilog (.sv) files are copied into the *./designs/ariane/rtl/* directory. For memory instantiation below steps are followed: 
 1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit sram. Here is an example of sram instantiation: 
 ```SystemVerilog
