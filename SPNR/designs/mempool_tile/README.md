@@ -10,4 +10,4 @@ Clone ORFS and build OpenROAD tools following the steps given [here](https://git
   make DESIGN_CONFIG=./designs/nangate45/mempool_tile/config.mk
   
 Below is the screenshot of the Ariane SP\&R database with 136 memory macros using ORFS flow.  
-<img src="./screenshoots/mempool_tile_ORFS_SPNR.png" alt="mempool_tile_orfs" width="400"/>
+<img src="./screenshots/mempool_tile_ORFS_SPNR.png" alt="mempool_tile_orfs" width="400"/>
