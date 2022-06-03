@@ -3,8 +3,8 @@ set design ariane
 set util 0.3
 
 set dir "../../../../platforms/nangate45"
-set netlist "./gate/$design.v"
-set sdc "./gate/$design.sdc"
+set netlist "../../netlist/$design.v"
+set sdc "../../constraints/$design.sdc"
 set lef "${dir}/lef/NangateOpenCellLibrary.tech.lef \
         ${dir}/lef/NangateOpenCellLibrary.macro.mod.lef \
         ${dir}/lef/fakeram45_256x16.lef \
@@ -75,14 +75,35 @@ createBasicPathGroups -expanded
 floorPlan -r 1.0 $util 10 10 10 10
 
 ## Macro Placement ##
-planDesign
-refinePlace
+proto_design -constraints mp_config.tcl 
+refine_macro_place
+saveDesign ${encDir}/${design}_floorplan.enc
 
 ## Creating Pin Blcokage for lower and upper pin layers ##
 createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
-createPinBlkg -name Layer_2 -layer {metal2 metal3 metal9 metal10} -edge 1
-createPinBlkg -name Layer_3 -layer {metal2 metal3 metal9 metal10} -edge 2
-createPinBlkg -name Layer_4 -layer {metal2 metal3 metal9 metal10} -edge 3
+createPinBlkg -name side_top -edge 1
+createPinBlkg -name side_right -edge 2
+createPinBlkg -name side_bottom -edge 3
+
+
+setPlaceMode -place_detail_legalization_inst_gap 1
+setFillerMode -fitGap true
+setNanoRouteMode -routeTopRoutingLayer 10
+setNanoRouteMode -routeBottomRoutingLayer 2
+setNanoRouteMode -drouteVerboseViolationSummary 1
+setNanoRouteMode -routeWithSiDriven true
+setNanoRouteMode -routeWithTimingDriven true
+setNanoRouteMode -routeExpUseAutoVia true
+setPlaceMode -placeIoPins true
+
+place_opt_design -out_dir $rptDir -prefix place
+saveDesign $encDir/${design}_placed.enc
+
+## Creating Pin Blcokage for lower and upper pin layers ##
+createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
+createPinBlkg -name Layer_2 -edge 1
+createPinBlkg -name Layer_3 -edge 2
+createPinBlkg -name Layer_4 -edge 3
 
 setPlaceMode -place_detail_legalization_inst_gap 1
 setFillerMode -fitGap true

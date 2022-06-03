@@ -12,7 +12,9 @@ Here we provide the setups to run SP&R of Ariane design with 136 macros on Nanga
 We use the Ariane netlist available in [this](https://github.com/lowRISC/ariane) GitHub repository to synthesize the Ariane design. All the required System-Verilog (.sv) files are copied into the *./designs/ariane/rtl/* directory. For memory instantiation below steps are followed: 
 1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit sram. Here is an example of sram instantiation: 
 ```SystemVerilog
-fakeram45_256x16 i_ram (.clk(clk_i),.rd_out(rdata_aligned[k*16 +: 16]),.ce_in(req_i),.we_in(we_i),.addr_in(addr_i),.wd_in(wdata_aligned[k*16 +: 16]));
+fakeram45_256x16 i_ram (.clk(clk_i), .rd_out(rdata_aligned[k*16 +: 16]),
+                        .ce_in(req_i), .we_in(we_i), .addr_in(addr_i),
+                        .wd_in(wdata_aligned[k*16 +: 16]));
 ```
 2. As it is a 16bit memory the for loop is also required to be updated. Here is the snippet of the code before and after update:  
 
@@ -26,7 +28,7 @@ generate
           .ADDR_WIDTH($clog2(NUM_WORDS)),
           .DATA_DEPTH(NUM_WORDS),
           .OUT_REGS (0),
-          .SIM_INIT (2) 
+          .SIM_INIT (2)
         ) i_ram (
            .Clk_CI    ( clk_i                     ),
            .Rst_RBI   ( rst_ni                    ),
@@ -45,7 +47,9 @@ Code snippet after update:
 genvar k;
 generate
     for (k = 0; k<(DATA_WIDTH+15)/16; k++) begin :macro_mem
-        fakeram45_256x16 i_ram (.clk(clk_i),.rd_out(rdata_aligned[k*16 +: 16]),.ce_in(req_i),.we_in(we_i),.addr_in(addr_i),.wd_in(wdata_aligned[k*16 +: 16]));
+        fakeram45_256x16 i_ram (.clk(clk_i), .rd_out(rdata_aligned[k*16 +: 16]), 
+                                .ce_in(req_i), .we_in(we_i), .addr_in(addr_i), 
+                                .wd_in(wdata_aligned[k*16 +: 16]));
     end
 endgenerate
 ```
@@ -54,7 +58,9 @@ Above code snippet initializes 16bit memory instances. To instantiate 64bit memo
 genvar k;
 generate
     for (k = 0; k<(DATA_WIDTH+63)/64; k++) begin :macro_mem
-        fakeram45_256x64 i_ram (.clk(clk_i),.rd_out(rdata_aligned[k*64 +: 64]),.ce_in(req_i),.we_in(we_i),.addr_in(addr_i),.wd_in(wdata_aligned[k*64 +: 64]));
+        fakeram45_256x64 i_ram (.clk(clk_i), .rd_out(rdata_aligned[k*64 +: 64]),
+                                .ce_in(req_i), .we_in(we_i), .addr_in(addr_i),
+                                .wd_in(wdata_aligned[k*64 +: 64]));
     end
 endgenerate
 ```
@@ -70,7 +76,9 @@ All the required scripts are available for each *design* in the *./designs/<desi
 ```
 genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
 ```  
-**P\&R:** run_innovus.tcl contains the setup for the P&R run using Innvous. It reads the netlist synthesized using the Genus flow. To launch the P\&R run please use the below command.
+We also generated synthesized netlist using Synopsys Design compiler. This netlist is avaialbe in *./designs/<design_name>/netlist/* directory.  
+  
+**P\&R:** run_innovus.tcl contains the setup for the P&R run using Innvous. It reads the netlist provided in *./designs/<design_name>/netlist/* directory. To launch the P\&R run please use the below command.
 ```
 innovus -64 -init run_invs.tcl -log log/run.log
 ```  
