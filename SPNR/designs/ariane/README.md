@@ -1,5 +1,5 @@
 # **Synthesis, Place \& Route (SP\&R):**
-Here we provide the setups to run SP&R of Ariane design with 136 macros on Nangate45 using commercial and open-source tools. First, we provide the steps for netlist preparation and then discuss the SP&R flow. Here is the content of the rest of the file:
+Here we provide the setup to run SP&R of Ariane design with 136 macros on Nangate45 using commercial and open-source tools. First, we provide the steps for netlist preparation and then discuss the SP&R flow.
   - [**Netlist Preparation**](#netlist-preparation)
     - [**Ariane design with 16bit memory macros**](#ariane-design-with-16bit-memory-macros)
   - [**SP\&R Flow**](#spr-flow)
@@ -9,8 +9,8 @@ Here we provide the setups to run SP&R of Ariane design with 136 macros on Nanga
 ## **Netlist Preparation:**
 
 ### **Ariane design with 16bit memory macros:**
-We use the Ariane netlist available in [this](https://github.com/lowRISC/ariane) GitHub repository to synthesize the Ariane design. All the required System-Verilog (.sv) files are copied into the *./designs/ariane/rtl/* directory. For memory instantiation below steps are followed: 
-1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit sram. Here is an example of sram instantiation: 
+We download the Ariane netlist from [lowRISC](https://github.com/lowRISC/ariane) GitHub repository. All the required System-Verilog (.sv) files are copied into the *./designs/ariane/rtl/* directory. For memory instantiation we make the following changes to the netlist: 
+1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit SRAM. Here is an example of the SRAM instantiation: 
 ```SystemVerilog
 fakeram45_256x16 i_ram (.clk(clk_i), .rd_out(rdata_aligned[k*16 +: 16]),
                         .ce_in(req_i), .we_in(we_i), .addr_in(addr_i),
@@ -64,15 +64,15 @@ generate
     end
 endgenerate
 ```
-sram.sv available in the *./designs/ariane/rtl/* directory already contains these changes. We used this .sv files for our synthesis run and the synthesized netlist contains 136 16bit memory macros. We also ran with 64bit configuration and in that scenario the synthesized netlist contains 37 64bit memory macros. As the Yosys does not support .sv files, we hack the verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace the 64bit memory macros with four or three 16bit memory macros based on the number of connected read-data pins. This hacked netlist is available in the *./designs/ariane/rtl/sv2v/* directory.
+sram.sv available in the *./designs/ariane/rtl/* directory already contains these changes. We used this .sv files for our synthesis run and the synthesized netlist contains 136 16bit memory macros. We also ran with 64bit configuration and in that scenario the synthesized netlist contains 37 64bit memory macros. As Yosys does not support System-Verlog files, we use the verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace the 64bit memory macros with four or three 16bit memory macros based on the number of connected read-data pins. This modified netlist is available in the *./designs/ariane/rtl/sv2v/* directory.
 
 ## **SP\&R Flow:**
 We implement Ariane design on the Nangate45 platform using commercial tools Genus (Synthesis) and Innovus (P&R) and open-source tools Yosys (Synthesis) and OpenROAD (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the Nangate45 platform to generate the 16-bit memory. All the required *.lib* and *.lef* files are copied into the *./platforms/nangate45* directory.  
   
   
 ### **Using Cadence Genus and Innovus:**
-All the required scripts are available for each *design* in the *./designs/<design_name>/scripts/cadence/* directory.  
-**Synthesis:** run_genus.tcl contains the setup for synthesis using Genus. It reads the .sv files based on the list in *./designs/<design_name>/scripts/cadence/rtl_list.tcl* (changing the order of the file may cause errors in the run.). The timing constraints are provided in *./designs/<design_name>/scripts/constrains/<design_name>.sdc* file. To launch the synthesis run please use the below command
+All the required scripts are available in the *./scripts/cadence/* directory.  
+**Synthesis:** run_genus.tcl contains the setup for synthesis using Genus. It reads the .sv files based on the list in *./scripts/cadence/rtl_list.tcl* (changing the order of the file may cause errors in the run.). The timing constraints are provided in *./designs/<design_name>/scripts/constrains/<design_name>.sdc* file. To launch the synthesis run please use the below command
 ```
 genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
 ```  
