@@ -75,9 +75,8 @@ genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
 innovus -64 -init run_invs.tcl -log log/run.log
 ```  
 Below is the screenshot of the Ariane SP\&R database with 136 memory macros using Cadence flow.  
-<img src="./screenshoots/Ariane136_Cadence_SPNR.png" alt="ariane136_cadence" width="400"/>  
-  
-  
+<img src="./screenshoots/Ariane136_Innovus_SPNR.png" alt="ariane136_cadence" width="400"/>  
+
 ### **Using OpenROAD-flow-scripts:**
 Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). To run SP&R using OpenROAD tools follow the below mentioned steps:  
 1. Copy *./designs/ariane/scripts/OpenROAD/ariane.tar.gz* directory to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/nangate45* area.
@@ -89,4 +88,7 @@ Clone ORFS and build OpenROAD tools following the steps given [here](https://git
 4. config_hier.mk uses the **RTL-MP** for macro placement. To run macro placement using **Triton Macro Placer** use the below command
   ```
   make DESIGN_CONFIG=./designs/nangate45/ariane136/config.mk
-  ```
+  ```  
+  
+Below is the screenshot of the Ariane SP\&R database with 136 memory macros using ORFS flow.  
+<img src="./screenshoots/Ariane136_ORFS_SPNR.png" alt="ariane136_orfs" width="400"/>
