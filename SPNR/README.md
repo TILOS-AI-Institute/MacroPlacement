@@ -9,12 +9,12 @@ Here we provide the setups to run SP&R of Ariane design with 136 macros on Nanga
 ## **Netlist Preparation:**  
 
 ### **Araine design with 16bit memory macros:**
-We use the Ariane netlist available in [this](https://github.com/lowRISC/ariane) GitHub repository to synthesize the Ariane design. All the required System-Verilog (.sv) files are copied into the *./designs/ariane* directory. For memory instantiation below steps are followed: 
-1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit SRAM. Here is an example of sram instantiation: 
+We use the Ariane netlist available in [this](https://github.com/lowRISC/ariane) GitHub repository to synthesize the Ariane design. All the required System-Verilog (.sv) files are copied into the *./designs/ariane/rtl/* directory. For memory instantiation below steps are followed: 
+1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit sram. Here is an example of sram instantiation: 
 ```SystemVerilog
 fakeram45_256x16 i_ram (.clk(clk_i),.rd_out(rdata_aligned[k*16 +: 16]),.ce_in(req_i),.we_in(we_i),.addr_in(addr_i),.wd_in(wdata_aligned[k*16 +: 16]));
 ```
-2. As It is a 16bit memory the for loop is also required to be updated. Here is the snippet of the code before and after update:  
+2. As it is a 16bit memory the for loop is also required to be updated. Here is the snippet of the code before and after update:  
 
 Code snippet before update:
 ```SystemVerilog
@@ -49,7 +49,7 @@ generate
     end
 endgenerate
 ```
-Above code snipped initializes 16bit memory instances. To instantiate 64bit memory below code snippet can be used.
+Above code snippet initializes 16bit memory instances. To instantiate 64bit memory below code snippet can be used.
 ```SystemVerilog
 genvar k;
 generate
