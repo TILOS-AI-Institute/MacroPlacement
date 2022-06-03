@@ -1,13 +1,13 @@
 ##############################################################
-### Clustering Flow devloped by Zhiang, May, 2022
-### It takes synthesized netlist and def file with
-### placed IO pins as input, then generate clustered
-### netlist (in lef/def format) by hemtis. In the default mode,
-### it will also run RePlace in GUI mode automatically
-### to place the clustered netlist.
-### We implement the flow based on OpenROAD API.
-### You can refer to OpenROAD repo for explanation of each tcl
-### command.  We have provided the openroad exe in utils dir.
+ Clustering Flow devloped by Zhiang Wang, May, 2022
+ It takes synthesized netlist and def file with
+ placed IO pins as input, then generate clustered
+ netlist (in lef/def format) by hemtis. In the default mode,
+ it will also run RePlace in GUI mode automatically
+ to place the clustered netlist.
+ We implement the flow based on OpenROAD API.
+ You can refer to OpenROAD repo for explanation of each tcl
+ command.  We have provided the openroad exe in utils dir.
 ##############################################################
 
 The input file: setup.tcl  (You can follow the example to setup your own design)
