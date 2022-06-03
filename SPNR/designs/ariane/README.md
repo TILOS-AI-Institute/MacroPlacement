@@ -69,7 +69,7 @@ sram.sv available in the *./designs/ariane/rtl/* directory already contains thes
 ## **SP\&R Flow:**
 We implement Ariane design on the Nangate45 platform using commercial tools Genus (Synthesis) and Innovus (P&R) and open-source tools Yosys (Synthesis) and OpenROAD (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the Nangate45 platform to generate the 16-bit memory. All the required *.lib* and *.lef* files are copied into the *./platforms/nangate45* directory.  
   
-
+  
 ### **Using Cadence Genus and Innovus:**
 All the required scripts are available for each *design* in the *./designs/<design_name>/scripts/cadence/* directory.  
 **Synthesis:** run_genus.tcl contains the setup for synthesis using Genus. It reads the .sv files based on the list in *./designs/<design_name>/scripts/cadence/rtl_list.tcl* (changing the order of the file may cause errors in the run.). The timing constraints are provided in *./designs/<design_name>/scripts/constrains/<design_name>.sdc* file. To launch the synthesis run please use the below command
