@@ -10,7 +10,7 @@ This repository provides detailed steps to run clustering and synthesis, place, 
 **List of enablements:**  
      NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)  
      ASAP7 (7.5T cell library (RVT only), FakeRAM2.0 memory generation)  
-     [Proprietary, only results given: GLOBALFOUNDRIES 12LP (Arm 9T cell library (SVT only), Arm memories) [**only results can be shown**]  
+  
  
 **List of elements:**  
      Hypergraph clustering  
