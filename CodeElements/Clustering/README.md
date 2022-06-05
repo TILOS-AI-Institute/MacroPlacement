@@ -1,12 +1,12 @@
- The Clustering Flow is developed by Zhiang Wang, May 2022.
- It takes synthesized netlist and def file with
- placed IO pins as input, then generates clustered
- netlist (in lef/def format) using hMETIS (1998 binary). In  default mode,
- it will also run RePlAce in GUI mode automatically
- to place the clustered netlist.
- We implement the flow based on  **OpenROAD APIs**.
- Please refer to **the OpenROAD repo** for explanation of each Tcl
- command.  We have provided the openroad exe in the **utils** dir.
+# Placement-guided hypergraph clustering (soft macro definition)
+**Placement-guided hypergraph clustering (soft macro defintion)**
+cluster millions of standard cells into a few thousand clusters.
+It takes synthesized netlist and def file with placed IO pins as input, 
+then generates clustered netlist (in lef/def format) using hMETIS (1998 binary). 
+In default mode, it will also run RePlAce in GUI mode automatically to place 
+the clustered netlist. We implement the flow based on  **OpenROAD APIs**.
+Please refer to **the OpenROAD repo** for explanation of each Tcl command.  
+We have provided the openroad exe in the **utils** dir.
 
 Input file: setup.tcl  (you can follow the example to set up your own design)
 
