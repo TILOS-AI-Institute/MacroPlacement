@@ -8,14 +8,14 @@
 - MemPool ("[tile](./Testcases/mempool_tile/)" and "group")
   
 ### List of Flows
-Synthesis, placement and routing flows in
-- OpenROAD
-  - Ariane
+Synthesis, placement and routing flows in  
+- OpenROAD  
+  - Ariane  
     - [136-macro version](./Flows/designs/ariane136/scripts/OpenROAD/)
     - [133-macro version]()
-  - MemPool
+  - MemPool  
     - [tile](./Flows/designs/mempool_tile/scripts/)
-- Cadence
+- Cadence  
   - Ariane 
     - [136-macro version](./Flows/designs/ariane136/scripts/cadence/)
     - [133-macro version]()
