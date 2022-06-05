@@ -11,7 +11,7 @@ NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)
 ASAP7 (7.5T cell library (RVT only), FakeRAM2.0 memory generation)  
   
 **List of Code Elements:** 
-![a link] (https://github.com/user/repo/blob/branch/other_file.md)
+[(Gridding)](https://dl.acm.org/doi/10.1145/2429384.2429441)
 Gridding <br />
 Grouping <br />
 Placement-guided hypergraph clustering (soft macro definition) <br />
