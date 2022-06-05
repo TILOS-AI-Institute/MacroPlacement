@@ -10,12 +10,12 @@ Synthesis, placement and routing flows in OpenROAD and Cadence
 NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)  
 ASAP7 (7.5T cell library (RVT only), FakeRAM2.0 memory generation)  
   
-### List of Code Elements:** 
--[Gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) <br />
--[Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Grouping) <br />
--[Placement-guided hypergraph clustering (soft macro definition)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering) <br />
--[Force-directed placement](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FDPlacement) <br />
--[Simulated annealing](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/SimulatedAnnealing)  <br />
--[LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators) <br />
+### List of Code Elements:
+- [Gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) <br />
+- [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Grouping) <br />
+- [Placement-guided hypergraph clustering (soft macro definition)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering) <br />
+- [Force-directed placement](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FDPlacement) <br />
+- [Simulated annealing](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/SimulatedAnnealing)  <br />
+- [LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators) <br />
 
 **Reproducible Example Solutions:**  
