@@ -11,7 +11,7 @@
   
  
 **List of Code Elements:**  
-     Hypergraph clustering  
      Gridding  
+     Hypergraph clustering  
      Force-directed placement  
      Simulated annealing  
