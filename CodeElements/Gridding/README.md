@@ -5,7 +5,7 @@ runtimes. Gridding enables hard macros to find locations consistent with high so
 
 Gridding determines a dissection of the layout canvas into some number of rows (**n_rows**) and some number of columns (**n_cols**) of _gridcells_.
 
-The choice of **n_rows** and **n_cols** is made **once** for each design.  Once **(n_rows, n_cols)** is chosen, these values remain fixed throughout Circuit Training for the given design.
+The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design.
 
 The gridding process starts with the dimensions **H_canvas** and **V_canvas** of the layout canvas, as well as a list of hard **macro blocks**, where each block has a width and a height. Blocks are not rotatable. The area of a block is the product of its width and height. 
 
@@ -13,14 +13,22 @@ Then, the gridding searches over combinations **(n_rows, n_cols)**, with constra
 - 10 <= **n_rows** , **n_cols** <= 100
 - **n_rows** * **n_cols** <= 3000   // this product is the number of _gridcells_ in the canvas
 
-For
-pack (i.e., place) all blocks into the _grid_, in order of decreasing (non-increasing) block area. This allows us to evaluate the _loss_ induced by a given choice of 
+The main idea is to search for a particular **(n_rows, n_cols)** combination that minimizes a metric called _loss_.
 
-There are constraints 
+To evaluate _loss_ for a given _grid_, all blocks are packed into the grid, and several terms that reflect wasted space are evaluated. 
+
+## Packing.
+
+Packing is performed as follows.
+- All blocks are placed, one by one, into the **(n_rows, n_cols)** _grid_.  If the current block cannot be placed, then the _grid_ is infeasible and the next candidate _grid_ is considered.
+- Blocks are placed in order of decreasing (i.e., non-increasing) block area.
+- Placement of a block means placing that block's **center** at the **center** of some gridcell.
+- The placement of a block's center at the center of some gridcell is _legal_ if (1) no part of the block is outside of the canvas, and (2) no overlap of the block with any previously-placed block is induced. 
+- A block is placed at the first (according to row-major order) gridcell where it can be legally placed.
+ 
 
 
-The gridded canvas, or _grid_, is comprised of **n_rows** * **n_cols** _gridcells_.
-
+ 
 Each block is placed at the FIRST AVAILABLE (according to row-major order) gridcell where the block's placement does not result in **any** overlap with previously-placed blocks.  Here, "placed" means that the center of the block is placed at the center of the gridcell.
 
 Overlap (horizontal) means _(pessimistically defined, note)_ that the x-spans of two placed blocks that intersect gridcells of a given row have a nonempty intersection.
