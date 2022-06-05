@@ -12,10 +12,10 @@ ASAP7 (7.5T cell library (RVT only), FakeRAM2.0 memory generation)
   
 **List of Code Elements:**  
 Gridding <br />
-Grouping
-Placement-guided hypergraph clustering (soft macro definition)
-Force-directed placement  
-Simulated annealing  
-LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators
+Grouping <br />
+Placement-guided hypergraph clustering (soft macro definition) <br />
+Force-directed placement <br />
+Simulated annealing  <br />
+LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators <br />
 
 **Reproducible Example Solutions:**  
