@@ -1,10 +1,24 @@
 # MacroPlacement
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of Google Brain's Circuit Training (Morpheus) deep RL-based placement method.  We provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the place-and-route flow using both proprietary and open-source tools.
 
-### List of Testcases and Flows  
-- Ariane (133-macro version, and 136-macro version)  
-- MemPool ("tile" and "group")
-- Synthesis, placement and routing flows in OpenROAD and Cadence
+### List of Testcases  
+- [Ariane](https://github.com/lowRISC/ariane)
+  - [136-macro version](./Testcases/ariane136/)
+  - [133-macro version](./Testcases/ariane133/)
+- MemPool ("[tile](./Testcases/mempool_tile/)" and "group")
+  
+### List of Flows
+Synthesis, placement and routing flows in
+- OpenROAD
+  - Ariane
+    - [136-macro version](./Flows/designs/ariane136/scripts/OpenROAD/)
+    - [133-macro version]()
+  - MemPool
+    - [tile](./Flows/designs/mempool_tile/scripts/)
+- Cadence
+  - Ariane 
+    - [136-macro version](./Flows/designs/ariane136/scripts/cadence/)
+    - [133-macro version]()
 
 ### List of Enablements
 - [NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Enablements/NanGate45)
