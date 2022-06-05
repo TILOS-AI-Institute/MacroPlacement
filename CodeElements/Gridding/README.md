@@ -1,14 +1,13 @@
 # Gridding
 
-Input: a list of blocks.  Each block has a width and a height.
+Input: a list of blocks.  Each block has a width and a height.  The area of a block is its width * height.
 
+We pack all blocks into the _grid_, in order of decreasing (non-increasing) block area.
 
 10 <= **n_rows** , **n_cols** <= 100
 **n_rows** *** n_cols** <= 3000
 
 The gridded canvas, or _grid_, is comprised of **n_rows** * **n_cols** _gridcells_.
-
-Pack blocks in order of decreasing area.
 
 Each block is placed at the FIRST AVAILBLE (according to row-major order) gridcell that does not result in **any** overlap
 
