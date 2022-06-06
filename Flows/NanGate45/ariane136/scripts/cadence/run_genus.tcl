@@ -18,6 +18,7 @@ set link_library $list_lib
 set target_library $list_lib
 
 # set path
+set_db auto_ungroup none
 set_db init_lib_search_path $libdir
 set_db init_hdl_search_path "../../designs/${top_module}/"
 
@@ -36,6 +37,11 @@ if {![file exists gate]} {
 if {![file exists rpt]} {
 	exec mkdir rpt
 }
+
+# Compiler drectives
+set compile_effort "high"
+set compile_flatten_all 1
+set compile_no_new_cells_at_top_level false
 
 # read RTL
 source rtl_list.tcl
