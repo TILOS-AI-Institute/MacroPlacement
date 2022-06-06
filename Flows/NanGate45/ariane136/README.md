@@ -67,7 +67,7 @@ endgenerate
 sram.sv available in the *./rtl/* directory already contains these changes (16bit configuration). We used this .sv files for our synthesis run and the synthesized netlist contains 136 16bit memory macros. We also ran with 64bit configuration and in that scenario the synthesized netlist contains 37 64bit memory macros (Not added in this repo). As Yosys does not support System-Verlog files, we use the verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace the 64bit memory macros with four or three 16bit memory macros based on the number of connected read-data pins. This modified netlist is available in the *./rtl/sv2v/* directory.
 
 ## **SP\&R Flow:**
-We implement Ariane design on the Nangate45 platform using commercial tools Genus (Synthesis) and Innovus (P&R) and open-source tools Yosys (Synthesis) and OpenROAD (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the Nangate45 platform to generate the 16-bit memory. All the required *.lib* and *.lef* files are copied into the *./platforms/nangate45* directory.  
+We implement Ariane design on the NanGate45 platform using commercial tools Genus (Synthesis) and Innovus (P&R) and open-source tools Yosys (Synthesis) and OpenROAD (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the Nangate45 platform to generate the 16-bit memory. All the required *.lib* and *.lef* files are copied into the *./platforms/nangate45* directory.  
   
   
 ### **Using Cadence Genus and Innovus:**
@@ -76,15 +76,15 @@ All the required scripts are available in the *./scripts/cadence/* directory.
 ```
 genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
 ```  
-We also generated synthesized netlist and this is avaialbe in *./netlist/* directory.  
+We also generate a synthesized netlist, which is available in the *./netlist/* directory.  
   
 **P\&R:** run_innovus.tcl contains the setup for the P&R run using Innvous. It reads the netlist provided in *./netlist/* directory. To launch the P\&R run please use the below command.
 ```
 innovus -64 -init run_invs.tcl -log log/run.log
 ```  
-Innovus required a configuration file to run the macro placement flow. For this we use *proto_design -constraints mp_config.tcl* command. The configuration file *mp_config.tcl* is available in the *./scripts/cadence/* directory. Some details of the configuration files are given below
+Innovus requires a configuration file to run the macro placement flow. For this we use *proto_design -constraints mp_config.tcl* command. The configuration file *mp_config.tcl* is available in the *./scripts/cadence/* directory. Some details of the configuration files are as follows.
 1. Provide the memory hierarchy name under the **SEED** section. If you do not provide the memory hierarchy here, then the macro placement constraints (e.g., cell orientation, spacing, etc.) related to that memory may be overlooked.
-2. For each macro, valid orientation, and spacing rules can be provided under the **MACRO** section. For example, we set valid macro orientation as *R0* for our run, horizontal spacing as *10um*, and vertical spacing as *5um*. Also, when you provide the cell name (ref name, not instance name) add the *isCell=true* option.
+2. For each macro, valid orientation and spacing rules can be provided under the **MACRO** section. For example, we set valid macro orientation as *R0* for our run, horizontal spacing as *10um*, and vertical spacing as *5um*. Also, when you provide the cell name (ref name, not instance name) add the *isCell=true* option.
 
 Below is the screenshot of the Ariane SP\&R database with 136 memory macros using Cadence flow.  
 <img src="./screenshots/Ariane136_Innovus_Genus.png" alt="ariane136_cadence" width="400"/>  
@@ -97,10 +97,10 @@ Clone ORFS and build OpenROAD tools following the steps given [here](https://git
   ```
   make DESIGN_CONFIG=./designs/nangate45/ariane136/config_hier.mk
   ```
-4. config_hier.mk uses the **RTL-MP** for macro placement. To run macro placement using **Triton Macro Placer** use the below command
+4. config_hier.mk uses the **RTL-MP** (RTL Macro Placer) for macro placement. If you wish to run macro placement using the older **Triton Macro Placer**, please use the below command:
   ```
   make DESIGN_CONFIG=./designs/nangate45/ariane136/config.mk
   ```  
   
-Below is the screenshot of the Ariane SP\&R database with 136 memory macros using ORFS (RTL-MP) flow.  
+Below is the screenshot of the Ariane SP\&R database with 136 memory macros using the ORFS (RTL-MP) flow.  
 <img src="./screenshots/Ariane136_ORFS_SPNR.png" alt="ariane136_orfs" width="400"/>
