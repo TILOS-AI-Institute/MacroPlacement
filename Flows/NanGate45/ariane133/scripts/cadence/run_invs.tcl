@@ -77,6 +77,7 @@ createBasicPathGroups -expanded
 floorPlan -r 1.0 $util 10 10 10 10
 
 ## Macro Placement ##
+redirect mp_config.tcl {source gen_mp_config.tcl}
 proto_design -constraints mp_config.tcl 
 refine_macro_place
 saveDesign ${encDir}/${design}_floorplan.enc
