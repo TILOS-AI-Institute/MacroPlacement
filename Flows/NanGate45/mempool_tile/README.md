@@ -16,7 +16,7 @@ Below is the screenshot of the mempool_tile SP\&R databse.
 <img src="./screenshots/mempool_tile_Innovus.png" alt="mempool_tile_invs" width="400"/>
 
 
-This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
+This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 
 
 ### **Using OpenROAD-flow-scripts:**

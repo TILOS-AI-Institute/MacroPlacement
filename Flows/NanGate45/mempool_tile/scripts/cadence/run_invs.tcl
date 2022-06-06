@@ -1,4 +1,4 @@
-# This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. 
+# This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. 
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 setMultiCpuUsage -localCpu 32
 set design mempool_tile_wrap
