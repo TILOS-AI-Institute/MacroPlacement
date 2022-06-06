@@ -1,5 +1,5 @@
 # Netlist preparation of Ariane 133-macro version
-For the Ariane 133-macro version, we use the Verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace the 64bit memory macros with four or three 16bit memory macros based on the number of connected read-data pins. In the synthesized netlist of the Ariane 136-macro version, the memory instantiation in the valid_dirty_sram hierarchy is given below.
+For the Ariane 133-macro version, we use the Verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace each 64-bit memory macro with either four or three 16-bit memory macros based on the number of connected read-data pins. In the synthesized netlist of the Ariane 136-macro version, the memory instantiation in the valid_dirty_sram hierarchy is given below.
 ```Verilog
   fakeram45_256x16 \macro_mem[0].i_ram (.clk (clk_i), .we_in (we_i),
        .ce_in (req_i), .addr_in (addr_i), .wd_in ({6'b0, wdata_i[1:0],
@@ -22,7 +22,7 @@ For the Ariane 133-macro version, we use the Verilog netlist available in the [O
        ({rdata_aligned[63:58], rdata_o[57:56], rdata_aligned[55:50],
        rdata_o[49:48]}));
 ```
-In each of the above four memory instantiations, only four read data (rd_out) and write data (wd_in) bits are used among the 16-bits. So we replace the four 16bit memory with a single 16bit memory and update the connections accordingly. Here is the updated version with the single memory macro
+In each of the above four memory instantiations, only four read data (rd_out) and write data (wd_in) bits are used among the 16 bits. So, we replace the four 16-bit memories with a single 16-bit memory and update the connections accordingly. Here is the updated version with the single memory macro
 
 ```Verilog
   fakeram45_256x16 \macro_mem[0].i_ram (.clk (clk_i), .we_in (we_i),
@@ -34,4 +34,4 @@ In each of the above four memory instantiations, only four read data (rd_out) an
 ```
 The available Verilog in the *./rtl/sv2v/* directory contains this change.
 
-After this change, we noticed that logic optimization trims some memory macros during the synthesis stage, so we use set_dont_touch for all the memory instantiations in the Ariane 133-macro version.
+After this change, we have noticed that logic optimization trims some memory macros during the synthesis stage, so we currently use set_dont_touch for all the memory instantiations in the Ariane 133-macro version.
