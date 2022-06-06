@@ -27,6 +27,10 @@ Innovus requires a configuration file to run the macro placement flow. For this 
 Below is the screenshot of the Ariane SP\&R database with 136 memory macros using Cadence flow.  
 <img src="./screenshots/Ariane136_Innovus_Genus.png" alt="ariane136_cadence" width="400"/>  
 
+
+This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
+
+
 ### **Using OpenROAD-flow-scripts:**
 Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). To run SP&R using OpenROAD tools follow the below mentioned steps:  
 1. Copy [*./scripts/OpenROAD/ariane.tar.gz*](./scripts/OpenROAD/ariane.tar.gz) file to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/nangate45* area.

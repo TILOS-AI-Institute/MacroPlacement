@@ -15,6 +15,10 @@ Innovus requires a configuration file to run the macro placement flow. For this 
 Below is the screenshot of the mempool_tile SP\&R databse.  
 <img src="./screenshots/mempool_tile_Innovus.png" alt="mempool_tile_invs" width="400"/>
 
+
+This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
+
+
 ### **Using OpenROAD-flow-scripts:**
 Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). To run SP&R using OpenROAD tools follow the below mentioned steps:  
 1. Copy [*./scripts/OpenROAD/mempool_tile.tar.gz*](./scripts/OpenROAD/mempool_tile.tar.gz) directory to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/nangate45* area.
