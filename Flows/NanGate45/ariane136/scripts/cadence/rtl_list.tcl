@@ -100,7 +100,6 @@ set rtl_all {
 ../../rtl/std_cache_subsystem.sv
 ../../rtl/store_buffer.sv
 ../../rtl/store_unit.sv
-../../rtl/SyncSpRamBeNx64.sv
 ../../rtl/sync_wedge.sv
 ../../rtl/tlb.sv
 ../../rtl/std_icache.sv
