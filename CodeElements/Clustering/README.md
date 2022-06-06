@@ -5,16 +5,16 @@ It takes synthesized netlist and def file with placed IO pins as input,
 then generates clustered netlist (in lef/def format) using hMETIS (1998 binary). 
 In default mode, it will also run RePlAce in GUI mode automatically to place 
 the clustered netlist. We implement the flow based on  [**OpenROAD APIs**](https://github.com/The-OpenROAD-Project/OpenROAD).
-Please refer to **the OpenROAD repo** for explanation of each Tcl command.  
+Please refer to [**the OpenROAD repo**](https://github.com/The-OpenROAD-Project/OpenROAD) for explanation of each Tcl command.  
 We have provided the openroad exe in the [**utils**](./utils/) dir.
 
-Input file: setup.tcl  (you can follow the example to set up your own design)
+Input file: [setup.tcl](./setup.tcl)  (you can follow the example to set up your own design)
 
-Output_files:  clusters.lef  and clustered_netlist.def
+Output_files:  clusters.lef  and  clustered_netlist.def
 
-Example commands:  python generate_clustered_netlist.py ariane hmetis
+Example commands:  python [generate_clustered_netlist.py](./generate_clustered_netlist.py) ariane hmetis
 
-You can use command:  python generate_clustered_netlist.py -h for other options
+You can use command:  python [generate_clustered_netlist.py](./generate_clustered_netlist.py) -h for other options
 
 
 Note:  In this example, we use the ariane design implemented in NanGate45.
