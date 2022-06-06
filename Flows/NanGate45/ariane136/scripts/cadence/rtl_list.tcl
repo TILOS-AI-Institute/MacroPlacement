@@ -1,10 +1,12 @@
 set rtl_all {
+../../rtl/dm_pkg.sv
+../../rtl/riscv_pkg.sv
+../../rtl/axi_pkg.sv
+../../rtl/ariane_pkg.sv
 ../../rtl/alu.sv
-../../rtl/amo_alu.sv
 ../../rtl/amo_buffer.sv
 ../../rtl/apb_to_reg.sv
 ../../rtl/ariane_axi_pkg.sv
-../../rtl/ariane_pkg.sv
 ../../rtl/ariane_regfile_ff.sv
 ../../rtl/ariane.sv
 ../../rtl/axi2apb_64_32.sv
@@ -19,7 +21,6 @@ set rtl_all {
 ../../rtl/axi_lite_interface.sv
 ../../rtl/axi_master_connect_rev.sv
 ../../rtl/axi_master_connect.sv
-../../rtl/axi_pkg.sv
 ../../rtl/axi_r_buffer.sv
 ../../rtl/axi_single_slice.sv
 ../../rtl/axi_slave_connect_rev.sv
@@ -31,7 +32,6 @@ set rtl_all {
 ../../rtl/bootrom.sv
 ../../rtl/branch_unit.sv
 ../../rtl/btb.sv
-../../rtl/cache_ctrl.sv
 ../../rtl/cdc_2phase.sv
 ../../rtl/clint.sv
 ../../rtl/cluster_clock_inverter.sv
@@ -47,7 +47,6 @@ set rtl_all {
 ../../rtl/dmi_jtag.sv
 ../../rtl/dmi_jtag_tap.sv
 ../../rtl/dm_mem.sv
-../../rtl/dm_pkg.sv
 ../../rtl/dm_sba.sv
 ../../rtl/dm_top.sv
 ../../rtl/ex_stage.sv
@@ -65,7 +64,6 @@ set rtl_all {
 ../../rtl/lfsr_8bit.sv
 ../../rtl/load_store_unit.sv
 ../../rtl/load_unit.sv
-../../rtl/miss_handler.sv
 ../../rtl/mmu.sv
 ../../rtl/multiplier.sv
 ../../rtl/mult.sv
@@ -83,7 +81,6 @@ set rtl_all {
 ../../rtl/ras.sv
 ../../rtl/reg_intf.sv
 ../../rtl/re_name.sv
-../../rtl/riscv_pkg.sv
 ../../rtl/rrarbiter.sv
 ../../rtl/rstgen_bypass.sv
 ../../rtl/scoreboard.sv
@@ -101,14 +98,18 @@ set rtl_all {
 ../../rtl/sram.sv
 ../../rtl/std_cache_pkg.sv
 ../../rtl/std_cache_subsystem.sv
-../../rtl/std_icache.sv
-../../rtl/std_nbdcache.sv
 ../../rtl/store_buffer.sv
 ../../rtl/store_unit.sv
-../../rtl/stream_arbiter.sv
-../../rtl/stream_demux.sv
-../../rtl/stream_mux.sv
+../../rtl/SyncSpRamBeNx64.sv
 ../../rtl/sync_wedge.sv
-../../rtl/tag_cmp.sv
 ../../rtl/tlb.sv
+../../rtl/std_icache.sv
+../../rtl/std_nbdcache.sv
+../../rtl/stream_arbiter.sv
+../../rtl/stream_mux.sv
+../../rtl/stream_demux.sv
+../../rtl/cache_ctrl.sv
+../../rtl/miss_handler.sv
+../../rtl/amo_alu.sv
+../../rtl/tag_cmp.sv
 }

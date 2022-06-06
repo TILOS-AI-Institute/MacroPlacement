@@ -52,7 +52,7 @@ elaborate $top_module
 
 
 # Default SDC Constraints
-read_sdc ./${top_module}.sdc
+read_sdc ../../constraints/${top_module}.sdc
 
 syn_generic
 syn_map
