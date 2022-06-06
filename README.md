@@ -14,13 +14,13 @@ Synthesis, placement and routing flows in
     - [136-macro version](./Flows/NanGate45/ariane136/)
     - [133-macro version](./Flows/NanGate45/ariane133/)
   - MemPool  
-    - [tile](./Flows/NanGate45/mempool_tile/scripts/)
+    - [tile](./Flows/NanGate45/mempool_tile/)
 - Cadence (Genus 21.1 for synthesis and Innovus 21.1 for P&R)  
   - Ariane 
     - [136-macro version](./Flows/NanGate45/ariane136/scripts/cadence/)
     - [133-macro version](./Flows/NanGate45/ariane133/scripts/cadence/)
   - MemPool
-    - [tile](./Flows/NanGate45/mempool_tile/scripts/OpenROAD/)
+    - [tile](./Flows/NanGate45/mempool_tile/scripts/cadence/)
     - group
 
 ### List of Enablements
