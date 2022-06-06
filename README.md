@@ -8,17 +8,20 @@
 - MemPool ("[tile](./Testcases/mempool_tile/)" and "group")
   
 ### List of Flows
-Synthesis, placement and routing flows in
-- OpenROAD
+Synthesis, placement and routing flows in  
+- [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)  
   - Ariane
-    - [136-macro version](./Flows/designs/ariane136/scripts/OpenROAD/)
-    - [133-macro version]()
-  - MemPool
-    - [tile](./Flows/designs/mempool_tile/scripts/)
-- Cadence
+    - [136-macro version](./Flows/NanGate45/ariane136/)
+    - [133-macro version](./Flows/NanGate45/ariane133/)
+  - MemPool  
+    - [tile](./Flows/NanGate45/mempool_tile/scripts/)
+- Cadence (Genus 21.1 for synthesis and Innovus 21.1 for P&R)  
   - Ariane 
-    - [136-macro version](./Flows/designs/ariane136/scripts/cadence/)
-    - [133-macro version]()
+    - [136-macro version](./Flows/NanGate45/ariane136/scripts/cadence/)
+    - [133-macro version](./Flows/NanGate45/ariane133/scripts/cadence/)
+  - MemPool
+    - [tile](./Flows/NanGate45/mempool_tile/scripts/OpenROAD/)
+    - group
 
 ### List of Enablements
 - [NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Enablements/NanGate45)
