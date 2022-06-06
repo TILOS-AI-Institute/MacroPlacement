@@ -1,9 +1,3 @@
-## This script was written and developed by UCSD ABKGroup, 
-## however, the underlying commands and reports are copyrighted
-## by Cadence. We thank Cadence for granting permission to share
-## our research to help promote and foster the next generation of
-## innovators.
-
 VERSION 1.0
 BEGIN SEED
 name=i_tile/gen_banks_0__mem_bank

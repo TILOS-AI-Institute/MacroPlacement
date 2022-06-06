@@ -1,9 +1,3 @@
-## This script was written and developed by UCSD ABKGroup, 
-## however, the underlying commands and reports are copyrighted
-## by Cadence. We thank Cadence for granting permission to share
-## our research to help promote and foster the next generation of
-## innovators.
-
 puts "VERSION 1.0"
 set mem_hier ""
 foreach a [dbget [dbget top.insts.cell.name fakeram45_* -p2 ].name ] {
