@@ -1,12 +1,12 @@
 # Netlist preparation of Ariane 136-macro version
-We download the Ariane netlist from [lowRISC](https://github.com/lowRISC/ariane) GitHub repository. All the required System-Verilog (.sv) files are copied into the *./rtl/* directory. For memory instantiation we make the following changes to the netlist: 
-1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16bit SRAM. Here is an example of the SRAM instantiation: 
+We download the Ariane netlist from the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository. All the required SystemVerilog (.sv) files are copied into the *./rtl/* directory. For memory instantiation we make the following changes to the netlist: 
+1. In [sram.sv](https://github.com/lowRISC/ariane/blob/master/src/util/sram.sv) file, remove the instantiation of module *SyncSpRamBeNx64* and instantiate the 16-bit SRAM. Here is an example of the SRAM instantiation: 
 ```SystemVerilog
 fakeram45_256x16 i_ram (.clk(clk_i), .rd_out(rdata_aligned[k*16 +: 16]),
                         .ce_in(req_i), .we_in(we_i), .addr_in(addr_i),
                         .wd_in(wdata_aligned[k*16 +: 16]));
 ```
-2. As it is a 16bit memory the for loop is also required to be updated. Here is the snippet of the code before and after update:  
+2. As it is a 16-bit memory the for loop is also required to be updated. Here is the snippet of the code before and after update:  
 
 Code snippet before update:
 ```SystemVerilog
@@ -43,7 +43,7 @@ generate
     end
 endgenerate
 ```
-Above code snippet initializes 16bit memory instances. To instantiate 64bit memory below code snippet can be used.
+The above code snippet initializes 16-bit memory instances. To instantiate 64-bit memory instances, the below code snippet can be used.
 ```SystemVerilog
 genvar k;
 generate
@@ -54,4 +54,4 @@ generate
     end
 endgenerate
 ```
-sram.sv available in the *./rtl/* directory already contains these changes (16bit configuration). We used this .sv files for our synthesis run and the synthesized netlist contains 136 16bit memory macros. We also ran with 64bit configuration and in that scenario the synthesized netlist contains 37 64bit memory macros (Not added in this repo). As Yosys does not support System-Verlog files, we use the verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace the 64bit memory macros with four or three 16bit memory macros based on the number of connected read-data pins. This modified netlist is available in the *./rtl/sv2v/* directory.
+sram.sv available in the *./rtl/* directory already contains these changes (16-bit configuration). We used these .sv files for our synthesis run, and the synthesized netlist contains 136 16-bit memory macros. We also ran with the 64-bit memory configuration, and in that scenario the synthesized netlist contains 37 64-bit memory macros (not added in this repo). As Yosys does not support SystemVerilog files, we use the verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace each 64-bit memory macro with either four or three 16-bit memory macros based on the number of connected read-data pins. This modified netlist is available in the *./rtl/sv2v/* directory.
