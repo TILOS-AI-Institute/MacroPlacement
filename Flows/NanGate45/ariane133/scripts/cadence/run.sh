@@ -1,3 +1,5 @@
+# This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. 
+# We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 #!/bin/tcsh
 module unload genus
 module load genus/21.1
