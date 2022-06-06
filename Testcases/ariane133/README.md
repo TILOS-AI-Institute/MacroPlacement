@@ -32,6 +32,6 @@ In each of the above four memory instantiations, only four read data (rd_out) an
        rdata_o[41:40], rdata_o[25:24], rdata_o[9:8], rdata_o[17:16], 
        rdata_o[33:32], rdata_o[49:48], rdata_o[1:0]}));
 ```
-The available Verilog in the *./rtl/sv2v/* directory contains this change.
+The available Verilog in the [*./sv2v/*](./sv2v/) directory contains this change.
 
 After this change, we have noticed that logic optimization trims some memory macros during the synthesis stage, so we currently use set_dont_touch for all the memory instantiations in the Ariane 133-macro version.
