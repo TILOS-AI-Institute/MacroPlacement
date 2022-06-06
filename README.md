@@ -11,14 +11,14 @@
 Synthesis, placement and routing flows in  
 - OpenROAD  
   - Ariane  
-    - [136-macro version](./Flows/designs/ariane136/scripts/OpenROAD/)
-    - [133-macro version]()
+    - [136-macro version](./Flows/NanGate45/ariane136/scripts/OpenROAD/)
+    - [133-macro version](./Flows/NanGate45/ariane133/scripts/OpenROAD/)
   - MemPool  
     - [tile](./Flows/designs/mempool_tile/scripts/)
 - Cadence  
   - Ariane 
-    - [136-macro version](./Flows/designs/ariane136/scripts/cadence/)
-    - [133-macro version]()
+    - [136-macro version](./Flows/NanGate45/ariane136/scripts/cadence/)
+    - [133-macro version](./Flows/NanGate45/ariane133/scripts/cadence/)
 
 ### List of Enablements
 - [NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Enablements/NanGate45)
