@@ -5,7 +5,7 @@ Here we provide the setup to run SP&R of Ariane design with 136 macros on NanGat
     - [**OpenROAD tools**](#using-openroad-flow-scripts)
 
 ## **SP\&R Flow:**
-We implement Ariane design with 136 macroes on the NanGate45 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the NanGate45 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are available in the [*Enablements/NanGate45*](../../../Enablements/NanGate45/) directory.  
+We implement Ariane design with [136 macroes](../../../Testcases/ariane136/) on the NanGate45 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the NanGate45 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are available in the [*Enablements/NanGate45*](../../../Enablements/NanGate45/) directory.  
   
   
 ### **Using Cadence Genus and Innovus:**
