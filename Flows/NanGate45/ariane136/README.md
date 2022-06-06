@@ -28,7 +28,7 @@ Below is the screenshot of the Ariane SP\&R database with 136 memory macros usin
 <img src="./screenshots/Ariane136_Innovus_Genus.png" alt="ariane136_cadence" width="400"/>  
 
 
-This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
+This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 
 
 ### **Using OpenROAD-flow-scripts:**
