@@ -18,8 +18,9 @@ set link_library $list_lib
 set target_library $list_lib
 
 # set path
+set_db auto_ungroup none 
 set_db init_lib_search_path $libdir
-set_db init_hdl_search_path "../../designs/${top_module}/"
+set_db init_hdl_search_path "../../rtl/"
 
 set_db library $list_lib
 
@@ -37,22 +38,19 @@ if {![file exists rpt]} {
 	exec mkdir rpt
 }
 
-# read RTL
-source rtl_list.tcl
+# Compiler drectives
+set compile_effort "high"
+set compile_flatten_all 1
+set compile_no_new_cells_at_top_level false
 
-foreach rtl_file $rtl_all {
-    if {$top_module == "jpeg_encoder"} {
-        read_hdl -sv $rtl_file
-    } else {
-        read_hdl -sv $rtl_file
-    }
-}
+# read RTL
+read_hdl ../../rtl/ariane.v 
 
 elaborate $top_module 
 
 
 # Default SDC Constraints
-read_sdc ./${top_module}.sdc
+read_sdc ../../constraints/${top_module}.sdc
 
 syn_generic
 syn_map
