@@ -22,7 +22,7 @@ Innovus requires a configuration file to run the macro placement flow. For this 
 Below is the screenshot of the Ariane SP\&R database with 133 memory macros using the Cadence flow.  
 <img src="./screenshots/Ariane133_Innovus.png" alt="ariane133_cadence" width="400"/>  
 
-This script was written and developed by OpenROAD (or UCSD), however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
+This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 
 
 ### **Using OpenROAD-flow-scripts:**
