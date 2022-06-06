@@ -1,1 +1,9 @@
-# NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)
+# NanGate45 (FreePDK45, 45nm Open Cell Library, bsg_FakeRAM memory generation)
+
+The NanGate45 Open Cell Library is available under an Apache2.0 license from ...
+
+It is based on FreePDK45, available at ...
+
+As the FreePDK45/NanGate45 enablement does not have memory generators, we use the bsg_FakeRAM memory generator that is available at ...
+
+With this combined enablement, testcases with SRAMs can be synthesized, placed and routed using both proprietary (commercial) tools such as Cadence Genus/Innovus, and open-source tools such as OpenROAD.
