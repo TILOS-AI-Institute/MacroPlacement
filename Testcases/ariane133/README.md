@@ -1,6 +1,6 @@
 # Netlist preparation of Ariane 133-macro version
 For the Ariane 133-macro version, we use the Verilog netlist available in the [ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/ariane) GitHub and replace the 64bit memory macros with four or three 16bit memory macros based on the number of connected read-data pins. In the synthesized netlist of the Ariane 136-macro version, the memory instantiation in the valid_dirty_sram hierarchy is given below.
-```verilog
+```Verilog
   fakeram45_256x16
        \i_cache_subsystem_i_nbdcache_valid_dirty_sram_macro_mem[0].i_ram
        (.clk (clk_i), .we_in (i_cache_subsystem_i_nbdcache_we_ram),
