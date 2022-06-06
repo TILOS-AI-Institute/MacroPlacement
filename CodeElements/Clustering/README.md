@@ -4,9 +4,9 @@ cluster millions of standard cells into a few thousand clusters.
 It takes synthesized netlist and def file with placed IO pins as input, 
 then generates clustered netlist (in lef/def format) using hMETIS (1998 binary). 
 In default mode, it will also run RePlAce in GUI mode automatically to place 
-the clustered netlist. We implement the flow based on  **OpenROAD APIs**.
+the clustered netlist. We implement the flow based on  **OpenROAD APIs**. **MAKE LINKS !!!!!!!!!!!!!**
 Please refer to **the OpenROAD repo** for explanation of each Tcl command.  
-We have provided the openroad exe in the **utils** dir.
+We have provided the openroad exe in the **utils** dir. **MAKE LIVE LINKS !!!!!!!!!**
 
 Input file: setup.tcl  (you can follow the example to set up your own design)
 
