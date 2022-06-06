@@ -22,7 +22,7 @@ For the Ariane 133-macro version, we use the Verilog netlist available in the [O
        ({rdata_aligned[63:58], rdata_o[57:56], rdata_aligned[55:50],
        rdata_o[49:48]}));
 ```
-In each of the above four memory instantiations, only four read data (rd_out) and write data (wd_in) bits are used among the 16-bits. So we replace the four 16bit memory with a single 16bit memory and update the connections accordingly. Here is the updated version
+In each of the above four memory instantiations, only four read data (rd_out) and write data (wd_in) bits are used among the 16-bits. So we replace the four 16bit memory with a single 16bit memory and update the connections accordingly. Here is the updated version with the single memory macro
 
 ```Verilog
   fakeram45_256x16 \macro_mem[0].i_ram (.clk (clk_i), .we_in (we_i),
