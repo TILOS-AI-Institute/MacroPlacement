@@ -10,11 +10,11 @@
 ### List of Flows
 Synthesis, placement and routing flows in  
 - [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)  
-  - Ariane  
-    - [136-macro version](./Flows/NanGate45/ariane136/scripts/OpenROAD/)
-    - [133-macro version](./Flows/NanGate45/ariane133/scripts/OpenROAD/)
+  - Ariane
+    - [136-macro version](./Flows/NanGate45/ariane136/)
+    - [133-macro version](./Flows/NanGate45/ariane133/)
   - MemPool  
-    - [tile](./Flows/designs/mempool_tile/scripts/)
+    - [tile](./Flows/NanGate45/mempool_tile/scripts/)
 - Cadence (Genus 21.1 for synthesis and Innovus 21.1 for P&R)  
   - Ariane 
     - [136-macro version](./Flows/NanGate45/ariane136/scripts/cadence/)
