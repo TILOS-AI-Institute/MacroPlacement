@@ -1,0 +1,6 @@
+#!/bin/tcsh
+module unload innovus
+module load innovus/21.1
+mkdir -p log
+
+innovus -64 -init run_invs.tcl -log log/run.log

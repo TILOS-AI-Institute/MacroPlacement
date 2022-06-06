@@ -1,0 +1,2 @@
+# Netlist preparation of mempool tile 
+MemPool tile is part of MemPool which is an open-source many-core system targeting image processing applications. We downloaded the netlist from the [mempool](https://github.com/pulp-platform/mempool) GitHub repository. All the required SystemVerilog files are copied into the *./rtl* directory.
