@@ -1,8 +1,13 @@
 # Grouping
-**Grouping** is a preprocessing step before
-[Placement-guided hypergraph clustering (soft macro definition)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering).
-In this step, each SRAM (hard macro) is clustered along with its immediate fanins and immediate fanouts 
-(w.r.t. all of the SRAM's pins) into a "group" that is recorded in the ".fix file".
-Similarly, all of the IOs (ports) that are in each row-grid or column-grid of 
-the boundary of the layout canvas are put into groups. Each group includes the union 
-of immediate fanins and immediate fanouts of the ports that are in that group.
+
+The _grouping_ step in Circuit Training requires as inputs:
+- the post-synthesis gate-level netlist (standard cells and hard macros)
+- placed IOs (ports, or terminals), typically at the borders of the chip canvas
+- the _grid_ of **n_rows** rows and **n_cols** columns of _gridcells_, which defines the gridded layout canvas
+
+
+## Thanks
+
+We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, that explained the grouping method used in Circuit Training. All errors of understanding and implementation are the authors'.
+We will rectify such errors as soon as possible after being made aware of them.
+
