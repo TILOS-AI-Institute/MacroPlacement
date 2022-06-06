@@ -23,8 +23,8 @@ To evaluate _loss_ for a given _grid_, all blocks are packed into the _grid_, an
 
 Packing is performed as follows.
 - All blocks are placed, one by one, into the **(n_rows, n_cols)** _grid_.  If the current block cannot be placed, then the _grid_ is infeasible and the next candidate _grid_ is considered.
-- Blocks are placed in order of decreasing (i.e., non-increasing) block area.
-- A block is placed at the first (according to row-major order) gridcell where it can be legally placed.
+- Blocks are placed in order of decreasing (i.e., non-increasing) block **area**.
+- A block is placed at the **first** (according to row-major order) gridcell where it can be legally placed.
 - Placement of a block means placing that block's **center** at the **center** of some gridcell.
 - The placement of a block's center at the center of some gridcell is _legal_ if (1) no part of the block is outside of the canvas, and (2) no overlap of the block with any previously-placed block is induced. 
 - If two placed blocks intersect gridcells of the same row in the _grid_, and the x-spans of the blocks intersect, then the two blocks have _horizontal overlap_. (Note that this definition achieves simplicity at the cost of pessimism - but, the goal is to have a quick-and-dirty packing that feeds evaluation of _loss_. Then, _vertical overlap_ is similarly defined.
