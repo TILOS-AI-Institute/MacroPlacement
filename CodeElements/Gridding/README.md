@@ -48,6 +48,7 @@ Vertical loss, **loss_v**, is similarly evaluated.
 Once we have found **n_rows_opt** and **n_cols_opt** as described above, we seek a smaller grid that has similar _loss_ properties.
 Specifically, we find  values of **n_rows_actual** and **n_cols_actual** such that the above constraints are satisfied, **loss_h_actual + loss_v_actual** is within some _tolerance_ (e.g., 5% or 10%) of the optimal **loss_tot**, and **n_rows_actual * n_cols_actual** is minimized.  This is the grid that is used in Circuit Training.
 
+## Thanks
 We thank Google engineers for May 19, 2022 discussions that explained the gridding method used in Circuit Training.
 All errors of understanding and implementation are the authors'. We will rectify such errors as soon as possible after being made aware of them.
 
