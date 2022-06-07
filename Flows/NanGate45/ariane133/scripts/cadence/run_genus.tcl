@@ -23,6 +23,7 @@ set_db init_lib_search_path $libdir
 set_db init_hdl_search_path "../../rtl/"
 
 set_db library $list_lib
+set_dont_touch fakeram45_256x16
 
 # Start
 if {[file exists template]} {
