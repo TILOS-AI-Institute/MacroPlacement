@@ -4,7 +4,7 @@
 module unload genus
 module load genus/21.1
 module unload innovus
-module load innovus/20.1
+module load innovus/21.1
 
 mkdir log -p
 genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
