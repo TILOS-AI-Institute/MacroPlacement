@@ -5,7 +5,7 @@ set design ariane
 set util 0.3
 
 set dir "../../../../../Enablements/NanGate45/"
-set netlist "../../netlist/$design.v"
+set netlist "./gate/$design.v"
 set sdc "../../constraints/$design.sdc"
 set lef "${dir}/lef/NangateOpenCellLibrary.tech.lef \
         ${dir}/lef/NangateOpenCellLibrary.macro.mod.lef \
