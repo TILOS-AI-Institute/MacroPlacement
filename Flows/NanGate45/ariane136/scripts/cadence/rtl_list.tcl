@@ -102,6 +102,7 @@ set rtl_all {
 ../../rtl/store_unit.sv
 ../../rtl/sync_wedge.sv
 ../../rtl/tlb.sv
+../../rtl/lzc.sv
 ../../rtl/std_icache.sv
 ../../rtl/std_nbdcache.sv
 ../../rtl/stream_arbiter.sv
