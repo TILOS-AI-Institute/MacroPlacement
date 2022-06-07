@@ -9,7 +9,7 @@ foreach a [dbget [dbget top.insts.cell.name fakeram45_* -p2 ].name ] {
 set unique_mem_hier [lsort -unique $mem_hier]
 puts "BEGIN SEED"
 foreach a $unique_mem_hier {
-puts "name=$a"
+puts "name=$a util=$util"
 }
 puts "END SEED"
 

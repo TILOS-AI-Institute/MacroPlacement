@@ -2,7 +2,6 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 set top_module ariane 
 set_db max_cpus_per_server 16
-set_db super_thread_servers "localhost"
 set libdir "../../../../../Enablements/NanGate45/lib/"
 
 set libworst "
