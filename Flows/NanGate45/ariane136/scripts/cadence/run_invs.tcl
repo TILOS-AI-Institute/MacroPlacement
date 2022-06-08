@@ -2,7 +2,7 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 setMultiCpuUsage -localCpu 16
 set design ariane 
-set util 0.3
+set util 0.37
 
 set dir "../../../../../Enablements/NanGate45/"
 set netlist "./gate/$design.v"
@@ -77,6 +77,7 @@ createBasicPathGroups -expanded
 floorPlan -r 1.0 $util 10 10 10 10
 
 ## Macro Placement ##
+addHaloToBlock -allMacro 1 1 1 1
 redirect mp_config.tcl {source gen_mp_config.tcl}
 proto_design -constraints mp_config.tcl 
 refine_macro_place
