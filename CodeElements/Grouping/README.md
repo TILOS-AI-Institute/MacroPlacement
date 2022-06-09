@@ -14,7 +14,7 @@ Note that “immediate fanins” is equivalent to “transitive fanins up to lev
  
 ## **A Simple “Cartoon”**
 The following cartoon was recently provided by a Google engineer to explain the grouping process. In the cartoon, there are three rows and four columns of gridcells. There are also three clumps of IOs and two hard macros. As a result, in the cartoon we see a total of five groups. To our understanding, a given SRAM hard macro is not part of the group (of standard cells) that it induces.  And, a given clump of (placed, fixed) IO ports is not part of the group (of standard cells) that it induces. 
-
+<img src="./Cartoon.png" width= "400"/>
  
 ## **How Groups Are Used**
 Each group is recorded in the “.fix file” that is part of the input to the hMETIS hypergraph partitioner when the gate-level netlist is clustered into soft macros.
