@@ -1,4 +1,4 @@
-## Grouping
+# **Grouping**
 The grouping step in Circuit Training requires as inputs:
 the post-synthesis gate-level netlist (standard cells and hard macros)
 placed IOs (ports, or terminals), typically at the borders of the chip canvas
@@ -14,10 +14,10 @@ Note that “immediate fanins” is equivalent to “transitive fanins up to lev
 The following cartoon was recently provided by a Google engineer to explain the grouping process. In the cartoon, there are three rows and four columns of gridcells. There are also three clumps of IOs and two hard macros. As a result, in the cartoon we see a total of five groups. To our understanding, a given SRAM hard macro is not part of the group (of standard cells) that it induces.  And, a given clump of (placed, fixed) IO ports is not part of the group (of standard cells) that it induces. 
 
  
-##How Groups Are Used
+## **How Groups Are Used**
 Each group is recorded in the “.fix file” that is part of the input to the hMETIS hypergraph partitioner when the gate-level netlist is clustered into soft macros.
 
- ##Thanks
+# Thanks
 We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, that explained the grouping method used in Circuit Training. All errors of understanding and implementation are the authors'. We will rectify such errors as soon as possible after being made aware of them.
 
 
