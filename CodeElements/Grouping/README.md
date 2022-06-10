@@ -10,8 +10,10 @@ In the Circuit Training approach, a given SRAM’s immediate fanins and immediat
 
 Then, all of the IOs (ports) that are in each row-grid or column-grid of the boundary of the layout canvas are put into clumps.  There is one clump for each row-grid or column-grid of the boundary that contains at least one IO. A group is then comprised of the union of immediate fanins and immediate fanouts of a given clump. 
 
-Note that “immediate fanins” is equivalent to “transitive fanins up to level Kin = 1”, and that “immediate fanouts” is equivalent to “transitive fanouts up to level Kout = 1”. It is our understanding that both Kin and Kout are always set to a default value of 1 in Circuit Training. However, other values might be applied.
- 
+Note that “immediate fanins” is equivalent to “transitive fanins up to level K_in = 1”, and that “immediate fanouts” is equivalent to “transitive fanouts up to level K_out = 1”. It is our understanding that both K_in and K_out are always set to a default value of 1 in Circuit Training. However, other values might be applied. 
+
+**Tie-Breaking.** If a given standard-cell instance can belong to two or more groups, we break ties according to the following, ordered criteria:  (1) when in the regime of K_in > 1 or K_out > 1, assign to the group with topologically closer (i.e., fewer levels away) macro or port; else (2) assign to the group induced by a clump containing lexicographically smallest port name; else (3) assign to the group induced by a macro having lexicographically smallest macro name.
+
 ## **A Simple “Cartoon”**
 The following cartoon was recently provided by a Google engineer to explain the grouping process. In the cartoon, there are three rows and four columns of gridcells. There are also three clumps of IOs and two hard macros. As a result, in the cartoon we see a total of five groups. To our understanding, a given SRAM hard macro is not part of the group (of standard cells) that it induces.  And, a given clump of (placed, fixed) IO ports is not part of the group (of standard cells) that it induces. 
 
