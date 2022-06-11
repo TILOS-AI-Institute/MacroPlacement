@@ -1,3 +1,3 @@
 set rtl_all {
-  ../../rtl/ariane.v
+  ../../../../../Testcases/ariane133/rtl/ariane.v
 }
