@@ -57,7 +57,7 @@ The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<cons
 List of code elements
 - [Gridding](./CodeElements/Gridding/)
 - [Grouping](./CodeElements/Grouping/)
-- [Placement-guided hypergraph clustering (soft macro definition)](./CodeElements/Clustering/)
+- [Hypergraph clustering](./CodeElements/Clustering/)
 - [Force-directed placement](./CodeElements/FDPlacement/)
 - [Simulated annealing](./CodeElements/SimulatedAnnealing/)
 - [LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](./CodeElements/FormatTranslators/)
@@ -65,13 +65,20 @@ List of code elements
 <!--## **Reproducible Example Solutions** -->
 
 ## **FAQ**
-**Why are we doing this?**
-- The challenges of data and benchmarking in EDA research have, in our view, been elements of recent controversy regarding the Nature work. The mission of the TILOS AI Institute includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We want this effort to become an existence proof for transparency, reproducibility, and democratization of research in EDA.  [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
+**Why are you doing this?**
+- The challenges of data and benchmarking in EDA research have, in our view, been contributing factors in the controversy regarding the Nature work. The mission of the TILOS AI Institute includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We hope that our effort will become an existence proof for transparency, reproducibility, and democratization of research in EDA.  [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
 - We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
 
 **What can others contribute?**
-- Our shopping list includes:
-- 
+- Our shopping list includes the following. Please join in! 
+  - force-directed placement (and API): documentation and implementation
+  - adjacency matrix generation: documentation and implementation  
+  - simulated annealing on the gridded canvas: documentation and implementation  
+  - donated cloud resources (credits) for experimental studies
+  - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
+  - protobuf, lef/def, Bookshelf: detailed and confirmed documentation, plus translators
+  - "fakeram" generator for the ASAP7 research PDK
+  - qrctechfile for NanGate45
 
 **What is your timeline?**
-- We hope to show significant progress at the DAC-2022 Birds-of-a-Feather meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
+- We hope to show significant progress at the DAC-2022 [Birds-of-a-Feather](https://59dac.conference-program.com/session/?sess=sess294) meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
