@@ -95,12 +95,12 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 
 
 ## **Related Links**
-- R. Cheng and J. Yan, "On joint learning for solving placement and routing in chip design'',
+- R. Cheng and J. Yan, "On joint learning for solving placement and routing in chip design",
 *Proc. NeurIPS*, 2021. \[[paper](https://arxiv.org/pdf/2111.00234v1.pdf)\] \[[code](https://github.com/Thinklab-SJTU/EDA-AI)\]
 - F. -C. Chang, Y. -W. Tseng, Y. -W. Yu, S. -R. Lee, A. Cioba, et al., 
 "Flexible multiple-objective reinforcement learning for chip placement",
 *arXiv:2204.06407*, 2022. \[[paper](https://arxiv.org/pdf/2204.06407.pdf)\]
-- S. Guadarrama, S. Yue, T. Boyd, J. Jiang, W. Joe,  et al.,
+- S. Guadarrama, S. Yue, T. Boyd, J. Jiang,  E. Songhori, et al.,
 "Circuit training: an open-source framework for generating chip floor plans with distributed deep reinforcement learning", 2021. \[[code](https://github.com/google-research/circuit_training)\]
 - A. Mirhoseini, A. Goldie, M. Yazgan, J. Jiang, E. Songhori, et al.,
 "A graph placement methodology for fast chip design", *Nature*, 594(7862) (2021), pp. 207-212.
