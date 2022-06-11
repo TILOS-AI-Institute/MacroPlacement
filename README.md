@@ -8,6 +8,7 @@
   - [Flows](#flows)
   - [Code Elements](#code-elements)
   - [FAQ](#faq)
+  - [Related Links](#related-links)
 
 ## **Testcases**  
 The list of avaialbe test cases
@@ -91,3 +92,10 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 
 **What is your timeline?**
 - We hope to show significant progress at the [DAC-2022 Birds-of-a-Feather](https://59dac.conference-program.com/session/?sess=sess294) meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
+
+
+## **Related Links**
+- I. L. Markov, J. Hu and M. Kim, “Progress and Challenges in VLSI Placement Research",
+*Proc. ICCAD*, 2012, pp. 275-282. [(Link)](https://dl.acm.org/doi/10.1145/2429384.2429441)
+
+
