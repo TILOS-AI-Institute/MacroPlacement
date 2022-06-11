@@ -3,13 +3,13 @@
   
 ## **Table of Content**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
-  - [Test Cases](#test-cases)
+  - [Testcases](#testcases)
   - [Enablements](#enablements)
   - [Flows](#flows)
   - [Code Elements](#code-elements)
   - [FAQ](#faq)
 
-## **Test Cases**  
+## **Testcases**  
 The list of avaialbe test cases
 - Ariane (RTL)
   - [136 macro](./Testcases/ariane136/)
@@ -18,8 +18,8 @@ The list of avaialbe test cases
   - [tile](./Testcases/mempool_tile/)
   - group
   
-In this [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), authors have used Ariane design with 133 memory (256x16, single ported SRAM) macros as one of the test cases. We noticed synthesizing the available Ariane netlist in [lowRISC](https://github.com/lowRISC/ariane) GitHub repository with 256x16 memory results in Ariane design with 136 memory macros ([Here](./Testcases/ariane136/) we show how we instantiate memories for Ariane 136). [Here](./Testcases/ariane133/) we show how we convert the Ariane 136 design to Ariane 133 design. So, we added these two versions to our test case list. 
-MemPool tile design is another test case and we will be adding MemPool group in this list.  
+In this [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), authors have used Ariane design with 133 memory (256x16, single ported SRAM) macros as one of the test cases. We noticed synthesizing the available Ariane netlist in [lowRISC](https://github.com/lowRISC/ariane) GitHub repository with 256x16 memory results in Ariane design with 136 memory macros ([Here](./Testcases/ariane136/) we show how we instantiate memories for Ariane 136). [Here](./Testcases/ariane133/) we show how we convert the Ariane 136 design to Ariane 133 design. So, we added these two versions to our testcase list. 
+MemPool tile design is another testcase and we will be adding MemPool group in this list.  
   
 
 Here we provide the detailed steps to generate the netlist for each test case. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/testcase/<rtl\|sv2v>/*. 
@@ -75,4 +75,3 @@ List of code elements
 
 **What is your timeline?**
 - We hope to show significant progress at the DAC-2022 Birds-of-a-Feather meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
-
