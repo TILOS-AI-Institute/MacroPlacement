@@ -12,8 +12,8 @@
 ## **Testcases**  
 The list of avaialbe test cases
 - Ariane (RTL)
-  - [136 macro (RTL files)](./Testcases/ariane136/)
-  - [133 macro](./Testcases/ariane133/)
+  - [136 macro (RTL files)](./Testcases/ariane136/)  Write here how do you get the RTL file
+  - [133 macro (RTL files)](./Testcases/ariane133/)  Write here how do get the 136 version RTL file
 - MemPool (RTL)
   - [tile](./Testcases/mempool_tile/)
   - group
