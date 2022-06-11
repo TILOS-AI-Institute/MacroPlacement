@@ -22,7 +22,7 @@ In this [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), auth
 MemPool tile design is another testcase and we will be adding MemPool group in this list.  
   
 
-Here we provide the detailed steps to generate the netlist for each test case. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/testcase/<rtl\|sv2v>/*. 
+Here we provide the detailed steps to generate the netlist for each test case. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/\<testcase\>/<rtl\|sv2v>/*. 
   - *rtl* directory contains all the required rtl files to synthesize the test case.
   - If the main repository contains only the SystemVerilog files, we add the converted Verilog file to the sv2v directory.
 
@@ -31,7 +31,7 @@ The list of available enablements
 - [NanGate45](./Enablements/NanGate45/)
 - [ASAP7](./Enablements/ASAP7/)
   
- Open-source enablements NanGate45 and ASAP7 (will be adding) are utilized in our SP&R flow. The directory structure is *./Enablements/<NanGate45\|ASAP7>/<lib\|lef>/*. Here
+ Open-source enablements NanGate45 and ASAP7 (will be adding) are utilized in our SP&R flow. The directory structure is *./Enablements/\<enablement\>/<lib\|lef>/*. Here
  - *lib* directory contains all the required liberty files.
  - *lef* directory contains all the required lef files.
   
@@ -46,7 +46,7 @@ Synthesis, place and route (SP&R) flow is available for each test case on each e
   - MemPool group
 
 Here we provide detailed information to run SP&R for each test case using the open-source tools Yosys (synthesis) and OpenROAD (P&R), and the commercial tools Cadence Genus (synthesis) and Innovus (P&R).  
-The directory structure is as follows *./FLows/Enablement/testcase/<constraint\|def\|netlist\|scripts\|run>/*. Here
+The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<constraint\|def\|netlist\|scripts\|run>/*. Here
 - *constraint* directory contains the *.sdc* file.
 - *def* directory contains the def file with pin placement and die area information.
 - *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.
