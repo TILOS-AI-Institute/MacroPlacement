@@ -1,7 +1,7 @@
 # **MacroPlacement**
-**MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the place-and-route flow using both proprietary and open-source tools.
+**MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the place-and-route flow using both proprietary and open-source tools.
   
-## **Table of Content**
+## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
   - [Testcases](#testcases)
   - [Enablements](#enablements)
@@ -76,14 +76,14 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 
 ## **FAQ**
 **Why are you doing this?**
-- The challenges of data and benchmarking in EDA research have, in our view, been contributing factors in the controversy regarding the Nature work. The mission of the TILOS AI Institute includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We hope that our effort will become an existence proof for transparency, reproducibility, and democratization of research in EDA.  [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
+- The challenges of data and benchmarking in EDA research have, in our view, been contributing factors in the controversy regarding the Nature work. The mission of the [TILOS AI Institute](https://tilos.ai/) includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We hope that our effort will become an existence proof for transparency, reproducibility, and democratization of research in EDA. [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
 - We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
 
 **What can others contribute?**
 - Our shopping list includes the following. Please join in! 
   - force-directed placement (and API): documentation and implementation
-  - adjacency matrix generation: documentation and implementation  
-  - simulated annealing on the gridded canvas: documentation and implementation  
+  - adjacency matrix generation: documentation and implementation
+  - simulated annealing on the gridded canvas: documentation and implementation
   - donated cloud resources (credits) for experimental studies
   - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
   - protobuf, lef/def, Bookshelf: detailed and confirmed documentation, plus translators
