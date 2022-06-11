@@ -54,8 +54,17 @@ The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<cons
 - Also, we provide the *run* directory to run the scripts provided in the *scripts* directory.
 
 ## **Code Elements**
-List of code elements
-- [Gridding](./CodeElements/Gridding/)
+The code elements below are most crucial undocumented portions of Circuit Training.   
+We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, 
+that explained the following code elements used in Circuit Training. 
+All errors of understanding and implementation are the authors'. 
+We will rectify such errors as soon as possible after being made aware of them.
+
+
+- [Gridding](./CodeElements/Gridding/) determines a dissection of the layout canvas into some number of rows (n_rows) and some number of columns (n_cols) of gridcells. In Circuit Training, the purpose of gridding is to control the size of the macro placement solution space, 
+thus allowing RL to train within reasonable runtimes. Gridding enables hard macros to find locations consistent with high solution quality, 
+while allowing soft macros (standard-cell clusters) to also find good locations. 
+
 - [Grouping](./CodeElements/Grouping/)
 - [Hypergraph clustering](./CodeElements/Clustering/)
 - [Force-directed placement](./CodeElements/FDPlacement/)
@@ -81,4 +90,4 @@ List of code elements
   - qrctechfile for NanGate45
 
 **What is your timeline?**
-- We hope to show significant progress at the DAC-2022 [Birds-of-a-Feather](https://59dac.conference-program.com/session/?sess=sess294) meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
+- We hope to show significant progress at the [DAC-2022 Birds-of-a-Feather](https://59dac.conference-program.com/session/?sess=sess294) meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
