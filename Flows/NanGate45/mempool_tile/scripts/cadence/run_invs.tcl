@@ -1,19 +1,17 @@
-# This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. 
+# This script was written and developed by ABKGroup students at UCSD. However, the underlying commands and reports are copyrighted by Cadence. 
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
-setMultiCpuUsage -localCpu 32
-set design mempool_tile_wrap
+source lib_setup.tcl
+source design_setup.tcl
+source mmmc_setup.tcl
 
-set dir "../../../../../Enablements/NanGate45/"
-set netlist "../../netlist/$design.v"
-set sdc "../../constraints/$design.sdc"
-set lef "${dir}/lef/NangateOpenCellLibrary.tech.lef ${dir}/lef/NangateOpenCellLibrary.macro.mod.lef ${dir}/lef/fakeram45_256x32.lef ${dir}/lef/fakeram45_64x64.lef"
+setMultiCpuUsage -localCpu 16
+set util 0.3
 
-set wc_lib_list [list $dir/libs/NangateOpenCellLibrary_typical.lib $dir/lib/fakeram45_256x32.lib $dir/lib/fakeram45_64x64.lib]
-set bc_lib_list [list $dir/libs/NangateOpenCellLibrary_typical.lib $dir/lib/fakeram45_256x32.lib $dir/lib/fakeram45_64x64.lib]
+set netlist "../../netlist/$DESIGN.v"
+set sdc "../../constraints/$DESIGN.sdc"
+#set netlist "./syn_handoff/$DESIGN.v"
+#set sdc "./syn_handoff/$DESIGN.sdc"
 
-create_library_set -name WC_LIB -timing $wc_lib_list
-create_library_set -name BC_LIB -timing $bc_lib_list
-	
 set site "FreePDK45_38x28_10R_NP_162NW_34O"
 
 set rptDir summaryReport/ 
@@ -31,22 +29,12 @@ if {![file exists $encDir/]} {
 set init_pwr_net VDD
 set init_gnd_net VSS
 
-create_rc_corner -name Cmax
-create_rc_corner -name Cmin
-create_delay_corner -name WC -library_set WC_LIB -rc_corner Cmax
-create_delay_corner -name BC -library_set BC_LIB -rc_corner Cmin
-
-create_constraint_mode -name CON -sdc_file [list $sdc]
-
-create_analysis_view -name WC_VIEW -delay_corner WC -constraint_mode CON
-create_analysis_view -name BC_VIEW -delay_corner BC -constraint_mode CON
-
 # default settings
 set init_verilog "$netlist"
 set init_design_netlisttype "Verilog"
 set init_design_settop 1
-set init_top_cell "$design"
-set init_lef_file "$lef"
+set init_top_cell "$DESIGN"
+set init_lef_file "$lefs"
 
 # MCMM setup
 init_design -setup {WC_VIEW} -hold {BC_VIEW}
@@ -63,7 +51,6 @@ globalNetConnect VSS -type tielo -inst * -override
 
 
 setOptMode -powerEffort low -leakageToDynamicRatio 0.5
-
 setGenerateViaMode -auto true
 generateVias
 
@@ -71,11 +58,16 @@ generateVias
 createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
-floorPlan -r 1.0 0.3 10 10 10 10
-#suspend
-proto_design -constraints mp_config.tcl 
+#floorPlan -r 1.0 $util 10 10 10 10
+defIn $floorplan_def 
+
+## Macro Placement ##
+#redirect mp_config.tcl {source gen_mp_config.tcl}
+#proto_design -constraints mp_config.tcl 
+addHaloToBlock -allMacro 5 5 5 5
+place_design -concurrent_macros
 refine_macro_place
-saveDesign ${encDir}/${design}_floorplan.enc
+saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 ## Creating Pin Blcokage for lower and upper pin layers ##
 createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
@@ -92,11 +84,30 @@ setNanoRouteMode -drouteVerboseViolationSummary 1
 setNanoRouteMode -routeWithSiDriven true
 setNanoRouteMode -routeWithTimingDriven true
 setNanoRouteMode -routeExpUseAutoVia true
+#setPlaceMode -placeIoPins true
+
+place_opt_design -out_dir $rptDir -prefix place
+saveDesign $encDir/${DESIGN}_placed.enc
+
+## Creating Pin Blcokage for lower and upper pin layers ##
+createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
+createPinBlkg -name Layer_2 -edge 1
+createPinBlkg -name Layer_3 -edge 2
+createPinBlkg -name Layer_4 -edge 3
+
+setPlaceMode -place_detail_legalization_inst_gap 1
+setFillerMode -fitGap true
+setNanoRouteMode -routeTopRoutingLayer 10
+setNanoRouteMode -routeBottomRoutingLayer 2
+setNanoRouteMode -drouteVerboseViolationSummary 1
+setNanoRouteMode -routeWithSiDriven true
+setNanoRouteMode -routeWithTimingDriven true
+setNanoRouteMode -routeExpUseAutoVia true
 setPlaceMode -placeIoPins true
 
 place_opt_design -out_dir $rptDir -prefix place
-saveDesign $encDir/${design}_placed.enc
-defOut -netlist -floorplan ${design}_placed.def
+saveDesign $encDir/${DESIGN}_placed.enc
+defOut -netlist -floorplan ${DESIGN}_placed.def
 
 set_ccopt_property post_conditioning_enable_routing_eco 1
 set_ccopt_property -cts_def_lock_clock_sinks_after_routing true
@@ -136,8 +147,8 @@ setNanoRouteMode -grouteExpWithTimingDriven false
 
 
 routeDesign
-saveDesign ${encDir}/${design}_route.enc
-defOut -netlist -floorplan -routing ${design}_route.def
+saveDesign ${encDir}/${DESIGN}_route.enc
+defOut -netlist -floorplan -routing ${DESIGN}_route.def
 
 setDelayCalMode -reset 
 setDelayCalMode -SIAware true
@@ -145,15 +156,15 @@ setExtractRCMode -engine postRoute -coupled true -tQuantusForPostRoute false
 setAnalysisMode -analysisType onChipVariation -cppr both
 
 # routeOpt
-optDesign -postRoute -setup -hold -prefix postRoute -expandedViews
+#optDesign -postRoute -setup -hold -prefix postRoute -expandedViews
 
-extractRC
+#extractRC
 deselectAll
 selectNet -clock
 reportSelect  > summaryReport/clock_net_length.post_route
 deselectAll
 summaryReport -noHtml -outfile summaryReport/post_route.sum
-saveDesign ${encDir}/${design}.enc
-defOut -netlist -floorplan -routing ${design}.def
+saveDesign ${encDir}/${DESIGN}.enc
+defOut -netlist -floorplan -routing ${DESIGN}.def
 
 exit
