@@ -11,15 +11,17 @@
 
 ## **Test Cases**  
 The list of avaialbe test cases
-- Ariane
+- Ariane (RTL)
   - [136 macro](./Testcases/ariane136/)
   - [133 macro](./Testcases/ariane133/)
-- MemPool
+- MemPool (RTL)
   - [tile](./Testcases/mempool_tile/)
   - group
   
-For Ariane, we have two versions one with 136 memory macros and another with 133 memory macros. In both versions 256x16 single ported SRAMS are used.
+In this [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), authors have used Ariane design with 133 memory (256x16, single ported SRAM) macros as one of the test cases. We noticed synthesizing the available Ariane netlist in [lowRISC](https://github.com/lowRISC/ariane) GitHub repository with 256x16 memory results in Ariane design with 136 memory macros ([Here](./Testcases/ariane136/) we show how we instantiate memories for Ariane 136). [Here](./Testcases/ariane133/) we show how we convert the Ariane 136 design to Ariane 133 design. So, we added these two versions to our test case list. 
 MemPool tile design is another test case and we will be adding MemPool group in this list.  
+  
+
 Here we provide the detailed steps to generate the netlist for each test case. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/testcase/<rtl\|sv2v>/*. 
   - *rtl* directory contains all the required rtl files to synthesize the test case.
   - If the main repository contains only the SystemVerilog files, we add the converted Verilog file to the sv2v directory.
@@ -36,7 +38,7 @@ The list of available enablements
 Also, we provide steps to generate the fakerams.
 
 ## **Flows**
-SP&R flow is available for each test case on each enablement. Here is the list
+Synthesis, place and route (SP&R) flow is available for each test case on each enablement. Here is the list
 - NanGate45
   - [Ariane 136](./Flows/NanGate45/ariane136/)
   - [Ariane 133](./Flows/NanGate45/ariane133/)
@@ -47,7 +49,7 @@ Here we provide detailed information to run SP&R for each test case using the op
 The directory structure is as follows *./FLows/Enablement/testcase/<constraint\|def\|netlist\|scripts\|run>/*. Here
 - *constraint* directory contains the *.sdc* file.
 - *def* directory contains the def file with pin placement and die area information.
-- *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.*
+- *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.
 - *netlist* directory contains the synthesized netlist. We provide a synthesized netlist that can be used to run P&R.
 - Also, we provide the *run* directory to run the scripts provided in the *scripts* directory.
 
