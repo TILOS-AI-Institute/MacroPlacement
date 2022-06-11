@@ -54,8 +54,8 @@ The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<cons
 - Also, we provide the *run* directory to run the scripts provided in the *scripts* directory.
 
 ## **Code Elements**
-The code elements below are most crucial undocumented portions of Circuit Training.   
-We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, 
+The code elements below are most crucial undocumented portions of Circuit Training. We thank Google 
+engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, 
 that explained the following code elements used in Circuit Training. 
 All errors of understanding and implementation are the authors'. 
 We will rectify such errors as soon as possible after being made aware of them.
