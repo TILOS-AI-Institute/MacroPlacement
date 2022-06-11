@@ -2,17 +2,63 @@
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the place-and-route flow using both proprietary and open-source tools.
   
 ## **Table of Content**
-  - [Repository Content](#repository-content)
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
+  - [Test Cases](#test-cases)
+  - [Enablements](#enablements)
+  - [Flows](#flows)
+  - [Code Elements](#code-elements)
   - [FAQ](#faq)
+
+## **Test Cases**  
+The list of avaialbe test cases
+- Ariane
+  - [136 macro](./Testcases/ariane136/)
+  - [133 macro](./Testcases/ariane133/)
+- MemPool
+  - [tile](./Testcases/mempool_tile/)
+  - group
   
-## **Repository Content**
-|           | Content                                                                                                                                                                                                                 | Description                                                                                                                                              |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Test Cases**    |Ariane<br> - [136 macro](./Testcases/ariane136/)<br> - [133 macro](./Testcases/ariane133/) <br>MemPool<br> - [tile](./Testcases/mempool_tile/)<br> - Group                                                                                                                                                |Here we discuss the detailed steps to generate the netlist for each version. This netlist is used for SP&R runs. <br> The directory structure is as followed *./Testcases/testcase/<rtl\|sv2v>/*. Here<br> - *rtl* directory contains all the required rtl files to synthesize the test case.<br>- If the main repository contains only the SystemVerilog files, we add the converted Verilog file to the sv2v directory.|
-| **Enablements**   | - [NanGate45](./Enablements/NanGate45/)<br> - [ASAP7](./Enablements/ASAP7/)                                                                                                                                                                                                | We use open-source enablements NanGate45 and ASAP7 for our SP&R flow. The directory structure is *./Enablements/<NanGate45\|ASAP7>/<lib\|lef>/*. Here<br>- *lib* directory contains all the required liberty files.<br>- *lef* directory contains all the required lef files.<br> Also, we provide steps to generate the fakerams. |
-| **Flows**         | [NanGate45](./Flows/NanGate45/)<br>\- [Ariane 136](./Flows/NanGate45/ariane136/)<br>\- [Ariane 133](./Flows/NanGate45/ariane133/)<br>\- [MemPool tile](./Flows/NanGate45/mempool_tile/)<br>\- MemPool group                                                                                                                                      | Here we provide detailed information to run SP&R for each test case using the open-source tool OpenROAD and the commercial tools Cadence Genus (synthesis) and Innovus (P&R). <br> The directory structure is as follows *./FLows/Enablement/testcase/<constraint\|def\|netlist\|scripts\|run>/*. Here<br>- *constraint* directory contains the *.sdc* file. <br>- *def* directory contains the def file with pin placement and die area information.<br>- *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.<br>- *netlist* directory contains the synthesized netlist. We provide a synthesized netlist that can be used to run P&R.<br>- Also, we provide the *run* directory to run the scripts provided in the *scripts* directory. |
-| **Code Elements** | - [Gridding](./CodeElements/Gridding/)<br>- [Grouping](./CodeElements/Grouping/)<br>- [Placement-guided hypergraph clustering (soft macro definition)](./CodeElements/Clustering/)<br>- [Force-directed placement](./CodeElements/FDPlacement/)<br>- [Simulated annealing](./CodeElements/SimulatedAnnealing/)<br>\- [LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](./CodeElements/FormatTranslators/) |                                                                                                                                          |
+For Ariane, we have two versions one with 136 memory macros and another with 133 memory macros. In both versions 256x16 single ported SRAMS are used.
+MemPool tile design is another test case and we will be adding MemPool group in this list.  
+Here we provide the detailed steps to generate the netlist for each test case. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/testcase/<rtl\|sv2v>/*. 
+  - *rtl* directory contains all the required rtl files to synthesize the test case.
+  - If the main repository contains only the SystemVerilog files, we add the converted Verilog file to the sv2v directory.
+
+## **Enablements**
+The list of available enablements
+- [NanGate45](./Enablements/NanGate45/)
+- [ASAP7](./Enablements/ASAP7/)
+  
+ Open-source enablements NanGate45 and ASAP7 (will be adding) are utilized in our SP&R flow. The directory structure is *./Enablements/<NanGate45\|ASAP7>/<lib\|lef>/*. Here
+ - *lib* directory contains all the required liberty files.
+ - *lef* directory contains all the required lef files.
+  
+Also, we provide steps to generate the fakerams.
+
+## **Flows**
+SP&R flow is available for each test case on each enablement. Here is the list
+- NanGate45
+  - [Ariane 136](./Flows/NanGate45/ariane136/)
+  - [Ariane 133](./Flows/NanGate45/ariane133/)
+  - [MemPool tile](./Flows/NanGate45/mempool_tile/)
+  - MemPool group
+
+Here we provide detailed information to run SP&R for each test case using the open-source tools Yosys (synthesis) and OpenROAD (P&R), and the commercial tools Cadence Genus (synthesis) and Innovus (P&R).  
+The directory structure is as follows *./FLows/Enablement/testcase/<constraint\|def\|netlist\|scripts\|run>/*. Here
+- *constraint* directory contains the *.sdc* file.
+- *def* directory contains the def file with pin placement and die area information.
+- *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.*
+- *netlist* directory contains the synthesized netlist. We provide a synthesized netlist that can be used to run P&R.
+- Also, we provide the *run* directory to run the scripts provided in the *scripts* directory.
+
+## **Code Elements**
+List of code elements
+- [Gridding](./CodeElements/Gridding/)
+- [Grouping](./CodeElements/Grouping/)
+- [Placement-guided hypergraph clustering (soft macro definition)](./CodeElements/Clustering/)
+- [Force-directed placement](./CodeElements/FDPlacement/)
+- [Simulated annealing](./CodeElements/SimulatedAnnealing/)
+- [LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](./CodeElements/FormatTranslators/)
 
 <!--## **Reproducible Example Solutions** -->
 
