@@ -1,38 +1,30 @@
-# MacroPlacement
-**MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  We provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the place-and-route flow using both proprietary and open-source tools.
-
-### List of Testcases  
-- [Ariane](https://github.com/lowRISC/ariane)
-  - [136-macro version](./Testcases/ariane136/)
-  - [133-macro version](./Testcases/ariane133/)
-- MemPool ("[tile](./Testcases/mempool_tile/)" and "group")
+# **MacroPlacement**
+**MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  We wil provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the place-and-route flow using both proprietary and open-source tools.
   
-### List of Flows
-Synthesis, placement and routing flows in  
-- [OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)  
-  - Ariane
-    - [136-macro version](./Flows/NanGate45/ariane136/)
-    - [133-macro version](./Flows/NanGate45/ariane133/)
-  - MemPool  
-    - [tile](./Flows/NanGate45/mempool_tile/)
-- Cadence (Genus 21.1 for synthesis and Innovus 21.1 for P&R)  
-  - Ariane 
-    - [136-macro version](./Flows/NanGate45/ariane136/scripts/cadence/)
-    - [133-macro version](./Flows/NanGate45/ariane133/scripts/cadence/)
-  - MemPool
-    - [tile](./Flows/NanGate45/mempool_tile/scripts/cadence/)
-    - group
-
-### List of Enablements
-- [NanGate45 (FreePDK45, 45nm Open Cell Library, bsg-FakeRAM memory generation)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Enablements/NanGate45)
-- [ASAP7 (7.5T cell library (RVT only), FakeRAM2.0 memory generation)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Enablements/ASAP7)  
+## **Table of Content**
+  - [Repository Content](#repository-content)
+  <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
+  - [FAQ](#faq)
   
-### List of Code Elements
-- [Gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) <br />
-- [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Grouping) <br />
-- [Placement-guided hypergraph clustering (soft macro definition)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering) <br />
-- [Force-directed placement](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FDPlacement) <br />
-- [Simulated annealing](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/SimulatedAnnealing)  <br />
-- [LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators) <br />
+## **Repository Content**
+|           | Content                                                                                                                                                                                                                 | Description                                                                                                                                              |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Test Cases**    |Ariane<br> - [136 macro](./Testcases/ariane136/)<br> - [133 macro](./Testcases/ariane133/) <br>MemPool<br> - [tile](./Testcases/mempool_tile/)<br> - Group                                                                                                                                                |Here we discuss the detailed steps to generate the netlist for each version. This netlist is used for SP&R runs. <br> The directory structure is as followed *./Testcases/design/<rtl\|sv2v>/*. Here<br> - *rtl* directory contains all the required rtl files to synthesize the test case.<br>- If the main repository contains only the SystemVerilog files, we add the converted Verilog file to the sv2v directory.|
+| **Enablements**   | - [NanGate45](./Enablements/NanGate45/)<br> - [ASAP7](./Enablements/ASAP7/)                                                                                                                                                                                                | We use open-source enablements NanGate45 and ASAP7 for our SP&R flow. The directory structure is *./Enablements/<NanGate45\|ASAP7>/<lib\|lef>/*. Here<br>- *lib* directory contains all the required liberty files.<br>- *lef* directory contains all the required lef files.<br> Also, we provide steps to generate the fakerams. |
+| **Flows**         | [NanGate45](./Flows/NanGate45/)<br>\- [Ariane 136](./Flows/NanGate45/ariane136/)<br>\- [Ariane 133](./Flows/NanGate45/ariane133/)<br>\- [MemPool tile](./Flows/NanGate45/mempool_tile/)<br>\- MemPool Group                                                                                                                                      | Here we provide detailed information to run SP&R for each test case using the open-source tool OpenROAD and the commercial tools Cadence Genus (synthesis) and Innovus (P&R). <br> The directory structure is as follows *./FLows/Enablement/design/<constraint\|def\|netlist\|scripts\|run>/*. Here<br>- *constraint* directory contains the *.sdc* file. <br>- *def* directory contains the def file with pin placement and die area information.<br>- *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.<br>- *netlist* directory contains the synthesized netlist. We provide a synthesized netlist that can be used to run P&R.<br>- Also, we provide the *run* directory to run the scripts provided in the *scripts* directory. |
+| **Code Elements** | - [Gridding](./CodeElements/Gridding/)<br>- [Grouping](./CodeElements/Grouping/)<br>- [Placement-guided hypergraph clustering (soft macro definition)](./CodeElements/Clustering/)<br>- [Force-directed placement](./CodeElements/FDPlacement/)<br>- [Simulated annealing](./CodeElements/SimulatedAnnealing/)<br>\- [LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators](./CodeElements/FormatTranslators/) |                                                                                                                                          |
 
-### Reproducible Example Solutions
+<!--## **Reproducible Example Solutions** -->
+
+## **FAQ**
+**Why are we doing this?**
+- The challenges of data and benchmarking in EDA research have, in our view, been elements of recent controversy regarding the Nature work. The mission of the TILOS AI Institute includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We want this effort to become an existence proof for transparency, reproducibility, and democratization of research in EDA.  [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
+- We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
+
+**What can others contribute?**
+- Our shopping list includes:
+- .......
+
+**What is your timeline?**
+- We hope to show significant progress at the DAC-2022 Birds-of-a-Feather meeting (Open-Source EDA and Benchmarking Summit) on July 12, 2022, 7-10pm in Room 3000 of Moscone West in San Francisco.
+
