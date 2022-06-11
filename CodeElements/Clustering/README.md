@@ -48,7 +48,7 @@ Finally, the Methods section of the [Nature paper](https://www.nature.com/articl
 * **Synthesis of the input netlist.** We use a commercial tool to synthesize the netlist from RTL. Synthesis is physical-aware, in the sense that it has access to the floorplan size and the locations of the input/output pins, which were informed by inter- and intra-block-level information.
 
 
-## **II. What exactly is the Hypergraph, and how is it partitioned?**
+## **II. What *exactly* is the Hypergraph, and how is it partitioned?**
 From the above information sources, the description of the [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md) process, and information provided by Google engineers, we are fairly certain of the following.
 * (1) Clustering uses the hMETIS partitioner, which is run in “multiway” mode. 
 More specifically, hMETIS is **always** invoked with *nparts*=500, with unit vertex weights. 
