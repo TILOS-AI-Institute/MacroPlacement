@@ -12,7 +12,7 @@
 ## **Test Cases**  
 The list of avaialbe test cases
 - Ariane (RTL)
-  - [136 macro](./Testcases/ariane136/)
+  - [136 macro (RTL files)](./Testcases/ariane136/)
   - [133 macro](./Testcases/ariane133/)
 - MemPool (RTL)
   - [tile](./Testcases/mempool_tile/)
