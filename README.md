@@ -95,7 +95,8 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 
 
 ## **Related Links**
-- I. L. Markov, J. Hu and M. Kim, “Progress and Challenges in VLSI Placement Research",
-*Proc. ICCAD*, 2012, pp. 275-282. [(Link)](https://dl.acm.org/doi/10.1145/2429384.2429441)
-
-
+- R. Cheng and J. Yan, "On joint learning for solving placement and routing in chip design'',
+*Proc. NeurIPS*, 2021. [paper](https://arxiv.org/pdf/2111.00234v1.pdf) [Code](https://github.com/Thinklab-SJTU/EDA-AI)
+- F. -C. Chang, Y. -W. Tseng, Y. -W. Yu, S. -R. Lee, A. Cioba et al., 
+"Flexible multiple-objective reinforcement learning for chip placement",
+*arXiv:2204.06407*, 2022. [paper](https://arxiv.org/pdf/2204.06407.pdf)
