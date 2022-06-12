@@ -108,5 +108,5 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 - A. Mirhoseini, A. Goldie, M. Yazgan, J. Jiang, E. Songhori, et al.,
 "Chip Placement with Deep Reinforcement Learning",
 *arXiv:2004.10746*, 2020. \[[paper](https://arxiv.org/pdf/2004.10746.pdf)\]
-- TILOS, a National Science Foundation funded National Artificial Intelligence (AI) Research Institute. \[[link](https://tilos.ai/)\]
+- TILOS AI Institute. \[[link](https://tilos.ai/)\]
 
