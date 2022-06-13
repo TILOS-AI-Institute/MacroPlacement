@@ -14,7 +14,7 @@ if __name__ == '__main__':
     parser.add_argument("--K_in", help = "K_in", type = int, default = "1")
     parser.add_argument("--K_out", help = "K_out", type = int, default = "1")
     parser.add_argument("--setup_file", help = "setup file for openroad (default = setup.tcl)", type =     str, default  = "setup.tcl")
-    parser.add_argument("--global_net_threshold", help = "global net threshold", type = int, default  =    100)
+    parser.add_argument("--global_net_threshold", help = "global net threshold", type = int, default  = 300)
 
     args = parser.parse_args()
 
