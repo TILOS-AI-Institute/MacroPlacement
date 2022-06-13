@@ -4,6 +4,7 @@
 
 set libdir "../../../../../Enablements/NanGate45/lib"
 set lefdir "../../../../../Enablements/NanGate45/lef"
+set qrcdir "../../../../../Enablements/NanGate45/qrc"
 
 set_db init_lib_search_path { \
     ${libdir} \
@@ -29,10 +30,9 @@ set lefs "
     ${lefdir}/fakeram45_256x16.lef \
     ${lefdir}/fakeram45_256x64.lef \
     "
+
+set qrc_max "${qrcdir}/NG45.tch"
+set qrc_min "${qrcdir}/NG45.tch"
 #
 # Ensures proper and consistent library handling between Genus and Innovus
 #set_db library_setup_ispatial true
-
-
-#set qrc_max "SigCmax/qrcTechFile"
-#set qrc_min "SigCmin/qrcTechFile"

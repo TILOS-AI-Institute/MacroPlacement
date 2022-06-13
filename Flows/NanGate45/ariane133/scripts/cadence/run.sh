@@ -7,5 +7,5 @@ module unload innovus
 module load innovus/21.1
 
 mkdir log -p
-genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
-#innovus -64 -files run_invs.tcl -overwrite -log log/innovus.log
+genus -overwrite -log log/genus.log -no_gui -files run_genus_iSpatial.tcl
+innovus -64 -files run_invs.tcl -overwrite -log log/innovus.log

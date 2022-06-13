@@ -73,39 +73,13 @@ createPinBlkg -name side_top -edge 1
 createPinBlkg -name side_right -edge 2
 createPinBlkg -name side_bottom -edge 3
 
-
 setPlaceMode -place_detail_legalization_inst_gap 1
 setFillerMode -fitGap true
-setNanoRouteMode -routeTopRoutingLayer 10
-setNanoRouteMode -routeBottomRoutingLayer 2
-setNanoRouteMode -drouteVerboseViolationSummary 1
-setNanoRouteMode -routeWithSiDriven true
-setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeExpUseAutoVia true
-#setPlaceMode -placeIoPins true
+setDesignMode -topRoutingLayer 10
+setDesignMode -bottomRoutingLayer 2 
 
 place_opt_design -out_dir $rptDir -prefix place
 saveDesign $encDir/${DESIGN}_placed.enc
-
-## Creating Pin Blcokage for lower and upper pin layers ##
-createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
-createPinBlkg -name Layer_2 -edge 1
-createPinBlkg -name Layer_3 -edge 2
-createPinBlkg -name Layer_4 -edge 3
-
-setPlaceMode -place_detail_legalization_inst_gap 1
-setFillerMode -fitGap true
-setNanoRouteMode -routeTopRoutingLayer 10
-setNanoRouteMode -routeBottomRoutingLayer 2
-setNanoRouteMode -drouteVerboseViolationSummary 1
-setNanoRouteMode -routeWithSiDriven true
-setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeExpUseAutoVia true
-setPlaceMode -placeIoPins true
-
-place_opt_design -out_dir $rptDir -prefix place
-saveDesign $encDir/${DESIGN}_placed.enc
-defOut -netlist -floorplan ${DESIGN}_placed.def
 
 set_ccopt_property post_conditioning_enable_routing_eco 1
 set_ccopt_property -cts_def_lock_clock_sinks_after_routing true
@@ -121,12 +95,10 @@ set_clock_propagation propagated
 # ------------------------------------------------------------------------------
 # Routing
 # ------------------------------------------------------------------------------
-setNanoRouteMode -routeTopRoutingLayer 10
-setNanoRouteMode -routeBottomRoutingLayer 2
 setNanoRouteMode -drouteVerboseViolationSummary 1
 setNanoRouteMode -routeWithSiDriven true
 setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeExpUseAutoVia true
+setNanoRouteMode -routeUseAutoVia true
 
 ##Recommended by lib owners
 # Prevent router modifying M1 pins shapes
@@ -135,7 +107,6 @@ setNanoRouteMode -routeWithViaOnlyForStandardCellPin "1:1"
 
 ## limit VIAs to ongrid only for VIA1 (S1)
 setNanoRouteMode -drouteOnGridOnly "via 1:1"
-setNanoRouteMode -dbCheckRule true
 setNanoRouteMode -drouteAutoStop false
 setNanoRouteMode -drouteExpAdvancedMarFix true
 setNanoRouteMode -routeExpAdvancedTechnology true
@@ -143,24 +114,11 @@ setNanoRouteMode -routeExpAdvancedTechnology true
 #SM suggestion for solving long extraction runtime during GR
 setNanoRouteMode -grouteExpWithTimingDriven false
 
-
 routeDesign
+#route_opt_design
 saveDesign ${encDir}/${DESIGN}_route.enc
 defOut -netlist -floorplan -routing ${DESIGN}_route.def
 
-setDelayCalMode -reset 
-setDelayCalMode -SIAware true
-setExtractRCMode -engine postRoute -coupled true -tQuantusForPostRoute false
-setAnalysisMode -analysisType onChipVariation -cppr both
-
-# routeOpt
-#optDesign -postRoute -setup -hold -prefix postRoute -expandedViews
-
-#extractRC
-deselectAll
-selectNet -clock
-reportSelect  > summaryReport/clock_net_length.post_route
-deselectAll
 summaryReport -noHtml -outfile summaryReport/post_route.sum
 saveDesign ${encDir}/${DESIGN}.enc
 defOut -netlist -floorplan -routing ${DESIGN}.def

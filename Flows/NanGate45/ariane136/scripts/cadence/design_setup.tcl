@@ -5,7 +5,7 @@ set DESIGN ariane
 set sdc  ../../constraints/${DESIGN}.sdc
 
 # def file with die size and placed IO pins
-set floorplan_def ../../def/ariane136_fp.def
+set floorplan_def ../../def/ariane136_fp_rows.def
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage
 # possible values are : high, medium or low
