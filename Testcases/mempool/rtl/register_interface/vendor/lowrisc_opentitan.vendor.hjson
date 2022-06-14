@@ -1,0 +1,25 @@
+// Copyright 2020 ETH Zurich and University of Bologna.
+// Licensed under the Apache License, Version 2.0, see LICENSE for details.
+// SPDX-License-Identifier: Apache-2.0
+{
+  name: "lowrisc_opentitan",
+  target_dir: "lowrisc_opentitan"
+
+  upstream: {
+    url: "https://github.com/lowRISC/opentitan.git",
+    rev: "master",
+  },
+
+  patch_dir: "patches",
+
+  mapping: [
+      {from: 'util/regtool.py', to: 'util/regtool.py'}
+      {from: 'util/reggen', to: 'util/reggen', patch_dir: 'lowrisc_opentitan'}
+      {from: 'util/topgen', to: 'util/topgen'}
+      {from: 'hw/ip/prim/rtl/prim_subreg.sv', to: 'src/prim_subreg.sv' }
+      {from: 'hw/ip/prim/rtl/prim_subreg_arb.sv', to: 'src/prim_subreg_arb.sv' }
+      {from: 'hw/ip/prim/rtl/prim_subreg_ext.sv', to: 'src/prim_subreg_ext.sv' }
+      {from: 'hw/ip/prim/rtl/prim_subreg_shadow.sv', to: 'src/prim_subreg_shadow.sv' }
+  ]
+
+}

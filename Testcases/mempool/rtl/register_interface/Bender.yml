@@ -1,0 +1,32 @@
+package:
+  name: register_interface
+  authors: ["Fabian Schuiki <fschuiki@iis.ee.ethz.ch>", "Florian Zaruba <zarubaf@iis.ee.ethz.ch>"]
+
+dependencies:
+  axi: { git: "https://github.com/pulp-platform/axi.git", version: 0.29.1 }
+  common_cells: { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
+
+export_include_dirs:
+  - include
+
+sources:
+  # Level 0
+  - src/reg_intf.sv
+  - vendor/lowrisc_opentitan/src/prim_subreg_arb.sv
+  - vendor/lowrisc_opentitan/src/prim_subreg_ext.sv
+  # Level 1
+  - src/apb_to_reg.sv
+  - src/axi_to_reg.sv
+  - src/periph_to_reg.sv
+  - src/reg_cdc.sv
+  - src/reg_demux.sv
+  - src/reg_mux.sv
+  - src/reg_to_mem.sv
+  - src/reg_uniform.sv
+  - vendor/lowrisc_opentitan/src/prim_subreg_shadow.sv
+  - vendor/lowrisc_opentitan/src/prim_subreg.sv
+  # Level 2
+  - src/axi_lite_to_reg.sv
+  - target: test
+    files:
+      - src/reg_test.sv

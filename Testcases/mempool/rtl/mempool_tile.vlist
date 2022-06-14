@@ -1,0 +1,5 @@
++libext+.v
++libext+.sv
++incdir+/home/csamudra/abkgroup_ref_flow_guest/mcDesign/MemPool/rtl
+-y /home/csamudra/abkgroup_ref_flow_guest/mcDesign/MemPool/rtl
+/home/csamudra/abkgroup_ref_flow_guest/mcDesign/MemPool/rtl/mempool_tile.sv

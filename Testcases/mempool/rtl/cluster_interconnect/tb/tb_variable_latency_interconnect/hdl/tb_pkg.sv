@@ -1,0 +1,1 @@
+../../tb_tcdm_interconnect/hdl/tb_pkg.sv

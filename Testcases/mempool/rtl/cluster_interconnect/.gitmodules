@@ -1,0 +1,3 @@
+[submodule "tb/tb_tcdm_interconnect/matlab/export_fig"]
+	path = tb/tb_tcdm_interconnect/matlab/export_fig
+	url = https://github.com/altmany/export_fig.git
