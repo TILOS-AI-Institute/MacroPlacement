@@ -2,6 +2,7 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 
 set DESIGN mempool_tile_wrap 
+set rtldir ../../../../../Testcases/mempool/rtl
 set sdc  ../../constraints/${DESIGN}.sdc
 
 # def file with die size and placed IO pins
