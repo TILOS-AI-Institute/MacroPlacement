@@ -7,9 +7,14 @@
 ### !!! Please don't touch this file !!!
 ########################################################################
 
-read_verilog $netlist
-link_design $top_design
-read_sdc $sdc
+#read_verilog $netlist
+#link_design $top_design
+#read_sdc $sdc
+
+read_def  $def_file
+#read_sdc $sdc
+
+
 
 #Generate the hypergraph
 partition_design -max_num_inst 2000000 -min_num_inst 40000 \

@@ -44,13 +44,13 @@ class Clustering:
         self.create_clustered_netlist_def_file = src_dir + "/utils/create_clustered_netlist_def.tcl"
 
         # set up temp report directory
-        self.rpt_dir = os.getcwd() + "/rtl_mp"
+        rpt_dir = os.getcwd() + "/rtl_mp"
         self.hypergraph_file = rpt_dir + "/" + design + ".hgr"
         # the io_name_file includes the io location
-        self.io_name_file = hypergraph_file + ".io"
+        self.io_name_file = self.hypergraph_file + ".io"
         # the instance_name_file includes name, is_macro, bounding box of the instance
-        self.instance_name_file = hypergraph_file + ".instance"
-        self.hypergraph_fix_file = hypergraph_file + ".fix"
+        self.instance_name_file = self.hypergraph_file + ".instance"
+        self.hypergraph_fix_file = self.hypergraph_file + ".fix"
 
         # set up result directories
         result_dir = "./results"
@@ -103,10 +103,10 @@ class Clustering:
     def GenerateHypergraph(self):
         # Extract hypergraph from netlist
         temp_file = os.getcwd() + "/extract_hypergraph.tcl"
-        cmd = "cp " + setup_file + " " + temp_file
+        cmd = "cp " + self.setup_file + " " + temp_file
         os.system(cmd)
 
-        with open(extract_hypergraph_file) as f:
+        with open(self.extract_hypergraph_file) as f:
             content = f.read().splitlines()
         f.close()
 
@@ -116,7 +116,7 @@ class Clustering:
             f.write(line + "\n")
         f.close()
 
-        cmd = openroad_exe + " " + temp_file
+        cmd = self.openroad_exe + " " + temp_file
         os.system(cmd)
 
         cmd = "rm " + temp_file
@@ -154,7 +154,7 @@ class Clustering:
             uy = float(items[5])
             self.vertex_map[instance_name] = vertex_id
             self.vertex_list.append(instance_name)
-            self.is_io_macro_list.append(io_macro)
+            self.is_io_macro_list.append(is_macro)
             self.vertex_pos.append([lx, ly, ux, uy])
             vertex_id += 1
 
@@ -258,9 +258,9 @@ class Clustering:
         # When breaking the cluster, we set the use the center of cluster as the
         # origin and threshold as step size to grid the bounding box
         # All the instances in each grid cell (in terms of the center of the instance) forms a new cluster
-        cluster_lx, cluster_ly, cluster_ux, cluster_uy = GetBoundingBox(self.vertices_in_cluster[cluster_id])
-        if ((cluster_ux - cluster_lx) <= self.step_threshold)
-            and (cluster_uy - cluster_ly) <= self.step_threshold)):
+        cluster_lx, cluster_ly, cluster_ux, cluster_uy = self.GetBoundingBox(self.vertices_in_cluster[cluster_id])
+        if (((cluster_ux - cluster_lx) <= self.step_threshold)
+            and ((cluster_uy - cluster_ly) <= self.step_threshold)):
                 return None
 
         cluster_x = (cluster_lx + cluster_ux) / 2.0
@@ -359,7 +359,7 @@ class Clustering:
 
             ### each time we only merge one cluster
             small_cluster_id = -1
-            for small_cluster, neighbors. in candidate_neighbors.items():
+            for small_cluster, neighbors in candidate_neighbors.items():
                 if (len(neighbors) > 0):
                     small_cluster_id = small_cluster
                     break
@@ -414,10 +414,7 @@ class Clustering:
         f = open(file_name, "a")
         f.write("\n")
         f.write("\n")
-        f.write("read_verilog $netlist\n")
-        f.write("link_design $top_design\n")
-        f.write("read_sdc $sdc\n")
-        f.write("read_def  $def_file -floorplan_initialize\n")
+        f.write("read_def  $def_file\n")
         f.write("\n")
         f.write("set db [ord::get_db]\n")
         f.write("set block [[$db getChip] getBlock]\n")
@@ -477,7 +474,7 @@ class Clustering:
         # Run RePlace on the clustered netlist
         #  Create the related openroad tcl file
         file_name = os.getcwd() + "/run_replace.tcl"
-        cmd = "cp " + setup_file + " " + file_name
+        cmd = "cp " + self.setup_file + " " + file_name
         os.system(cmd)
         f = open(file_name, "a")
         line = "read_lef " + self.cluster_lef_file + "\n"
@@ -485,7 +482,7 @@ class Clustering:
         line += "set global_place_density " + str(self.placement_density) + "\n"
         line += "set global_place_density_penalty 8e-5\n"
         line += "global_placement -disable_routability_driven  -density $global_place_density -init_density_penalty $global_place_density_penalty\n"
-        line += "write_def " + blob_def_file + "\n"
+        line += "write_def " + self.blob_def_file + "\n"
         f.write(line)
         if (self.GUI == False):
             f.write("exit\n")

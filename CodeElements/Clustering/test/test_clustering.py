@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument("--setup_file", help = "setup file for openroad (default = setup.tcl)", type = str, default = "setup.tcl")
     parser.add_argument("--RePlace", help = "Run RePlace for blob placement (default = True)", type = bool, default = True)
     parser.add_argument("--placement_density", help = "Placement density for RePlace (default = 0.7)", type = float, default = 0.7)
-    parser.add_argument("--GUI", help = "Run OpenROAD in GUI Mode (default = True)", type = bool, default = True)
+    parser.add_argument("--GUI", help = "Run OpenROAD in GUI Mode (default = True)", type = bool, default = False)
     args = parser.parse_args()
 
     design = args.design
