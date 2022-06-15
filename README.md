@@ -19,9 +19,8 @@ The list of available testcases
   - [RTL files for Mempool tile design](./Testcases/mempool_tile/)
   - RTL files for Mempool group design
   
-In this [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), authors have used Ariane design with 133 memory (256x16, single ported SRAM) macros as one of the testcases. We noticed synthesizing the available Ariane netlist in [lowRISC](https://github.com/lowRISC/ariane) GitHub repository with 256x16 memory results in Ariane design with 136 memory macros ([Here](./Testcases/ariane136/) we show how we instantiate memories for Ariane 136). [Here](./Testcases/ariane133/) we show how we convert the Ariane 136 design to Ariane 133 design. So, we added these two versions to our testcase list. 
-MemPool tile design is another testcase and we will be adding MemPool group in this list.  
-  
+In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. [Here](./Testcases/ariane136/) we show how we instantiate memories for Ariane 136. [Here](./Testcases/ariane136/) we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's SRAM count. Both of these versions are in our testcase list. The [MemPool](https://github.com/pulp-platform/mempool) tile design and MemPool group design are additional testcases. 
+
 
 Here we provide the detailed steps to generate the netlist for each testcase. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/\<testcase\>/<rtl\|sv2v>/*. 
   - *rtl* directory contains all the required rtl files to synthesize the testcase.
