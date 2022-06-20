@@ -65,6 +65,7 @@ defIn $floorplan_def
 addHaloToBlock -allMacro 1 1 1 1
 place_design -concurrent_macros
 refine_macro_place
+snapFPlan -pin
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 ## Creating Pin Blcokage for lower and upper pin layers ##

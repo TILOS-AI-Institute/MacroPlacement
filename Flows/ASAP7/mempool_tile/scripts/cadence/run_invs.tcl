@@ -65,8 +65,10 @@ defIn $floorplan_def
 #redirect mp_config.tcl {source gen_mp_config.tcl}
 #proto_design -constraints mp_config.tcl 
 addHaloToBlock -allMacro 1 1 1 1
+setFPlanMode -snapBlockGrid LayerTrack
 place_design -concurrent_macros
 refine_macro_place
+snapFPlan -pin
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 ## Creating Pin Blcokage for lower and upper pin layers ##
@@ -151,6 +153,7 @@ setAnalysisMode -analysisType onChipVariation -cppr both
 
 # routeOpt
 #optDesign -postRoute -setup -hold -prefix postRoute -expandedViews
+source fix_route_drc.tcl
 
 #extractRC
 deselectAll
