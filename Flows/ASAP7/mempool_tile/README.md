@@ -1,5 +1,5 @@
 # **Synthesis, Place & Route (SP&R):**  
-Here we provide the setup to run SP&R of MemPool_tile on NanGate45 using commercial and open-source tools. MemPool tile is part of MemPool which is an open-source many-core system targeting image processing applications. It can be downloaded from [mempool](https://github.com/pulp-platform/mempool) GitHub repo.
+Here we provide the setup to run SP&R of MemPool_tile on ASAP7 using commercial and open-source tools. MemPool tile is part of MemPool which is an open-source many-core system targeting image processing applications. It can be downloaded from [mempool](https://github.com/pulp-platform/mempool) GitHub repo.
 
 ### **Using Cadence Innovus:**
 All the required scripts to run P\&R are available in the [*./scripts/cadence/*](./scripts/cadence/) directory. 

@@ -1,11 +1,11 @@
 # **Synthesis, Place \& Route (SP\&R):**
-Here we provide the setup to run SP&R of Ariane design with 133 macros on NanGate45 using commercial and open-source tools. First, we provide the steps for netlist preparation and then discuss the SP&R flow.
+Here we provide the setup to run SP&R of Ariane design with 133 macros on ASAP7 using commercial and open-source tools. First, we provide the steps for netlist preparation and then discuss the SP&R flow.
   - [**SP\&R Flow:**](#spr-flow)
     - [**Using Cadence Innovus:**](#using-cadence-innovus)
     - [**Using OpenROAD-flow-scripts:**](#using-openroad-flow-scripts)
 
 ## **SP\&R Flow:**
-We implement the Ariane design on the NanGate45 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the NanGate45 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are copied into the [*Enablements/NanGate45*](../../../Enablements/NanGate45/) directory.  
+We implement the Ariane design on the ASAP7 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/asap7). We use the [FakeRAM2.0](https://github.com/ABKGroup/FakeRAM2.0) generator for the ASAP7 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are copied into the [*Enablements/ASAP7*](../../../Enablements/ASAP7/) directory.  
   
 ### **Using Cadence Innovus:**
 All the required scripts are available in the [*./scripts/cadence/*](./scripts/cadence/) directory.  
@@ -27,7 +27,7 @@ This script was written and developed by ABKGroup students at UCSD; however, the
 
 ### **Using OpenROAD-flow-scripts:**
 Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). To run SP&R using OpenROAD tools follow the below mentioned steps:  
-1. Copy [*./scripts/OpenROAD/ariane.tar.gz*](./scripts/OpenROAD/ariane.tar.gz) file to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/nangate45* area.
+1. Copy [*./scripts/OpenROAD/ariane.tar.gz*](./scripts/OpenROAD/ariane.tar.gz) file to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/asap7* area.
 2. Use command *tar -xvf ariane.tar.gz* to untar *ariane.tar.gz*. This will generate *ariane133* directory which contains all the files required to run SP&R using ORFS. The config file contains the *set_dont_touch* (it is called PRESERVE_CELLS in ORFS) for the memory macros.
 3. To launch the SP&R job go to the flow directory and use the below command
   ```
