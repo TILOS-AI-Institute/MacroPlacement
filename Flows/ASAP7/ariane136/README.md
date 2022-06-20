@@ -5,7 +5,7 @@ Here we provide the setup to run SP&R of Ariane design with 136 macros on ASAP7 
     - [**OpenROAD tools**](#using-openroad-flow-scripts)
 
 ## **SP\&R Flow:**
-We implement Ariane design with [136 macroes](../../../Testcases/ariane136/) on the ASAP7 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/asap7). We use the [FakeRAM2.0](https://github.com/ABKGroup/FakeRAM2.0) generator for the ASAP7 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are available in the [*Enablements/ASAP7*](../../../Enablements/ASAP7/) directory.  
+We implement Ariane design with [136 macros](../../../Testcases/ariane136/) on the ASAP7 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/asap7). We use the [FakeRAM2.0](https://github.com/ABKGroup/FakeRAM2.0) generator for the ASAP7 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are available in the [*Enablements/ASAP7*](../../../Enablements/ASAP7/) directory.  
   
   
 ### **Using Cadence Genus and Innovus:**
