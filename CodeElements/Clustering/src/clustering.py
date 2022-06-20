@@ -414,7 +414,10 @@ class Clustering:
         f = open(file_name, "a")
         f.write("\n")
         f.write("\n")
-        f.write("read_def  $def_file\n")
+        f.write("read_verilog $netlist\n")
+        f.write("link_design $top_design\n")
+        f.write("read_def  $def_file -floorplan_initialize\n")
+        #f.write("read_def  $def_file\n")
         f.write("\n")
         f.write("set db [ord::get_db]\n")
         f.write("set block [[$db getChip] getBlock]\n")
@@ -426,6 +429,14 @@ class Clustering:
             if (self.is_io_macro_list[i] == False):
                 instance_name = self.vertex_list[i]
                 cluster_id = self.solution_vector[i]
+                # fix the `\' and '[' in the names
+                new_instance_name = ""
+                for char in instance_name:
+                    if (char == '\\') or (char == '[') or (char == ']'):
+                        new_instance_name += '\\' + char
+                    else:
+                        new_instance_name += char
+                instance_name = new_instance_name
                 line = "set inst [$block findInst " + instance_name +  " ]\n"
                 f.write(line)
                 f.write("set cluster_id " + str(cluster_id) + "\n")
