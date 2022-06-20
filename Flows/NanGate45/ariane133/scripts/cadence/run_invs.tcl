@@ -60,8 +60,6 @@ createBasicPathGroups -expanded
 defIn $floorplan_def 
 defOut -routing ${DESIGN}.def
 
-exit
-
 
 ## Macro Placement ##
 #redirect mp_config.tcl {source gen_mp_config.tcl}
