@@ -38,11 +38,16 @@ The list of available enablements
 Also, we provide steps to generate the fakerams.
 
 ## **Flows**
-Synthesis, place and route (SP&R) flow is available for each testcase on each enablement. Here is the list
+Synthesis, place and route (SP&R) [flow](./Flows/) is available for each testcase on each enablement. Here is the list
 - NanGate45
-  - [SP&R flows for Ariane design with 136 macros](./Flows/NanGate45/ariane136/)
-  - [SP&R flows for Ariane design with 133 macros](./Flows/NanGate45/ariane133/)
-  - [SP&R flows for MemPool tile design](./Flows/NanGate45/mempool_tile/)
+  - [SP&R flows for Ariane design with 136 macros on NanGate45](./Flows/NanGate45/ariane136/)
+  - [SP&R flows for Ariane design with 133 macros on NanGate45](./Flows/NanGate45/ariane133/)
+  - [SP&R flows for MemPool tile design on NanGate45](./Flows/NanGate45/mempool_tile/)
+  - MemPool group
+- ASAP7
+  - [SP&R flows for Ariane design with 136 macros on ASAP7](./Flows/ASAP7/ariane136/)
+  - [SP&R flows for Ariane design with 133 macros on ASAP7](./Flows/ASAP7/ariane133/)
+  - [SP&R flows for MemPool tile design on ASAP7](./Flows/ASAP7/mempool_tile/)
   - MemPool group
 
 Here we provide detailed information to run SP&R for each testcase using the open-source tools Yosys (synthesis) and OpenROAD (P&R), and the commercial tools Cadence Genus (synthesis) and Innovus (P&R).  
