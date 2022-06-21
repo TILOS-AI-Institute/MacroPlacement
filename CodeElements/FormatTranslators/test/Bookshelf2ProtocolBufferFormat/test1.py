@@ -5,7 +5,7 @@ from FormatTranslators import BookShelf2ProBufFormat
 
 if __name__ == '__main__':
     # set up inputs
-    benchmark_dir = './ISPD2012_testcases'
+    benchmark_dir = './DAC2012_testcases'
     design = 'superblue19'
 
     # other parameters
