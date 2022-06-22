@@ -6,6 +6,9 @@
 import os
 from math import floor
 from math import ceil
+import shutil
+import sys
+sys.path.append('./utils')
 
 # Note that we use the center point of an object (macro, grid)
 # to represent the position of that object
@@ -81,9 +84,9 @@ def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
             grid_height = grid.height_
             # update covered grids
             min_col_id = floor(lx / grid_width)
-            max_col_id = ceil(ux / grid_width)
+            max_col_id = floor(ux / grid_width)
             min_row_id = floor(ly / grid_height)
-            max_row_id = ceil(uy / grid_height)
+            max_row_id = floor(uy / grid_height)
             for i in range(min_row_id, max_row_id + 1):
                 for j in range(min_col_id, max_col_id + 1):
                     grid_id = i * n + j # n is the num_cols
@@ -114,6 +117,14 @@ def Gridding(macro_width_list, macro_height_list,
 
     macro_map = dict(sorted(macro_map.items(), key=lambda item: item[1][0] * item[1][1], reverse = True))
     macro_bbox = [] # (lx, ly, ux, uy) for each bounding box
+
+    print("*"*80)
+    print("[INFO] Outline Information :  outline_width =", chip_width,  "  outline_height =", chip_height)
+    print("\n")
+    print("[INFO] Sorted Macro Information")
+    for key, value in macro_map.items():
+        print("macro_" + str(key), "  macro_width =", round(value[0], 2), "  macro_height =", round(value[1], 2), "  macro_area =", round(value[0] * value[1], 2))
+    print("\n")
 
     # we use m for max_n_rows and n for max_n_cols
     m_best = -1
@@ -172,6 +183,97 @@ def Gridding(macro_width_list, macro_height_list,
 
     print("[INFO] Optimal configuration :  num_rows = ", m_opt, " num_cols = ", n_opt)
     return m_opt, n_opt
+
+
+class GriddingLefDefInterface:
+    def __init__(self, src_dir, design, setup_file = "setup.tcl", tolerance = 0.01,
+                 min_n_rows = 10, min_n_cols = 10, max_n_rows = 100, max_n_cols = 100,
+                 max_rows_times_cols = 3000):
+        self.src_dir = src_dir
+        self.design = design
+        self.setup_file = setup_file
+        self.tolerance = tolerance
+        self.min_n_rows = min_n_rows
+        self.min_n_cols = min_n_cols
+        self.max_n_rows = max_n_rows
+        self.max_n_cols = max_n_cols
+        self.max_rows_times_cols = max_rows_times_cols
+        self.macro_width_list = []
+        self.macro_height_list = []
+        self.chip_width = 0.0
+        self.chip_height = 0.0
+        self.num_std_cells = 0
+        self.extract_hypergraph_file = self.src_dir + '/utils/extract_hypergraph.tcl'
+        self.openroad_exe = self.src_dir + "/utils/openroad"
+
+        self.GenerateHypergraph()
+        self.ExtractInputs()
+        self.m_opt, self.n_opt = Gridding(self.macro_width_list, self.macro_height_list, self.chip_width, self.chip_height, self.tolerance,
+                                          self.min_n_rows, self.min_n_cols, self.max_n_rows, self.max_n_cols, self.max_rows_times_cols)
+
+    def GetNumRows(self):
+        return self.m_opt
+
+    def GetNumCols(self):
+        return self.n_opt
+
+    def GetChipWidth(self):
+        return self.chip_width
+
+    def GetChipHeight(self):
+        return self.chip_height
+
+    def GetNumStdCells(self):
+        return self.num_std_cells
+
+
+    def GenerateHypergraph(self):
+        # Extract hypergraph from netlist
+        temp_file = os.getcwd() + "/extract_hypergraph.tcl"
+        cmd = "cp " + self.setup_file + " " + temp_file
+        os.system(cmd)
+
+        with open(self.extract_hypergraph_file) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        f = open(temp_file, "a")
+        f.write("\n")
+        for line in content:
+            f.write(line + "\n")
+        f.close()
+
+        cmd = self.openroad_exe + " " + temp_file
+        os.system(cmd)
+
+        cmd = "rm " + temp_file
+        os.system(cmd)
+
+    def ExtractInputs(self):
+        file_name = os.getcwd() + "/rtl_mp/" + self.design + ".hgr.outline"
+        with open(file_name) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        items = content[0].split()
+        self.chip_width = float(items[2]) - float(items[0])
+        self.chip_height = float(items[3]) - float(items[1])
+
+        file_name = os.getcwd() + "/rtl_mp/" + self.design + ".hgr.instance"
+        with open(file_name) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        for line in content:
+            items = line.split()
+            if (items[1] == "1"):
+                self.macro_width_list.append(float(items[4]) - float(items[2]))
+                self.macro_height_list.append(float(items[5]) - float(items[3]))
+            else:
+                self.num_std_cells += 1
+
+        rpt_dir = os.getcwd() + "/rtl_mp"
+        shutil.rmtree(rpt_dir)
 
 
 if __name__ == "__main__":

@@ -259,9 +259,12 @@ class Clustering:
         # origin and threshold as step size to grid the bounding box
         # All the instances in each grid cell (in terms of the center of the instance) forms a new cluster
         cluster_lx, cluster_ly, cluster_ux, cluster_uy = self.GetBoundingBox(self.vertices_in_cluster[cluster_id])
+
         if (((cluster_ux - cluster_lx) <= self.step_threshold)
             and ((cluster_uy - cluster_ly) <= self.step_threshold)):
                 return None
+
+        Print("Break This Cluster")
 
         cluster_x = (cluster_lx + cluster_ux) / 2.0
         cluster_y = (cluster_ly + cluster_uy) / 2.0
@@ -507,5 +510,6 @@ class Clustering:
         cmd = "rm " + file_name
         os.system(cmd)
 
-
+    def GetNumClusters(self):
+        return len(self.vertices_in_cluster)
 
