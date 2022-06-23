@@ -69,7 +69,7 @@ Nparts = 500
 
 # Based on the description of circuit training, [see line 180 at grouper.py]
 # we set the following thresholds
-step_threshold = sqrt(chip_width * chip_height) / 100.0
+step_threshold = sqrt(chip_width * chip_height) / 4.0
 distance = step_threshold / 2.0
 max_num_vertices = num_std_cells / Nparts / 4
 Replace = False

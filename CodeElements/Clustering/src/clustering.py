@@ -3,7 +3,11 @@ import time
 import shutil
 import sys
 sys.path.append('./utils')
+sys.path.append('../../FormatTranslators/src')
 
+from FormatTranslators import Port
+from FormatTranslators import Macro
+from FormatTranslators import MacroPin
 
 class Clustering:
     def __init__(self, design, src_dir, fixed_file, step_threshold = 100.6, distance = 1000.0,
@@ -36,6 +40,11 @@ class Clustering:
         self.RePlace = RePlace
         self.placement_density = placement_density
         self.GUI = GUI
+
+        ### Print Information
+        print("[INFO] step_threshold : ", self.step_threshold)
+        print("[INFO] distance : ", self.distance)
+        print("[INFO] max_num_vertices : ", self.max_num_vertices)
 
         # Specify the location of hmetis exe and openroad exe and other utilities
         self.hmetis_exe = src_dir + "/utils/hmetis"
@@ -92,7 +101,13 @@ class Clustering:
         self.ConvertFixFile() # Convert fixed file
         self.hMetisPartitioner()  # Partition the hypergraph
         self.BreakClusters()  # Break clusters spreading apart
+        print("[INFO] After finishing BreakClusters(), ", end = "")
+        print("num_clusters = ", len(self.vertices_in_cluster))
+
         self.MergeSmallClusters()  # Merge small clusters with its neighbors
+        print("[INFO] After finishing MergeSmallClusters(), ", end = "")
+        print("num_clusters = ", len(self.vertices_in_cluster))
+
         self.CreateInvsCluster()  # Generate Innovus Clustering Commands
         self.CreateDef()  # Generate clustered lef and def file
         if (self.RePlace == True):
@@ -246,8 +261,8 @@ class Clustering:
                 box = self.vertex_pos[vertex]
                 cluster_lx = min(cluster_lx, box[0])
                 cluster_ly = min(cluster_ly, box[1])
-                cluster_ux = min(cluster_ux, box[2])
-                cluster_uy = min(cluster_uy, box[3])
+                cluster_ux = max(cluster_ux, box[2])
+                cluster_uy = max(cluster_uy, box[3])
 
         return cluster_lx, cluster_ly, cluster_ux, cluster_uy
 
@@ -263,8 +278,6 @@ class Clustering:
         if (((cluster_ux - cluster_lx) <= self.step_threshold)
             and ((cluster_uy - cluster_ly) <= self.step_threshold)):
                 return None
-
-        Print("Break This Cluster")
 
         cluster_x = (cluster_lx + cluster_ux) / 2.0
         cluster_y = (cluster_ly + cluster_uy) / 2.0

@@ -572,7 +572,7 @@ class BookShelf2ProBufFormat:
                 line_id += 1
 
 
-    # Generate PLC file
+    # Generate.pb.txt file
     def Output(self):
         f = open(self.output_file, "w")
         for inst_name, inst in self.insts.items():
@@ -767,7 +767,7 @@ class ODB2ProBufFormat:
                     self.insts[driver_name].AddSinks(sinks_name)
 
 
-    # Generate PLC file
+    # Generate.pb.txt file
     def Output(self):
         f = open(self.output_file, "w")
         for inst_name, inst in self.insts.items():
@@ -785,7 +785,7 @@ class LefDef2ProBufFormat:
         self.lef_list = lef_list
         self.def_file = def_file
         self.design = design
-        self.output_file = self.design + ".plc"
+        self.output_file = self.design + ".pb.txt"
         self.openroad_exe = openroad_exe
         self.net_size_threshold = net_size_threshold
         self.file_dir = os.getcwd() + "/rtl_mp"
