@@ -31,6 +31,8 @@ set link_library $list_lib
 set target_library $list_lib
 
 # set path
+set_db hdl_flatten_complex_port true
+set_db hdl_record_naming_style  %s_%s
 set_db auto_ungroup none
 
 set_db library $list_lib
@@ -65,6 +67,7 @@ syn_generic
 time_info GENERIC
 
 # generate a summary for the current stage of synthesis
+write_hdl -generic > ${HANDOFF_PATH}/${DESIGN}_generic.v
 write_reports -directory ${REPORTS_PATH} -tag generic
 write_db  ${OUTPUTS_PATH}/${DESIGN}_generic.db
 
