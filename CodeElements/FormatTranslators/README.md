@@ -13,7 +13,7 @@ In this example, we use the *superblue19* testcase from [DAC 2012 Routability-Dr
 *  **Bookshelf -> Lef/Def -> Protocol Buffer Format** :  In this conversion, users can first map a netlist in Bookshelf format to some technology node (e.g., NanGate45 or ASAP7), then convert the netlist to a corresponding netlist in protocol buffer format. Here is [an example](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/FormatTranslators/test/Bookshelf2ProtocolBufferFormat/test3.py). In this example, we use the *superblue19* testcase from [DAC 2012 Routability-Driven Placement Contest and Benchmark Suite](http://archive.sigda.org/dac2012/contest/dac2012_contest_benchmarks.html#head-designs). The technology node used in this example is NanGate45.  After running the scripts, you will have both *.plc* file (netlist in protocol buffer format) and *.def*, *.lef* files (netlist and fake lefs in NanGate45).
 
 
-Note that we use part of the codes from [RosettaStone](https://github.com/ABKGroup/RosettaStone), which supports the integration of academic Bookshelf benchmarks into real open-source technologies (ASAP7, NanGate45, SKY130HD, SKY130HS). (See the branch **Booshelf -> Lef/Def -> Protocol Buffer Format**)
+Note that we use part of the codes from [RosettaStone](https://github.com/ABKGroup/RosettaStone), which supports the integration of academic Bookshelf benchmarks into real open-source technologies (ASAP7, NanGate45, SKY130HD, SKY130HS). (See the branch **Bookshelf -> Lef/Def -> Protocol Buffer Format**)
 
 
 
