@@ -65,7 +65,7 @@ In the table below, we provide the details of each testcase on each of the enabl
 <table class="tg">
 <thead>
   <tr>
-    <th class="tg-baqh" rowspan="2"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Test Cases</span></th>
+    <th class="tg-baqh" rowspan="2"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Testcase</span></th>
     <th class="tg-baqh" colspan="4"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Nangate45</span></th>
     <th class="tg-baqh" colspan="4"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">ASAP7</span></th>
   </tr>
