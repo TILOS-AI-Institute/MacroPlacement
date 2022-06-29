@@ -43,13 +43,13 @@ We provide multiple flows for each of the testcases and enablements. They are lo
 
 The details of each flow are shown below:  
 - **Flow-1:**  
-<img src="./Flows/figures/flow-1.PNG" alt="Flow-1" width="800">  
+  <img src="./Flows/figures/flow-1.PNG" alt="Flow-1" width="800"/>  
 - **Flow-2:**  
-<img src="./Flows/figures/flow-2.PNG" alt="Flow-2" width="800"/>    
-- **Flow-3:**   
-<img src="./Flows/figures/flow-3.PNG" alt="Flow-3" width="800"/>  
+  <img src="./Flows/figures/flow-2.PNG" alt="Flow-2" width="800"/>    
+- **Flow-3:**  
+  <img src="./Flows/figures/flow-3.PNG" alt="Flow-3" width="800"/>  
 - **Flow-4:**  
-<img src="./Flows/figures/flow-4.PNG" alt="Flow-4" width="800"/>  
+  <img src="./Flows/figures/flow-4.PNG" alt="Flow-4" width="800"/>  
 
 
 In the table below, we provide the details of each testcase on each of the enablements for the different flows.
