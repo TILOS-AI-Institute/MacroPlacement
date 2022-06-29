@@ -37,26 +37,104 @@ The list of available enablements
   
 Also, we provide steps to generate the fakerams.
 
-## **Flows**
-Synthesis, place and route (SP&R) [flow](./Flows/) is available for each testcase on each enablement. Here is the list
-- NanGate45
-  - [SP&R flows for Ariane design with 136 macros on NanGate45](./Flows/NanGate45/ariane136/)
-  - [SP&R flows for Ariane design with 133 macros on NanGate45](./Flows/NanGate45/ariane133/)
-  - [SP&R flows for MemPool tile design on NanGate45](./Flows/NanGate45/mempool_tile/)
-  - MemPool group
-- ASAP7
-  - [SP&R flows for Ariane design with 136 macros on ASAP7](./Flows/ASAP7/ariane136/)
-  - [SP&R flows for Ariane design with 133 macros on ASAP7](./Flows/ASAP7/ariane133/)
-  - [SP&R flows for MemPool tile design on ASAP7](./Flows/ASAP7/mempool_tile/)
-  - MemPool group
 
-Here we provide detailed information to run SP&R for each testcase using the open-source tools Yosys (synthesis) and OpenROAD (P&R), and the commercial tools Cadence Genus (synthesis) and Innovus (P&R).  
+## **Flows**
+We provide multiple flows for each of the testcases and enablements. They are logical synthesis-based SP&R flow using Cadence Genus and Innovus ([Flow-1](./Flows/figures/flow-1.PNG)), physical synthesis-based SP&R flow using Cadence Genus iSpatial and Innovus ([Flow-2](./Flows/figures/flow-2.PNG)), logical synthesis-based SP&R flow using Yosys and OpenROAD ([Flow-3](./Flows/figures/flow-3.PNG)), and input data for Physical synthesis based CircuitTraining using Genus iSpatial ([Flow-4](./Flows/figures/flow-4.PNG)).
+
+The details of each flow are shown below:  
+- **Flow-1:**  
+<img src="./Flows/figures/flow-1.PNG" alt="Flow-1" width="800">  
+- **Flow-2:**  
+<img src="./Flows/figures/flow-2.PNG" alt="Flow-2" width="800"/>    
+- **Flow-3:**   
+<img src="./Flows/figures/flow-3.PNG" alt="Flow-3" width="800"/>  
+- **Flow-4:**  
+<img src="./Flows/figures/flow-4.PNG" alt="Flow-4" width="800"/>  
+
+
+In the table below, we provide the details of each testcase on each of the enablements for the different flows.
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-kry2{color:#15C;text-align:center;text-decoration:underline;vertical-align:top}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+</style>
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-baqh" rowspan="2"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Test Cases</span></th>
+    <th class="tg-baqh" colspan="4"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Nangate45</span></th>
+    <th class="tg-baqh" colspan="4"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">ASAP7</span></th>
+  </tr>
+  <tr>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-1</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-2</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-3</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-4</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-1</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-2</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-3</span></th>
+    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-4</span></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Ariane 136</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+  </tr>
+  <tr>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Ariane 133</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+  </tr>
+  <tr>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">MemPool tile</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+  </tr>
+  <tr>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">NVDLA</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+  </tr>
+</tbody>
+</table>
+  
 The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<constraint\|def\|netlist\|scripts\|run>/*. Here
 - *constraint* directory contains the *.sdc* file.
 - *def* directory contains the def file with pin placement and die area information.
 - *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.
 - *netlist* directory contains the synthesized netlist. We provide a synthesized netlist that can be used to run P&R.
 - Also, we provide the *run* directory to run the scripts provided in the *scripts* directory.
+
 
 ## **Code Elements**
 The code elements below are the most crucial undocumented portions of Circuit Training. We thank Google 
