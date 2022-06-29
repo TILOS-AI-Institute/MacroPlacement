@@ -19,21 +19,23 @@ The list of available testcases
   - [RTL files for Mempool tile design](./Testcases/mempool_tile/)
   - RTL files for Mempool group design
   
-In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. [Here](./Testcases/ariane136/) we show how we instantiate memories for Ariane 136. [Here](./Testcases/ariane136/) we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's SRAM count. Both of these versions are in our testcase list. The [MemPool](https://github.com/pulp-platform/mempool) tile design and MemPool group design are additional testcases. 
+In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. We outline the steps instantiate memories for Ariane 136 [here](./Testcases/ariane136/) and we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's SRAM count [here](./Testcases/ariane133/). 
 
 
-Here we provide the detailed steps to generate the netlist for each testcase. This netlist is used for the SP&R runs. The directory structure is as follows *./Testcases/\<testcase\>/<rtl\|sv2v>/*. 
-  - *rtl* directory contains all the required rtl files to synthesize the testcase.
-  - If the main repository contains only the SystemVerilog files, we add the converted Verilog file to the sv2v directory.
+All the testcases are available under the [Testcases](./Testcases/) directory. Details of the sub-directories of each testcases:  
+  - *rtl*: directory contains all the required rtl files to synthesize the testcase.
+  - *sv2v*: If the main repository contains multiple Verilog files or the SystemVerilog files, then we convert it to a single Verilog file. This is availabe in the *sv2v* sub-drectory.
 
 ## **Enablements**
 The list of available enablements
-- [NanGate45 Enablements](./Enablements/NanGate45/)
-- [ASAP7 Enablements](./Enablements/ASAP7/)
+- [NanGate45](./Enablements/NanGate45/)
+- [ASAP7](./Enablements/ASAP7/)
+- SKY130HD
   
- Open-source enablements NanGate45 and ASAP7 (will be adding) are utilized in our SP&R flow. The directory structure is *./Enablements/\<enablement\>/<lib\|lef>/*. Here
+Open-source enablements NanGate45 and ASAP7 are utilized in our SP&R flow. All the enablements are available under [Enablements](./Enablements) directory. Details of the sub-directories of each enablements:
  - *lib* directory contains all the required liberty files.
  - *lef* directory contains all the required lef files.
+ - *qrc* directory contains all the required qrc tech files.
   
 Also, we provide steps to generate the fakerams.
 
@@ -44,6 +46,7 @@ We provide multiple flows for each of the testcases and enablements. They are lo
 The details of each flow are shown below:  
 - **Flow-1:**  
   <img src="./Flows/figures/flow-1.PNG" alt="Flow-1" width="800"/>  
+
 - **Flow-2:**  
   <img src="./Flows/figures/flow-2.PNG" alt="Flow-2" width="800"/>    
 - **Flow-3:**  
@@ -119,12 +122,12 @@ In the table below, we provide the details of each testcase on each of the enabl
 </tbody>
 </table>
   
-The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<constraint\|def\|netlist\|scripts\|run>/*. Here
+The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<constraint\|def\|netlist\|scripts\|run>/*. Details of the sub-directories for each testcase on each enablement:
 - *constraint* directory contains the *.sdc* file.
 - *def* directory contains the def file with pin placement and die area information.
 - *scripts* directory contains required scripts to run SP&R using the Cadence and OpenROAD tools.
 - *netlist* directory contains the synthesized netlist. We provide a synthesized netlist that can be used to run P&R.
-- Also, we provide the *run* directory to run the scripts provided in the *scripts* directory.
+- *run* directory to run the scripts provided in the *scripts* directory.
 
 
 ## **Code Elements**
