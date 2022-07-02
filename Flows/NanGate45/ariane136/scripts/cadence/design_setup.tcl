@@ -8,7 +8,7 @@ set sdc  ../../constraints/${DESIGN}.sdc
 # DEF file for floorplan initialization
 #
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
-    set floorplan_def ../../def/ariane_fp_placed_macros.def
+    set floorplan_def ../../def/ariane136_fp_placed_macros.def
 } else {
     set floorplan_def ../../def/ariane136_fp.def
 }
