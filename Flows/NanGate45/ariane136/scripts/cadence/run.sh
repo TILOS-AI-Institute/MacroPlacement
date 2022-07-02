@@ -12,4 +12,4 @@ export PHY_SYNTH=1
 
 mkdir log -p
 genus -overwrite -log log/genus.log -no_gui -files run_genus_hybrid.tcl
-innovus -64 -files run_invs.tcl -overwrite -log log/innovus.log
+innovus -64 -overwrite -log log/innovus.log -files run_invs.tcl

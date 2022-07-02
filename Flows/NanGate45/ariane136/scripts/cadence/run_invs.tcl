@@ -57,15 +57,16 @@ createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
 
-defIn $floorplan_def 
-
-## Macro Placement ##
-
-if {![info exist ::env(PHY_SYNTH)] || $::env(PHY_SYNTH) == 0} {
+if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
+    defIn $floorplan_def
+} else {
+    defIn $floorplan_def
     addHaloToBlock -allMacro 5 5 5 5
     place_design -concurrent_macros
     refine_macro_place
 }
+
+suspend
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 setPlaceMode -place_detail_legalization_inst_gap 1

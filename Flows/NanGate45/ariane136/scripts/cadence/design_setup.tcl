@@ -10,7 +10,7 @@ set sdc  ../../constraints/${DESIGN}.sdc
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     set floorplan_def ../../def/ariane_fp_placed_macros.def
 } else {
-    set floorplan_def ../../def/ariane136_fp_rows.def
+    set floorplan_def ../../def/ariane136_fp.def
 }
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage
