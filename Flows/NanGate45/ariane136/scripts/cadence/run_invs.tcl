@@ -56,22 +56,17 @@ generateVias
 createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
-#floorPlan -r 1.0 $util 10 10 10 10
+
 defIn $floorplan_def 
 
 ## Macro Placement ##
-#redirect mp_config.tcl {source gen_mp_config.tcl}
-#proto_design -constraints mp_config.tcl 
-addHaloToBlock -allMacro 5 5 5 5
-place_design -concurrent_macros
-refine_macro_place
-saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
-## Creating Pin Blcokage for lower and upper pin layers ##
-createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
-createPinBlkg -name side_top -edge 1
-createPinBlkg -name side_right -edge 2
-createPinBlkg -name side_bottom -edge 3
+if {![info exist ::env(PHY_SYNTH)] || $::env(PHY_SYNTH) == 0} {
+    addHaloToBlock -allMacro 5 5 5 5
+    place_design -concurrent_macros
+    refine_macro_place
+}
+saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 setPlaceMode -place_detail_legalization_inst_gap 1
 setFillerMode -fitGap true
