@@ -7,16 +7,16 @@
 # with this distribution for more information.
 # ===================================================================
 
-set_max_area 0
+#set_max_area 0
 set_ideal_network [get_ports direct_reset_]
 set_ideal_network [get_ports dla_reset_rstn]
 set_ideal_network -no_propagate [get_nets nvdla_core_rstn]
 set_ideal_network [get_ports test_mode]
-create_clock [get_ports nvdla_core_clk]  -period 0.9  -waveform {0 0.45}
-set_clock_transition -max -rise 0.05 [get_clocks nvdla_core_clk]
-set_clock_transition -max -fall 0.05 [get_clocks nvdla_core_clk]
-set_clock_transition -min -rise 0.05 [get_clocks nvdla_core_clk]
-set_clock_transition -min -fall 0.05 [get_clocks nvdla_core_clk]
+create_clock [get_ports nvdla_core_clk]  -period 6.0  -waveform {0 3.0}
+set_clock_transition -max -rise 0.15 [get_clocks nvdla_core_clk]
+set_clock_transition -max -fall 0.15 [get_clocks nvdla_core_clk]
+set_clock_transition -min -rise 0.15 [get_clocks nvdla_core_clk]
+set_clock_transition -min -fall 0.15 [get_clocks nvdla_core_clk]
 set_false_path   -from [get_ports direct_reset_]
 set_false_path   -from [get_ports dla_reset_rstn]
 set_false_path   -from [get_ports test_mode]
