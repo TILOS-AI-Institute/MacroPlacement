@@ -74,7 +74,10 @@ class Clustering:
         if not os.path.exists(openroad_result_dir):
             os.mkdir(openroad_result_dir)
 
-        self.cluster_file  = cadence_result_dir + "/" + self.design + "_cluster_"  + str(self.Nparts) +  ".tcl"  # for innovus command
+        # for innovus command
+        self.cluster_file   = cadence_result_dir + "/" + self.design
+        self.cluster_file  += "_cluster_"  + str(self.Nparts) +  ".tcl"
+
         self.solution_file = self.hypergraph_file + ".part." + str(self.Nparts) # defined by hemtis automatically
         self.cluster_lef_file  = openroad_result_dir + "/clusters.lef"
         self.cluster_def_file  = openroad_result_dir + "/clustered_netlist.def"
@@ -92,7 +95,6 @@ class Clustering:
         self.vertices_in_cluster = {  } # vertices in each cluster
         self.cluster_pos = {  } # store the coordinates of each cluster
 
-
         ###############################################################################
         ### Functions
         ###############################################################################
@@ -107,6 +109,13 @@ class Clustering:
         self.MergeSmallClusters()  # Merge small clusters with its neighbors
         print("[INFO] After finishing MergeSmallClusters(), ", end = "")
         print("num_clusters = ", len(self.vertices_in_cluster))
+
+        print(len(self.vertices_in_cluster))
+        print(len(self.cluster_pos))
+
+
+        exit()
+
 
         self.CreateInvsCluster()  # Generate Innovus Clustering Commands
         self.CreateDef()  # Generate clustered lef and def file
@@ -230,7 +239,8 @@ class Clustering:
         # Vcycle   = 3
         # The random seed is 0 by default (in our implementation)
         # We use the hMetis C++ API to implement hMetis
-        cmd = self.hmetis_exe + " " + self.hypergraph_file + " " + self.hypergraph_fix_file + " "  + str(self.Nparts) + " 5 10 5 3 3 0 0"
+        cmd  = self.hmetis_exe + " " + self.hypergraph_file + " " + self.hypergraph_fix_file + " "
+        cmd += str(self.Nparts) + " 5 10 5 3 3 0 0"
         os.system(cmd)
 
         # read solution vector
@@ -336,11 +346,11 @@ class Clustering:
     def MergeSmallClusters(self):
         # Merge small clusters to the most adjacent clusters
         # within its neighbors (in terms of Manhattan distance)
-        num_clusters = len(self.vertices_in_cluster)
+        #num_clusters = len(self.vertices_in_cluster)
         while(True):
             # check if there are possible clusters to be merged
-            if (len(self.vertices_in_cluster) == num_clusters):
-                return None
+            #if (len(self.vertices_in_cluster) == num_clusters):
+            #    return None
 
             # merge small clusters
             num_clusters = len(self.vertices_in_cluster)
@@ -348,10 +358,10 @@ class Clustering:
             self.cluster_pos = {  }
             self.cluster_adj = {  }
             for cluster_id, vertices in self.vertices_in_cluster.items():
-                cluster_lx, cluster_ly, cluster_ux, cluster_uy = GetBoundingBox(self.vertices_in_cluster[cluster_id])
+                cluster_lx, cluster_ly, cluster_ux, cluster_uy = self.GetBoundingBox(self.vertices_in_cluster[cluster_id])
                 self.cluster_pos[cluster_id] = [(cluster_ux + cluster_lx) / 2.0, (cluster_ly + cluster_uy) / 2.0]
                 self.cluster_adj[cluster_id] = {  }
-                if (len(vertices) > self.max_num_vertices):
+                if (len(vertices) < self.max_num_vertices):
                     small_clusters.append(cluster_id)
 
             # update cluster adjacency matrix
@@ -367,7 +377,10 @@ class Clustering:
                             if (cluster_i != cluster_j):
                                 self.AddClusterEdge(cluster_i, cluster_j)
 
-            candidate_neighors = {  }
+            candidate_neighbors = { }
+            for cluster in small_clusters:
+                candidate_neighbors[cluster] = []
+
             for cluster in small_clusters:
                 for neighbor in self.cluster_adj[cluster]:
                     if (self.IsNearNeighbor(cluster, neighbor) == True):
