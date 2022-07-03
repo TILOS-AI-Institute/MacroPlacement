@@ -67,7 +67,6 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     place_design -concurrent_macros
     refine_macro_place
 }
-suspend
 
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
