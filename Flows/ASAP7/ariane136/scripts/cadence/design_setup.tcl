@@ -18,5 +18,5 @@ set GEN_EFF medium
 # possible values are : high, medium or low
 set MAP_EFF high
 #
-set HALO_WIDTH 2
+set HALO_WIDTH 1 
 set TOP_ROUTING_LAYER 7

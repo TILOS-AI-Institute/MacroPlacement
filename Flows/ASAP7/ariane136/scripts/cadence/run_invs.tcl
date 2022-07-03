@@ -12,7 +12,7 @@ set handoff_dir  "./syn_handoff"
 set netlist ${handoff_dir}/${DESIGN}.v
 set sdc ${handoff_dir}/${DESIGN}.sdc 
 
-set site "FreePDK45_38x28_10R_NP_162NW_34O"
+set site "asap7sc7p5t"
 
 set rptDir summaryReport/ 
 set encDir enc/
@@ -41,7 +41,7 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
-setDesignMode -process 45
+setDesignMode -process 7 
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
