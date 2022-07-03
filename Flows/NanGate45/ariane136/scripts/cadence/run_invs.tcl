@@ -7,8 +7,10 @@ source mmmc_setup.tcl
 setMultiCpuUsage -localCpu 16
 set util 0.3
 
-set netlist "./syn_handoff/$DESIGN.v"
-set sdc "./syn_handoff/$DESIGN.sdc"
+set handoff_dir  "./syn_handoff"
+
+set netlist ${handoff_dir}/${DESIGN}.v
+set sdc ${handoff_dir}/${DESIGN}.sdc 
 
 set site "FreePDK45_38x28_10R_NP_162NW_34O"
 
@@ -58,15 +60,15 @@ createBasicPathGroups -expanded
 ## Generate the floorplan ##
 
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
-    defIn $floorplan_def
+    defIn ${handoff_dir}/${DESIGN}.def
 } else {
     defIn $floorplan_def
     addHaloToBlock -allMacro 5 5 5 5
     place_design -concurrent_macros
     refine_macro_place
 }
-
 suspend
+
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 setPlaceMode -place_detail_legalization_inst_gap 1
