@@ -4,8 +4,11 @@
 set DESIGN ariane 
 set sdc  ../../constraints/${DESIGN}.sdc
 
-# def file with die size and placed IO pins
-set floorplan_def ../../def/ariane136_fp_rows.def
+if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
+    set floorplan_def ../../def/ariane136_fp_placed_macros.def
+} else {
+    set floorplan_def ../../def/ariane136_fp.def
+}
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage
 # possible values are : high, medium or low
@@ -14,3 +17,6 @@ set GEN_EFF medium
 # Effort level during optimization in syn_map -physical (or called mapping) stage
 # possible values are : high, medium or low
 set MAP_EFF high
+#
+set HALO_WIDTH 2
+set TOP_ROUTING_LAYER 7
