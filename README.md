@@ -34,7 +34,7 @@ The list of available enablements
 - [ASAP7](./Enablements/ASAP7/)
 - [SKY130HD FakeStack](./Enablements/SKY130HD/)
   
-Open-source enablements NanGate45 and ASAP7 are utilized in our SP&R flow. All the enablements are available under [Enablements](./Enablements) directory. Details of the sub-directories of each enablements:
+Open-source enablements NanGate45, ASAP7 and SKY130DH are utilized in our SP&R flow. All the enablements are available under [Enablements](./Enablements) directory. Details of the sub-directories of each enablements:
  - *lib* directory contains all the required liberty files.
  - *lef* directory contains all the required lef files.
  - *qrc* directory contains all the required qrc tech files.
