@@ -1,15 +1,15 @@
 # **Synthesis, Place \& Route (SP\&R):**
-Here we provide the setup to run SP&R of Ariane design with 136 macros on SKY130HD using commercial and open-source tools.
+Here we provide the setup to run SP&R of NVDLA design with 128 macros on NanGate45 using commercial and open-source tools.
   - [**SP\&R Flow**](#spr-flow)
     - [**Cadence tools**](#using-cadence-genus-and-innovus)
 
 ## **SP\&R Flow:**
-We implement Ariane design with [136 macros](../../../Testcases/ariane136/) on the SKY130HD platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R) (Soon, we will update the OpenROAD flow details). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/sky130hd). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the SKY130HD platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are available in the [*Enablements/SKY130HD*](../../../Enablements/SKY130HD/) directory.  
+We implement [NVDLA](../../../Testcases/nvdla/) on the NanGate45 platform using the proprietary (commercial) tools **Cadence Genus** (Synthesis) and **Cadence Innovus** (P&R), and the open-source tools **Yosys** (Synthesis) and **OpenROAD** (P&R) (Soon, we will update the OpenROAD flow details). The required *.lef* and *.lib* files are downloaded from the OpenROAD-flow-scripts (ORFS) [GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). We use the [fakeram](https://github.com/jjcherry56/bsg_fakeram) generator for the NanGate45 platform to generate the 16-bit (256x16, single-ported SRAM) memory. All the required *.lib* and *.lef* files are available in the [*Enablements/NanGate45*](../../../Enablements/NanGate45/) directory.
   
   
 ### **Using Cadence Genus and Innovus:**
 All the required scripts are available in the [*./scripts/cadence/*](./scripts/cadence/) directory.  
-**Synthesis:** [run_genus.tcl](./scripts/cadence/run_genus.tcl) contains the setup for synthesis using Genus. It reads the .sv files based on the list in [*./scripts/cadence/rtl_list.tcl*](./scripts/cadence/rtl_list.tcl) (changing the order of the file may cause errors). The timing constraints are provided in [*./constrains/ariane.sdc*](./constraints/ariane.sdc) file. To launch the synthesis run please use the below command
+**Synthesis:** [run_genus.tcl](./scripts/cadence/run_genus.tcl) contains the setup for synthesis using Genus. It reads the .v files based on the list in [*./scripts/cadence/rtl_list.tcl*](./scripts/cadence/rtl_list.tcl) (changing the order of the file may cause errors). The timing constraints are provided in [*./constrains/NV_NVDLA_partition_c.sdc*](./constraints/NV_NVDLA_partition_c.sdc) file. To launch the synthesis run please use the below command
 ```
 genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
 ```  
@@ -20,9 +20,8 @@ We also generate a synthesized netlist, which is available in the [*./netlist/*]
 innovus -64 -init run_invs.tcl -log log/run.log
 ```
 
-Below is the screenshot of the Ariane SP\&R database with 136 memory macros using Cadence flow.  
-<img src="./screenshots/Ariane136_Innovus_Genus.png" alt="ariane136_cadence" width="400"/>  
-
+Below is the screenshot of the NVDLA SP\&R database with 128 memory macros using Cadence flow.  
+<img src="./screenshots/nvdla_Innovus_ng45.png" alt="nvdla_cadence" width="400"/>  
 
 This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 

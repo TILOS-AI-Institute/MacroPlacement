@@ -2,7 +2,7 @@ library(sram_asap7_64x256_1rw) {
     technology (cmos);
     delay_model : table_lookup;
     revision : 1.0;
-    date : "2022-06-13 17:29:18Z";
+    date : "2022-07-02 07:14:59Z";
     comment : "SRAM";
     time_unit : "1ns";
     voltage_unit : "1V";
@@ -313,77 +313,6 @@ cell(sram_asap7_64x256_1rw) {
         }
     }
     bus(wd_in)   {
-        bus_type : sram_asap7_64x256_1rw_DATA;
-        memory_write() {
-            address : addr_in;
-            clocked_on : "clk";
-        }
-        direction : input;
-        capacitance : 0.005;
-        timing() {
-            related_pin     : clk;
-            timing_type     : setup_rising ;
-            rise_constraint(sram_asap7_64x256_1rw_constraint_template) {
-                index_1 ("0.009, 0.227");
-                index_2 ("0.009, 0.227");
-                values ( \
-                  "0.050, 0.050", \
-                  "0.050, 0.050" \
-                )
-            }
-            fall_constraint(sram_asap7_64x256_1rw_constraint_template) {
-                index_1 ("0.009, 0.227");
-                index_2 ("0.009, 0.227");
-                values ( \
-                  "0.050, 0.050", \
-                  "0.050, 0.050" \
-                )
-            }
-        } 
-        timing() {
-            related_pin     : clk;
-            timing_type     : hold_rising ;
-            rise_constraint(sram_asap7_64x256_1rw_constraint_template) {
-                index_1 ("0.009, 0.227");
-                index_2 ("0.009, 0.227");
-                values ( \
-                  "0.050, 0.050", \
-                  "0.050, 0.050" \
-                )
-            }
-            fall_constraint(sram_asap7_64x256_1rw_constraint_template) {
-                index_1 ("0.009, 0.227");
-                index_2 ("0.009, 0.227");
-                values ( \
-                  "0.050, 0.050", \
-                  "0.050, 0.050" \
-                )
-            }
-        }
-        internal_power(){
-            when : "(! (we_in) )";
-            rise_power(sram_asap7_64x256_1rw_energy_template_sigslew) {
-                index_1 ("0.009, 0.227");
-                values ("0.013, 0.013")
-            }
-            fall_power(sram_asap7_64x256_1rw_energy_template_sigslew) {
-                index_1 ("0.009, 0.227");
-                values ("0.013, 0.013")
-            }
-        }
-        internal_power(){
-            when : "(we_in)";
-            rise_power(sram_asap7_64x256_1rw_energy_template_sigslew) {
-                index_1 ("0.009, 0.227");
-                values ("0.013, 0.013")
-            }
-            fall_power(sram_asap7_64x256_1rw_energy_template_sigslew) {
-                index_1 ("0.009, 0.227");
-                values ("0.013, 0.013")
-            }
-        }
-    }
-    bus(w_mask_in)   {
         bus_type : sram_asap7_64x256_1rw_DATA;
         memory_write() {
             address : addr_in;
