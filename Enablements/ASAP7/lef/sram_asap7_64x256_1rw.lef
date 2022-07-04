@@ -3,591 +3,15 @@ BUSBITCHARS "[]" ;
 MACRO sram_asap7_64x256_1rw
   FOREIGN sram_asap7_64x256_1rw 0 0 ;
   SYMMETRY X Y R90 ;
-  SIZE 8.360 BY 67.200 ;
+  SIZE 16.720 BY 33.600 ;
   CLASS BLOCK ;
-  PIN w_mask_in[0]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 0.192 0.005 0.197 ;
-    END
-  END w_mask_in[0]
-  PIN w_mask_in[1]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 0.384 0.005 0.389 ;
-    END
-  END w_mask_in[1]
-  PIN w_mask_in[2]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 0.576 0.005 0.581 ;
-    END
-  END w_mask_in[2]
-  PIN w_mask_in[3]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 0.768 0.005 0.773 ;
-    END
-  END w_mask_in[3]
-  PIN w_mask_in[4]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 0.960 0.005 0.965 ;
-    END
-  END w_mask_in[4]
-  PIN w_mask_in[5]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 1.152 0.005 1.157 ;
-    END
-  END w_mask_in[5]
-  PIN w_mask_in[6]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 1.344 0.005 1.349 ;
-    END
-  END w_mask_in[6]
-  PIN w_mask_in[7]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 1.536 0.005 1.541 ;
-    END
-  END w_mask_in[7]
-  PIN w_mask_in[8]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 1.728 0.005 1.733 ;
-    END
-  END w_mask_in[8]
-  PIN w_mask_in[9]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 1.920 0.005 1.925 ;
-    END
-  END w_mask_in[9]
-  PIN w_mask_in[10]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 2.112 0.005 2.117 ;
-    END
-  END w_mask_in[10]
-  PIN w_mask_in[11]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 2.304 0.005 2.309 ;
-    END
-  END w_mask_in[11]
-  PIN w_mask_in[12]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 2.496 0.005 2.501 ;
-    END
-  END w_mask_in[12]
-  PIN w_mask_in[13]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 2.688 0.005 2.693 ;
-    END
-  END w_mask_in[13]
-  PIN w_mask_in[14]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 2.880 0.005 2.885 ;
-    END
-  END w_mask_in[14]
-  PIN w_mask_in[15]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 3.072 0.005 3.077 ;
-    END
-  END w_mask_in[15]
-  PIN w_mask_in[16]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 3.264 0.005 3.269 ;
-    END
-  END w_mask_in[16]
-  PIN w_mask_in[17]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 3.456 0.005 3.461 ;
-    END
-  END w_mask_in[17]
-  PIN w_mask_in[18]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 3.648 0.005 3.653 ;
-    END
-  END w_mask_in[18]
-  PIN w_mask_in[19]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 3.840 0.005 3.845 ;
-    END
-  END w_mask_in[19]
-  PIN w_mask_in[20]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 4.032 0.005 4.037 ;
-    END
-  END w_mask_in[20]
-  PIN w_mask_in[21]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 4.224 0.005 4.229 ;
-    END
-  END w_mask_in[21]
-  PIN w_mask_in[22]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 4.416 0.005 4.421 ;
-    END
-  END w_mask_in[22]
-  PIN w_mask_in[23]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 4.608 0.005 4.613 ;
-    END
-  END w_mask_in[23]
-  PIN w_mask_in[24]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 4.800 0.005 4.805 ;
-    END
-  END w_mask_in[24]
-  PIN w_mask_in[25]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 4.992 0.005 4.997 ;
-    END
-  END w_mask_in[25]
-  PIN w_mask_in[26]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 5.184 0.005 5.189 ;
-    END
-  END w_mask_in[26]
-  PIN w_mask_in[27]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 5.376 0.005 5.381 ;
-    END
-  END w_mask_in[27]
-  PIN w_mask_in[28]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 5.568 0.005 5.573 ;
-    END
-  END w_mask_in[28]
-  PIN w_mask_in[29]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 5.760 0.005 5.765 ;
-    END
-  END w_mask_in[29]
-  PIN w_mask_in[30]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 5.952 0.005 5.957 ;
-    END
-  END w_mask_in[30]
-  PIN w_mask_in[31]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 6.144 0.005 6.149 ;
-    END
-  END w_mask_in[31]
-  PIN w_mask_in[32]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 6.336 0.005 6.341 ;
-    END
-  END w_mask_in[32]
-  PIN w_mask_in[33]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 6.528 0.005 6.533 ;
-    END
-  END w_mask_in[33]
-  PIN w_mask_in[34]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 6.720 0.005 6.725 ;
-    END
-  END w_mask_in[34]
-  PIN w_mask_in[35]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 6.912 0.005 6.917 ;
-    END
-  END w_mask_in[35]
-  PIN w_mask_in[36]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 7.104 0.005 7.109 ;
-    END
-  END w_mask_in[36]
-  PIN w_mask_in[37]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 7.296 0.005 7.301 ;
-    END
-  END w_mask_in[37]
-  PIN w_mask_in[38]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 7.488 0.005 7.493 ;
-    END
-  END w_mask_in[38]
-  PIN w_mask_in[39]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 7.680 0.005 7.685 ;
-    END
-  END w_mask_in[39]
-  PIN w_mask_in[40]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 7.872 0.005 7.877 ;
-    END
-  END w_mask_in[40]
-  PIN w_mask_in[41]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 8.064 0.005 8.069 ;
-    END
-  END w_mask_in[41]
-  PIN w_mask_in[42]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 8.256 0.005 8.261 ;
-    END
-  END w_mask_in[42]
-  PIN w_mask_in[43]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 8.448 0.005 8.453 ;
-    END
-  END w_mask_in[43]
-  PIN w_mask_in[44]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 8.640 0.005 8.645 ;
-    END
-  END w_mask_in[44]
-  PIN w_mask_in[45]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 8.832 0.005 8.837 ;
-    END
-  END w_mask_in[45]
-  PIN w_mask_in[46]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 9.024 0.005 9.029 ;
-    END
-  END w_mask_in[46]
-  PIN w_mask_in[47]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 9.216 0.005 9.221 ;
-    END
-  END w_mask_in[47]
-  PIN w_mask_in[48]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 9.408 0.005 9.413 ;
-    END
-  END w_mask_in[48]
-  PIN w_mask_in[49]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 9.600 0.005 9.605 ;
-    END
-  END w_mask_in[49]
-  PIN w_mask_in[50]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 9.792 0.005 9.797 ;
-    END
-  END w_mask_in[50]
-  PIN w_mask_in[51]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 9.984 0.005 9.989 ;
-    END
-  END w_mask_in[51]
-  PIN w_mask_in[52]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 10.176 0.005 10.181 ;
-    END
-  END w_mask_in[52]
-  PIN w_mask_in[53]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 10.368 0.005 10.373 ;
-    END
-  END w_mask_in[53]
-  PIN w_mask_in[54]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 10.560 0.005 10.565 ;
-    END
-  END w_mask_in[54]
-  PIN w_mask_in[55]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 10.752 0.005 10.757 ;
-    END
-  END w_mask_in[55]
-  PIN w_mask_in[56]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 10.944 0.005 10.949 ;
-    END
-  END w_mask_in[56]
-  PIN w_mask_in[57]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 11.136 0.005 11.141 ;
-    END
-  END w_mask_in[57]
-  PIN w_mask_in[58]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 11.328 0.005 11.333 ;
-    END
-  END w_mask_in[58]
-  PIN w_mask_in[59]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 11.520 0.005 11.525 ;
-    END
-  END w_mask_in[59]
-  PIN w_mask_in[60]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 11.712 0.005 11.717 ;
-    END
-  END w_mask_in[60]
-  PIN w_mask_in[61]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 11.904 0.005 11.909 ;
-    END
-  END w_mask_in[61]
-  PIN w_mask_in[62]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 12.096 0.005 12.101 ;
-    END
-  END w_mask_in[62]
-  PIN w_mask_in[63]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    SHAPE ABUTMENT ;
-    PORT
-      LAYER M4 ;
-      RECT 0.000 12.288 0.005 12.293 ;
-    END
-  END w_mask_in[63]
   PIN rd_out[0]
     DIRECTION OUTPUT ;
     USE SIGNAL ;
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 19.200 0.005 19.205 ;
+      RECT 0.000 0.048 0.024 0.072 ;
     END
   END rd_out[0]
   PIN rd_out[1]
@@ -596,7 +20,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 19.392 0.005 19.397 ;
+      RECT 0.000 0.288 0.024 0.312 ;
     END
   END rd_out[1]
   PIN rd_out[2]
@@ -605,7 +29,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 19.584 0.005 19.589 ;
+      RECT 0.000 0.528 0.024 0.552 ;
     END
   END rd_out[2]
   PIN rd_out[3]
@@ -614,7 +38,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 19.776 0.005 19.781 ;
+      RECT 0.000 0.768 0.024 0.792 ;
     END
   END rd_out[3]
   PIN rd_out[4]
@@ -623,7 +47,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 19.968 0.005 19.973 ;
+      RECT 0.000 1.008 0.024 1.032 ;
     END
   END rd_out[4]
   PIN rd_out[5]
@@ -632,7 +56,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 20.160 0.005 20.165 ;
+      RECT 0.000 1.248 0.024 1.272 ;
     END
   END rd_out[5]
   PIN rd_out[6]
@@ -641,7 +65,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 20.352 0.005 20.357 ;
+      RECT 0.000 1.488 0.024 1.512 ;
     END
   END rd_out[6]
   PIN rd_out[7]
@@ -650,7 +74,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 20.544 0.005 20.549 ;
+      RECT 0.000 1.728 0.024 1.752 ;
     END
   END rd_out[7]
   PIN rd_out[8]
@@ -659,7 +83,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 20.736 0.005 20.741 ;
+      RECT 0.000 1.968 0.024 1.992 ;
     END
   END rd_out[8]
   PIN rd_out[9]
@@ -668,7 +92,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 20.928 0.005 20.933 ;
+      RECT 0.000 2.208 0.024 2.232 ;
     END
   END rd_out[9]
   PIN rd_out[10]
@@ -677,7 +101,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 21.120 0.005 21.125 ;
+      RECT 0.000 2.448 0.024 2.472 ;
     END
   END rd_out[10]
   PIN rd_out[11]
@@ -686,7 +110,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 21.312 0.005 21.317 ;
+      RECT 0.000 2.688 0.024 2.712 ;
     END
   END rd_out[11]
   PIN rd_out[12]
@@ -695,7 +119,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 21.504 0.005 21.509 ;
+      RECT 0.000 2.928 0.024 2.952 ;
     END
   END rd_out[12]
   PIN rd_out[13]
@@ -704,7 +128,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 21.696 0.005 21.701 ;
+      RECT 0.000 3.168 0.024 3.192 ;
     END
   END rd_out[13]
   PIN rd_out[14]
@@ -713,7 +137,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 21.888 0.005 21.893 ;
+      RECT 0.000 3.408 0.024 3.432 ;
     END
   END rd_out[14]
   PIN rd_out[15]
@@ -722,7 +146,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 22.080 0.005 22.085 ;
+      RECT 0.000 3.648 0.024 3.672 ;
     END
   END rd_out[15]
   PIN rd_out[16]
@@ -731,7 +155,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 22.272 0.005 22.277 ;
+      RECT 0.000 3.888 0.024 3.912 ;
     END
   END rd_out[16]
   PIN rd_out[17]
@@ -740,7 +164,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 22.464 0.005 22.469 ;
+      RECT 0.000 4.128 0.024 4.152 ;
     END
   END rd_out[17]
   PIN rd_out[18]
@@ -749,7 +173,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 22.656 0.005 22.661 ;
+      RECT 0.000 4.368 0.024 4.392 ;
     END
   END rd_out[18]
   PIN rd_out[19]
@@ -758,7 +182,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 22.848 0.005 22.853 ;
+      RECT 0.000 4.608 0.024 4.632 ;
     END
   END rd_out[19]
   PIN rd_out[20]
@@ -767,7 +191,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 23.040 0.005 23.045 ;
+      RECT 0.000 4.848 0.024 4.872 ;
     END
   END rd_out[20]
   PIN rd_out[21]
@@ -776,7 +200,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 23.232 0.005 23.237 ;
+      RECT 0.000 5.088 0.024 5.112 ;
     END
   END rd_out[21]
   PIN rd_out[22]
@@ -785,7 +209,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 23.424 0.005 23.429 ;
+      RECT 0.000 5.328 0.024 5.352 ;
     END
   END rd_out[22]
   PIN rd_out[23]
@@ -794,7 +218,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 23.616 0.005 23.621 ;
+      RECT 0.000 5.568 0.024 5.592 ;
     END
   END rd_out[23]
   PIN rd_out[24]
@@ -803,7 +227,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 23.808 0.005 23.813 ;
+      RECT 0.000 5.808 0.024 5.832 ;
     END
   END rd_out[24]
   PIN rd_out[25]
@@ -812,7 +236,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 24.000 0.005 24.005 ;
+      RECT 0.000 6.048 0.024 6.072 ;
     END
   END rd_out[25]
   PIN rd_out[26]
@@ -821,7 +245,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 24.192 0.005 24.197 ;
+      RECT 0.000 6.288 0.024 6.312 ;
     END
   END rd_out[26]
   PIN rd_out[27]
@@ -830,7 +254,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 24.384 0.005 24.389 ;
+      RECT 0.000 6.528 0.024 6.552 ;
     END
   END rd_out[27]
   PIN rd_out[28]
@@ -839,7 +263,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 24.576 0.005 24.581 ;
+      RECT 0.000 6.768 0.024 6.792 ;
     END
   END rd_out[28]
   PIN rd_out[29]
@@ -848,7 +272,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 24.768 0.005 24.773 ;
+      RECT 0.000 7.008 0.024 7.032 ;
     END
   END rd_out[29]
   PIN rd_out[30]
@@ -857,7 +281,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 24.960 0.005 24.965 ;
+      RECT 0.000 7.248 0.024 7.272 ;
     END
   END rd_out[30]
   PIN rd_out[31]
@@ -866,7 +290,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 25.152 0.005 25.157 ;
+      RECT 0.000 7.488 0.024 7.512 ;
     END
   END rd_out[31]
   PIN rd_out[32]
@@ -875,7 +299,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 25.344 0.005 25.349 ;
+      RECT 0.000 7.728 0.024 7.752 ;
     END
   END rd_out[32]
   PIN rd_out[33]
@@ -884,7 +308,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 25.536 0.005 25.541 ;
+      RECT 0.000 7.968 0.024 7.992 ;
     END
   END rd_out[33]
   PIN rd_out[34]
@@ -893,7 +317,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 25.728 0.005 25.733 ;
+      RECT 0.000 8.208 0.024 8.232 ;
     END
   END rd_out[34]
   PIN rd_out[35]
@@ -902,7 +326,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 25.920 0.005 25.925 ;
+      RECT 0.000 8.448 0.024 8.472 ;
     END
   END rd_out[35]
   PIN rd_out[36]
@@ -911,7 +335,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 26.112 0.005 26.117 ;
+      RECT 0.000 8.688 0.024 8.712 ;
     END
   END rd_out[36]
   PIN rd_out[37]
@@ -920,7 +344,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 26.304 0.005 26.309 ;
+      RECT 0.000 8.928 0.024 8.952 ;
     END
   END rd_out[37]
   PIN rd_out[38]
@@ -929,7 +353,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 26.496 0.005 26.501 ;
+      RECT 0.000 9.168 0.024 9.192 ;
     END
   END rd_out[38]
   PIN rd_out[39]
@@ -938,7 +362,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 26.688 0.005 26.693 ;
+      RECT 0.000 9.408 0.024 9.432 ;
     END
   END rd_out[39]
   PIN rd_out[40]
@@ -947,7 +371,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 26.880 0.005 26.885 ;
+      RECT 0.000 9.648 0.024 9.672 ;
     END
   END rd_out[40]
   PIN rd_out[41]
@@ -956,7 +380,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 27.072 0.005 27.077 ;
+      RECT 0.000 9.888 0.024 9.912 ;
     END
   END rd_out[41]
   PIN rd_out[42]
@@ -965,7 +389,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 27.264 0.005 27.269 ;
+      RECT 0.000 10.128 0.024 10.152 ;
     END
   END rd_out[42]
   PIN rd_out[43]
@@ -974,7 +398,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 27.456 0.005 27.461 ;
+      RECT 0.000 10.368 0.024 10.392 ;
     END
   END rd_out[43]
   PIN rd_out[44]
@@ -983,7 +407,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 27.648 0.005 27.653 ;
+      RECT 0.000 10.608 0.024 10.632 ;
     END
   END rd_out[44]
   PIN rd_out[45]
@@ -992,7 +416,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 27.840 0.005 27.845 ;
+      RECT 0.000 10.848 0.024 10.872 ;
     END
   END rd_out[45]
   PIN rd_out[46]
@@ -1001,7 +425,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 28.032 0.005 28.037 ;
+      RECT 0.000 11.088 0.024 11.112 ;
     END
   END rd_out[46]
   PIN rd_out[47]
@@ -1010,7 +434,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 28.224 0.005 28.229 ;
+      RECT 0.000 11.328 0.024 11.352 ;
     END
   END rd_out[47]
   PIN rd_out[48]
@@ -1019,7 +443,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 28.416 0.005 28.421 ;
+      RECT 0.000 11.568 0.024 11.592 ;
     END
   END rd_out[48]
   PIN rd_out[49]
@@ -1028,7 +452,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 28.608 0.005 28.613 ;
+      RECT 0.000 11.808 0.024 11.832 ;
     END
   END rd_out[49]
   PIN rd_out[50]
@@ -1037,7 +461,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 28.800 0.005 28.805 ;
+      RECT 0.000 12.048 0.024 12.072 ;
     END
   END rd_out[50]
   PIN rd_out[51]
@@ -1046,7 +470,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 28.992 0.005 28.997 ;
+      RECT 0.000 12.288 0.024 12.312 ;
     END
   END rd_out[51]
   PIN rd_out[52]
@@ -1055,7 +479,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 29.184 0.005 29.189 ;
+      RECT 0.000 12.528 0.024 12.552 ;
     END
   END rd_out[52]
   PIN rd_out[53]
@@ -1064,7 +488,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 29.376 0.005 29.381 ;
+      RECT 0.000 12.768 0.024 12.792 ;
     END
   END rd_out[53]
   PIN rd_out[54]
@@ -1073,7 +497,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 29.568 0.005 29.573 ;
+      RECT 0.000 13.008 0.024 13.032 ;
     END
   END rd_out[54]
   PIN rd_out[55]
@@ -1082,7 +506,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 29.760 0.005 29.765 ;
+      RECT 0.000 13.248 0.024 13.272 ;
     END
   END rd_out[55]
   PIN rd_out[56]
@@ -1091,7 +515,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 29.952 0.005 29.957 ;
+      RECT 0.000 13.488 0.024 13.512 ;
     END
   END rd_out[56]
   PIN rd_out[57]
@@ -1100,7 +524,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 30.144 0.005 30.149 ;
+      RECT 0.000 13.728 0.024 13.752 ;
     END
   END rd_out[57]
   PIN rd_out[58]
@@ -1109,7 +533,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 30.336 0.005 30.341 ;
+      RECT 0.000 13.968 0.024 13.992 ;
     END
   END rd_out[58]
   PIN rd_out[59]
@@ -1118,7 +542,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 30.528 0.005 30.533 ;
+      RECT 0.000 14.208 0.024 14.232 ;
     END
   END rd_out[59]
   PIN rd_out[60]
@@ -1127,7 +551,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 30.720 0.005 30.725 ;
+      RECT 0.000 14.448 0.024 14.472 ;
     END
   END rd_out[60]
   PIN rd_out[61]
@@ -1136,7 +560,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 30.912 0.005 30.917 ;
+      RECT 0.000 14.688 0.024 14.712 ;
     END
   END rd_out[61]
   PIN rd_out[62]
@@ -1145,7 +569,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 31.104 0.005 31.109 ;
+      RECT 0.000 14.928 0.024 14.952 ;
     END
   END rd_out[62]
   PIN rd_out[63]
@@ -1154,7 +578,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 31.296 0.005 31.301 ;
+      RECT 0.000 15.168 0.024 15.192 ;
     END
   END rd_out[63]
   PIN wd_in[0]
@@ -1163,7 +587,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 38.208 0.005 38.213 ;
+      RECT 0.000 15.216 0.024 15.240 ;
     END
   END wd_in[0]
   PIN wd_in[1]
@@ -1172,7 +596,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 38.400 0.005 38.405 ;
+      RECT 0.000 15.456 0.024 15.480 ;
     END
   END wd_in[1]
   PIN wd_in[2]
@@ -1181,7 +605,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 38.592 0.005 38.597 ;
+      RECT 0.000 15.696 0.024 15.720 ;
     END
   END wd_in[2]
   PIN wd_in[3]
@@ -1190,7 +614,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 38.784 0.005 38.789 ;
+      RECT 0.000 15.936 0.024 15.960 ;
     END
   END wd_in[3]
   PIN wd_in[4]
@@ -1199,7 +623,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 38.976 0.005 38.981 ;
+      RECT 0.000 16.176 0.024 16.200 ;
     END
   END wd_in[4]
   PIN wd_in[5]
@@ -1208,7 +632,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 39.168 0.005 39.173 ;
+      RECT 0.000 16.416 0.024 16.440 ;
     END
   END wd_in[5]
   PIN wd_in[6]
@@ -1217,7 +641,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 39.360 0.005 39.365 ;
+      RECT 0.000 16.656 0.024 16.680 ;
     END
   END wd_in[6]
   PIN wd_in[7]
@@ -1226,7 +650,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 39.552 0.005 39.557 ;
+      RECT 0.000 16.896 0.024 16.920 ;
     END
   END wd_in[7]
   PIN wd_in[8]
@@ -1235,7 +659,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 39.744 0.005 39.749 ;
+      RECT 0.000 17.136 0.024 17.160 ;
     END
   END wd_in[8]
   PIN wd_in[9]
@@ -1244,7 +668,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 39.936 0.005 39.941 ;
+      RECT 0.000 17.376 0.024 17.400 ;
     END
   END wd_in[9]
   PIN wd_in[10]
@@ -1253,7 +677,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 40.128 0.005 40.133 ;
+      RECT 0.000 17.616 0.024 17.640 ;
     END
   END wd_in[10]
   PIN wd_in[11]
@@ -1262,7 +686,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 40.320 0.005 40.325 ;
+      RECT 0.000 17.856 0.024 17.880 ;
     END
   END wd_in[11]
   PIN wd_in[12]
@@ -1271,7 +695,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 40.512 0.005 40.517 ;
+      RECT 0.000 18.096 0.024 18.120 ;
     END
   END wd_in[12]
   PIN wd_in[13]
@@ -1280,7 +704,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 40.704 0.005 40.709 ;
+      RECT 0.000 18.336 0.024 18.360 ;
     END
   END wd_in[13]
   PIN wd_in[14]
@@ -1289,7 +713,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 40.896 0.005 40.901 ;
+      RECT 0.000 18.576 0.024 18.600 ;
     END
   END wd_in[14]
   PIN wd_in[15]
@@ -1298,7 +722,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 41.088 0.005 41.093 ;
+      RECT 0.000 18.816 0.024 18.840 ;
     END
   END wd_in[15]
   PIN wd_in[16]
@@ -1307,7 +731,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 41.280 0.005 41.285 ;
+      RECT 0.000 19.056 0.024 19.080 ;
     END
   END wd_in[16]
   PIN wd_in[17]
@@ -1316,7 +740,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 41.472 0.005 41.477 ;
+      RECT 0.000 19.296 0.024 19.320 ;
     END
   END wd_in[17]
   PIN wd_in[18]
@@ -1325,7 +749,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 41.664 0.005 41.669 ;
+      RECT 0.000 19.536 0.024 19.560 ;
     END
   END wd_in[18]
   PIN wd_in[19]
@@ -1334,7 +758,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 41.856 0.005 41.861 ;
+      RECT 0.000 19.776 0.024 19.800 ;
     END
   END wd_in[19]
   PIN wd_in[20]
@@ -1343,7 +767,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 42.048 0.005 42.053 ;
+      RECT 0.000 20.016 0.024 20.040 ;
     END
   END wd_in[20]
   PIN wd_in[21]
@@ -1352,7 +776,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 42.240 0.005 42.245 ;
+      RECT 0.000 20.256 0.024 20.280 ;
     END
   END wd_in[21]
   PIN wd_in[22]
@@ -1361,7 +785,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 42.432 0.005 42.437 ;
+      RECT 0.000 20.496 0.024 20.520 ;
     END
   END wd_in[22]
   PIN wd_in[23]
@@ -1370,7 +794,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 42.624 0.005 42.629 ;
+      RECT 0.000 20.736 0.024 20.760 ;
     END
   END wd_in[23]
   PIN wd_in[24]
@@ -1379,7 +803,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 42.816 0.005 42.821 ;
+      RECT 0.000 20.976 0.024 21.000 ;
     END
   END wd_in[24]
   PIN wd_in[25]
@@ -1388,7 +812,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 43.008 0.005 43.013 ;
+      RECT 0.000 21.216 0.024 21.240 ;
     END
   END wd_in[25]
   PIN wd_in[26]
@@ -1397,7 +821,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 43.200 0.005 43.205 ;
+      RECT 0.000 21.456 0.024 21.480 ;
     END
   END wd_in[26]
   PIN wd_in[27]
@@ -1406,7 +830,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 43.392 0.005 43.397 ;
+      RECT 0.000 21.696 0.024 21.720 ;
     END
   END wd_in[27]
   PIN wd_in[28]
@@ -1415,7 +839,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 43.584 0.005 43.589 ;
+      RECT 0.000 21.936 0.024 21.960 ;
     END
   END wd_in[28]
   PIN wd_in[29]
@@ -1424,7 +848,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 43.776 0.005 43.781 ;
+      RECT 0.000 22.176 0.024 22.200 ;
     END
   END wd_in[29]
   PIN wd_in[30]
@@ -1433,7 +857,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 43.968 0.005 43.973 ;
+      RECT 0.000 22.416 0.024 22.440 ;
     END
   END wd_in[30]
   PIN wd_in[31]
@@ -1442,7 +866,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 44.160 0.005 44.165 ;
+      RECT 0.000 22.656 0.024 22.680 ;
     END
   END wd_in[31]
   PIN wd_in[32]
@@ -1451,7 +875,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 44.352 0.005 44.357 ;
+      RECT 0.000 22.896 0.024 22.920 ;
     END
   END wd_in[32]
   PIN wd_in[33]
@@ -1460,7 +884,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 44.544 0.005 44.549 ;
+      RECT 0.000 23.136 0.024 23.160 ;
     END
   END wd_in[33]
   PIN wd_in[34]
@@ -1469,7 +893,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 44.736 0.005 44.741 ;
+      RECT 0.000 23.376 0.024 23.400 ;
     END
   END wd_in[34]
   PIN wd_in[35]
@@ -1478,7 +902,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 44.928 0.005 44.933 ;
+      RECT 0.000 23.616 0.024 23.640 ;
     END
   END wd_in[35]
   PIN wd_in[36]
@@ -1487,7 +911,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 45.120 0.005 45.125 ;
+      RECT 0.000 23.856 0.024 23.880 ;
     END
   END wd_in[36]
   PIN wd_in[37]
@@ -1496,7 +920,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 45.312 0.005 45.317 ;
+      RECT 0.000 24.096 0.024 24.120 ;
     END
   END wd_in[37]
   PIN wd_in[38]
@@ -1505,7 +929,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 45.504 0.005 45.509 ;
+      RECT 0.000 24.336 0.024 24.360 ;
     END
   END wd_in[38]
   PIN wd_in[39]
@@ -1514,7 +938,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 45.696 0.005 45.701 ;
+      RECT 0.000 24.576 0.024 24.600 ;
     END
   END wd_in[39]
   PIN wd_in[40]
@@ -1523,7 +947,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 45.888 0.005 45.893 ;
+      RECT 0.000 24.816 0.024 24.840 ;
     END
   END wd_in[40]
   PIN wd_in[41]
@@ -1532,7 +956,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 46.080 0.005 46.085 ;
+      RECT 0.000 25.056 0.024 25.080 ;
     END
   END wd_in[41]
   PIN wd_in[42]
@@ -1541,7 +965,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 46.272 0.005 46.277 ;
+      RECT 0.000 25.296 0.024 25.320 ;
     END
   END wd_in[42]
   PIN wd_in[43]
@@ -1550,7 +974,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 46.464 0.005 46.469 ;
+      RECT 0.000 25.536 0.024 25.560 ;
     END
   END wd_in[43]
   PIN wd_in[44]
@@ -1559,7 +983,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 46.656 0.005 46.661 ;
+      RECT 0.000 25.776 0.024 25.800 ;
     END
   END wd_in[44]
   PIN wd_in[45]
@@ -1568,7 +992,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 46.848 0.005 46.853 ;
+      RECT 0.000 26.016 0.024 26.040 ;
     END
   END wd_in[45]
   PIN wd_in[46]
@@ -1577,7 +1001,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 47.040 0.005 47.045 ;
+      RECT 0.000 26.256 0.024 26.280 ;
     END
   END wd_in[46]
   PIN wd_in[47]
@@ -1586,7 +1010,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 47.232 0.005 47.237 ;
+      RECT 0.000 26.496 0.024 26.520 ;
     END
   END wd_in[47]
   PIN wd_in[48]
@@ -1595,7 +1019,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 47.424 0.005 47.429 ;
+      RECT 0.000 26.736 0.024 26.760 ;
     END
   END wd_in[48]
   PIN wd_in[49]
@@ -1604,7 +1028,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 47.616 0.005 47.621 ;
+      RECT 0.000 26.976 0.024 27.000 ;
     END
   END wd_in[49]
   PIN wd_in[50]
@@ -1613,7 +1037,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 47.808 0.005 47.813 ;
+      RECT 0.000 27.216 0.024 27.240 ;
     END
   END wd_in[50]
   PIN wd_in[51]
@@ -1622,7 +1046,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 48.000 0.005 48.005 ;
+      RECT 0.000 27.456 0.024 27.480 ;
     END
   END wd_in[51]
   PIN wd_in[52]
@@ -1631,7 +1055,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 48.192 0.005 48.197 ;
+      RECT 0.000 27.696 0.024 27.720 ;
     END
   END wd_in[52]
   PIN wd_in[53]
@@ -1640,7 +1064,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 48.384 0.005 48.389 ;
+      RECT 0.000 27.936 0.024 27.960 ;
     END
   END wd_in[53]
   PIN wd_in[54]
@@ -1649,7 +1073,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 48.576 0.005 48.581 ;
+      RECT 0.000 28.176 0.024 28.200 ;
     END
   END wd_in[54]
   PIN wd_in[55]
@@ -1658,7 +1082,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 48.768 0.005 48.773 ;
+      RECT 0.000 28.416 0.024 28.440 ;
     END
   END wd_in[55]
   PIN wd_in[56]
@@ -1667,7 +1091,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 48.960 0.005 48.965 ;
+      RECT 0.000 28.656 0.024 28.680 ;
     END
   END wd_in[56]
   PIN wd_in[57]
@@ -1676,7 +1100,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 49.152 0.005 49.157 ;
+      RECT 0.000 28.896 0.024 28.920 ;
     END
   END wd_in[57]
   PIN wd_in[58]
@@ -1685,7 +1109,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 49.344 0.005 49.349 ;
+      RECT 0.000 29.136 0.024 29.160 ;
     END
   END wd_in[58]
   PIN wd_in[59]
@@ -1694,7 +1118,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 49.536 0.005 49.541 ;
+      RECT 0.000 29.376 0.024 29.400 ;
     END
   END wd_in[59]
   PIN wd_in[60]
@@ -1703,7 +1127,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 49.728 0.005 49.733 ;
+      RECT 0.000 29.616 0.024 29.640 ;
     END
   END wd_in[60]
   PIN wd_in[61]
@@ -1712,7 +1136,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 49.920 0.005 49.925 ;
+      RECT 0.000 29.856 0.024 29.880 ;
     END
   END wd_in[61]
   PIN wd_in[62]
@@ -1721,7 +1145,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 50.112 0.005 50.117 ;
+      RECT 0.000 30.096 0.024 30.120 ;
     END
   END wd_in[62]
   PIN wd_in[63]
@@ -1730,7 +1154,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 50.304 0.005 50.309 ;
+      RECT 0.000 30.336 0.024 30.360 ;
     END
   END wd_in[63]
   PIN addr_in[0]
@@ -1739,7 +1163,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 57.216 0.005 57.221 ;
+      RECT 0.000 30.384 0.024 30.408 ;
     END
   END addr_in[0]
   PIN addr_in[1]
@@ -1748,7 +1172,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 57.408 0.005 57.413 ;
+      RECT 0.000 30.624 0.024 30.648 ;
     END
   END addr_in[1]
   PIN addr_in[2]
@@ -1757,7 +1181,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 57.600 0.005 57.605 ;
+      RECT 0.000 30.864 0.024 30.888 ;
     END
   END addr_in[2]
   PIN addr_in[3]
@@ -1766,7 +1190,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 57.792 0.005 57.797 ;
+      RECT 0.000 31.104 0.024 31.128 ;
     END
   END addr_in[3]
   PIN addr_in[4]
@@ -1775,7 +1199,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 57.984 0.005 57.989 ;
+      RECT 0.000 31.344 0.024 31.368 ;
     END
   END addr_in[4]
   PIN addr_in[5]
@@ -1784,7 +1208,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 58.176 0.005 58.181 ;
+      RECT 0.000 31.584 0.024 31.608 ;
     END
   END addr_in[5]
   PIN addr_in[6]
@@ -1793,7 +1217,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 58.368 0.005 58.373 ;
+      RECT 0.000 31.824 0.024 31.848 ;
     END
   END addr_in[6]
   PIN addr_in[7]
@@ -1802,7 +1226,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 58.560 0.005 58.565 ;
+      RECT 0.000 32.064 0.024 32.088 ;
     END
   END addr_in[7]
   PIN we_in
@@ -1811,7 +1235,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 65.472 0.005 65.477 ;
+      RECT 0.000 32.112 0.024 32.136 ;
     END
   END we_in
   PIN ce_in
@@ -1820,7 +1244,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 65.664 0.005 65.669 ;
+      RECT 0.000 32.352 0.024 32.376 ;
     END
   END ce_in
   PIN clk
@@ -1829,7 +1253,7 @@ MACRO sram_asap7_64x256_1rw
     SHAPE ABUTMENT ;
     PORT
       LAYER M4 ;
-      RECT 0.000 65.856 0.005 65.861 ;
+      RECT 0.000 32.592 0.024 32.616 ;
     END
   END clk
   PIN VSS
@@ -1837,28 +1261,50 @@ MACRO sram_asap7_64x256_1rw
     USE GROUND ;
     PORT
       LAYER M4 ;
-      RECT 0.192 0.182 8.168 0.202 ;
-      RECT 0.192 3.254 8.168 3.274 ;
-      RECT 0.192 6.326 8.168 6.346 ;
-      RECT 0.192 9.398 8.168 9.418 ;
-      RECT 0.192 12.470 8.168 12.490 ;
-      RECT 0.192 15.542 8.168 15.562 ;
-      RECT 0.192 18.614 8.168 18.634 ;
-      RECT 0.192 21.686 8.168 21.706 ;
-      RECT 0.192 24.758 8.168 24.778 ;
-      RECT 0.192 27.830 8.168 27.850 ;
-      RECT 0.192 30.902 8.168 30.922 ;
-      RECT 0.192 33.974 8.168 33.994 ;
-      RECT 0.192 37.046 8.168 37.066 ;
-      RECT 0.192 40.118 8.168 40.138 ;
-      RECT 0.192 43.190 8.168 43.210 ;
-      RECT 0.192 46.262 8.168 46.282 ;
-      RECT 0.192 49.334 8.168 49.354 ;
-      RECT 0.192 52.406 8.168 52.426 ;
-      RECT 0.192 55.478 8.168 55.498 ;
-      RECT 0.192 58.550 8.168 58.570 ;
-      RECT 0.192 61.622 8.168 61.642 ;
-      RECT 0.192 64.694 8.168 64.714 ;
+      RECT 0.048 0.000 16.672 0.096 ;
+      RECT 0.048 0.768 16.672 0.864 ;
+      RECT 0.048 1.536 16.672 1.632 ;
+      RECT 0.048 2.304 16.672 2.400 ;
+      RECT 0.048 3.072 16.672 3.168 ;
+      RECT 0.048 3.840 16.672 3.936 ;
+      RECT 0.048 4.608 16.672 4.704 ;
+      RECT 0.048 5.376 16.672 5.472 ;
+      RECT 0.048 6.144 16.672 6.240 ;
+      RECT 0.048 6.912 16.672 7.008 ;
+      RECT 0.048 7.680 16.672 7.776 ;
+      RECT 0.048 8.448 16.672 8.544 ;
+      RECT 0.048 9.216 16.672 9.312 ;
+      RECT 0.048 9.984 16.672 10.080 ;
+      RECT 0.048 10.752 16.672 10.848 ;
+      RECT 0.048 11.520 16.672 11.616 ;
+      RECT 0.048 12.288 16.672 12.384 ;
+      RECT 0.048 13.056 16.672 13.152 ;
+      RECT 0.048 13.824 16.672 13.920 ;
+      RECT 0.048 14.592 16.672 14.688 ;
+      RECT 0.048 15.360 16.672 15.456 ;
+      RECT 0.048 16.128 16.672 16.224 ;
+      RECT 0.048 16.896 16.672 16.992 ;
+      RECT 0.048 17.664 16.672 17.760 ;
+      RECT 0.048 18.432 16.672 18.528 ;
+      RECT 0.048 19.200 16.672 19.296 ;
+      RECT 0.048 19.968 16.672 20.064 ;
+      RECT 0.048 20.736 16.672 20.832 ;
+      RECT 0.048 21.504 16.672 21.600 ;
+      RECT 0.048 22.272 16.672 22.368 ;
+      RECT 0.048 23.040 16.672 23.136 ;
+      RECT 0.048 23.808 16.672 23.904 ;
+      RECT 0.048 24.576 16.672 24.672 ;
+      RECT 0.048 25.344 16.672 25.440 ;
+      RECT 0.048 26.112 16.672 26.208 ;
+      RECT 0.048 26.880 16.672 26.976 ;
+      RECT 0.048 27.648 16.672 27.744 ;
+      RECT 0.048 28.416 16.672 28.512 ;
+      RECT 0.048 29.184 16.672 29.280 ;
+      RECT 0.048 29.952 16.672 30.048 ;
+      RECT 0.048 30.720 16.672 30.816 ;
+      RECT 0.048 31.488 16.672 31.584 ;
+      RECT 0.048 32.256 16.672 32.352 ;
+      RECT 0.048 33.024 16.672 33.120 ;
     END
   END VSS
   PIN VDD
@@ -1866,291 +1312,357 @@ MACRO sram_asap7_64x256_1rw
     USE POWER ;
     PORT
       LAYER M4 ;
-      RECT 0.192 1.718 8.168 1.738 ;
-      RECT 0.192 4.790 8.168 4.810 ;
-      RECT 0.192 7.862 8.168 7.882 ;
-      RECT 0.192 10.934 8.168 10.954 ;
-      RECT 0.192 14.006 8.168 14.026 ;
-      RECT 0.192 17.078 8.168 17.098 ;
-      RECT 0.192 20.150 8.168 20.170 ;
-      RECT 0.192 23.222 8.168 23.242 ;
-      RECT 0.192 26.294 8.168 26.314 ;
-      RECT 0.192 29.366 8.168 29.386 ;
-      RECT 0.192 32.438 8.168 32.458 ;
-      RECT 0.192 35.510 8.168 35.530 ;
-      RECT 0.192 38.582 8.168 38.602 ;
-      RECT 0.192 41.654 8.168 41.674 ;
-      RECT 0.192 44.726 8.168 44.746 ;
-      RECT 0.192 47.798 8.168 47.818 ;
-      RECT 0.192 50.870 8.168 50.890 ;
-      RECT 0.192 53.942 8.168 53.962 ;
-      RECT 0.192 57.014 8.168 57.034 ;
-      RECT 0.192 60.086 8.168 60.106 ;
-      RECT 0.192 63.158 8.168 63.178 ;
-      RECT 0.192 66.230 8.168 66.250 ;
+      RECT 0.048 0.384 16.672 0.480 ;
+      RECT 0.048 1.152 16.672 1.248 ;
+      RECT 0.048 1.920 16.672 2.016 ;
+      RECT 0.048 2.688 16.672 2.784 ;
+      RECT 0.048 3.456 16.672 3.552 ;
+      RECT 0.048 4.224 16.672 4.320 ;
+      RECT 0.048 4.992 16.672 5.088 ;
+      RECT 0.048 5.760 16.672 5.856 ;
+      RECT 0.048 6.528 16.672 6.624 ;
+      RECT 0.048 7.296 16.672 7.392 ;
+      RECT 0.048 8.064 16.672 8.160 ;
+      RECT 0.048 8.832 16.672 8.928 ;
+      RECT 0.048 9.600 16.672 9.696 ;
+      RECT 0.048 10.368 16.672 10.464 ;
+      RECT 0.048 11.136 16.672 11.232 ;
+      RECT 0.048 11.904 16.672 12.000 ;
+      RECT 0.048 12.672 16.672 12.768 ;
+      RECT 0.048 13.440 16.672 13.536 ;
+      RECT 0.048 14.208 16.672 14.304 ;
+      RECT 0.048 14.976 16.672 15.072 ;
+      RECT 0.048 15.744 16.672 15.840 ;
+      RECT 0.048 16.512 16.672 16.608 ;
+      RECT 0.048 17.280 16.672 17.376 ;
+      RECT 0.048 18.048 16.672 18.144 ;
+      RECT 0.048 18.816 16.672 18.912 ;
+      RECT 0.048 19.584 16.672 19.680 ;
+      RECT 0.048 20.352 16.672 20.448 ;
+      RECT 0.048 21.120 16.672 21.216 ;
+      RECT 0.048 21.888 16.672 21.984 ;
+      RECT 0.048 22.656 16.672 22.752 ;
+      RECT 0.048 23.424 16.672 23.520 ;
+      RECT 0.048 24.192 16.672 24.288 ;
+      RECT 0.048 24.960 16.672 25.056 ;
+      RECT 0.048 25.728 16.672 25.824 ;
+      RECT 0.048 26.496 16.672 26.592 ;
+      RECT 0.048 27.264 16.672 27.360 ;
+      RECT 0.048 28.032 16.672 28.128 ;
+      RECT 0.048 28.800 16.672 28.896 ;
+      RECT 0.048 29.568 16.672 29.664 ;
+      RECT 0.048 30.336 16.672 30.432 ;
+      RECT 0.048 31.104 16.672 31.200 ;
+      RECT 0.048 31.872 16.672 31.968 ;
+      RECT 0.048 32.640 16.672 32.736 ;
+      RECT 0.048 33.408 16.672 33.504 ;
     END
   END VDD
   OBS
     LAYER M1 ;
-    RECT 0 0 8.360 67.200 ;
+    RECT 0 0 16.720 33.600 ;
     LAYER M2 ;
-    RECT 0 0 8.360 67.200 ;
+    RECT 0 0 16.720 33.600 ;
     LAYER M3 ;
-    RECT 0 0 8.360 67.200 ;
+    RECT 0 0 16.720 33.600 ;
     LAYER M4 ;
-    RECT 0.005 0 0.192 67.200 ;
-    RECT 8.168 0 8.360 67.200 ;
-    RECT 0.192 0.000 8.168 0.182 ;
-    RECT 0.192 0.202 8.168 1.718 ;
-    RECT 0.192 1.738 8.168 3.254 ;
-    RECT 0.192 3.274 8.168 4.790 ;
-    RECT 0.192 4.810 8.168 6.326 ;
-    RECT 0.192 6.346 8.168 7.862 ;
-    RECT 0.192 7.882 8.168 9.398 ;
-    RECT 0.192 9.418 8.168 10.934 ;
-    RECT 0.192 10.954 8.168 12.470 ;
-    RECT 0.192 12.490 8.168 14.006 ;
-    RECT 0.192 14.026 8.168 15.542 ;
-    RECT 0.192 15.562 8.168 17.078 ;
-    RECT 0.192 17.098 8.168 18.614 ;
-    RECT 0.192 18.634 8.168 20.150 ;
-    RECT 0.192 20.170 8.168 21.686 ;
-    RECT 0.192 21.706 8.168 23.222 ;
-    RECT 0.192 23.242 8.168 24.758 ;
-    RECT 0.192 24.778 8.168 26.294 ;
-    RECT 0.192 26.314 8.168 27.830 ;
-    RECT 0.192 27.850 8.168 29.366 ;
-    RECT 0.192 29.386 8.168 30.902 ;
-    RECT 0.192 30.922 8.168 32.438 ;
-    RECT 0.192 32.458 8.168 33.974 ;
-    RECT 0.192 33.994 8.168 35.510 ;
-    RECT 0.192 35.530 8.168 37.046 ;
-    RECT 0.192 37.066 8.168 38.582 ;
-    RECT 0.192 38.602 8.168 40.118 ;
-    RECT 0.192 40.138 8.168 41.654 ;
-    RECT 0.192 41.674 8.168 43.190 ;
-    RECT 0.192 43.210 8.168 44.726 ;
-    RECT 0.192 44.746 8.168 46.262 ;
-    RECT 0.192 46.282 8.168 47.798 ;
-    RECT 0.192 47.818 8.168 49.334 ;
-    RECT 0.192 49.354 8.168 50.870 ;
-    RECT 0.192 50.890 8.168 52.406 ;
-    RECT 0.192 52.426 8.168 53.942 ;
-    RECT 0.192 53.962 8.168 55.478 ;
-    RECT 0.192 55.498 8.168 57.014 ;
-    RECT 0.192 57.034 8.168 58.550 ;
-    RECT 0.192 58.570 8.168 60.086 ;
-    RECT 0.192 60.106 8.168 61.622 ;
-    RECT 0.192 61.642 8.168 63.158 ;
-    RECT 0.192 63.178 8.168 64.694 ;
-    RECT 0.192 64.714 8.168 66.230 ;
-    RECT 0.192 66.250 8.168 67.200 ;
-    RECT 0 0.000 0.005 0.192 ;
-    RECT 0 0.197 0.005 0.384 ;
-    RECT 0 0.389 0.005 0.576 ;
-    RECT 0 0.581 0.005 0.768 ;
-    RECT 0 0.773 0.005 0.960 ;
-    RECT 0 0.965 0.005 1.152 ;
-    RECT 0 1.157 0.005 1.344 ;
-    RECT 0 1.349 0.005 1.536 ;
-    RECT 0 1.541 0.005 1.728 ;
-    RECT 0 1.733 0.005 1.920 ;
-    RECT 0 1.925 0.005 2.112 ;
-    RECT 0 2.117 0.005 2.304 ;
-    RECT 0 2.309 0.005 2.496 ;
-    RECT 0 2.501 0.005 2.688 ;
-    RECT 0 2.693 0.005 2.880 ;
-    RECT 0 2.885 0.005 3.072 ;
-    RECT 0 3.077 0.005 3.264 ;
-    RECT 0 3.269 0.005 3.456 ;
-    RECT 0 3.461 0.005 3.648 ;
-    RECT 0 3.653 0.005 3.840 ;
-    RECT 0 3.845 0.005 4.032 ;
-    RECT 0 4.037 0.005 4.224 ;
-    RECT 0 4.229 0.005 4.416 ;
-    RECT 0 4.421 0.005 4.608 ;
-    RECT 0 4.613 0.005 4.800 ;
-    RECT 0 4.805 0.005 4.992 ;
-    RECT 0 4.997 0.005 5.184 ;
-    RECT 0 5.189 0.005 5.376 ;
-    RECT 0 5.381 0.005 5.568 ;
-    RECT 0 5.573 0.005 5.760 ;
-    RECT 0 5.765 0.005 5.952 ;
-    RECT 0 5.957 0.005 6.144 ;
-    RECT 0 6.149 0.005 6.336 ;
-    RECT 0 6.341 0.005 6.528 ;
-    RECT 0 6.533 0.005 6.720 ;
-    RECT 0 6.725 0.005 6.912 ;
-    RECT 0 6.917 0.005 7.104 ;
-    RECT 0 7.109 0.005 7.296 ;
-    RECT 0 7.301 0.005 7.488 ;
-    RECT 0 7.493 0.005 7.680 ;
-    RECT 0 7.685 0.005 7.872 ;
-    RECT 0 7.877 0.005 8.064 ;
-    RECT 0 8.069 0.005 8.256 ;
-    RECT 0 8.261 0.005 8.448 ;
-    RECT 0 8.453 0.005 8.640 ;
-    RECT 0 8.645 0.005 8.832 ;
-    RECT 0 8.837 0.005 9.024 ;
-    RECT 0 9.029 0.005 9.216 ;
-    RECT 0 9.221 0.005 9.408 ;
-    RECT 0 9.413 0.005 9.600 ;
-    RECT 0 9.605 0.005 9.792 ;
-    RECT 0 9.797 0.005 9.984 ;
-    RECT 0 9.989 0.005 10.176 ;
-    RECT 0 10.181 0.005 10.368 ;
-    RECT 0 10.373 0.005 10.560 ;
-    RECT 0 10.565 0.005 10.752 ;
-    RECT 0 10.757 0.005 10.944 ;
-    RECT 0 10.949 0.005 11.136 ;
-    RECT 0 11.141 0.005 11.328 ;
-    RECT 0 11.333 0.005 11.520 ;
-    RECT 0 11.525 0.005 11.712 ;
-    RECT 0 11.717 0.005 11.904 ;
-    RECT 0 11.909 0.005 12.096 ;
-    RECT 0 12.101 0.005 12.288 ;
-    RECT 0 12.293 0.005 19.200 ;
-    RECT 0 19.205 0.005 19.392 ;
-    RECT 0 19.397 0.005 19.584 ;
-    RECT 0 19.589 0.005 19.776 ;
-    RECT 0 19.781 0.005 19.968 ;
-    RECT 0 19.973 0.005 20.160 ;
-    RECT 0 20.165 0.005 20.352 ;
-    RECT 0 20.357 0.005 20.544 ;
-    RECT 0 20.549 0.005 20.736 ;
-    RECT 0 20.741 0.005 20.928 ;
-    RECT 0 20.933 0.005 21.120 ;
-    RECT 0 21.125 0.005 21.312 ;
-    RECT 0 21.317 0.005 21.504 ;
-    RECT 0 21.509 0.005 21.696 ;
-    RECT 0 21.701 0.005 21.888 ;
-    RECT 0 21.893 0.005 22.080 ;
-    RECT 0 22.085 0.005 22.272 ;
-    RECT 0 22.277 0.005 22.464 ;
-    RECT 0 22.469 0.005 22.656 ;
-    RECT 0 22.661 0.005 22.848 ;
-    RECT 0 22.853 0.005 23.040 ;
-    RECT 0 23.045 0.005 23.232 ;
-    RECT 0 23.237 0.005 23.424 ;
-    RECT 0 23.429 0.005 23.616 ;
-    RECT 0 23.621 0.005 23.808 ;
-    RECT 0 23.813 0.005 24.000 ;
-    RECT 0 24.005 0.005 24.192 ;
-    RECT 0 24.197 0.005 24.384 ;
-    RECT 0 24.389 0.005 24.576 ;
-    RECT 0 24.581 0.005 24.768 ;
-    RECT 0 24.773 0.005 24.960 ;
-    RECT 0 24.965 0.005 25.152 ;
-    RECT 0 25.157 0.005 25.344 ;
-    RECT 0 25.349 0.005 25.536 ;
-    RECT 0 25.541 0.005 25.728 ;
-    RECT 0 25.733 0.005 25.920 ;
-    RECT 0 25.925 0.005 26.112 ;
-    RECT 0 26.117 0.005 26.304 ;
-    RECT 0 26.309 0.005 26.496 ;
-    RECT 0 26.501 0.005 26.688 ;
-    RECT 0 26.693 0.005 26.880 ;
-    RECT 0 26.885 0.005 27.072 ;
-    RECT 0 27.077 0.005 27.264 ;
-    RECT 0 27.269 0.005 27.456 ;
-    RECT 0 27.461 0.005 27.648 ;
-    RECT 0 27.653 0.005 27.840 ;
-    RECT 0 27.845 0.005 28.032 ;
-    RECT 0 28.037 0.005 28.224 ;
-    RECT 0 28.229 0.005 28.416 ;
-    RECT 0 28.421 0.005 28.608 ;
-    RECT 0 28.613 0.005 28.800 ;
-    RECT 0 28.805 0.005 28.992 ;
-    RECT 0 28.997 0.005 29.184 ;
-    RECT 0 29.189 0.005 29.376 ;
-    RECT 0 29.381 0.005 29.568 ;
-    RECT 0 29.573 0.005 29.760 ;
-    RECT 0 29.765 0.005 29.952 ;
-    RECT 0 29.957 0.005 30.144 ;
-    RECT 0 30.149 0.005 30.336 ;
-    RECT 0 30.341 0.005 30.528 ;
-    RECT 0 30.533 0.005 30.720 ;
-    RECT 0 30.725 0.005 30.912 ;
-    RECT 0 30.917 0.005 31.104 ;
-    RECT 0 31.109 0.005 31.296 ;
-    RECT 0 31.301 0.005 38.208 ;
-    RECT 0 38.213 0.005 38.400 ;
-    RECT 0 38.405 0.005 38.592 ;
-    RECT 0 38.597 0.005 38.784 ;
-    RECT 0 38.789 0.005 38.976 ;
-    RECT 0 38.981 0.005 39.168 ;
-    RECT 0 39.173 0.005 39.360 ;
-    RECT 0 39.365 0.005 39.552 ;
-    RECT 0 39.557 0.005 39.744 ;
-    RECT 0 39.749 0.005 39.936 ;
-    RECT 0 39.941 0.005 40.128 ;
-    RECT 0 40.133 0.005 40.320 ;
-    RECT 0 40.325 0.005 40.512 ;
-    RECT 0 40.517 0.005 40.704 ;
-    RECT 0 40.709 0.005 40.896 ;
-    RECT 0 40.901 0.005 41.088 ;
-    RECT 0 41.093 0.005 41.280 ;
-    RECT 0 41.285 0.005 41.472 ;
-    RECT 0 41.477 0.005 41.664 ;
-    RECT 0 41.669 0.005 41.856 ;
-    RECT 0 41.861 0.005 42.048 ;
-    RECT 0 42.053 0.005 42.240 ;
-    RECT 0 42.245 0.005 42.432 ;
-    RECT 0 42.437 0.005 42.624 ;
-    RECT 0 42.629 0.005 42.816 ;
-    RECT 0 42.821 0.005 43.008 ;
-    RECT 0 43.013 0.005 43.200 ;
-    RECT 0 43.205 0.005 43.392 ;
-    RECT 0 43.397 0.005 43.584 ;
-    RECT 0 43.589 0.005 43.776 ;
-    RECT 0 43.781 0.005 43.968 ;
-    RECT 0 43.973 0.005 44.160 ;
-    RECT 0 44.165 0.005 44.352 ;
-    RECT 0 44.357 0.005 44.544 ;
-    RECT 0 44.549 0.005 44.736 ;
-    RECT 0 44.741 0.005 44.928 ;
-    RECT 0 44.933 0.005 45.120 ;
-    RECT 0 45.125 0.005 45.312 ;
-    RECT 0 45.317 0.005 45.504 ;
-    RECT 0 45.509 0.005 45.696 ;
-    RECT 0 45.701 0.005 45.888 ;
-    RECT 0 45.893 0.005 46.080 ;
-    RECT 0 46.085 0.005 46.272 ;
-    RECT 0 46.277 0.005 46.464 ;
-    RECT 0 46.469 0.005 46.656 ;
-    RECT 0 46.661 0.005 46.848 ;
-    RECT 0 46.853 0.005 47.040 ;
-    RECT 0 47.045 0.005 47.232 ;
-    RECT 0 47.237 0.005 47.424 ;
-    RECT 0 47.429 0.005 47.616 ;
-    RECT 0 47.621 0.005 47.808 ;
-    RECT 0 47.813 0.005 48.000 ;
-    RECT 0 48.005 0.005 48.192 ;
-    RECT 0 48.197 0.005 48.384 ;
-    RECT 0 48.389 0.005 48.576 ;
-    RECT 0 48.581 0.005 48.768 ;
-    RECT 0 48.773 0.005 48.960 ;
-    RECT 0 48.965 0.005 49.152 ;
-    RECT 0 49.157 0.005 49.344 ;
-    RECT 0 49.349 0.005 49.536 ;
-    RECT 0 49.541 0.005 49.728 ;
-    RECT 0 49.733 0.005 49.920 ;
-    RECT 0 49.925 0.005 50.112 ;
-    RECT 0 50.117 0.005 50.304 ;
-    RECT 0 50.309 0.005 57.216 ;
-    RECT 0 57.221 0.005 57.408 ;
-    RECT 0 57.413 0.005 57.600 ;
-    RECT 0 57.605 0.005 57.792 ;
-    RECT 0 57.797 0.005 57.984 ;
-    RECT 0 57.989 0.005 58.176 ;
-    RECT 0 58.181 0.005 58.368 ;
-    RECT 0 58.373 0.005 58.560 ;
-    RECT 0 58.565 0.005 65.472 ;
-    RECT 0 65.477 0.005 65.664 ;
-    RECT 0 65.669 0.005 65.856 ;
-    RECT 0 65.861 0.005 67.200 ;
+    RECT 0.024 0 0.048 33.600 ;
+    RECT 16.672 0 16.720 33.600 ;
+    RECT 0.048 0.000 16.672 0.000 ;
+    RECT 0.048 0.096 16.672 0.384 ;
+    RECT 0.048 0.480 16.672 0.768 ;
+    RECT 0.048 0.864 16.672 1.152 ;
+    RECT 0.048 1.248 16.672 1.536 ;
+    RECT 0.048 1.632 16.672 1.920 ;
+    RECT 0.048 2.016 16.672 2.304 ;
+    RECT 0.048 2.400 16.672 2.688 ;
+    RECT 0.048 2.784 16.672 3.072 ;
+    RECT 0.048 3.168 16.672 3.456 ;
+    RECT 0.048 3.552 16.672 3.840 ;
+    RECT 0.048 3.936 16.672 4.224 ;
+    RECT 0.048 4.320 16.672 4.608 ;
+    RECT 0.048 4.704 16.672 4.992 ;
+    RECT 0.048 5.088 16.672 5.376 ;
+    RECT 0.048 5.472 16.672 5.760 ;
+    RECT 0.048 5.856 16.672 6.144 ;
+    RECT 0.048 6.240 16.672 6.528 ;
+    RECT 0.048 6.624 16.672 6.912 ;
+    RECT 0.048 7.008 16.672 7.296 ;
+    RECT 0.048 7.392 16.672 7.680 ;
+    RECT 0.048 7.776 16.672 8.064 ;
+    RECT 0.048 8.160 16.672 8.448 ;
+    RECT 0.048 8.544 16.672 8.832 ;
+    RECT 0.048 8.928 16.672 9.216 ;
+    RECT 0.048 9.312 16.672 9.600 ;
+    RECT 0.048 9.696 16.672 9.984 ;
+    RECT 0.048 10.080 16.672 10.368 ;
+    RECT 0.048 10.464 16.672 10.752 ;
+    RECT 0.048 10.848 16.672 11.136 ;
+    RECT 0.048 11.232 16.672 11.520 ;
+    RECT 0.048 11.616 16.672 11.904 ;
+    RECT 0.048 12.000 16.672 12.288 ;
+    RECT 0.048 12.384 16.672 12.672 ;
+    RECT 0.048 12.768 16.672 13.056 ;
+    RECT 0.048 13.152 16.672 13.440 ;
+    RECT 0.048 13.536 16.672 13.824 ;
+    RECT 0.048 13.920 16.672 14.208 ;
+    RECT 0.048 14.304 16.672 14.592 ;
+    RECT 0.048 14.688 16.672 14.976 ;
+    RECT 0.048 15.072 16.672 15.360 ;
+    RECT 0.048 15.456 16.672 15.744 ;
+    RECT 0.048 15.840 16.672 16.128 ;
+    RECT 0.048 16.224 16.672 16.512 ;
+    RECT 0.048 16.608 16.672 16.896 ;
+    RECT 0.048 16.992 16.672 17.280 ;
+    RECT 0.048 17.376 16.672 17.664 ;
+    RECT 0.048 17.760 16.672 18.048 ;
+    RECT 0.048 18.144 16.672 18.432 ;
+    RECT 0.048 18.528 16.672 18.816 ;
+    RECT 0.048 18.912 16.672 19.200 ;
+    RECT 0.048 19.296 16.672 19.584 ;
+    RECT 0.048 19.680 16.672 19.968 ;
+    RECT 0.048 20.064 16.672 20.352 ;
+    RECT 0.048 20.448 16.672 20.736 ;
+    RECT 0.048 20.832 16.672 21.120 ;
+    RECT 0.048 21.216 16.672 21.504 ;
+    RECT 0.048 21.600 16.672 21.888 ;
+    RECT 0.048 21.984 16.672 22.272 ;
+    RECT 0.048 22.368 16.672 22.656 ;
+    RECT 0.048 22.752 16.672 23.040 ;
+    RECT 0.048 23.136 16.672 23.424 ;
+    RECT 0.048 23.520 16.672 23.808 ;
+    RECT 0.048 23.904 16.672 24.192 ;
+    RECT 0.048 24.288 16.672 24.576 ;
+    RECT 0.048 24.672 16.672 24.960 ;
+    RECT 0.048 25.056 16.672 25.344 ;
+    RECT 0.048 25.440 16.672 25.728 ;
+    RECT 0.048 25.824 16.672 26.112 ;
+    RECT 0.048 26.208 16.672 26.496 ;
+    RECT 0.048 26.592 16.672 26.880 ;
+    RECT 0.048 26.976 16.672 27.264 ;
+    RECT 0.048 27.360 16.672 27.648 ;
+    RECT 0.048 27.744 16.672 28.032 ;
+    RECT 0.048 28.128 16.672 28.416 ;
+    RECT 0.048 28.512 16.672 28.800 ;
+    RECT 0.048 28.896 16.672 29.184 ;
+    RECT 0.048 29.280 16.672 29.568 ;
+    RECT 0.048 29.664 16.672 29.952 ;
+    RECT 0.048 30.048 16.672 30.336 ;
+    RECT 0.048 30.432 16.672 30.720 ;
+    RECT 0.048 30.816 16.672 31.104 ;
+    RECT 0.048 31.200 16.672 31.488 ;
+    RECT 0.048 31.584 16.672 31.872 ;
+    RECT 0.048 31.968 16.672 32.256 ;
+    RECT 0.048 32.352 16.672 32.640 ;
+    RECT 0.048 32.736 16.672 33.024 ;
+    RECT 0.048 33.120 16.672 33.408 ;
+    RECT 0.048 33.504 16.672 33.600 ;
+    RECT 0 0.000 0.024 0.048 ;
+    RECT 0 0.072 0.024 0.288 ;
+    RECT 0 0.312 0.024 0.528 ;
+    RECT 0 0.552 0.024 0.768 ;
+    RECT 0 0.792 0.024 1.008 ;
+    RECT 0 1.032 0.024 1.248 ;
+    RECT 0 1.272 0.024 1.488 ;
+    RECT 0 1.512 0.024 1.728 ;
+    RECT 0 1.752 0.024 1.968 ;
+    RECT 0 1.992 0.024 2.208 ;
+    RECT 0 2.232 0.024 2.448 ;
+    RECT 0 2.472 0.024 2.688 ;
+    RECT 0 2.712 0.024 2.928 ;
+    RECT 0 2.952 0.024 3.168 ;
+    RECT 0 3.192 0.024 3.408 ;
+    RECT 0 3.432 0.024 3.648 ;
+    RECT 0 3.672 0.024 3.888 ;
+    RECT 0 3.912 0.024 4.128 ;
+    RECT 0 4.152 0.024 4.368 ;
+    RECT 0 4.392 0.024 4.608 ;
+    RECT 0 4.632 0.024 4.848 ;
+    RECT 0 4.872 0.024 5.088 ;
+    RECT 0 5.112 0.024 5.328 ;
+    RECT 0 5.352 0.024 5.568 ;
+    RECT 0 5.592 0.024 5.808 ;
+    RECT 0 5.832 0.024 6.048 ;
+    RECT 0 6.072 0.024 6.288 ;
+    RECT 0 6.312 0.024 6.528 ;
+    RECT 0 6.552 0.024 6.768 ;
+    RECT 0 6.792 0.024 7.008 ;
+    RECT 0 7.032 0.024 7.248 ;
+    RECT 0 7.272 0.024 7.488 ;
+    RECT 0 7.512 0.024 7.728 ;
+    RECT 0 7.752 0.024 7.968 ;
+    RECT 0 7.992 0.024 8.208 ;
+    RECT 0 8.232 0.024 8.448 ;
+    RECT 0 8.472 0.024 8.688 ;
+    RECT 0 8.712 0.024 8.928 ;
+    RECT 0 8.952 0.024 9.168 ;
+    RECT 0 9.192 0.024 9.408 ;
+    RECT 0 9.432 0.024 9.648 ;
+    RECT 0 9.672 0.024 9.888 ;
+    RECT 0 9.912 0.024 10.128 ;
+    RECT 0 10.152 0.024 10.368 ;
+    RECT 0 10.392 0.024 10.608 ;
+    RECT 0 10.632 0.024 10.848 ;
+    RECT 0 10.872 0.024 11.088 ;
+    RECT 0 11.112 0.024 11.328 ;
+    RECT 0 11.352 0.024 11.568 ;
+    RECT 0 11.592 0.024 11.808 ;
+    RECT 0 11.832 0.024 12.048 ;
+    RECT 0 12.072 0.024 12.288 ;
+    RECT 0 12.312 0.024 12.528 ;
+    RECT 0 12.552 0.024 12.768 ;
+    RECT 0 12.792 0.024 13.008 ;
+    RECT 0 13.032 0.024 13.248 ;
+    RECT 0 13.272 0.024 13.488 ;
+    RECT 0 13.512 0.024 13.728 ;
+    RECT 0 13.752 0.024 13.968 ;
+    RECT 0 13.992 0.024 14.208 ;
+    RECT 0 14.232 0.024 14.448 ;
+    RECT 0 14.472 0.024 14.688 ;
+    RECT 0 14.712 0.024 14.928 ;
+    RECT 0 14.952 0.024 15.168 ;
+    RECT 0 15.192 0.024 15.216 ;
+    RECT 0 15.240 0.024 15.456 ;
+    RECT 0 15.480 0.024 15.696 ;
+    RECT 0 15.720 0.024 15.936 ;
+    RECT 0 15.960 0.024 16.176 ;
+    RECT 0 16.200 0.024 16.416 ;
+    RECT 0 16.440 0.024 16.656 ;
+    RECT 0 16.680 0.024 16.896 ;
+    RECT 0 16.920 0.024 17.136 ;
+    RECT 0 17.160 0.024 17.376 ;
+    RECT 0 17.400 0.024 17.616 ;
+    RECT 0 17.640 0.024 17.856 ;
+    RECT 0 17.880 0.024 18.096 ;
+    RECT 0 18.120 0.024 18.336 ;
+    RECT 0 18.360 0.024 18.576 ;
+    RECT 0 18.600 0.024 18.816 ;
+    RECT 0 18.840 0.024 19.056 ;
+    RECT 0 19.080 0.024 19.296 ;
+    RECT 0 19.320 0.024 19.536 ;
+    RECT 0 19.560 0.024 19.776 ;
+    RECT 0 19.800 0.024 20.016 ;
+    RECT 0 20.040 0.024 20.256 ;
+    RECT 0 20.280 0.024 20.496 ;
+    RECT 0 20.520 0.024 20.736 ;
+    RECT 0 20.760 0.024 20.976 ;
+    RECT 0 21.000 0.024 21.216 ;
+    RECT 0 21.240 0.024 21.456 ;
+    RECT 0 21.480 0.024 21.696 ;
+    RECT 0 21.720 0.024 21.936 ;
+    RECT 0 21.960 0.024 22.176 ;
+    RECT 0 22.200 0.024 22.416 ;
+    RECT 0 22.440 0.024 22.656 ;
+    RECT 0 22.680 0.024 22.896 ;
+    RECT 0 22.920 0.024 23.136 ;
+    RECT 0 23.160 0.024 23.376 ;
+    RECT 0 23.400 0.024 23.616 ;
+    RECT 0 23.640 0.024 23.856 ;
+    RECT 0 23.880 0.024 24.096 ;
+    RECT 0 24.120 0.024 24.336 ;
+    RECT 0 24.360 0.024 24.576 ;
+    RECT 0 24.600 0.024 24.816 ;
+    RECT 0 24.840 0.024 25.056 ;
+    RECT 0 25.080 0.024 25.296 ;
+    RECT 0 25.320 0.024 25.536 ;
+    RECT 0 25.560 0.024 25.776 ;
+    RECT 0 25.800 0.024 26.016 ;
+    RECT 0 26.040 0.024 26.256 ;
+    RECT 0 26.280 0.024 26.496 ;
+    RECT 0 26.520 0.024 26.736 ;
+    RECT 0 26.760 0.024 26.976 ;
+    RECT 0 27.000 0.024 27.216 ;
+    RECT 0 27.240 0.024 27.456 ;
+    RECT 0 27.480 0.024 27.696 ;
+    RECT 0 27.720 0.024 27.936 ;
+    RECT 0 27.960 0.024 28.176 ;
+    RECT 0 28.200 0.024 28.416 ;
+    RECT 0 28.440 0.024 28.656 ;
+    RECT 0 28.680 0.024 28.896 ;
+    RECT 0 28.920 0.024 29.136 ;
+    RECT 0 29.160 0.024 29.376 ;
+    RECT 0 29.400 0.024 29.616 ;
+    RECT 0 29.640 0.024 29.856 ;
+    RECT 0 29.880 0.024 30.096 ;
+    RECT 0 30.120 0.024 30.336 ;
+    RECT 0 30.360 0.024 30.384 ;
+    RECT 0 30.408 0.024 30.624 ;
+    RECT 0 30.648 0.024 30.864 ;
+    RECT 0 30.888 0.024 31.104 ;
+    RECT 0 31.128 0.024 31.344 ;
+    RECT 0 31.368 0.024 31.584 ;
+    RECT 0 31.608 0.024 31.824 ;
+    RECT 0 31.848 0.024 32.064 ;
+    RECT 0 32.088 0.024 32.304 ;
+    RECT 0 32.328 0.024 32.544 ;
+    RECT 0 32.568 0.024 32.784 ;
+    RECT 0 32.808 0.024 33.024 ;
+    RECT 0 33.048 0.024 33.264 ;
+    RECT 0 33.288 0.024 33.504 ;
+    RECT 0 33.528 0.024 33.744 ;
+    RECT 0 33.768 0.024 33.984 ;
+    RECT 0 34.008 0.024 34.224 ;
+    RECT 0 34.248 0.024 34.464 ;
+    RECT 0 34.488 0.024 34.704 ;
+    RECT 0 34.728 0.024 34.944 ;
+    RECT 0 34.968 0.024 35.184 ;
+    RECT 0 35.208 0.024 35.424 ;
+    RECT 0 35.448 0.024 35.664 ;
+    RECT 0 35.688 0.024 35.904 ;
+    RECT 0 35.928 0.024 36.144 ;
+    RECT 0 36.168 0.024 36.384 ;
+    RECT 0 36.408 0.024 36.624 ;
+    RECT 0 36.648 0.024 36.864 ;
+    RECT 0 36.888 0.024 37.104 ;
+    RECT 0 37.128 0.024 37.344 ;
+    RECT 0 37.368 0.024 37.584 ;
+    RECT 0 37.608 0.024 37.824 ;
+    RECT 0 37.848 0.024 38.064 ;
+    RECT 0 38.088 0.024 38.304 ;
+    RECT 0 38.328 0.024 38.544 ;
+    RECT 0 38.568 0.024 38.784 ;
+    RECT 0 38.808 0.024 39.024 ;
+    RECT 0 39.048 0.024 39.264 ;
+    RECT 0 39.288 0.024 39.504 ;
+    RECT 0 39.528 0.024 39.744 ;
+    RECT 0 39.768 0.024 39.984 ;
+    RECT 0 40.008 0.024 40.224 ;
+    RECT 0 40.248 0.024 40.464 ;
+    RECT 0 40.488 0.024 40.704 ;
+    RECT 0 40.728 0.024 40.944 ;
+    RECT 0 40.968 0.024 41.184 ;
+    RECT 0 41.208 0.024 41.424 ;
+    RECT 0 41.448 0.024 41.664 ;
+    RECT 0 41.688 0.024 41.904 ;
+    RECT 0 41.928 0.024 42.144 ;
+    RECT 0 42.168 0.024 42.384 ;
+    RECT 0 42.408 0.024 42.624 ;
+    RECT 0 42.648 0.024 42.864 ;
+    RECT 0 42.888 0.024 43.104 ;
+    RECT 0 43.128 0.024 43.344 ;
+    RECT 0 43.368 0.024 43.584 ;
+    RECT 0 43.608 0.024 43.824 ;
+    RECT 0 43.848 0.024 44.064 ;
+    RECT 0 44.088 0.024 44.304 ;
+    RECT 0 44.328 0.024 44.544 ;
+    RECT 0 44.568 0.024 44.784 ;
+    RECT 0 44.808 0.024 45.024 ;
+    RECT 0 45.048 0.024 45.264 ;
+    RECT 0 45.288 0.024 45.504 ;
+    RECT 0 45.528 0.024 45.552 ;
+    RECT 0 45.576 0.024 45.792 ;
+    RECT 0 45.816 0.024 46.032 ;
+    RECT 0 46.056 0.024 46.272 ;
+    RECT 0 46.296 0.024 46.512 ;
+    RECT 0 46.536 0.024 46.752 ;
+    RECT 0 46.776 0.024 46.992 ;
+    RECT 0 47.016 0.024 47.232 ;
+    RECT 0 47.256 0.024 47.280 ;
+    RECT 0 47.304 0.024 47.520 ;
+    RECT 0 47.544 0.024 47.760 ;
+    RECT 0 47.784 0.024 33.600 ;
     LAYER OVERLAP ;
-    RECT 0 0 8.360 67.200 ;
+    RECT 0 0 16.720 33.600 ;
   END
 END sram_asap7_64x256_1rw
 
