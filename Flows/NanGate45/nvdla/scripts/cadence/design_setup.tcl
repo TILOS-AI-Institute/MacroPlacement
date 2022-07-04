@@ -2,12 +2,15 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 
 set DESIGN NV_NVDLA_partition_c
+set rtldir ../../../../../Testcases/nvdla/rtl
 set sdc  ../../constraints/${DESIGN}.sdc
 
 # def file with die size and placed IO pins
-set floorplan_def ../../def/${DESIGN}_fp.def
-
-set rtl_path ../../../../../Testcases/nvdla/rtl/
+if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
+    set floorplan_def ../../def/${DESIGN}_fp_placed_macros.def
+} else {
+    set floorplan_def ../../def/${DESIGN}_fp.def
+}
 
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage
@@ -17,3 +20,7 @@ set GEN_EFF medium
 # Effort level during optimization in syn_map -physical (or called mapping) stage
 # possible values are : high, medium or low
 set MAP_EFF high
+#
+set SITE "FreePDK45_38x28_10R_NP_162NW_34O"
+set HALO_WIDTH 5
+set TOP_ROUTING_LAYER 10

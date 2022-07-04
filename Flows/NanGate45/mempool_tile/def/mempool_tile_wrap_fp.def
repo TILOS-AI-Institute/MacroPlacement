@@ -1306,49 +1306,6 @@ GCELLGRID Y 1797740 DO 2 STEP 2380 ;
 GCELLGRID Y 140 DO 643 STEP 2800 ;
 GCELLGRID Y 0 DO 2 STEP 140 ;
 
-COMPONENTS 20 ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance0 fakeram45_64x64
- ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance1 fakeram45_64x64
- ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance2 fakeram45_64x64
- ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance3 fakeram45_64x64
- ;
-- i_tile/gen_banks_0__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_1__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_2__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_3__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_4__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_5__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_6__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_7__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_8__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_9__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_10__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_11__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_12__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_13__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_14__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-- i_tile/gen_banks_15__mem_bank/genblk1_sram_instance fakeram45_256x32
- ;
-END COMPONENTS
-
 PINS 1272 ;
 - clk_i + NET clk_i + DIRECTION INPUT + USE SIGNAL
   + LAYER metal3 ( -70 0 ) ( 70 140 )

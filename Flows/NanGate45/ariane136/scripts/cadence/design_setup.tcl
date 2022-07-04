@@ -3,6 +3,7 @@
 
 set DESIGN ariane 
 set sdc  ../../constraints/${DESIGN}.sdc
+set rtldir ../../../../../Testcases/ariane136/rtl
 
 #
 # DEF file for floorplan initialization
