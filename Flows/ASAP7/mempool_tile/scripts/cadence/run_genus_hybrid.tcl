@@ -57,7 +57,7 @@ set_db init_hdl_search_path $rtldir
 source rtl_list.tcl
 
 foreach rtl_file $rtl_all {
-    read_hdl -sv $rtl_file
+    read_hdl -language sv -define TARGET_SYNTHESIS -define XPULPIMG=1 $rtl_file
 }
 
 elaborate $DESIGN
@@ -90,6 +90,7 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     syn_generic -physical
 } else {
     syn_generic
+    write_hdl -generic > ${HANDOFF_PATH}/${DESIGN}_generic.v
 }
 time_info GENERIC
 
