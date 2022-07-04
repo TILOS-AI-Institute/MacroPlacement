@@ -59,69 +59,91 @@ In the table below, we provide the details of each testcase on each of the enabl
 <table class="tg">
 <thead>
   <tr>
-    <th class="tg-baqh" rowspan="2"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Testcase</span></th>
-    <th class="tg-baqh" colspan="4"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Nangate45</span></th>
-    <th class="tg-baqh" colspan="4"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">ASAP7</span></th>
+    <th class="tg-0lax" rowspan="2">Test Cases</th>
+    <th class="tg-0lax" colspan="4">Nangate45</th>
+    <th class="tg-0lax" colspan="4">ASAP7</th>
+    <th class="tg-0lax" colspan="4">sky130hd</th>
   </tr>
   <tr>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-1</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-2</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-3</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-4</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-1</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-2</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-3</span></th>
-    <th class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Flow-4</span></th>
+    <th class="tg-0lax">Flow-1</th>
+    <th class="tg-0lax">Flow-2</th>
+    <th class="tg-0lax">Flow-3</th>
+    <th class="tg-0lax">Flow-4</th>
+    <th class="tg-0lax">Flow-1</th>
+    <th class="tg-0lax">Flow-2</th>
+    <th class="tg-0lax">Flow-3</th>
+    <th class="tg-0lax">Flow-4</th>
+    <th class="tg-0lax">Flow-1</th>
+    <th class="tg-0lax">Flow-2</th>
+    <th class="tg-0lax">Flow-3</th>
+    <th class="tg-0lax">Flow-4</th>
   </tr>
 </thead>
 <tbody>
   <tr>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Ariane 136</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-0lax">Ariane 136</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136">Link</a></td>
+    <td class="tg-0lax">In Progress</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">Ariane 133</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-0lax">Ariane 133</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133">Link</a></td>
+    <td class="tg-0lax">In Progress</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">MemPool tile</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-kry2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile"><span style="font-weight:400;font-style:normal;text-decoration:underline;color:#15C;background-color:transparent">Link</span></a></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-0lax">MemPool tile</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
+    <td class="tg-0lax">Done</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">In Progress</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">NVDLA</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
-    <td class="tg-baqh"><span style="font-weight:400;font-style:normal;text-decoration:none;color:#000;background-color:transparent">N/A</span></td>
+    <td class="tg-0lax">NVDLA</td>
+    <td class="tg-0lax">Done</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">In Progress</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
   </tr>
 </tbody>
 </table>
-  
+
+
 The directory structure is as follows *./FLows/\<enablement\>/\<testcase\>/<constraint\|def\|netlist\|scripts\|run>/*. Details of the sub-directories for each testcase on each enablement:
 - *constraint* directory contains the *.sdc* file.
 - *def* directory contains the def file with pin placement and die area information.
