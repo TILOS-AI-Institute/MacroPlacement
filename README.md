@@ -18,6 +18,8 @@ The list of available testcases
 - MemPool (RTL)
   - [RTL files for Mempool tile design](./Testcases/mempool_tile/)
   - RTL files for Mempool group design
+- NVDLA (RTL)
+  - [RTL files for NVDLA Partition *c*](./Testcases/nvdla/)
   
 In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. We outline the steps instantiate memories for Ariane 136 [here](./Testcases/ariane136/) and we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's SRAM count [here](./Testcases/ariane133/). 
 
@@ -30,7 +32,7 @@ All the testcases are available under the [Testcases](./Testcases/) directory. D
 The list of available enablements
 - [NanGate45](./Enablements/NanGate45/)
 - [ASAP7](./Enablements/ASAP7/)
-- SKY130HD
+- [SKY130HD FakeStack](./Enablements/SKY130HD/)
   
 Open-source enablements NanGate45 and ASAP7 are utilized in our SP&R flow. All the enablements are available under [Enablements](./Enablements) directory. Details of the sub-directories of each enablements:
  - *lib* directory contains all the required liberty files.
@@ -62,7 +64,7 @@ In the table below, we provide the details of each testcase on each of the enabl
     <th class="tg-0lax" rowspan="2">Test Cases</th>
     <th class="tg-0lax" colspan="4">Nangate45</th>
     <th class="tg-0lax" colspan="4">ASAP7</th>
-    <th class="tg-0lax" colspan="4">sky130hd</th>
+    <th class="tg-0lax" colspan="4">SKY130HD FakeStack</th>
   </tr>
   <tr>
     <th class="tg-0lax">Flow-1</th>
@@ -88,9 +90,9 @@ In the table below, we provide the details of each testcase on each of the enabl
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136">Link</a></td>
-    <td class="tg-0lax">In Progress</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
@@ -103,9 +105,9 @@ In the table below, we provide the details of each testcase on each of the enabl
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133">Link</a></td>
-    <td class="tg-0lax">In Progress</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
@@ -113,29 +115,29 @@ In the table below, we provide the details of each testcase on each of the enabl
   <tr>
     <td class="tg-0lax">MemPool tile</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
-    <td class="tg-0lax">Done</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">In Progress</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
     <td class="tg-0lax">NVDLA</td>
-    <td class="tg-0lax">Done</td>
-    <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">In Progress</td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
