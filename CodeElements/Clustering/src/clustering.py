@@ -5,6 +5,7 @@ import sys
 sys.path.append('./utils')
 sys.path.append('../../FormatTranslators/src')
 
+from math import sqrt
 from FormatTranslators import Port
 from FormatTranslators import Macro
 from FormatTranslators import MacroPin
@@ -60,11 +61,19 @@ class Clustering:
         # the instance_name_file includes name, is_macro, bounding box of the instance
         self.instance_name_file = self.hypergraph_file + ".instance"
         self.hypergraph_fix_file = self.hypergraph_file + ".fix"
+        self.macro_pin_file = self.hypergraph_file + ".macro_pin"
+        self.outline_file = self.hypergraph_file + ".outline"
+        self.net_file = self.hypergraph_file + ".net"
 
         # set up result directories
         result_dir = "./results"
         if not os.path.exists(result_dir):
             os.mkdir(result_dir)
+
+
+        pbf_result_dir = result_dir + "/Protocol_buffer_format"
+        if not os.path.exists(pbf_result_dir):
+            os.mkdir(pbf_result_dir)
 
         cadence_result_dir = result_dir + "/Cadence"
         if not os.path.exists(cadence_result_dir):
@@ -73,6 +82,9 @@ class Clustering:
         openroad_result_dir = result_dir + "/OpenROAD"
         if not os.path.exists(openroad_result_dir):
             os.mkdir(openroad_result_dir)
+
+        # for protocol buffer format
+        self.pbf_file = pbf_result_dir + "/" + self.design + ".pb.txt"
 
         # for innovus command
         self.cluster_file   = cadence_result_dir + "/" + self.design
@@ -94,6 +106,7 @@ class Clustering:
         self.max_cluster_id = -1
         self.vertices_in_cluster = {  } # vertices in each cluster
         self.cluster_pos = {  } # store the coordinates of each cluster
+        self.soft_macros = [  ] # list of the std cell instances in each soft macro
 
         ###############################################################################
         ### Functions
@@ -108,11 +121,12 @@ class Clustering:
 
         self.MergeSmallClusters()  # Merge small clusters with its neighbors
         print("[INFO] After finishing MergeSmallClusters(), ", end = "")
-        print("num_clusters = ", len(self.vertices_in_cluster))
 
-        print(len(self.vertices_in_cluster))
-        print(len(self.cluster_pos))
-
+        self.GenerateSoftMacros()
+        ProBufFormat(self.io_name_file, self.macro_pin_file, \
+                     self.instance_name_file,  self.outline_file, \
+                     self.net_file, self.soft_macros, \
+                     self.pbf_file, self.net_size_threshold, 1.0)
 
         exit()
 
@@ -538,4 +552,272 @@ class Clustering:
 
     def GetNumClusters(self):
         return len(self.vertices_in_cluster)
+
+    def GenerateSoftMacros(self):
+        for key, value in self.vertices_in_cluster.items():
+            soft_macro = []
+            for vertex_id in value:
+                if self.is_io_macro_list[vertex_id] == False:
+                    soft_macro.append(self.vertex_list[vertex_id])
+            self.soft_macros.append(soft_macro)
+
+
+
+
+# Generate Clustered Netlist in Protocol Buffer Format
+class ProBufFormat:
+    def __init__(self, io_file, macro_pin_file, inst_file, outline_file,
+                 net_file, soft_macros, pbf_file, net_size_threshold,
+                 aspect_ratio):
+        self.io_file = io_file
+        self.macro_pin_file = macro_pin_file
+        self.inst_file = inst_file
+        self.outline_file = outline_file
+        self.net_file = net_file
+        self.soft_macros = soft_macros
+        self.pbf_file = pbf_file
+        self.net_size_threshold = net_size_threshold
+        self.aspect_ratio = aspect_ratio
+        self.insts = {  }  # map name to Port, Macro, Soft Macro
+        self.macro_pin_map = {  } # map macro_pin to macro
+        self.macro_pin_offset = {  } # map macro_pin_name to offset
+        self.std_cell_pos = {   } # instance_name, bounding box
+        self.std_cell_map = {   } # instance_name, soft macro name
+        self.ios = []
+
+        # circuit row information
+        self.fp_lx = 0.0
+        self.fp_ly = 0.0
+        self.fp_ux = 0.0
+        self.fp_uy = 0.0
+
+        self.ReadOutlineFile()
+        self.ReadIOFile()
+        self.ReadInstFile()
+        self.ReadMacroPinFile()
+        self.ReadNetFile()
+        self.Output()
+
+    # Read outline file
+    def ReadOutlineFile(self):
+        with open(self.outline_file) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        items = content[0].split()
+        self.fp_lx = float(items[0])
+        self.fp_ly = float(items[1])
+        self.fp_ux = float(items[2])
+        self.fp_uy = float(items[3])
+
+        print('*'*80)
+        print("Outline Information")
+        print("[INFO] Core Size : ", self.fp_lx, self.fp_ly, self.fp_ux, self.fp_uy)
+        print("\n\n")
+
+    # Read IO file
+    def ReadIOFile(self):
+        with open(self.io_file) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        for line in content:
+            items = line.split()
+            io_name = items[0]
+            lx = float(items[1])
+            ly = float(items[2])
+            ux = float(items[3])
+            uy = float(items[4])
+            side = "LEFT"
+            if (lx <= self.fp_lx):
+                side = "LEFT"
+            elif (ux >= self.fp_ux):
+                side = "RIGHT"
+            elif (uy >= self.fp_uy):
+                side = "TOP"
+            else:
+                side = "BOTTOM"
+            self.insts[io_name] = Port(io_name, (lx + ux) / 2.0, (ly + uy) / 2.0, side)
+            self.ios.append(io_name)
+
+    # Read instance file
+    def ReadInstFile(self):
+        with open(self.inst_file) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        for line in content:
+            items = line.split()
+            inst_name = items[0]
+            block_flag = items[1]
+            lx = float(items[2])
+            ly = float(items[3])
+            ux = float(items[4])
+            uy = float(items[5])
+            orientation = items[6]
+            width = ux - lx
+            height = uy - ly
+            x = (lx + ux) / 2.0
+            y = (ly + uy) / 2.0
+            if block_flag == '1':
+                self.insts[inst_name] = Macro(inst_name, width, height, x, y, orientation)
+            else:
+                self.std_cell_pos[inst_name] = [lx, ly, ux, uy]
+
+        # Create Soft Macros
+        soft_macro_id = 0
+        for soft_macro in self.soft_macros:
+            macro_name = "Grp_" + str(soft_macro_id)
+            lx = 1e20
+            ly = 1e20
+            ux = 0.0
+            uy = 0.0
+            area = 0.0
+            for std_cell in soft_macro:
+                bbox = self.std_cell_pos[std_cell]
+                lx = min(lx, bbox[0])
+                ly = min(ly, bbox[1])
+                ux = max(ux, bbox[2])
+                uy = max(uy, bbox[3])
+                area += (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
+                self.std_cell_map[std_cell] = macro_name
+            x = (lx + ux) / 2.0
+            y = (ly + uy) / 2.0
+            height = sqrt(area * self.aspect_ratio)
+            width = area / height
+            self.insts[macro_name] = Macro(macro_name, width, height, x, y)
+            soft_macro_id += 1
+
+    # Read Macro Pin file
+    def ReadMacroPinFile(self):
+        with open(self.macro_pin_file) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        for line in content:
+            items = line.split()
+            pin_name = items[0] + '/' + items[1]
+            macro_name = items[0]
+            self.macro_pin_map[pin_name] = macro_name
+            x_offset = float(items[2])
+            y_offset = float(items[3])
+            self.macro_pin_offset[pin_name] = [x_offset, y_offset]
+
+    # Read Net file
+    def ReadNetFile(self):
+        with open(self.net_file) as f:
+            content = f.read().splitlines()
+        f.close()
+
+        adj_list = {  }
+        for io in self.ios:
+            adj_list[io] = {  }
+
+        for macro_pin in self.macro_pin_map.keys():
+            adj_list[macro_pin] = {  }
+
+        for i in range(len(self.soft_macros)):
+            adj_list["Grp_" + str(i)] = { }
+
+        for line in content:
+            items = line.split()
+            num_pin = len(items) / 4
+            if (num_pin > self.net_size_threshold):
+                pass
+            else:
+                driver_name = items[2]
+                driver_pin_name = driver_name + '/' + items[0]
+                driver = None
+                if (driver_name in self.ios):
+                    driver = driver_name
+                elif (driver_pin_name in self.macro_pin_offset):
+                    driver = driver_pin_name
+                else:
+                    driver = self.std_cell_map[driver_name]
+
+                sinks_name = []
+                for i in range(1, int(num_pin)):
+                    inst_name = items[4 * i + 2]
+                    pin_name = inst_name + '/' + items[4 * i]
+                    if (inst_name in self.ios):
+                        sinks_name.append(inst_name)
+                    elif (pin_name in self.macro_pin_offset):
+                        sinks_name.append(pin_name)
+                    else:
+                        sinks_name.append(self.std_cell_map[inst_name] + "/Input")
+                unique_sinks = []
+                for sink in sinks_name:
+                    if sink not in unique_sinks:
+                        unique_sinks.append(sink)
+
+                for sink in unique_sinks:
+                    if sink not in adj_list[driver]:
+                        adj_list[driver][sink] = 1
+                    else:
+                        adj_list[driver][sink] += 1
+
+        # Create Macro Pins
+        for io in self.ios:
+            self.insts[io].AddSinks(adj_list[io].keys())
+
+        for macro_pin in self.macro_pin_map.keys():
+            if (len(adj_list[macro_pin]) == 0):
+                offset = self.macro_pin_offset[macro_pin]
+                inst_name = self.macro_pin_map[macro_pin]
+                self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, \
+                                                           offset[0], offset[1]))
+            else:
+                offset = self.macro_pin_offset[macro_pin]
+                inst_name = self.macro_pin_map[macro_pin]
+                Pin = MacroPin(macro_pin, inst_name, offset[0], offset[1])
+                Pin.AddSinks(adj_list[macro_pin].keys())
+                self.insts[inst_name].AddOutputPin(Pin)
+
+        for i in range(len(self.soft_macros)):
+            # add input pin
+            inst_name = "Grp_" + str(i)
+            macro_pin = inst_name + "/Input"
+            self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, 0.0, 0.0))
+            output_idx = 1
+            for key, weight in adj_list[inst_name].items():
+                macro_pin = inst_name + "/Output_" + str(output_idx)
+                output_idx += 1
+                Pin = MacroPin(macro_pin, inst_name, 0.0, 0.0)
+                Pin.AddSink(key)
+                if key not in self.ios or key not in self.macro_pin_map:
+                    Pin.SpecifyWeight(weight)
+                self.insts[inst_name].AddOutputPin(Pin)
+
+
+    # Generate.pb.txt file
+    def Output(self):
+        f = open(self.pbf_file, "w")
+        for inst_name, inst in self.insts.items():
+            f.write(str(inst))
+            if (inst.GetType() == "MACRO"):
+                for macro_pin in inst.GetPins():
+                    f.write(str(macro_pin))
+        f.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
