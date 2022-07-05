@@ -64,7 +64,8 @@ elaborate $DESIGN
 time_info Elaboration
 
 if {![info exist ::env(PHY_SYNTH)] || $::env(PHY_SYNTH) == 0} {
-    read_sdc $sdc
+    #read_sdc $sdc
+    source $sdc
 }
 
 init_design

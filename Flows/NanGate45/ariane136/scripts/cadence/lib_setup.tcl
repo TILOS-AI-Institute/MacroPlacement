@@ -36,3 +36,4 @@ set qrc_min "${qrcdir}/NG45.tch"
 #
 # Ensures proper and consistent library handling between Genus and Innovus
 #set_db library_setup_ispatial true
+setDesignMode -process 45

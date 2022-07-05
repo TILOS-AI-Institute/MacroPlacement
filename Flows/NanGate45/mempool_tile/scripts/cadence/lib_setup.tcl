@@ -36,3 +36,4 @@ set lefs "
 
 set qrc_max "${qrcdir}/NG45.tch"
 set qrc_min "${qrcdir}/NG45.tch"
+setDesignMode -process 45

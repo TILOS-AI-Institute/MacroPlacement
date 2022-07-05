@@ -36,3 +36,4 @@ set lefs "
 
 #set qrc_max "SigCmax/qrcTechFile"
 #set qrc_min "SigCmin/qrcTechFile"
+setDesignMode -process 45
