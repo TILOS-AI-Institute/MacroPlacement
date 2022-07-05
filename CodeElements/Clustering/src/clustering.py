@@ -128,8 +128,6 @@ class Clustering:
                      self.net_file, self.soft_macros, \
                      self.pbf_file, self.net_size_threshold, 1.0)
 
-        exit()
-
 
         self.CreateInvsCluster()  # Generate Innovus Clustering Commands
         self.CreateDef()  # Generate clustered lef and def file
