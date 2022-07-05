@@ -2,7 +2,7 @@ VERSION 5.7 ;
 BUSBITCHARS "[]" ;
 MACRO fakeram45_64x256
   FOREIGN fakeram45_64x256 0 0 ;
-  SYMMETRY X Y R90 ;
+  SYMMETRY X Y ;
   SIZE 108.870 BY 175.000 ;
   CLASS BLOCK ;
   PIN w_mask_in[0]

@@ -2,7 +2,7 @@ VERSION 5.7 ;
 BUSBITCHARS "[]" ;
 MACRO sram_asap7_64x64_1rw
   FOREIGN sram_asap7_64x64_1rw 0 0 ;
-  SYMMETRY X Y R90 ;
+  SYMMETRY X Y ;
   SIZE 8.360 BY 16.800 ;
   CLASS BLOCK ;
   PIN rd_out[0]

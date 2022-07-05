@@ -1271,93 +1271,66 @@ ROW CORE_ROW_626 FreePDK45_38x28_10R_NP_162NW_34O 20140 1772680 FS DO 4631 BY 1 
 ROW CORE_ROW_627 FreePDK45_38x28_10R_NP_162NW_34O 20140 1775480 N DO 4631 BY 1 STEP 380 0
  ;
 
-TRACKS Y 4020 DO 562 STEP 3200 LAYER metal10 ;
-TRACKS X 3530 DO 535 STEP 3360 LAYER metal10 ;
-TRACKS X 1850 DO 1071 STEP 1680 LAYER metal9 ;
-TRACKS Y 4020 DO 562 STEP 3200 LAYER metal9 ;
-TRACKS Y 1540 DO 1071 STEP 1680 LAYER metal8 ;
-TRACKS X 1850 DO 1071 STEP 1680 LAYER metal8 ;
-TRACKS X 730 DO 3214 STEP 560 LAYER metal7 ;
-TRACKS Y 1540 DO 1071 STEP 1680 LAYER metal7 ;
-TRACKS Y 420 DO 3214 STEP 560 LAYER metal6 ;
-TRACKS X 730 DO 3214 STEP 560 LAYER metal6 ;
-TRACKS X 730 DO 3214 STEP 560 LAYER metal5 ;
-TRACKS Y 420 DO 3214 STEP 560 LAYER metal5 ;
-TRACKS Y 140 DO 6429 STEP 280 LAYER metal4 ;
-TRACKS X 730 DO 3214 STEP 560 LAYER metal4 ;
-TRACKS X 190 DO 4737 STEP 380 LAYER metal3 ;
-TRACKS Y 140 DO 6429 STEP 280 LAYER metal3 ;
-TRACKS Y 140 DO 6429 STEP 280 LAYER metal2 ;
-TRACKS X 190 DO 4737 STEP 380 LAYER metal2 ;
-TRACKS X 190 DO 4737 STEP 380 LAYER metal1 ;
-TRACKS Y 140 DO 6429 STEP 280 LAYER metal1 ;
-
-GCELLGRID X 1797590 DO 2 STEP 2470 ;
-GCELLGRID X 190 DO 474 STEP 3800 ;
-GCELLGRID X 0 DO 2 STEP 190 ;
-GCELLGRID Y 1797740 DO 2 STEP 2380 ;
-GCELLGRID Y 140 DO 643 STEP 2800 ;
-GCELLGRID Y 0 DO 2 STEP 140 ;
 
 COMPONENTS 20 ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance0 fakeram45_64x64 + PLACED ( 472980 29880 ) FN
+- i_tile/gen_caches\[0\].i_snitch_icache/i_lookup/i_data/genblk1.fr_sp_instance0 fakeram45_64x64 + PLACED ( 203180 183880 ) FN + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance1 fakeram45_64x64 + PLACED ( 647400 29880 ) FN
+- i_tile/gen_caches\[0\].i_snitch_icache/i_lookup/i_data/genblk1.fr_sp_instance1 fakeram45_64x64 + PLACED ( 212680 421880 ) FN + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance2 fakeram45_64x64 + PLACED ( 318320 29880 ) FN
+- i_tile/gen_caches\[0\].i_snitch_icache/i_lookup/i_data/genblk1.fr_sp_instance2 fakeram45_64x64 + PLACED ( 37120 133480 ) FN + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_caches_0__i_snitch_icache/i_lookup/i_data/genblk1_fr_sp_instance3 fakeram45_64x64 + PLACED ( 495020 279080 ) FN
+- i_tile/gen_caches\[0\].i_snitch_icache/i_lookup/i_data/genblk1.fr_sp_instance3 fakeram45_64x64 + PLACED ( 37120 374280 ) FN + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_0__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1053480 1404280 ) FS
+- i_tile/gen_banks\[15\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 314520 718680 ) FN + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_1__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1375340 1401480 ) FS
+- i_tile/gen_banks\[14\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 34840 1401480 ) S + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_2__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 549360 1407080 ) S
+- i_tile/gen_banks\[13\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 186840 1401480 ) S + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_3__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1502260 931080 ) FS
+- i_tile/gen_banks\[12\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 72460 1021080 ) FN + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_4__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1648560 945080 ) FS
+- i_tile/gen_banks\[11\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 340360 1401480 ) S + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_5__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1153420 807880 ) FS
+- i_tile/gen_banks\[10\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 498060 1401480 ) S + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_6__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 364300 1407080 ) S
+- i_tile/gen_banks\[9\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 703120 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_7__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1329360 989880 ) FS
+- i_tile/gen_banks\[8\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 862720 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_8__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 894640 1404280 ) FS
+- i_tile/gen_banks\[7\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1518980 1029080 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_9__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1211560 1351080 ) FS
+- i_tile/gen_banks\[6\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1143540 1026280 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_10__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 1540640 1345480 ) FS
+- i_tile/gen_banks\[5\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1296300 1026280 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_11__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 252200 511480 ) FN
+- i_tile/gen_banks\[4\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1339620 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_12__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 178860 1407080 ) S
+- i_tile/gen_banks\[3\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1033340 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_13__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 72840 1017880 ) S
+- i_tile/gen_banks\[2\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1186480 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_14__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 735800 1404280 ) FS
+- i_tile/gen_banks\[1\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1643620 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
-- i_tile/gen_banks_15__mem_bank/genblk1_sram_instance fakeram45_256x32 + PLACED ( 30280 1407080 ) S
+- i_tile/gen_banks\[0\].mem_bank/genblk1.sram_instance fakeram45_256x32 + PLACED ( 1492380 1398680 ) FS + WEIGHT 1
   + HALO 10000 10000 10000 10000
  ;
 END COMPONENTS
