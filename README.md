@@ -3,10 +3,10 @@
   
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
-  - [Testcases](#testcases)
-  - [Enablements](#enablements)
-  - [Flows](#flows)
-  - [Code Elements](#code-elements)
+  - [Testcases](#testcases) contains open-source designs such as Ariane, MemPool and NVDLA.
+  - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
+  - [Flows](#flows) contains Cadence Genus and Innovus SP&R flow scripts and OpenROAD flow scripts.
+  - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
   - [FAQ](#faq)
   - [Related Links](#related-links)
 
@@ -43,7 +43,7 @@ We also provide the steps to generate the fakeram models for each of the enablem
 
 
 ## **Flows**
-We provide multiple flows for each of the testcases and enablements. They are: (1) a logical synthesis-based SP&R flow using Cadence Genus and Innovus ([Flow-1](./Flows/figures/flow-1.PNG)), (2) a physical synthesis-based SP&R flow using Cadence Genus iSpatial and Innovus ([Flow-2](./Flows/figures/flow-2.PNG)), (3) a logical synthesis-based SP&R flow using Yosys and OpenROAD ([Flow-3](./Flows/figures/flow-3.PNG)), and (4) creation of input data for Physical synthesis-based CircuitTraining using Genus iSpatial ([Flow-4](./Flows/figures/flow-4.PNG)).
+We provide multiple flows for each of the testcases and enablements. They are: (1) a logical synthesis-based SP&R flow using Cadence Genus and Innovus ([Flow-1](./Flows/figures/flow-1.PNG)), (2) a physical synthesis-based SP&R flow using Cadence Genus iSpatial and Innovus ([Flow-2](./Flows/figures/flow-2.PNG)), (3) a logical synthesis-based SP&R flow using Yosys and OpenROAD ([Flow-3](./Flows/figures/flow-3.PNG)), and (4) creation of input data for Physical synthesis-based Circuit Training using Genus iSpatial ([Flow-4](./Flows/figures/flow-4.PNG)).
 
 The details of each flow are are given in the following.
 - **Flow-1:**  
@@ -185,7 +185,7 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
   - simulated annealing on the gridded canvas: documentation and implementation
   - donated cloud resources (credits) for experimental studies
   - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
-  - protobuf, lef/def, Bookshelf: detailed and confirmed documentation, plus translators
+  - protobuf, lef/def, Bookshelf: detailed and confirmed documentation, plus tests and other help to improve our initial versions of translators
   - "fakeram" generator for the ASAP7 research PDK
   - qrctechfile for NanGate45
 
