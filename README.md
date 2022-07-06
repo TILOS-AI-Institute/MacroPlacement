@@ -5,7 +5,7 @@
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
   - [Testcases](#testcases) contains open-source designs such as Ariane, MemPool and NVDLA.
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
-  - [Flows](#flows) contains Cadence Genus and Innovus SP&R flow scripts and OpenROAD flow scripts.
+  - [Flows](#flows) contains tool setups and runscripts for both proprietary and open-source SP&R tools such as Cadence Genus/Innovus and OpenROAD.
   - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
   - [FAQ](#faq)
   - [Related Links](#related-links)
