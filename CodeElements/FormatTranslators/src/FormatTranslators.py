@@ -43,6 +43,13 @@ class Port:
         self.str += "node {\n"
         self.str += '  name: "' + self.name + '"\n'
         for sink in self.sinks:
+            sink_new = ''
+            for char in sink:
+                if char == '\\':
+                    sink_new += '\\\\'
+                else:
+                    sink_new += char
+            sink = sink_new
             self.str += '  input: "' + sink + '"\n'
         self.str += "  attr {\n"
         self.str += '    key: "type"\n'
@@ -108,6 +115,13 @@ class StandardCell:
         self.str += "node {\n"
         self.str += '  name: "' + self.name + '"\n'
         for sink in self.sinks:
+            sink_new = ''
+            for char in sink:
+                if char == '\\':
+                    sink_new += '\\\\'
+                else:
+                    sink_new += char
+            sink = sink_new
             self.str += '  input: "' + sink + '"\n'
         self.str += "  attr {\n"
         self.str += '    key: "type"\n'
@@ -263,6 +277,13 @@ class MacroPin:
         self.str += "node {\n"
         self.str += '  name: "' + self.name + '"\n'
         for sink in self.sinks:
+            sink_new = ''
+            for char in sink:
+                if char == '\\':
+                    sink_new += '\\\\'
+                else:
+                    sink_new += char
+            sink = sink_new
             self.str += '  input: "' + sink + '"\n'
         self.str += "  attr {\n"
         self.str += '    key: "macro_name"\n'
