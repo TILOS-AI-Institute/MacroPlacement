@@ -56,4 +56,4 @@ set_input_delay  [expr 0.30*$clock_cycle] -clock vclk_i rst_ni
 
 # Critical range
 # Depending on the synthesis tool used, this can be helpful.
-set_critical_range 0.100 [current_design]
+#set_critical_range 0.100 [current_design]
