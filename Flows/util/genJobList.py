@@ -2,6 +2,7 @@ import os
 import shutil
 import fileinput
 import re
+import time
 
 testcases = ['ariane136', 'ariane133', 'mempool_tile', 'nvdla']
 enablements = ['NanGate45', 'ASAP7']
@@ -9,17 +10,20 @@ job_file = "all_jobs"
 flows = [1, 2]
 
 fp = open(job_file, "w")
+run_dir_name= f"run-{time.strftime('%Y%m%d-%H%M%S')}"
 for enablement in enablements:
   for testcase in testcases:
     for flow in flows:
       ## Check if the run directory exists
-      run_dir = f"./{enablement}/{testcase}/run"
+      run_dir = f"./{enablement}/{testcase}/{run_dir_name}"
+      print(run_dir)
       if not os.path.exists(run_dir):
         os.makedirs(run_dir)
       
       ## Copy the scripts
       scripts_src = f"./{enablement}/{testcase}/scripts/cadence"
-      scripts_dst = f"./{enablement}/{testcase}/run/flow{flow}"
+      scripts_dst = f"{run_dir}/flow{flow}"
+      #scripts_dst = f"./{enablement}/{testcase}/run/flow{flow}"
       if os.path.exists(scripts_dst):
           print(f"For TestCase:{testcase} Enablement:{enablement} Flow:{flow} already exists. So not generating job for this") 
       shutil.copytree(scripts_src, scripts_dst)
