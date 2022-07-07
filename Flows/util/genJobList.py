@@ -2,11 +2,15 @@ import os
 import shutil
 import fileinput
 import re
+from datetime import datetime
 
 testcases = ['ariane136', 'ariane133', 'mempool_tile', 'nvdla']
 enablements = ['NanGate45', 'ASAP7']
-job_file = "all_jobs"
 flows = [1, 2]
+job_file = "all_jobs"
+tnow = datetime.now()
+suffix = f'{tnow.month}{tnow.day}{tnow.year}_{tnow.hour}{tnow.minute}{tnow.second}'
+
 
 fp = open(job_file, "w")
 for enablement in enablements:
@@ -19,9 +23,16 @@ for enablement in enablements:
       
       ## Copy the scripts
       scripts_src = f"./{enablement}/{testcase}/scripts/cadence"
-      scripts_dst = f"./{enablement}/{testcase}/run/flow{flow}"
+      
+      if suffix != "":
+        scripts_dst = f"./{enablement}/{testcase}/run/flow{flow}_{suffix}"
+      else:
+        scripts_dst = f"./{enablement}/{testcase}/run/flow{flow}"
+      
       if os.path.exists(scripts_dst):
-          print(f"For TestCase:{testcase} Enablement:{enablement} Flow:{flow} already exists. So not generating job for this") 
+          print(f"For TestCase:{testcase} Enablement:{enablement} Flow:{flow}"
+                "already exists. So not generating job for this")
+      
       shutil.copytree(scripts_src, scripts_dst)
 
       ## Update the run.sh for flow
