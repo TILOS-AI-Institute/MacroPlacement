@@ -20,7 +20,7 @@ set_clock_latency $pre_cts_clock_latency_estimate [get_clocks clk_i]
 
 # Create virtual clock.
 create_clock -name "vclk_i" -period $clock_cycle
-set_clock_uncertainty $clk_uncertainty [get_clocks vclk_i]
+set_clock_uncertainty $uncertainty [get_clocks vclk_i]
 set_clock_latency $pre_cts_clock_latency_estimate [get_clocks vclk_i]
 set_max_transition $maxTransition -clock_path [get_clocks vclk_i]
 
@@ -34,26 +34,26 @@ set_max_fanout $maxFanout [current_design]
 set_false_path -from tile_id_i
 
 # TCDM Master
-set_input_delay  [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "hierarchical_name =~ tcdm_master_*req_*"] 
-set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "hierarchical_name =~ tcdm_master_*req_*"]
+set_input_delay  [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "name =~ tcdm_master_*req_*"] 
+set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "name =~ tcdm_master_*req_*"]
 
-set_input_delay  [expr 0.65*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "hierarchical_name =~ tcdm_master_*resp_*"] 
-set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "hierarchical_name =~ tcdm_master_*resp_*"]
+set_input_delay  [expr 0.65*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "name =~ tcdm_master_*resp_*"] 
+set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "name =~ tcdm_master_*resp_*"]
 
 # TCDM Slave
-set_input_delay  [expr 0.65*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "hierarchical_name =~ tcdm_slave_*req_*"] 
-set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "hierarchical_name =~ tcdm_slave_*req_*"]
+set_input_delay  [expr 0.65*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "name =~ tcdm_slave_*req_*"] 
+set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "name =~ tcdm_slave_*req_*"]
 
-set_input_delay  [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "hierarchical_name =~ tcdm_slave_*resp_*"] 
-set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "hierarchical_name =~ tcdm_slave_*resp_*"]
+set_input_delay  [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "name =~ tcdm_slave_*resp_*"] 
+set_output_delay [expr 0.85*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "name =~ tcdm_slave_*resp_*"]
 
 # Refill port
-set_input_delay  [expr 0.50*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "hierarchical_name =~ refill_*"] 
-set_output_delay [expr 0.50*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "hierarchical_name =~ refill_*"]
+#set_input_delay  [expr 0.50*$clock_cycle] -clock vclk_i [filter_collection [all_inputs]  "name =~ refill_*"] 
+#set_output_delay [expr 0.50*$clock_cycle] -clock vclk_i [filter_collection [all_outputs] "name =~ refill_*"]
 
 # Reset
 set_input_delay  [expr 0.30*$clock_cycle] -clock vclk_i rst_ni
 
 # Critical range
 # Depending on the synthesis tool used, this can be helpful.
-set_critical_range 0.100 [current_design]
+#set_critical_range 0.100 [current_design]

@@ -1299,4 +1299,4 @@ set_clock_uncertainty -setup 0.08 [get_clocks clk_i]
 set_clock_uncertainty -hold 0.08 [get_clocks clk_i]
 set_clock_latency  0.07 [get_clocks vclk_i]
 ## List of unsupported SDC commands ##
-set_critical_range 0.100 [current_design]
+#set_critical_range 0.100 [current_design]
