@@ -3,6 +3,7 @@
 
 set DESIGN ariane 
 set sdc  ../../constraints/${DESIGN}.sdc
+set rtldir ../../../../../Testcases/ariane136/rtl
 
 #
 # DEF file for floorplan initialization
@@ -20,3 +21,7 @@ set GEN_EFF medium
 # Effort level during optimization in syn_map -physical (or called mapping) stage
 # possible values are : high, medium or low
 set MAP_EFF high
+#
+set SITE "FreePDK45_38x28_10R_NP_162NW_34O"
+set HALO_WIDTH 5
+set TOP_ROUTING_LAYER 10

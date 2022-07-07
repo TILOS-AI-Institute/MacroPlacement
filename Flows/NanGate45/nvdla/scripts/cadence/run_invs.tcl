@@ -7,10 +7,10 @@ source mmmc_setup.tcl
 setMultiCpuUsage -localCpu 16
 set util 0.3
 
-set netlist "./syn_handoff/$DESIGN.v"
-set sdc "./syn_handoff/$DESIGN.sdc"
+set handoff_dir  "./syn_handoff"
 
-set site "FreePDK45_38x28_10R_NP_162NW_34O"
+set netlist ${handoff_dir}/${DESIGN}.v
+set sdc ${handoff_dir}/${DESIGN}.sdc 
 
 set rptDir summaryReport/ 
 set encDir enc/
@@ -39,7 +39,6 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
-setDesignMode -process 45
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
@@ -56,26 +55,21 @@ generateVias
 createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
-#floorPlan -r 1.0 $util 10 10 10 10
-defIn $floorplan_def 
 
-## Macro Placement ##
-#redirect mp_config.tcl {source gen_mp_config.tcl}
-#proto_design -constraints mp_config.tcl 
-addHaloToBlock -allMacro 5 5 5 5
-place_design -concurrent_macros
-refine_macro_place
+if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
+    defIn ${handoff_dir}/${DESIGN}.def
+} else {
+    defIn $floorplan_def
+    addHaloToBlock -allMacro $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH
+    place_design -concurrent_macros
+    refine_macro_place
+}
+
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
-
-## Creating Pin Blcokage for lower and upper pin layers ##
-createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
-createPinBlkg -name side_top -edge 1
-createPinBlkg -name side_right -edge 2
-createPinBlkg -name side_bottom -edge 3
 
 setPlaceMode -place_detail_legalization_inst_gap 1
 setFillerMode -fitGap true
-setDesignMode -topRoutingLayer 10
+setDesignMode -topRoutingLayer $TOP_ROUTING_LAYER
 setDesignMode -bottomRoutingLayer 2 
 
 place_opt_design -out_dir $rptDir -prefix place

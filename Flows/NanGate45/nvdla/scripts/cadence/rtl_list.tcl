@@ -5,6 +5,7 @@
 +libext+.gv
 +define+DISABLE_TESTPOINTS
 +define+NV_SYNTHESIS
++define+SYNTHESIS
 //+define+RAM_INTERFACE
 
 NV_nvdla.v
@@ -371,7 +372,7 @@ nv_ram_rwsthp_80x15.v
 nv_ram_rwsthp_80x17.v
 nv_ram_rwsthp_80x72.v
 nv_ram_rwsthp_80x9.v
-fakeram_256x64_dp.v
+fakeram45_256x64_dp.v
 
 
 -v NV_NVDLA_XXIF_libs.v

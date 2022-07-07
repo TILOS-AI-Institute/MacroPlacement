@@ -207,5 +207,7 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 - A. Mirhoseini, A. Goldie, M. Yazgan, J. Jiang, E. Songhori, et al.,
 "Chip Placement with Deep Reinforcement Learning",
 *arXiv:2004.10746*, 2020. \[[paper](https://arxiv.org/pdf/2004.10746.pdf)\]
+- S. Yue, E. M. Songhori, J. W. Jiang, T. Boyd, A. Goldie, A. Mirhoseini and S. Guadarrama, "Scalability and Generalization of Circuit Training for Chip Floorplanning", *ISPD*, 2022. \[[paper](https://dl.acm.org/doi/abs/10.1145/3505170.3511478)\]\[[ppt](http://www.ispd.cc/slides/2021/protected/2_2_Goldie_Mirhoseini.pdf)\]
+- Z. Jiang, E. Songhori, S. Wang, A. Goldie, A. Mirhoseini, et al., "Delving into Macro Placement with Reinforcement Learning", *MLCAD*, 2021. \[[paper](https://arxiv.org/pdf/2109.02587)\]
+- A Gentle Introduction to Graph Neural Networks. [[Link](https://distill.pub/2021/gnn-intro/)]
 - TILOS AI Institute. \[[link](https://tilos.ai/)\]
-

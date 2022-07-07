@@ -53,7 +53,7 @@ if {![info exist ::env(PHY_SYNTH)] || $::env(PHY_SYNTH) == 0} {
 #################################################
 # Load Design and Initialize
 #################################################
-
+set_db init_hdl_search_path $rtldir 
 source rtl_list.tcl
 
 foreach rtl_file $rtl_all {
@@ -64,7 +64,8 @@ elaborate $DESIGN
 time_info Elaboration
 
 if {![info exist ::env(PHY_SYNTH)] || $::env(PHY_SYNTH) == 0} {
-    read_sdc $sdc
+    #read_sdc $sdc
+    source $sdc
 }
 
 init_design
@@ -90,6 +91,7 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     syn_generic -physical
 } else {
     syn_generic
+    write_hdl -generic > ${HANDOFF_PATH}/${DESIGN}_generic.v
 }
 time_info GENERIC
 

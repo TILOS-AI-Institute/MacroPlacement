@@ -12,8 +12,6 @@ set handoff_dir  "./syn_handoff"
 set netlist ${handoff_dir}/${DESIGN}.v
 set sdc ${handoff_dir}/${DESIGN}.sdc 
 
-set site "FreePDK45_38x28_10R_NP_162NW_34O"
-
 set rptDir summaryReport/ 
 set encDir enc/
 
@@ -41,7 +39,6 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
-setDesignMode -process 45
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
@@ -63,7 +60,7 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     defIn ${handoff_dir}/${DESIGN}.def
 } else {
     defIn $floorplan_def
-    addHaloToBlock -allMacro 5 5 5 5
+    addHaloToBlock -allMacro $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH
     place_design -concurrent_macros
     refine_macro_place
 }
@@ -72,7 +69,7 @@ saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 setPlaceMode -place_detail_legalization_inst_gap 1
 setFillerMode -fitGap true
-setDesignMode -topRoutingLayer 10
+setDesignMode -topRoutingLayer $TOP_ROUTING_LAYER
 setDesignMode -bottomRoutingLayer 2 
 
 place_opt_design -out_dir $rptDir -prefix place

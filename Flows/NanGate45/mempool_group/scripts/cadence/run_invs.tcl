@@ -41,7 +41,6 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
-setDesignMode -process 45
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override

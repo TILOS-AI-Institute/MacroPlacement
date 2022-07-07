@@ -7,7 +7,7 @@
 # with this distribution for more information.
 # ===================================================================
 
-set_max_area 0
+#set_max_area 0
 set_ideal_network [get_ports direct_reset_]
 set_ideal_network [get_ports dla_reset_rstn]
 set_ideal_network -no_propagate [get_nets nvdla_core_rstn]

@@ -3,6 +3,7 @@
 
 set DESIGN ariane 
 set sdc  ../../constraints/${DESIGN}.sdc
+set rtldir ../../rtl
 
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     set floorplan_def ../../def/ariane136_fp_placed_macros.def
@@ -18,5 +19,6 @@ set GEN_EFF medium
 # possible values are : high, medium or low
 set MAP_EFF high
 #
+set SITE "asap7sc7p5t"
 set HALO_WIDTH 1 
 set TOP_ROUTING_LAYER 7
