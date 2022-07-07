@@ -82,7 +82,7 @@ The command to launch the P&R run is as follows.
 innovus -64 -init run_invs.tcl -log log/run.log
 ```  
 
-The screenshot of the Ariane 136 testcase using the Cadence Flow-1 on NanGate45 enablement is given below.  
+The screenshot of the Ariane 136 testcase using the Cadence Flow-1 on NanGate45 enablement is shown below.  
 <img src="./NanGate45/ariane136/screenshots/Ariane136_Innovus_Genus.png" alt="ariane136_cadence" width="400"/>
 
 This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.  
@@ -100,5 +100,5 @@ Clone ORFS and build OpenROAD tools following the steps given [here](https://git
   make DESIGN_CONFIG=./designs/<enablement>/<design>/config.mk
   ```
   
-The screenshot of the Ariane 136 testcase using the ORFS (RTL-MP) on NanGate45 enablement is given below.  
+The screenshot of the Ariane 136 testcase using the ORFS (RTL-MP) on NanGate45 enablement is shown below.  
 <img src="./NanGate45/ariane136/screenshots/Ariane136_ORFS_SPNR.png" alt="ariane136_orfs" width="400"/>
