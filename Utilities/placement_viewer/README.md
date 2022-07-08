@@ -16,15 +16,18 @@ $  git clone https://github.com/google-research/circuit-training.git
 ### Place the placement_viewer in circuit_training/circuit_training/
 
 ## Testing: 
+```
 $ python3 -m circuit_training.placement_viewer.placement_viewer_test 
+```
 
 ## Execution: 
-$ python3 -m circuit_training.placement_viewer.placement_viewer \
-  --img_name: Prefix of the name of output image file. 
-  --init_file: Path to the init file.
-  --netlist_file: Path to the input netlist file.
+```
+$ python3 -m circuit_training.placement_viewer.placement_viewer  
+  --init_file: Path to the init file. 
+  --netlist_file: Path to the input netlist file. 
+  --img_name: Path to/Prefix of the name of output image file.
+```  
   
-  
-#### Example plot: Ariane RISC-V placement done by Circuit Training after training from scratch i.e. Full Scale Ariane example
-  
-![picture alt](https://github.com/Maria-UET/MacroPlacement/blob/bc90e6deaceca15ff0ce846f7c441eddc3f44034/Utilities/placement_viewer/test_data/ariane/ariane_final_placement.png "Ariane RISC-V placement done by Circuit Training after training from scratch i.e. Full Scale Ariane example")
+#### Example plot: Ariane RISC-V placement done by Circuit Training after training from scratch i.e.  [Full Scale Ariane example](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md "Full Scale Ariane example") 
+
+![picture alt](https://github.com/Maria-UET/MacroPlacement/blob/bc90e6deaceca15ff0ce846f7c441eddc3f44034/Utilities/placement_viewer/test_data/ariane/ariane_final_placement.png "Ariane RISC-V placement done by Circuit Training after training from scratch")
