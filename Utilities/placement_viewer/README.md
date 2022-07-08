@@ -1,6 +1,6 @@
-# Utility function to visualize placement in image format using plc_client from Google Circuit Training
+# Utility function to visualize placement in image format
 
-This utlity script uses the plc_client binary provided with the Google Circuit Training to plot the placement of macros and standard cells in an image format. 
+This utlity script uses the plc_client binary provided with the Google Circuit Training to plot the placement of macros and standard cells in an image format. The input to the placement viewer is the placement files in prototxt and .plc format
 
 ### Install Google Circuit Training plc_wrapper_main library
 ```
@@ -23,4 +23,8 @@ $ python3 -m circuit_training.placement_viewer.placement_viewer \
   --img_name: Prefix of the name of output image file. 
   --init_file: Path to the init file.
   --netlist_file: Path to the input netlist file.
-
+  
+  
+#### Example plot: Ariane RISC-V placement done by Circuit Training after training from scratch i.e. Full Scale Ariane example
+  
+![picture alt](https://github.com/Maria-UET/MacroPlacement/blob/bc90e6deaceca15ff0ce846f7c441eddc3f44034/Utilities/placement_viewer/test_data/ariane/ariane_final_placement.png "Ariane RISC-V placement done by Circuit Training after training from scratch i.e. Full Scale Ariane example")
