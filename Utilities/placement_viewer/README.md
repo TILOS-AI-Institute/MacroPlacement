@@ -11,7 +11,7 @@ $ sudo chmod 555 /usr/local/bin/plc_wrapper_main
 #### Clones the circuit-training repo.
 $  git clone https://github.com/google-research/circuit-training.git
 
-## Place the placement_viewer in circuit_training/circuit_training/
+#### Place the placement_viewer in circuit_training/circuit_training/
 
 ## Testing: 
 $ python3 -m circuit_training.placement_viewer.placement_viewer_test 
