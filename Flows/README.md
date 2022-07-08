@@ -101,8 +101,4 @@ Clone ORFS and build OpenROAD tools following the steps given [here](https://git
   ```
   
 The screenshot of the Ariane 136 testcase using the ORFS (RTL-MP) on NanGate45 enablement is shown below.  
-<<<<<<< HEAD
 <img src="./NanGate45/ariane136/screenshots/Ariane136_ORFS_SPNR.png" alt="ariane136_orfs" width="400"/>
-=======
-<img src="./NanGate45/ariane136/screenshots/Ariane136_ORFS_SPNR.png" alt="ariane136_orfs" width="400"/>
->>>>>>> f203df754b535b476f5d8edf541bc18ca6d902ea
