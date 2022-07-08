@@ -1,0 +1,236 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2014 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Sat Jun 25 19:52:19 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# default
+.SHELLFLAGS := -c
+# environment
+VSCODE_AGENT_FOLDER = /nfs/site/home/mariasha/.vscode-server-insiders
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# default
+MAKE_VERSION := 4.1
+# makefile
+CURDIR := /lab/aipg-ra-stor-03/mariasha/code/MacroPlacement
+# makefile
+SHELL = /bin/sh
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{}}
+# environment
+_ = /ec/pdx/disks/il_ailabs/mariasha/.vscode-server-insiders/bin/668c538b8d2fec1258ed786ae212124d6d68023c/node
+# environment
+socks_proxy = proxy.ra.intel.com:1080
+# environment
+ftp_proxy = http://proxy.ra.intel.com:911
+# makefile
+MAKEFILE_LIST := 
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+XDG_DATA_DIRS = /usr/local/share:/usr/share:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/12111378/bus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_CWD = /ec/pdx/disks/il_ailabs/mariasha
+# environment
+SSH_CONNECTION = 10.209.141.205 58700 10.23.167.42 22
+# environment
+PATH = /ec/pdx/disks/il_ailabs/mariasha/.vscode-server-insiders/bin/668c538b8d2fec1258ed786ae212124d6d68023c/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
+XDG_RUNTIME_DIR = /run/user/12111378
+# environment
+UBUNTU_MENUPROXY = 1
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# automatic
+%F = $(notdir $%)
+# environment
+no_proxy = localhost,127.0.0.1,intel.com,.intel.com,.maas,10.0.0.0/8,172.16.0.0/16,192.168.0.0/16,134.134.0.0/16,.maas-internal,.svc
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /lab/aipg-ra-stor-03/mariasha/code/MacroPlacement
+# environment
+VSCODE_IPC_HOOK_CLI = /run/user/12111378/vscode-ipc-f0bef181-39bc-4b33-b60f-bbb1729dba4d.sock
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+GTK_MODULES = appmenu-gtk-module
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /nfs/site/home/mariasha
+# environment
+LOGNAME = mariasha
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
++F = $(notdir $+)
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+MFX_HOME = /opt/intel/mediasdk
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 3
+# environment
+LIBVA_DRIVER_NAME = iHD
+# environment
+XDG_SESSION_ID = 2131
+# environment
+USER = mariasha
+# makefile
+.DEFAULT_GOAL := 
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := make
+# environment
+OLDPWD = /nfs/site/home/mariasha/.vscode-server-insiders/bin/668c538b8d2fec1258ed786ae212124d6d68023c
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_CLIENT = 10.209.141.205 58700 22
+# environment
+MAIL = /var/mail/mariasha
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+BROWSER = /ec/pdx/disks/il_ailabs/mariasha/.vscode-server-insiders/bin/668c538b8d2fec1258ed786ae212124d6d68023c/bin/helpers/browser.sh
+# environment
+S_COLORS = auto
+# environment
+VSCODE_HANDLES_SIGPIPE = true
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LIBVA_DRIVERS_PATH = /opt/intel/mediasdk/lib64
+# environment
+https_proxy = http://proxy.ra.intel.com:912
+# environment
+LC_ALL = C
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# default
+.RECIPEPREFIX := 
+# environment
+http_proxy = http://proxy.ra.intel.com:911
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+LANG = C
+# variable set hash-table stats:
+# Load=76/1024=7%, Rehash=0, Collisions=9/98=9%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 69, inode 48774): 12 files, no impossibilities.
+
+# 12 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+GNUmakefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# files hash-table stats:
+# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 20 / storage = 190 B / avg = 9 B
+# current buf: size = 8162 B / used = 190 B / count = 20 / avg = 9 B
+
+# strcache performance: lookups = 23 / hit rate = 13%
+# hash-table stats:
+# Load=20/8192=0%, Rehash=0, Collisions=1/23=4%
+# Finished Make data base on Sat Jun 25 19:52:19 2022
+
+ 
