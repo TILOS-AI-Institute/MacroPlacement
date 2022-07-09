@@ -1,3 +1,10 @@
+'''
+To run this scripts use the below command
+python gen_plc_from_pb.py <netlist.pb.txt file>
+
+This will generate the 'init.plc' as output
+'''
+
 import sys
 import numpy as np
 
