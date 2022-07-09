@@ -89,16 +89,22 @@ for node in node_list:
 
 area1 = 0
 area2 = 0
+soft_macro_count = 0
+hard_macro_count = 0
 for node in port_list:
-  fp.write(f"{node.node_id} {node.x} {node.y} - 1\n")
+  fp.write(f"{node.node_id} {np.round(float(node.x),3)} {np.round(float(node.y),3)} - 1\n")
 for node in hard_macro_list:
   fp.write(f"{node.node_id} {np.round(float(node.x),3)} {np.round(float(node.y),3)} N 0\n")
   area1 += float(node.height)*float(node.width)
+  hard_macro_count += 1
 
 for node in soft_macro_list:
   fp.write(f"{node.node_id} {np.round(float(node.x),3)} {np.round(float(node.y),3)} N 0\n")
   area2 += float(node.height)*float(node.width)
+  soft_macro_count += 1
 
 area = area1 + area2
 fp.write(f"# Area: {area}\n")
+fp.write(f"# SOFT MACRO COUNT: {soft_macro_count}\n")
+fp.write(f"# HARD MACRO COUNT: {hard_macro_count}\n")
 fp.close()
