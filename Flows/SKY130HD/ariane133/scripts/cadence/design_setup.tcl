@@ -3,6 +3,7 @@
 
 set DESIGN ariane 
 set sdc  ../../constraints/${DESIGN}.sdc
+set rtldir ../../rtl
 
 # def file with die size and placed IO pins
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
