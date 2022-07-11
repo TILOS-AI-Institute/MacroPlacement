@@ -5,7 +5,7 @@ import re
 import time
 
 testcases = ['ariane136', 'ariane133', 'mempool_tile', 'nvdla']
-enablements = ['NanGate45', 'ASAP7']
+enablements = ['NanGate45', 'ASAP7', 'SKY130HD']
 flows = [1, 2]
 job_file = "all_jobs"
 
