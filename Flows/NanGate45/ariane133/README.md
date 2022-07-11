@@ -17,7 +17,9 @@ We generate the manual macro placement in two steps:
 (1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (27 x 27 in our case); (2) we manually place macros on the center of grid cells.
 
 The macro placement can a competitive baseline for [Circuit Training](https://github.com/google-research/circuit_training).
-The metrics after different physical design stages are shown below. (activity factor = 2)
+The metrics after different physical design stages are shown below. 
+Note that (1) we set the activity factor to 0.2; (2) the standard cell area does not include physical cells.
+(activity factor = 2)
 <table class="tg">
 <thead>
   <tr>
