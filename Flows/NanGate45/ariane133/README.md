@@ -50,8 +50,8 @@ Note that (1) we set the activity factor to 0.2 in our flow; (2) the standard ce
     <td class="tg-0lax">216326</td>
     <td class="tg-0lax">0.30</td>
     <td class="tg-0lax">4.47</td>
-    <td class="tg-0lax">0</td>
-    <td class="tg-0lax">1</td>   
+    <td class="tg-0lax">1</td>
+    <td class="tg-0lax">0</td>   
   </tr>
 </tbody>
 <tbody>
