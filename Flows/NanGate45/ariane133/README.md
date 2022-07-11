@@ -22,7 +22,8 @@ The metrics after different physical design stages are shown below. (activity fa
 <thead>
   <tr>
     <th class="tg-0lax">Report Stage</th>
-    <th class="tg-0lax">Total Area (um^2)</th>
+    <th class="tg-0lax">Core Area (um^2)</th>
+    <th class="tg-0lax">Standard Cell Area (subtracting physcial cells) (um^2)</th>
     <th class="tg-0lax">Total Power (mW)</th>
     <th class="tg-0lax">Wirelength (m)</th>
     <th class="tg-0lax">WNS (ps)</th>
@@ -32,7 +33,8 @@ The metrics after different physical design stages are shown below. (activity fa
 <tbody>
   <tr>
     <td class="tg-0lax">Post-placement</td>
-    <td class="tg-0lax">2560079.999</td>
+    <td class="tg-0lax">2560080</td>
+    <td class="tg-0lax">215189/td>
     <td class="tg-0lax">0.29</td>
     <td class="tg-0lax">4.47</td>
     <td class="tg-0lax">-2</td>
@@ -42,7 +44,8 @@ The metrics after different physical design stages are shown below. (activity fa
 <tbody>
   <tr>
     <td class="tg-0lax">Post-CTS</td>
-    <td class="tg-0lax">2560079.999</td>
+    <td class="tg-0lax">2560080</td>
+    <td class="tg-0lax">216326</td>
     <td class="tg-0lax">0.30</td>
     <td class="tg-0lax">4.47</td>
     <td class="tg-0lax">0</td>
@@ -52,7 +55,8 @@ The metrics after different physical design stages are shown below. (activity fa
 <tbody>
   <tr>
     <td class="tg-0lax">Post-Routing</td>
-    <td class="tg-0lax">2560079.999</td>
+    <td class="tg-0lax">2560080</td>
+    <td class="tg-0lax">216326</td>
     <td class="tg-0lax">0.30</td>
     <td class="tg-0lax">4.59</td>
     <td class="tg-0lax">62</td>
