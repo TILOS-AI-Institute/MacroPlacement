@@ -19,7 +19,7 @@ We generate the manual macro placement in two steps:
 The macro placement can be a competitive baseline for [Circuit Training](https://github.com/google-research/circuit_training).
 The metrics after different physical design stages are shown below. 
 Note that (1) we set the activity factor to 0.2 in our flow; (2) the standard cell area does not include physical cells; (3) In order to match [Nature paper](https://www.nature.com/articles/s41586-021-03544-w), we adjust the pin positions to occupy about 60% of the left boundary. 
-(activity factor = 2)
+
 <table class="tg">
 <thead>
   <tr>
