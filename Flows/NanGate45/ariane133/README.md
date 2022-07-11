@@ -21,12 +21,22 @@ The metrics after different physical design stages are shown below.
 <table class="tg">
 <thead>
   <tr>
-    <th class="tg-0lax">Flow-1</th>
+    <th class="tg-0lax">Report Stage</th>
+    <th class="tg-0lax">Total Area (um^2)</th>
+    <th class="tg-0lax">Total Power (mW)</th>
+    <th class="tg-0lax">Wirelength (m)</th>
+    <th class="tg-0lax">WNS (ps)</th>
+    <th class="tg-0lax">TNS (ns)</th>
   </tr>
 </thead>
 <tbody>
   <tr>
-    <td class="tg-0lax">Ariane 136</td>
+    <td class="tg-0lax">Post-placement</td>
+    <td class="tg-0lax">Post-placement</td>
+    <td class="tg-0lax">Post-placement</td>
+    <td class="tg-0lax">Post-placement</td>
+    <td class="tg-0lax">Post-placement</td>
+    <td class="tg-0lax">Post-placement</td>   
   </tr>
 </tbody>
 </table>
