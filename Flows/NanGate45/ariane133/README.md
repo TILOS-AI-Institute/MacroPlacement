@@ -23,7 +23,7 @@ Note that (1) we set the activity factor to 0.2; (2) the standard cell area does
 <table class="tg">
 <thead>
   <tr>
-    <th class="tg-0lax">Report Stage</th>
+    <th class="tg-0lax">Stage in Physcial Design</th>
     <th class="tg-0lax">Core Area (um^2)</th>
     <th class="tg-0lax">Standard Cell Area (um^2)</th>
     <th class="tg-0lax">Total Power (mW)</th>
