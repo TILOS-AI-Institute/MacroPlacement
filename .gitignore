@@ -1,2 +1,4 @@
 Flows/*/*/run/*/
+Flows/*/*/run-*
 Flows/job
+CodeElements/*/*/__pycache__
