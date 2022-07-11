@@ -17,7 +17,7 @@ We generate the manual macro placement in two steps:
 (1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (27 x 27 in our case); (2) we manually place macros on the center of grid cells.
 
 The macro placement can a competitive baseline for [Circuit Training](https://github.com/google-research/circuit_training).
-The metrics after different physical design stages are shown below.
+The metrics after different physical design stages are shown below. (activity factor = 2)
 <table class="tg">
 <thead>
   <tr>
@@ -32,11 +32,31 @@ The metrics after different physical design stages are shown below.
 <tbody>
   <tr>
     <td class="tg-0lax">Post-placement</td>
-    <td class="tg-0lax">Post-placement</td>
-    <td class="tg-0lax">Post-placement</td>
-    <td class="tg-0lax">Post-placement</td>
-    <td class="tg-0lax">Post-placement</td>
-    <td class="tg-0lax">Post-placement</td>   
+    <td class="tg-0lax">2560079.999</td>
+    <td class="tg-0lax">0.29</td>
+    <td class="tg-0lax">4.47</td>
+    <td class="tg-0lax">-2</td>
+    <td class="tg-0lax">-0.05</td>   
+  </tr>
+</tbody>
+<tbody>
+  <tr>
+    <td class="tg-0lax">Post-CTS</td>
+    <td class="tg-0lax">2560079.999</td>
+    <td class="tg-0lax">0.30</td>
+    <td class="tg-0lax">4.47</td>
+    <td class="tg-0lax">0</td>
+    <td class="tg-0lax">1</td>   
+  </tr>
+</tbody>
+<tbody>
+  <tr>
+    <td class="tg-0lax">Post-Routing</td>
+    <td class="tg-0lax">2560079.999</td>
+    <td class="tg-0lax">0.30</td>
+    <td class="tg-0lax">4.59</td>
+    <td class="tg-0lax">62</td>
+    <td class="tg-0lax">0</td>   
   </tr>
 </tbody>
 </table>
