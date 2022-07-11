@@ -7,7 +7,7 @@
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
   - [Flows](#flows) contains tool setups and runscripts for both proprietary and open-source SP&R tools such as Cadence Genus/Innovus and OpenROAD.
   - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
-  - [Baseline for Circuit Training](#baseline) provides a competitive baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
+  - [Baseline for Circuit Training](#baseline-for-circuit training) provides a competitive baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
   - [FAQ](#faq)
   - [Related Links](#related-links)
 
