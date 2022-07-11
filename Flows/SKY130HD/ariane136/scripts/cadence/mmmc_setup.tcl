@@ -4,8 +4,8 @@
 create_library_set -name WC_LIB -timing $libworst
 create_library_set -name BC_LIB -timing $libbest
  
-create_rc_corner -name Cmax
-create_rc_corner -name Cmin
+create_rc_corner -name Cmax -qx_tech_file $qrc_max
+create_rc_corner -name Cmin -qx_tech_file $qrc_min
 
 
 create_delay_corner -name WC -library_set WC_LIB -rc_corner Cmax

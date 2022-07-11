@@ -3,11 +3,14 @@
 
 set DESIGN NV_NVDLA_partition_c
 set sdc  ../../constraints/${DESIGN}.sdc
+set rtldir ../../../../../Testcases/nvdla/rtl/
 
 # def file with die size and placed IO pins
-set floorplan_def ../../def/${DESIGN}_fp.def
-
-set rtl_path ../../../../../Testcases/nvdla/rtl/
+if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
+    set floorplan_def ../../def/${DESIGN}_fp_placed_macros.def
+} else {
+    set floorplan_def ../../def/${DESIGN}_fp.def
+}
 
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage
@@ -17,3 +20,7 @@ set GEN_EFF medium
 # Effort level during optimization in syn_map -physical (or called mapping) stage
 # possible values are : high, medium or low
 set MAP_EFF high
+#
+set SITE "unithd"
+set HALO_WIDTH 5
+set TOP_ROUTING_LAYER 9

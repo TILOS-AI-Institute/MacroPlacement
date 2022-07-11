@@ -10,10 +10,8 @@ create_library_set -name BC_LIB -timing $libbest
 create_timing_condition -name timing_wc  -library_sets { WC_LIB }
 create_timing_condition -name timing_bc  -library_sets { BC_LIB }
  
-#create_rc_corner -name Cmax -qrc_tech $qrc_max
-#create_rc_corner -name Cmin -qrc_tech $qrc_min
-create_rc_corner -name Cmax
-create_rc_corner -name Cmin
+create_rc_corner -name Cmax -qrc_tech $qrc_max
+create_rc_corner -name Cmin -qrc_tech $qrc_min
 
 create_delay_corner -name WC -early_timing_condition { timing_wc } \
                              -late_timing_condition  { timing_wc } \
