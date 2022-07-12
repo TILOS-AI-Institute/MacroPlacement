@@ -187,12 +187,13 @@ def Gridding(macro_width_list, macro_height_list,
 
 class GriddingLefDefInterface:
     def __init__(self, src_dir, design, setup_file = "setup.tcl", tolerance = 0.01,
-                 min_n_rows = 10, min_n_cols = 10, max_n_rows = 100, max_n_cols = 100,
-                 max_rows_times_cols = 3000):
+                 halo_width = 5.0, min_n_rows = 10, min_n_cols = 10, max_n_rows = 100,
+                 max_n_cols = 100, max_rows_times_cols = 3000):
         self.src_dir = src_dir
         self.design = design
         self.setup_file = setup_file
         self.tolerance = tolerance
+        self.halo_width = halo_width
         self.min_n_rows = min_n_rows
         self.min_n_cols = min_n_cols
         self.max_n_rows = max_n_rows
@@ -267,23 +268,14 @@ class GriddingLefDefInterface:
         for line in content:
             items = line.split()
             if (items[1] == "1"):
-                self.macro_width_list.append(float(items[4]) - float(items[2]))
-                self.macro_height_list.append(float(items[5]) - float(items[3]))
+                self.macro_width_list.append(float(items[4]) - float(items[2]) + 2 * self.halo_width)
+                self.macro_height_list.append(float(items[5]) - float(items[3]) + 2 * self.halo_width)
             else:
                 self.num_std_cells += 1
 
         rpt_dir = os.getcwd() + "/rtl_mp"
         shutil.rmtree(rpt_dir)
 
-
-if __name__ == "__main__":
-    # Just test
-    macro_width_list = [1, 2, 3.5, 3.5, 2.5]
-    macro_height_list = [1, 2, 3.5, 3.5, 2.5]
-    chip_width = 10
-    chip_height = 10
-    tolerance = 0.01
-    Gridding(macro_width_list, macro_height_list, chip_width, chip_height, tolerance)
 
 
 

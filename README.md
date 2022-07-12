@@ -7,6 +7,7 @@
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
   - [Flows](#flows) contains tool setups and runscripts for both proprietary and open-source SP&R tools such as Cadence Genus/Innovus and OpenROAD.
   - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
+  - [Baseline for Circuit Training](#baseline-for-circuit-training) provides a competitive baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
   - [FAQ](#faq)
   - [Related Links](#related-links)
 
@@ -172,6 +173,12 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 
 
 <!--## **Reproducible Example Solutions** -->
+
+## **Baseline for Circuit Training**
+We provide a competitive baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) by placing macros manually following similar rules as the RL agent. The example for Ariane133 implemented on NanGate45 is shown [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133). We generate the manual macro placement in two steps:  
+(1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (27 x 27 in our case); (2) we manually place macros on the center of grid cells.
+
+
 
 ## **FAQ**
 **Why are you doing this?**
