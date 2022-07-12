@@ -24,13 +24,14 @@ macro_lefs = ["./lefs/fakeram45_256x16.lef"]
 ##############################################
 gridding_src_dir = '../Gridding/src'
 tolerance = 0.01
-min_n_rows = 30
-min_n_cols = 30
+min_n_rows = 10
+min_n_cols = 10
 max_n_rows = 50
 max_n_cols = 50
 max_rows_times_cols = 3000
+halo_width = 5
 
-gridding = GriddingLefDefInterface(gridding_src_dir, design, setup_file, tolerance,
+gridding = GriddingLefDefInterface(gridding_src_dir, design, setup_file, tolerance, halo_width,
                                    min_n_rows, min_n_cols, max_n_rows, max_n_cols,
                                    max_rows_times_cols)
 num_rows = gridding.GetNumRows()
