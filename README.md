@@ -94,7 +94,7 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
@@ -109,7 +109,7 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
@@ -124,7 +124,7 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
     <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
