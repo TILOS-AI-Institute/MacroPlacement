@@ -12,7 +12,7 @@ set_ideal_network [get_ports direct_reset_]
 set_ideal_network [get_ports dla_reset_rstn]
 set_ideal_network -no_propagate [get_nets nvdla_core_rstn]
 set_ideal_network [get_ports test_mode]
-create_clock [get_ports nvdla_core_clk]  -period 6.0  -waveform {0 3.0}
+create_clock [get_ports nvdla_core_clk]  -period 5.0  -waveform {0 2.5}
 set_clock_transition -max -rise 0.15 [get_clocks nvdla_core_clk]
 set_clock_transition -max -fall 0.15 [get_clocks nvdla_core_clk]
 set_clock_transition -min -rise 0.15 [get_clocks nvdla_core_clk]

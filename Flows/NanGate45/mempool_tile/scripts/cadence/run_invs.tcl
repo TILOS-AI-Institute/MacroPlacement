@@ -75,6 +75,11 @@ setDesignMode -bottomRoutingLayer 2
 place_opt_design -out_dir $rptDir -prefix place
 saveDesign $encDir/${DESIGN}_placed.enc
 
+echo "stage,core_area,standard_cell_area,macro_area,total_power,wire_length,wns,tns,h_c,v_c" > ${DESIGN}_DETAILS.rpt
+source ../../../../util/extract_report.tcl
+set rpt_pre_cts [extract_report preCTS]
+echo "$rpt_pre_cts" >> ${DESIGN}_DETAILS.rpt
+
 set_ccopt_property post_conditioning_enable_routing_eco 1
 set_ccopt_property -cts_def_lock_clock_sinks_after_routing true
 setOptMode -unfixClkInstForOpt false
@@ -85,6 +90,10 @@ ccopt_design
 set_interactive_constraint_modes [all_constraint_modes -active]
 set_propagated_clock [all_clocks]
 set_clock_propagation propagated
+
+saveDesign $encDir/${DESIGN}_cts.enc
+set rpt_post_cts [extract_report postCTS]
+echo "$rpt_post_cts" >> ${DESIGN}_DETAILS.rpt
 
 # ------------------------------------------------------------------------------
 # Routing
@@ -111,6 +120,8 @@ setNanoRouteMode -grouteExpWithTimingDriven false
 routeDesign
 #route_opt_design
 saveDesign ${encDir}/${DESIGN}_route.enc
+set rpt_post_route [extract_report postRoute]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 defOut -netlist -floorplan -routing ${DESIGN}_route.def
 
 summaryReport -noHtml -outfile summaryReport/post_route.sum
