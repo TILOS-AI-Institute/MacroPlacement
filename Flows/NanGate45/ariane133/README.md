@@ -14,11 +14,12 @@ The screenshot of the design using the Cadence Innovus tool for standard-cell pl
 <img src="./screenshots/manual_ariane133_Innovus.png" alt="ariane133_cadence" width="400"/>  
 The manual macro placement is provided in [manual_floorplan.def](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/Flows/NanGate45/ariane133/def/manual_floorplan.def).
 We generate the manual macro placement in two steps:  
-(1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (in this case, we end up with a 27 x 27 grid); (2) we manually place macros so that their centers lie on centers of grid cells, with no overlap between macros or overflow of macros beyond the layout canvas.
+(1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (in this case, we end up with a 27 x 27 grid); and (2) we manually place macros so that their centers lie on centers of grid cells, with no overlap between macros or overflow of macros beyond the layout canvas.
 
-Note that this human-constructed macro placement can be a competitive baseline for [Circuit Training](https://github.com/google-research/circuit_training).
+Note that this human-constructed macro placement can serve as a competitive baseline for [Circuit Training](https://github.com/google-research/circuit_training).
 The metrics reported by the Innovus tool after different physical design stages are shown below. 
-Note that (1) we set the activity factor to 0.2 in our flow; (2) the standard cell area does not include physical cells; (3) In order to match [Nature paper](https://www.nature.com/articles/s41586-021-03544-w), we adjust the pin positions to occupy about 60% of the left boundary. 
+Note that (1) we set the activity factor to 0.2 in our flow; (2) the standard cell area does not include physical cells; (3) In order to match [Nature paper](https://www.nature.com/articles/s41586-021-03544-w), we adjust the pin positions to occupy about 60% of the left boundary; and (4) the total macro area for ariane133 (NanGate45) is 1018356um^2, and the overall utilization is 48.228%.  
+
 
 <table class="tg">
 <thead>
