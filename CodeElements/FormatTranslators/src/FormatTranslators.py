@@ -41,7 +41,13 @@ class Port:
     def __str__(self):
         self.str = ""
         self.str += "node {\n"
-        self.str += '  name: "' + self.name + '"\n'
+        name = ''
+        for char in self.name:
+            if char == '\\':
+                name += '\\\\'
+        else:
+            name += char
+        self.str += '  name: "' + name + '"\n'
         for sink in self.sinks:
             sink_new = ''
             for char in sink:
@@ -113,7 +119,13 @@ class StandardCell:
     def __str__(self):
         self.str = ""
         self.str += "node {\n"
-        self.str += '  name: "' + self.name + '"\n'
+        name = ''
+        for char in self.name:
+            if char == '\\':
+                name += '\\\\'
+        else:
+            name += char
+        self.str += '  name: "' + name + '"\n'
         for sink in self.sinks:
             sink_new = ''
             for char in sink:
@@ -202,7 +214,13 @@ class Macro:
     def __str__(self):
         self.str = ""
         self.str += "node {\n"
-        self.str += '  name: "' + self.name + '"\n'
+        name = ''
+        for char in self.name:
+            if char == '\\':
+                name += '\\\\'
+        else:
+            name += char
+        self.str += '  name: "' + name + '"\n'
         self.str += "  attr {\n"
         self.str += '    key: "type"\n'
         self.str += '    value {\n'
@@ -275,7 +293,13 @@ class MacroPin:
     def __str__(self):
         self.str = ""
         self.str += "node {\n"
-        self.str += '  name: "' + self.name + '"\n'
+        name = ''
+        for char in self.name:
+            if char == '\\':
+                name += '\\\\'
+        else:
+            name += char
+        self.str += '  name: "' + name + '"\n'
         for sink in self.sinks:
             sink_new = ''
             for char in sink:
@@ -288,7 +312,13 @@ class MacroPin:
         self.str += "  attr {\n"
         self.str += '    key: "macro_name"\n'
         self.str += '    value {\n'
-        self.str += '      placeholder: "' + str(self.macro_name) + '"\n'
+        macro_name = ''
+        for char in self.macro_name:
+            if char == '\\':
+                macro_name += '\\\\'
+        else:
+            macro_name += char
+        self.str += '      placeholder: "' + str(macro_name) + '"\n'
         self.str += '    }\n'
         self.str += '  }\n'
         self.str += "  attr {\n"
