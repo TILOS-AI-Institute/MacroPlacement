@@ -1,4 +1,4 @@
-# SKY130HD FakeStack (SKY130HD library, bsg_fakeram memory generation, 9M FkaeStack)
+# SKY130HD FakeStack (SKY130HD library, bsg_fakeram memory generation, 9M FakeStack)
 
 The SKY130HD enablement available in the OpenROAD-flow-script [GitHub repo](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/sky130hd) is a five-metal stack enablement. However, memory macro has blockage till metal four, so a five-metal stack is not enough to route our macro dominant testcases.  
 
