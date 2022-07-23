@@ -45,8 +45,8 @@ class Port:
         for char in self.name:
             if char == '\\':
                 name += '\\\\'
-        else:
-            name += char
+            else:
+                name += char
         self.str += '  name: "' + name + '"\n'
         for sink in self.sinks:
             sink_new = ''
@@ -123,8 +123,8 @@ class StandardCell:
         for char in self.name:
             if char == '\\':
                 name += '\\\\'
-        else:
-            name += char
+            else:
+                name += char
         self.str += '  name: "' + name + '"\n'
         for sink in self.sinks:
             sink_new = ''
@@ -183,6 +183,7 @@ class Macro:
         self.x = x
         self.y = y
         self.orientation = orientation
+        self.is_soft = False
         self.input_pins = []
         self.output_pins = []
 
@@ -208,8 +209,14 @@ class Macro:
     def GetPins(self):
         return self.input_pins + self.output_pins
 
+    def IsSoft(self):
+        self.is_soft = True
+
     def GetType(self):
-        return "MACRO"
+        if (self.is_soft == True):
+            return "macro"
+        else:
+            return "MACRO"
 
     def __str__(self):
         self.str = ""
@@ -218,13 +225,13 @@ class Macro:
         for char in self.name:
             if char == '\\':
                 name += '\\\\'
-        else:
-            name += char
+            else:
+                name += char
         self.str += '  name: "' + name + '"\n'
         self.str += "  attr {\n"
         self.str += '    key: "type"\n'
         self.str += '    value {\n'
-        self.str += '      placeholder: "MACRO"\n'
+        self.str += '      placeholder: "'  + self.GetType() + '\n'
         self.str += '    }\n'
         self.str += '  }\n'
         self.str += "  attr {\n"
@@ -297,8 +304,8 @@ class MacroPin:
         for char in self.name:
             if char == '\\':
                 name += '\\\\'
-        else:
-            name += char
+            else:
+                name += char
         self.str += '  name: "' + name + '"\n'
         for sink in self.sinks:
             sink_new = ''
@@ -316,8 +323,8 @@ class MacroPin:
         for char in self.macro_name:
             if char == '\\':
                 macro_name += '\\\\'
-        else:
-            macro_name += char
+            else:
+                macro_name += char
         self.str += '      placeholder: "' + str(macro_name) + '"\n'
         self.str += '    }\n'
         self.str += '  }\n'

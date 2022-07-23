@@ -1,0 +1,4 @@
+The [flow.py](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/CodeFlowIntegration/flow.py) contains implementation of [Gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding), [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Grouping), [Clustering](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering) and
+[FormatTranslators](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators).  After running 
+[flow.py](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/CodeFlowIntegration/flow.py), 
+you will be able to generate the clustered netlist in the protocol buffer format, which you can used for circuit training.

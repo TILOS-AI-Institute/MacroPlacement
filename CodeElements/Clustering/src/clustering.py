@@ -684,6 +684,7 @@ class ProBufFormat:
             height = sqrt(area * self.aspect_ratio)
             width = area / height
             self.insts[macro_name] = Macro(macro_name, width, height, x, y)
+            self.insts[macro_name].IsSoft()
             soft_macro_id += 1
 
     # Read Macro Pin file

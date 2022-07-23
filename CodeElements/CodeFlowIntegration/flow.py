@@ -85,6 +85,9 @@ clustering = Clustering(design, clustering_src_dir, fixed_file, step_threshold, 
 cluster_def = "./results/OpenROAD/clustered_netlist.def"
 cluster_lef = "./results/OpenROAD/clusters.lef"
 
+
+exit()
+
 ######################################################################
 ### Convert the clustered netlist to the Protocol Buffer Format
 ######################################################################
