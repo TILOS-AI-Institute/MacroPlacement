@@ -1,0 +1,4 @@
+Physical Design Stage, Core Area (um^2), Standard Cell Area (um^2), Macro Area (um^2), Total Power (mW), Wirelength(um), WS(ns), TNS(ns), Congestion(H), Congestion(V)
+preCTS,2560079.9994,217400.204,1018355.73,292.98188484,5478166.09699,0.001,0.000,0.00%,0.00%
+postCTS,2560079.9994,218514.744,1018355.73,306.28826483,5475829.10099,0.003,0.000,0.00%,0.00%
+postRoute,2560079.9994,218514.744,1018355.73,304.18521778,5595628.68499,0.297,0.000,,
