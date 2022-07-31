@@ -66,6 +66,7 @@ clustering_src_dir = '../Clustering/src'
 chip_width = gridding.GetChipWidth()
 chip_height = gridding.GetChipHeight()
 num_std_cells = gridding.GetNumStdCells()
+grid_width = chip_width / num_cols
 Nparts = 500
 
 # Based on the description of circuit training, [see line 180 at grouper.py]
@@ -80,7 +81,7 @@ print("[INFO] max_num_vertices : ", max_num_vertices)
 
 
 clustering = Clustering(design, clustering_src_dir, fixed_file, step_threshold, distance,
-           max_num_vertices, global_net_threshold, Nparts, setup_file, Replace)
+             grid_width, max_num_vertices, global_net_threshold, Nparts, setup_file, Replace)
 
 cluster_def = "./results/OpenROAD/clustered_netlist.def"
 cluster_lef = "./results/OpenROAD/clusters.lef"
