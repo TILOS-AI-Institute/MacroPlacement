@@ -57,6 +57,8 @@ createBasicPathGroups -expanded
 ## Generate the floorplan ##
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     defIn ${handoff_dir}/${DESIGN}.def
+    source ../../../../util/gen_pb.tcl
+    gen_pb_netlist
 } else {
     defIn $floorplan_def
     addHaloToBlock -allMacro $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH
@@ -64,6 +66,7 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     refine_macro_place
 }
 
+source ../../../../util/write_required_def.tcl
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
 setPlaceMode -place_detail_legalization_inst_gap 1
@@ -74,7 +77,7 @@ setDesignMode -bottomRoutingLayer 2
 place_opt_design -out_dir $rptDir -prefix place
 saveDesign $encDir/${DESIGN}_placed.enc
 
-echo "stage,core_area,standard_cell_area,macro_area,total_power,wire_length,wns,tns,h_c,v_c" > ${DESIGN}_DETAILS.rpt
+echo "Physical Design Stage, Core Area (um^2), Standard Cell Area (um^2), Macro Area (um^2), Total Power (mW), Wirelength(um), WS(ns), TNS(ns), Congestion(H), Congestion(V)" > ${DESIGN}_DETAILS.rpt
 source ../../../../util/extract_report.tcl
 set rpt_pre_cts [extract_report preCTS]
 echo "$rpt_pre_cts" >> ${DESIGN}_DETAILS.rpt
