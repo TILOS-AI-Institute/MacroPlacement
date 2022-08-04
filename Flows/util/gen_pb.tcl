@@ -73,13 +73,13 @@ proc print_net { net_ptr fp } {
   
   ### Print Macro Pins ###
   foreach macro_pin [dbget [dbget [dbget ${net_ptr}.instTerms.isInput 1 -p \
-                    ].inst.isHaloBlock 1 -p2 ].name -e] {
+                    ].inst.cell.subClass block -p3 ].name -e] {
     puts $fp "  input: \"${macro_pin}\""
   }
   
   ### Print Stdcells ###
   foreach inst [dbget [dbget [dbget ${net_ptr}.instTerms.isInput 1 -p \
-                    ].inst.isHaloBlock 0 -p ].name -e] {
+                    ].inst.cell.subClass core -p2 ].name -e] {
     puts $fp "  input: \"${inst}\""
   }
 }
@@ -270,14 +270,14 @@ proc gen_pb_netlist { } {
     write_node_port $port_ptr $fp
   }
 
-  foreach macro_ptr [dbget top.insts.isHaloBlock 1 -p] {
+  foreach macro_ptr [dbget top.insts.cell.subClass block -p2] {
     write_node_macro $macro_ptr $fp
     foreach macro_pin_ptr [dbget ${macro_ptr}.instTerms] {
       write_node_macro_pin $macro_pin_ptr $fp
     }
   }
 
-  foreach inst_ptr [dbget top.insts.isHaloBlock 0 -p] {
+  foreach inst_ptr [dbget top.insts.cell.subClass core -p2] {
     write_node_stdcell $inst_ptr $fp
   }
 

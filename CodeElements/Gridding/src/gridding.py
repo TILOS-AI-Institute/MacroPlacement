@@ -49,7 +49,7 @@ def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
     # Place macro one by one
     for key, value in macro_map.items():
         width = value[0]
-        height = value[0]
+        height = value[1]
         macro_id = key
         placed_flag = False
         for grid in grid_list:
