@@ -49,7 +49,7 @@ def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
     # Place macro one by one
     for key, value in macro_map.items():
         width = value[0]
-        height = value[0]
+        height = value[1]
         macro_id = key
         placed_flag = False
         for grid in grid_list:
@@ -104,7 +104,9 @@ def Gridding(macro_width_list, macro_height_list,
              chip_width, chip_height, tolerance = 0.1,
              min_n_rows = 10, min_n_cols = 10,
              max_n_rows = 100, max_n_cols = 100,
-             max_rows_times_cols = 3000):
+             max_rows_times_cols = 3000,
+             min_rows_times_cols = 500,
+             max_aspect_ratio = 1.5):
     ### Sort all the macros in a non-decreasing order
     if (len(macro_width_list) != len(macro_height_list)):
       print("[Error] The macro information is wrong!!!")
@@ -137,11 +139,19 @@ def Gridding(macro_width_list, macro_height_list,
         for n in range(min_n_cols, max_n_cols + 1):
             if (m * n > max_rows_times_cols):
                 break
+            if (m * n < min_rows_times_cols):
+                continue
 
             ### Step1:  Divide the canvas into grids
             ### We arrange all the grids in a row-major manner
             grid_height = chip_height / m
             grid_width  = chip_width / n
+            if (grid_height / grid_width > max_aspect_ratio):
+                continue
+
+            if (grid_width / grid_height > max_aspect_ratio):
+                continue
+
             grid_list = []
             for i in range(m):
                 for j in range(n):
@@ -174,8 +184,12 @@ def Gridding(macro_width_list, macro_height_list,
     n_opt = n_best
     num_grids_opt = m_opt * n_opt
 
+    print("m_best = ", m_best)
+    print("n_best = ", n_best)
+    print("tolerance = ", tolerance)
     for [m, m_map] in choice_map.items():
         for [n, cost] in m_map.items():
+            print("m = ", m , "  n = ", n, "  cost = ", cost)
             if ((cost <= (1.0 + tolerance) * best_cost) and (m * n < num_grids_opt)):
                 m_opt = m
                 n_opt = n
@@ -186,9 +200,10 @@ def Gridding(macro_width_list, macro_height_list,
 
 
 class GriddingLefDefInterface:
-    def __init__(self, src_dir, design, setup_file = "setup.tcl", tolerance = 0.01,
-                 halo_width = 5.0, min_n_rows = 10, min_n_cols = 10, max_n_rows = 100,
-                 max_n_cols = 100, max_rows_times_cols = 3000):
+    def __init__(self, src_dir, design, setup_file = "setup.tcl", tolerance = 0.05,
+                 halo_width = 5.0, min_n_rows = 10, min_n_cols = 10, max_n_rows = 128,
+                 max_n_cols = 128, max_rows_times_cols = 2500,  min_rows_times_cols = 500,
+                 max_aspect_ratio = 1.5):
         self.src_dir = src_dir
         self.design = design
         self.setup_file = setup_file
@@ -199,6 +214,8 @@ class GriddingLefDefInterface:
         self.max_n_rows = max_n_rows
         self.max_n_cols = max_n_cols
         self.max_rows_times_cols = max_rows_times_cols
+        self.min_rows_times_cols = min_rows_times_cols
+        self.max_aspect_ratio = max_aspect_ratio
         self.macro_width_list = []
         self.macro_height_list = []
         self.chip_width = 0.0
@@ -209,8 +226,12 @@ class GriddingLefDefInterface:
 
         self.GenerateHypergraph()
         self.ExtractInputs()
-        self.m_opt, self.n_opt = Gridding(self.macro_width_list, self.macro_height_list, self.chip_width, self.chip_height, self.tolerance,
-                                          self.min_n_rows, self.min_n_cols, self.max_n_rows, self.max_n_cols, self.max_rows_times_cols)
+        self.m_opt, self.n_opt = Gridding(self.macro_width_list, self.macro_height_list,
+                                          self.chip_width, self.chip_height, self.tolerance,
+                                          self.min_n_rows, self.min_n_cols,
+                                          self.max_n_rows, self.max_n_cols,
+                                          self.max_rows_times_cols, self.min_rows_times_cols,
+                                          self.max_aspect_ratio)
 
     def GetNumRows(self):
         return self.m_opt
