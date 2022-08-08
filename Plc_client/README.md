@@ -1,4 +1,4 @@
-# PlacementCost Class:
+# PlacementCost
 *Circuit Training Open Source* is an effort to open-source the entire framework for generating chip floor plans
 with distributed deep reinforcement learning. This framework is originally reproduces the
 methodology published in the Nature 2021 paper:
