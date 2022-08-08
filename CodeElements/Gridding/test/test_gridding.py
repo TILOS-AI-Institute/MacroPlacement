@@ -11,7 +11,7 @@ if __name__ == '__main__':
     design = "ariane"
     src_dir = "../src"
     setup_file = "setup.tcl"
-    tolerance = 0.01
+    tolerance = 0.05
     halo_width = 5.0
     GriddingLefDefInterface(src_dir, design, setup_file, tolerance, halo_width)
 
