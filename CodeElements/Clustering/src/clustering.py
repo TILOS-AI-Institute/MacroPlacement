@@ -42,6 +42,7 @@ class Clustering:
         self.RePlace = RePlace
         self.placement_density = placement_density
         self.GUI = GUI
+        self.grid_width = grid_width
 
         ### Print Information
         print("[INFO] step_threshold : ", self.step_threshold)
@@ -127,7 +128,7 @@ class Clustering:
         ProBufFormat(self.io_name_file, self.macro_pin_file, \
                      self.instance_name_file,  self.outline_file, \
                      self.net_file, self.soft_macros, \
-                     self.pbf_file, self.net_size_threshold, 1.0)
+                     self.pbf_file, self.net_size_threshold, self.grid_width)
 
 
         self.CreateInvsCluster()  # Generate Innovus Clustering Commands
