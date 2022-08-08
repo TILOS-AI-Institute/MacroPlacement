@@ -14,7 +14,6 @@ pp.207-212.
 Under `MACROPLACEMENT` main directory, run the following command:
 ```
 python -m Plc_client.plc_client_os_test
-
 ```
 
 ## What do we open-source here?
@@ -22,11 +21,11 @@ The current Circuit Training framework requires user to download an executable b
 
 ## How do I open-source?
 
-All current progress can be reviewed [here](https://github.com/Dinple/circuit_training_os/blob/main/circuit_training/environment/plc_client_os.py). I have generated numerous testcases, varying from a few macros to hundreds of different modules. The purpose of these testcases is to study the behavior of <em>plc_wrapper_main</em> in a scalable way. I have also set up testbench to compare my result to the result from [plc_client.py](https://github.com/Dinple/circuit_training_os/blob/main/circuit_training/environment/plc_client.py).
+All current progress can be reviewed [here](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/plc_client-open-source/Plc_client/plc_client_os.py). I have generated numerous testcases, varying from a few macros to hundreds of different modules. The purpose of these testcases is to study the behavior of <em>plc_wrapper_main</em> in a scalable way. I have also set up testbench to compare my result to the result from [plc_client.py](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/plc_client.py).
 
 ## What is the end-goal?
 
-The first step and the current step of this open-source effor is to reproduce similar results to Google's <em>plc_wrapper_main</em> in the testbench. The final step will be plugging [plc_client_os.py](https://github.com/Dinple/circuit_training_os/blob/main/circuit_training/environment/plc_client_os.py) into the Circuit Training Framework and reproduce a quality training.
+The first step and the current step of this open-source effor is to reproduce similar results to Google's <em>plc_wrapper_main</em> in the testbench. The final step will be plugging [plc_client_os.py](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/plc_client-open-source/Plc_client/plc_client_os.py) into the Circuit Training Framework and reproduce a quality training.
 
 ## Reference
 
