@@ -182,11 +182,13 @@ class PlacementCost(object):
                         self.soft_macro_indices.append(node_cnt-1)
 
                     elif attr_dict['type'][1] == 'macro_pin':
+                        # [MACRO_NAME]/[PIN_NAME]
+                        soft_macro_name = node_name.rsplit('/', 1)[0]
                         # soft macro pin
                         soft_macro_pin = self.SoftMacroPin(name=node_name,
                                                            x = attr_dict['x'][1],
                                                            y = attr_dict['y'][1],
-                                                           macro_name = attr_dict['macro_name'][1])
+                                                           macro_name = soft_macro_name)
                         if 'weight' in attr_dict.keys():
                             soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
@@ -201,9 +203,6 @@ class PlacementCost(object):
                         # store current node indx
                         self.soft_macro_pin_indices.append(node_cnt-1)
 
-                        # [MACRO_NAME]/[PIN_NAME]
-                        # soft_macro_name = attr_dict['macro_name'][1]
-                        soft_macro_name = node_name.rsplit('/', 1)[0]
                         if soft_macro_name in self.soft_macros_to_inpins.keys():
                             self.soft_macros_to_inpins[soft_macro_name]\
                                 .append(soft_macro_pin.get_name())
@@ -230,14 +229,15 @@ class PlacementCost(object):
                         self.hard_macro_indices.append(node_cnt-1)
 
                     elif attr_dict['type'][1] == 'MACRO_PIN':
+                        # [MACRO_NAME]/[PIN_NAME]
+                        hard_macro_name = node_name.rsplit('/', 1)[0]
                         # hard macro pin
                         hard_macro_pin = self.HardMacroPin(name=node_name,
                                                         x = attr_dict['x'][1],
                                                         y = attr_dict['y'][1],
                                                         x_offset = attr_dict['x_offset'][1],
                                                         y_offset = attr_dict['y_offset'][1],
-                                                        macro_name= attr_dict['macro_name'][1])
-
+                                                        macro_name= hard_macro_name)
                         if 'weight' in attr_dict.keys():
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
@@ -252,8 +252,6 @@ class PlacementCost(object):
                         # store current node indx
                         self.hard_macro_pin_indices.append(node_cnt-1)
 
-                        # [MACRO_NAME]/[PIN_NAME]
-                        hard_macro_name = node_name.rsplit('/', 1)[0]
                         # add to dict
                         if hard_macro_name in self.hard_macros_to_inpins.keys():
                             self.hard_macros_to_inpins[hard_macro_name]\
