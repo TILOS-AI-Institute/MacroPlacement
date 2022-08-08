@@ -35,7 +35,7 @@ from FormatTranslators import LefDef2ProBufFormat
 ### Call Gridding Function
 ##############################################
 gridding_src_dir = f'{work_dir}/CodeElements/Gridding/src'
-tolerance = 0.01
+tolerance = 0.05
 min_n_rows = 10
 min_n_cols = 10
 max_n_rows = 50
