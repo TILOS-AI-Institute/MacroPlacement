@@ -780,12 +780,12 @@ class ProBufFormat:
             inst_name = "Grp_" + str(i)
             macro_pin = inst_name + "/Input"
             macro_type = self.insts[inst_name].GetType()
-            self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, macro_type, 0.0, 0.0))
+            self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, 0.0, 0.0, macro_type))
             output_idx = 1
             for key, weight in adj_list[inst_name].items():
                 macro_pin = inst_name + "/Output_" + str(output_idx)
                 output_idx += 1
-                Pin = MacroPin(macro_pin, inst_name, macro_type, 0.0, 0.0)
+                Pin = MacroPin(macro_pin, inst_name, 0.0, 0.0, macro_type)
                 Pin.AddSink(key)
                 if key not in self.ios or key not in self.macro_pin_map:
                     Pin.SpecifyWeight(weight)
