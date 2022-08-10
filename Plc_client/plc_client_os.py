@@ -146,7 +146,7 @@ class PlacementCost(object):
 
                         # advance, expect value item
                         line = fp.readline()
-                        line_item = re.findall(r'\-*\w+\.*\w*', line)
+                        line_item = re.findall(r'\-*\w+\.*\/{0,1}\w*[\w+\/{0,1}\w*]*', line)
 
                         attr_dict[key] = line_item
 
@@ -188,7 +188,7 @@ class PlacementCost(object):
                         soft_macro_pin = self.SoftMacroPin(name=node_name,
                                                            x = attr_dict['x'][1],
                                                            y = attr_dict['y'][1],
-                                                           macro_name = soft_macro_name)
+                                                           macro_name = attr_dict['macro_name'][1])
                         if 'weight' in attr_dict.keys():
                             soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
@@ -237,7 +237,7 @@ class PlacementCost(object):
                                                         y = attr_dict['y'][1],
                                                         x_offset = attr_dict['x_offset'][1],
                                                         y_offset = attr_dict['y_offset'][1],
-                                                        macro_name= hard_macro_name)
+                                                        macro_name = attr_dict['macro_name'][1])
                         if 'weight' in attr_dict.keys():
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
@@ -318,9 +318,15 @@ class PlacementCost(object):
             macro_type = macro.get_type()
 
             if macro_type == "MACRO":
-                pin_names = self.hard_macros_to_inpins[macro_name]
+                if macro_name in self.hard_macros_to_inpins.keys():
+                    pin_names = self.hard_macros_to_inpins[macro_name]
+                else:
+                    return
             elif macro_type == "macro":
-                pin_names = self.soft_macros_to_inpins[macro_name]
+                if macro_name in self.soft_macros_to_inpins.keys():
+                    pin_names = self.soft_macros_to_inpins[macro_name]
+                else:
+                    return
 
             for pin_name in pin_names:
                 pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
@@ -602,7 +608,40 @@ class PlacementCost(object):
         pass
 
     def get_macro_and_clustered_port_adjacency(self):
-        pass
+        """
+        Compute Adjacency Matrix (Unclustered PORTs)
+        """
+        # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
+        macro_adj = [0] * self.module_cnt * self.module_cnt
+        assert len(macro_adj) == self.module_cnt * self.module_cnt
+
+        #[MACRO][macro][PORT]
+        module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
+
+        for row_idx, module_idx in enumerate(module_indices):
+            # row index
+            # store temp module
+            curr_module = self.modules_w_pins[module_idx]
+            # get module name
+            curr_module_name = curr_module.get_name()
+
+            for col_idx, h_module_idx in enumerate(module_indices):
+                # col index
+                entry = 0
+                # store connected module
+                h_module = self.modules_w_pins[h_module_idx]
+                # get connected module name
+                h_module_name = h_module.get_name()
+
+                if curr_module_name in h_module.get_connection():
+                    entry += h_module.get_connection()[curr_module_name]
+
+                if h_module_name in curr_module.get_connection():
+                    entry += curr_module.get_connection()[h_module_name]
+
+                macro_adj[row_idx * self.module_cnt + col_idx] = entry
+
+        return macro_adj
 
     def get_node_location(self):
         pass

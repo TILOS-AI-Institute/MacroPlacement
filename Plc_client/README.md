@@ -13,6 +13,10 @@ pp.207-212.
 ## Quick Start
 Under `MACROPLACEMENT` main directory, run the following command:
 ```
+# Copies the placement cost binary to /usr/local/bin and makes it executable.
+sudo curl https://storage.googleapis.com/rl-infra-public/circuit-training/placement_cost/plc_wrapper_main \
+  -o  /usr/local/bin/plc_wrapper_main
+# Run plc testbench
 python -m Plc_client.plc_client_os_test
 ```
 
