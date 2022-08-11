@@ -43,6 +43,7 @@ class Clustering:
         self.RePlace = RePlace
         self.placement_density = placement_density
         self.GUI = GUI
+        self.grid_width = grid_width
 
         ### Print Information
         print("[INFO] step_threshold : ", self.step_threshold)
@@ -90,8 +91,6 @@ class Clustering:
         # for innovus command
         self.cluster_file   = cadence_result_dir + "/" + self.design
         self.cluster_file  += "_cluster_"  + str(self.Nparts) +  ".tcl"
-
-        self.solution_file = self.hypergraph_file + ".part." + str(self.Nparts) # defined by hemtis automatically
         self.cluster_lef_file  = openroad_result_dir + "/clusters.lef"
         self.cluster_def_file  = openroad_result_dir + "/clustered_netlist.def"
         self.blob_def_file = openroad_result_dir + "/blob.def"
@@ -115,19 +114,25 @@ class Clustering:
         self.GenerateHypergraph() # Extract netlist information from lef/def/v
         self.RemoveLargetNet()  # Remove large nets
         self.ConvertFixFile() # Convert fixed file
+        self.cluster_file  += "_cluster_"  + str(self.Nparts) +  ".tcl"
+        self.solution_file = self.hypergraph_file + ".part." + str(self.Nparts)
+        # defined by hemtis automatically
         self.hMetisPartitioner()  # Partition the hypergraph
         self.BreakClusters()  # Break clusters spreading apart
         print("[INFO] After finishing BreakClusters(), ", end = "")
         print("num_clusters = ", len(self.vertices_in_cluster))
+        print("\n\n")
 
         self.MergeSmallClusters()  # Merge small clusters with its neighbors
         print("[INFO] After finishing MergeSmallClusters(), ", end = "")
+        print("num_clusters = ", len(self.vertices_in_cluster))
+        print("\n\n")
 
         self.GenerateSoftMacros()
         ProBufFormat(self.io_name_file, self.macro_pin_file, \
                      self.instance_name_file,  self.outline_file, \
                      self.net_file, self.soft_macros, \
-                     self.pbf_file, self.net_size_threshold, 1.0)
+                     self.pbf_file, self.net_size_threshold, self.grid_width)
 
 
         self.CreateInvsCluster()  # Generate Innovus Clustering Commands
@@ -228,6 +233,7 @@ class Clustering:
         with open(self.fixed_file) as f:
             content = f.read().splitlines()
         f.close()
+        self.Nparts += len(content)
 
         # read the grouping information
         for i in range(len(content)):
@@ -235,6 +241,8 @@ class Clustering:
             vertices = content[i].split(',')
             for vertex in vertices:
                 fixed_part[self.vertex_map[vertex]] = i
+
+
 
         f = open(self.hypergraph_fix_file, "w")
         for part in fixed_part:
