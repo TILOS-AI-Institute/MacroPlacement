@@ -13,12 +13,22 @@ python -m Plc_client.plc_client_os_test
 ```
 
 ## HPWL Computation
-$$
-\begin{align*}
-HPWL =  \\
+Given a net $i$, its wirelength can be computed as the following:
 
-\end{align*}
+$$
+HPWL(i) = W_{i\_{source}} \cdot [max_{b\in i}(x_b) - min_{b\in i}(x_b) + max_{b\in i}(y_b) - min_{b\in i}(y_b)]
+$$
+
+where $W_{i\_{source}}$ is the weight (default to $1$) defined on the source pin.
+
+The total wirelength of the netlist can be computed as the following:
+
+$$
+HPWL(netlist) = \sum_{i}^{N_{netlist}} W_{i\_{source}} \cdot [max_{b\in i}(x_b) - min_{b\in i}(x_b) + max_{b\in i}(y_b) - min_{b\in i}(y_b)]
 $$
 
 ## Adjacency Matrix Computation
+The adjacency matrix is represented as an array of $[N_{hardmacros} + N_{softmacros} + N_{ports}] \times [N_{hardmacros} + N_{softmacros} + N_{ports}]$ elements.
+For each entry of the adjacency matrix, it represents the total number of connections between module $i$ and module $j$ subject to all corresponding pins.
+
 
