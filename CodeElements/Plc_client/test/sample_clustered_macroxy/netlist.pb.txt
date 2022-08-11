@@ -1,0 +1,406 @@
+# proto-file: tensorflow/core/framework/graph.proto
+# proto-message: tensorflow.GraphDef
+node {
+  name: "P0"
+  input: "Grp_2/Pinput"
+  input: "M0/P0"
+  attr {
+    key: "side"
+    value {
+      placeholder: "LEFT"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "PORT"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 100
+    }
+  }
+}
+node {
+  name: "P1"
+  attr {
+    key: "side"
+    value {
+      placeholder: "TOP"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "PORT"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 499
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 499
+    }
+  }
+}
+node {
+  name: "M0"
+  attr {
+    key: "height"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 200
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 200
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50
+    }
+  }
+}
+node {
+  name: "M1"
+  attr {
+    key: "height"
+    value {
+      f: 40
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 100
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 100
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 40
+    }
+  }
+}
+node {
+  name: "M0/P0"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M0"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: -50
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 150
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 250
+    }
+  }
+}
+node {
+  name: "M0/P1"
+  input: "Grp_2/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M0"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 250
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 250
+    }
+  }
+}
+node {
+  name: "M1/P0"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M1"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: -20
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 80
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 120
+    }
+  }
+}
+node {
+  name: "M1/P1"
+  input: "P1"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M1"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 120
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 120
+    }
+  }
+}
+node {
+  name: "Grp_2"
+  attr {
+    key: "height"
+    value {
+      f: 0.20625865
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 17.128008
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 45
+    }
+  }
+}
+node {
+  name: "Grp_2/Poutput_single_0"
+  input: "M1/P0"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_2"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 45
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
+node {
+  name: "Grp_2/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_2"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 45
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
