@@ -90,9 +90,11 @@ proc write_node_port { port_ptr fp } {
   
   set name [lindex [dbget ${port_ptr}.name] 0]
   puts $fp "  name: \"${name}\""
-  
-  set net_ptr [dbget ${port_ptr}.net]
-  print_net $net_ptr $fp
+ 
+  if { [dbget ${port_ptr}.isInput] == 1 } {
+    set net_ptr [dbget ${port_ptr}.net]
+    print_net $net_ptr $fp
+  }
 
   ### Attribute: type ###
   print_placeholder $fp "type" "port"
