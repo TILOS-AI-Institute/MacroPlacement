@@ -1,8 +1,12 @@
 """Open-Sourced PlacementCost client class."""
 import os, io
 import re
+import math
 from typing import Text, Tuple
 from absl import logging
+from collections import namedtuple
+
+Block = namedtuple('Block', 'x_max y_max x_min y_min')
 
 # FLAGS = flags.FLAG
 
@@ -28,8 +32,8 @@ class PlacementCost(object):
         self.block_name = netlist_file.rsplit('/', -1)[-2]
         self.width = 0.0
         self.height = 0.0
-        self.grid_col = 0
-        self.grid_row = 0
+        self.grid_col = 10
+        self.grid_row = 10
         self.hroutes_per_micron = 0.0
         self.vroutes_per_micron = 0.0
         self.smooth_range = 0.0
@@ -423,8 +427,110 @@ class PlacementCost(object):
     def get_congestion_cost(self) -> float:
         return 0.0
 
+    def __get_grid_cell_location(self, x_pos, y_pos):
+        # private function for getting grid cell row/col ranging from 0...N
+        row = math.floor(y_pos / self.grid_height)
+        col = math.floor(x_pos / self.grid_width)
+        return row, col
+    
+    def __overlap_area(self, block_i, block_j):
+        # private function for computing block overlapping
+        x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
+        y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
+        if x_diff >= 0 and y_diff >= 0:
+            return x_diff * y_diff
+        
+        return 0.0
+
+    def __add_module_to_grid_cells(self, mod_x, mod_y, mod_w, mod_h):
+        # private function for add module to grid cells
+        # row/col ranging from 0...N
+        row, col = self.__get_grid_cell_location(mod_x, mod_y)
+
+        # Four corners
+        ur = (mod_x + (mod_w/2), mod_y + (mod_h/2))
+        br = (mod_x + (mod_w/2), mod_y - (mod_h/2))
+        ul = (mod_x - (mod_w/2), mod_y + (mod_h/2))
+        bl = (mod_x - (mod_w/2), mod_y - (mod_h/2))
+
+        # construct block based on current module
+        module_block = Block(
+                            x_max=mod_x + (mod_w/2),
+                            y_max=mod_y + (mod_h/2),
+                            x_min=mod_x - (mod_w/2),
+                            y_min=mod_y - (mod_h/2)
+                            )
+        
+        print(ur, br, ul, bl)
+
+        # Four corner grid cells
+        ur_row, ur_col = self.__get_grid_cell_location(*ur)
+        br_row, br_col = self.__get_grid_cell_location(*br)
+        ul_row, ul_col = self.__get_grid_cell_location(*ul)
+        bl_row, bl_col = self.__get_grid_cell_location(*bl)
+
+        for r_i in range(bl_row, ur_row + 1):
+            for c_i in range(bl_col, ur_col + 1):
+                # construct block based on current cell row/col
+                grid_cell_block = Block(
+                                        x_max=(r_i + 1) * self.grid_height,
+                                        y_max=(c_i + 1) * self.grid_width,
+                                        x_min= r_i * self.grid_height,
+                                        y_min=c_i * self.grid_width
+                                        )
+                self.grid_occupied[self.grid_row * r_i + c_i] += \
+                    self.__overlap_area(grid_cell_block, module_block)
+
+    
+    def get_grid_cells_density(self):
+        # by default grid row/col is 10/10
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
+        
+        grid_area = self.grid_width * self.grid_height
+        self.grid_occupied = [0] * (self.grid_col * self.grid_row)
+        self.grid_cells = [0] * (self.grid_col * self.grid_row)
+
+        for module_idx in (self.soft_macro_indices + self.hard_macro_indices):
+            module = self.modules_w_pins[module_idx]
+            module_h = module.get_height()
+            module_w = module.get_width()
+            module_x, module_y = module.get_pos()
+
+            self.__add_module_to_grid_cells(
+                                            mod_x=module_x,
+                                            mod_y=module_y,
+                                            mod_h=module_h,
+                                            mod_w=module_w
+                                            )
+
+        for i, gcell in enumerate(self.grid_occupied):
+            self.grid_cells[i] = gcell / grid_area
+        
+        return self.grid_cells
+
     def get_density_cost(self) -> float:
-        pass
+        # run get_grid_cells_density first
+        occupied_cells = sorted([gc for gc in self.grid_cells if gc != 0.0], reverse=True)
+        density_cost = 0.0
+
+        # take top 10%
+        density_cnt = math.floor(len(self.grid_cells) * 0.1)
+        density_cnt = min(density_cnt, 10)
+
+        # if grid cell smaller than 10, take the average over occupied cells
+        if len(self.grid_cells) < 10:
+            density_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return 0.5 * density_cost
+
+        idx = 0
+        sum_density = 0
+        # take top 10%
+        while idx < density_cnt and idx < len(occupied_cells):
+            sum_density += occupied_cells[idx]
+            idx += 1
+
+        return 0.5 * float(sum_density / density_cnt)
 
     def set_canvas_size(self, width:float, height:float) -> float:
         """
@@ -805,6 +911,12 @@ class PlacementCost(object):
 
         def get_area(self):
             return self.width * self.height
+        
+        def get_height(self):
+            return self.height
+
+        def get_width(self):
+            return self.width
 
     class SoftMacroPin:
         def __init__(self, name,
@@ -919,6 +1031,12 @@ class PlacementCost(object):
 
         def get_area(self):
             return self.width * self.height
+        
+        def get_height(self):
+            return self.height
+
+        def get_width(self):
+            return self.width
 
     class HardMacroPin:
         def __init__(self, name,
@@ -980,3 +1098,32 @@ class PlacementCost(object):
 
         def get_type(self):
             return "MACRO_PIN"
+
+def main():
+    test_netlist_dir = './Plc_client/test/ariane'
+    netlist_file = os.path.join(test_netlist_dir,
+                                'netlist.pb.txt')
+    plc = PlacementCost(netlist_file)
+
+    print(plc.get_block_name())
+    print("Area: ", plc.get_area())
+    print("Wirelength: ", plc.get_wirelength())
+    print("# HARD_MACROs     :         %d"%(plc.get_hard_macro_count()))
+    print("# HARD_MACRO_PINs :         %d"%(plc.get_hard_macro_pin_count()))
+    print("# MACROs          :         %d"%(plc.get_hard_macro_count() + plc.get_soft_macro_count()))
+    print("# MACRO_PINs      :         %d"%(plc.get_hard_macro_pin_count() + plc.get_soft_macro_pin_count()))
+    print("# PORTs           :         %d"%(plc.get_port_count()))
+    print("# SOFT_MACROs     :         %d"%(plc.get_soft_macro_count()))
+    print("# SOFT_MACRO_PINs :         %d"%(plc.get_soft_macro_pin_count()))
+    print("# STDCELLs        :         0")
+    
+    # print(adj[137])
+    # print(np.unique(adj))
+    print(plc.set_canvas_size(356.592, 356.640))
+    print(plc.set_placement_grid(35, 33))
+    print(plc.get_grid_cells_density())
+    print(plc.get_density_cost())
+    
+
+if __name__ == '__main__':
+    main()
