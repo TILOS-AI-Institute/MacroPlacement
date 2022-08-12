@@ -4,6 +4,10 @@
 # We thank Cadence for granting permission to share our research to help 
 # promote and foster the next generation of innovators.
 # Author: Sayak Kundu, ABKGroup, UCSD
+#
+# Usage: First source the script in Innovus shell. then use gen_pb_netlist
+# command to write out the netlist. The protobuf netlist will be available
+# as <design name>.pb.txt. 
 #############################################################################
 
 #### Print the design header ####
