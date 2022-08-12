@@ -4,6 +4,10 @@
 # We thank Cadence for granting permission to share our research to help 
 # promote and foster the next generation of innovators.
 # Author: Sayak Kundu, ABKGroup, UCSD
+#
+# Usage: First source the script in Innovus shell. then use gen_pb_netlist
+# command to write out the netlist. The protobuf netlist will be available
+# as <design name>.pb.txt.
 #############################################################################
 
 #### Print the design header ####
@@ -12,13 +16,14 @@ proc print_header { fp } {
   set user [exec whoami]
   set date [exec date]
   set run_dir [exec pwd]
-  set fp_box [dbget top.fplan.box]
+  set fp_box_ll [dbget top.fplan.box_ll]
+  set fp_box_ur [dbget top.fplan.box_ur]
 
   puts $fp "# User: $user"
   puts $fp "# Date: $date"
   puts $fp "# Run area: $run_dir"
-  puts $fp "# Current_design: $design"
-  puts $fp "# FP bbox: $fp_box"
+  puts $fp "# current_design: $design"
+  puts $fp "# FP bbox: $fp_box_ll $fp_box_ur"
 }
 
 #### Print helper ####
