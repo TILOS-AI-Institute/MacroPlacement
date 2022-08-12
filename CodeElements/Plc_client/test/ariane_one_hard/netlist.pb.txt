@@ -1,0 +1,41 @@
+# proto-file: tensorflow/core/framework/graph.proto
+# proto-message: tensorflow.GraphDef
+node {
+  name: "i_ariane/ex_stage_i/lsu_i/i_nbdcache/sram_block_4__data_sram/mem/mem_inst_mem_256x128_256x16_0x1"
+  attr {
+    key: "height"
+    value {
+      f: 19.26
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 29.355
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 0
+    }
+  }
+}
