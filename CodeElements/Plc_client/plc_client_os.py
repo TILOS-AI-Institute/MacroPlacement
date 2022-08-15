@@ -761,31 +761,21 @@ class PlacementCost(object):
 
         #[MACRO][macro][PORT]
         module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
+        
+        #[Grid Cell] => [PORT]
+        clustered_ports = {}
+        for port_idx in self.port_indices:
+            port = self.modules_w_pins[port_idx]
+            x_pos, y_pos = port.get_pos()
 
-        for row_idx, module_idx in enumerate(module_indices):
-            # row index
-            # store temp module
-            curr_module = self.modules_w_pins[module_idx]
-            # get module name
-            curr_module_name = curr_module.get_name()
+            row, col = self.__get_grid_cell_location(x_pos=x_pos, y_pos=y_pos)
 
-            for col_idx, h_module_idx in enumerate(module_indices):
-                # col index
-                entry = 0
-                # store connected module
-                h_module = self.modules_w_pins[h_module_idx]
-                # get connected module name
-                h_module_name = h_module.get_name()
+            if (row, col) in clustered_ports:
+                clustered_ports[(row, col)].append(port)
+            else:
+                clustered_ports[(row, col)] = [port]
 
-                if curr_module_name in h_module.get_connection():
-                    entry += h_module.get_connection()[curr_module_name]
-
-                if h_module_name in curr_module.get_connection():
-                    entry += curr_module.get_connection()[h_module_name]
-
-                macro_adj[row_idx * self.module_cnt + col_idx] = entry
-
-        return macro_adj
+        return clustered_ports
 
     def get_node_location(self):
         pass
@@ -1196,6 +1186,7 @@ def main():
     print(plc.get_grid_cells_density())
     print(plc.get_density_cost())
     print(plc.display_canvas())
+    print(len(plc.get_macro_and_clustered_port_adjacency()))
     
 
 if __name__ == '__main__':
