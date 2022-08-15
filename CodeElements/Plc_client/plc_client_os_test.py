@@ -11,6 +11,7 @@ class CircuitDataBaseTest(unittest.TestCase):
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
 
     def test_proxy_cost(self):
         # Google's Binary Executable
@@ -19,8 +20,24 @@ class CircuitDataBaseTest(unittest.TestCase):
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                 macro_macro_x_spacing = 50,
                                                 macro_macro_y_spacing = 50)
+        # Google's Ariane
+        CANVAS_HEIGHT = 
+        CANVAS_WIDTH = 
+        GRID_COL = 35
+        GRID_ROW = 33
+
+        # Ariane133
+        CANVAS_HEIGHT = 
+        CANVAS_WIDTH = 
+        GRID_COL = 35
+        GRID_ROW = 33
+
+
+        print(self.plc.set_canvas_size(CANVAS_WIDTH, CANVAS_HEIGHT))
+        print(self.plc.set_placement_grid(GRID_COL, GRID_ROW))
 
         assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+        assert int(self.plc_os.get_density_cost()) == int(self.plc.get_density_cost())
     
     def test_metadata(self):
         # Google's Binary Executable

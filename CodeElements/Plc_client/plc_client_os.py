@@ -6,8 +6,6 @@ from typing import Text, Tuple
 from absl import logging
 from collections import namedtuple
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
-from matplotlib.collections import LineCollection
 from matplotlib.patches import Rectangle
 import numpy as np
 
@@ -437,7 +435,7 @@ class PlacementCost(object):
         row = math.floor(y_pos / self.grid_height)
         col = math.floor(x_pos / self.grid_width)
         return row, col
-    
+
     def __overlap_area(self, block_i, block_j):
         # private function for computing block overlapping
         x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
@@ -477,25 +475,25 @@ class PlacementCost(object):
         if ur_row >= 0 and ur_col >= 0:
             if bl_row < 0:
                 bl_row = 0
-            
+
             if bl_col < 0:
                 bl_col = 0
         else:
             # OOB, skip module
             print("OOB skipped")
             return
-        
+
         if bl_row >= 0 and bl_col >= 0:
             if ur_row > self.grid_row - 1:
                 ur_row = self.grid_row - 1
-            
+
             if ur_col > self.grid_col - 1:
                 ur_col = self.grid_col - 1
         else:
             # OOB, skip module
             print("OOB skipped")
             return
-        
+
         print("Four Corner Grid")
         print("UR row",ur_row, "\nUR col", ur_col, "\nBL row", bl_row, "\nBL col",bl_col)
 
@@ -509,28 +507,27 @@ class PlacementCost(object):
                                         x_min= c_i * self.grid_width,
                                         y_min= r_i * self.grid_height
                                         )
-                print("grid_cell_block", grid_cell_block)
 
-                print(self.grid_row * r_i + c_i)
-                self.grid_occupied[self.grid_row * r_i + c_i] += \
+                self.grid_occupied[self.grid_col * r_i + c_i] += \
                     self.__overlap_area(grid_cell_block, module_block)
-                
-                if abs(self.grid_occupied[self.grid_row * r_i + c_i] - 1) < 1e-6:
-                    self.grid_occupied[self.grid_row * r_i + c_i] = 1
-                
+
+                # if abs(self.grid_occupied[self.grid_row * r_i + c_i] - 1) < 1e-6:
+                #     self.grid_occupied[self.grid_row * r_i + c_i] = 1
+
                 print("module_block", module_block)
 
-    
+
     def get_grid_cells_density(self):
         # by default grid row/col is 10/10
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
-        
+
         grid_area = self.grid_width * self.grid_height
         self.grid_occupied = [0] * (self.grid_col * self.grid_row)
         self.grid_cells = [0] * (self.grid_col * self.grid_row)
 
         for module_idx in (self.soft_macro_indices + self.hard_macro_indices):
+            # extract module information
             module = self.modules_w_pins[module_idx]
             module_h = module.get_height()
             module_w = module.get_width()
@@ -545,11 +542,10 @@ class PlacementCost(object):
 
         for i, gcell in enumerate(self.grid_occupied):
             self.grid_cells[i] = gcell / grid_area
-        
+
         return self.grid_cells
 
     def get_density_cost(self) -> float:
-        # run get_grid_cells_density first
         occupied_cells = sorted([gc for gc in self.grid_cells if gc != 0.0], reverse=True)
         density_cost = 0.0
 
@@ -761,7 +757,7 @@ class PlacementCost(object):
 
         #[MACRO][macro][PORT]
         module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
-        
+
         #[Grid Cell] => [PORT]
         clustered_ports = {}
         for port_idx in self.port_indices:
@@ -810,9 +806,9 @@ class PlacementCost(object):
     def save_placement(self):
         pass
 
-    def display_canvas(self):
+    def display_canvas(self, annotate=True):
         #define Matplotlib figure and axis
-        fig, ax = plt.subplots(figsize=(8,8), dpi=80)
+        fig, ax = plt.subplots(figsize=(8,8), dpi=50)
 
         # Plt config
         ax.margins(x=0.05, y=0.05)
@@ -825,6 +821,7 @@ class PlacementCost(object):
         ax.plot(x, y, c='b', alpha=0.1) # use plot, not scatter
         ax.plot(np.transpose(x), np.transpose(y), c='b', alpha=0.1) # add this here
 
+        # Construct module blocks
         for mod in self.modules_w_pins:
             if mod.get_type() == 'PORT':
                 plt.plot(*mod.get_pos(),'ro', markersize=1)
@@ -832,13 +829,19 @@ class PlacementCost(object):
                 ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
                     mod.get_width(), mod.get_height(),\
                     alpha=0.5, zorder=1000, facecolor='b', edgecolor='darkblue'))
-                ax.annotate(mod.get_name().rsplit('/', 1)[1], mod.get_pos(), color='r', weight='bold', fontsize=3, ha='center', va='center')
+                if annotate:
+                    ax.annotate(mod.get_name(), mod.get_pos(), color='r', weight='bold', fontsize=7, ha='center', va='center')
+            elif mod.get_type() == 'MACRO_PIN':
+                plt.plot(*mod.get_pos(),'bo', markersize=1)
             elif mod.get_type() == 'macro':
                 ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
                     mod.get_width(), mod.get_height(),\
                     alpha=0.5, zorder=1000, facecolor='y'))
+                if annotate:
+                    ax.annotate(mod.get_name(), mod.get_pos(), wrap=True,color='r', weight='bold', fontsize=7, ha='center', va='center')
 
         plt.show()
+        plt.close('all')
 
 
     # Board Entity Definition
@@ -970,7 +973,7 @@ class PlacementCost(object):
 
         def get_area(self):
             return self.width * self.height
-        
+
         def get_height(self):
             return self.height
 
@@ -1090,7 +1093,7 @@ class PlacementCost(object):
 
         def get_area(self):
             return self.width * self.height
-        
+
         def get_height(self):
             return self.height
 
@@ -1159,7 +1162,7 @@ class PlacementCost(object):
             return "MACRO_PIN"
 
 def main():
-    test_netlist_dir = '/home/yuw/Desktop/Github/CT_runnable/circuit_training/circuit_training/environment/test_data/'+\
+    test_netlist_dir = './Plc_client/test/'+\
         'ariane'
     netlist_file = os.path.join(test_netlist_dir,
                                 'netlist.pb.txt')
