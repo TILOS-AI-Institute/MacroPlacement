@@ -5,6 +5,11 @@ import math
 from typing import Text, Tuple
 from absl import logging
 from collections import namedtuple
+import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
+from matplotlib.collections import LineCollection
+from matplotlib.patches import Rectangle
+import numpy as np
 
 Block = namedtuple('Block', 'x_max y_max x_min y_min')
 
@@ -439,8 +444,7 @@ class PlacementCost(object):
         y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
         if x_diff >= 0 and y_diff >= 0:
             return x_diff * y_diff
-        
-        return 0.0
+        return 0
 
     def __add_module_to_grid_cells(self, mod_x, mod_y, mod_w, mod_h):
         # private function for add module to grid cells
@@ -460,8 +464,8 @@ class PlacementCost(object):
                             x_min=mod_x - (mod_w/2),
                             y_min=mod_y - (mod_h/2)
                             )
-        
-        print(ur, br, ul, bl)
+        print("Module Four corners")
+        print("Upper Left",ur, "\nBottom Right", br, "\nUpper Left", ul, "\nBottom Left",bl)
 
         # Four corner grid cells
         ur_row, ur_col = self.__get_grid_cell_location(*ur)
@@ -469,17 +473,52 @@ class PlacementCost(object):
         ul_row, ul_col = self.__get_grid_cell_location(*ul)
         bl_row, bl_col = self.__get_grid_cell_location(*bl)
 
+        # check if out of bound
+        if ur_row >= 0 and ur_col >= 0:
+            if bl_row < 0:
+                bl_row = 0
+            
+            if bl_col < 0:
+                bl_col = 0
+        else:
+            # OOB, skip module
+            print("OOB skipped")
+            return
+        
+        if bl_row >= 0 and bl_col >= 0:
+            if ur_row > self.grid_row - 1:
+                ur_row = self.grid_row - 1
+            
+            if ur_col > self.grid_col - 1:
+                ur_col = self.grid_col - 1
+        else:
+            # OOB, skip module
+            print("OOB skipped")
+            return
+        
+        print("Four Corner Grid")
+        print("UR row",ur_row, "\nUR col", ur_col, "\nBL row", bl_row, "\nBL col",bl_col)
+
         for r_i in range(bl_row, ur_row + 1):
             for c_i in range(bl_col, ur_col + 1):
+                print(r_i, c_i)
                 # construct block based on current cell row/col
                 grid_cell_block = Block(
-                                        x_max=(r_i + 1) * self.grid_height,
-                                        y_max=(c_i + 1) * self.grid_width,
-                                        x_min= r_i * self.grid_height,
-                                        y_min=c_i * self.grid_width
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
                                         )
+                print("grid_cell_block", grid_cell_block)
+
+                print(self.grid_row * r_i + c_i)
                 self.grid_occupied[self.grid_row * r_i + c_i] += \
                     self.__overlap_area(grid_cell_block, module_block)
+                
+                if abs(self.grid_occupied[self.grid_row * r_i + c_i] - 1) < 1e-6:
+                    self.grid_occupied[self.grid_row * r_i + c_i] = 1
+                
+                print("module_block", module_block)
 
     
     def get_grid_cells_density(self):
@@ -516,7 +555,6 @@ class PlacementCost(object):
 
         # take top 10%
         density_cnt = math.floor(len(self.grid_cells) * 0.1)
-        density_cnt = min(density_cnt, 10)
 
         # if grid cell smaller than 10, take the average over occupied cells
         if len(self.grid_cells) < 10:
@@ -781,6 +819,37 @@ class PlacementCost(object):
 
     def save_placement(self):
         pass
+
+    def display_canvas(self):
+        #define Matplotlib figure and axis
+        fig, ax = plt.subplots(figsize=(8,8), dpi=80)
+
+        # Plt config
+        ax.margins(x=0.05, y=0.05)
+        ax.set_aspect('equal', adjustable='box')
+
+        # Construct grid
+        x, y = np.meshgrid(np.linspace(0, self.height, self.grid_row + 1),\
+             np.linspace(0, self.width, self.grid_col + 1))
+
+        ax.plot(x, y, c='b', alpha=0.1) # use plot, not scatter
+        ax.plot(np.transpose(x), np.transpose(y), c='b', alpha=0.1) # add this here
+
+        for mod in self.modules_w_pins:
+            if mod.get_type() == 'PORT':
+                plt.plot(*mod.get_pos(),'ro', markersize=1)
+            elif mod.get_type() == 'MACRO':
+                ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
+                    mod.get_width(), mod.get_height(),\
+                    alpha=0.5, zorder=1000, facecolor='b', edgecolor='darkblue'))
+                ax.annotate(mod.get_name().rsplit('/', 1)[1], mod.get_pos(), color='r', weight='bold', fontsize=3, ha='center', va='center')
+            elif mod.get_type() == 'macro':
+                ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
+                    mod.get_width(), mod.get_height(),\
+                    alpha=0.5, zorder=1000, facecolor='y'))
+
+        plt.show()
+
 
     # Board Entity Definition
     class Port:
@@ -1100,7 +1169,8 @@ class PlacementCost(object):
             return "MACRO_PIN"
 
 def main():
-    test_netlist_dir = './Plc_client/test/ariane'
+    test_netlist_dir = '/home/yuw/Desktop/Github/CT_runnable/circuit_training/circuit_training/environment/test_data/'+\
+        'ariane'
     netlist_file = os.path.join(test_netlist_dir,
                                 'netlist.pb.txt')
     plc = PlacementCost(netlist_file)
@@ -1121,8 +1191,11 @@ def main():
     # print(np.unique(adj))
     print(plc.set_canvas_size(356.592, 356.640))
     print(plc.set_placement_grid(35, 33))
+    # print(plc.set_canvas_size(80, 80))
+    # print(plc.set_placement_grid(5, 5))
     print(plc.get_grid_cells_density())
     print(plc.get_density_cost())
+    print(plc.display_canvas())
     
 
 if __name__ == '__main__':
