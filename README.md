@@ -84,61 +84,61 @@ In the following table, we provide the status details of each testcase on each o
 <tbody>
   <tr>
     <td class="tg-0lax">Ariane 136</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/ariane136">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
     <td class="tg-0lax">Ariane 133</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/ariane133">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
     <td class="tg-0lax">MemPool tile</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
     <td class="tg-0lax">NVDLA</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/ASAP7/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/SKY130HD/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
   </tr>
