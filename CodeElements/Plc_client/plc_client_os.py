@@ -434,13 +434,17 @@ class PlacementCost(object):
         return 0.0
 
     def __get_grid_cell_location(self, x_pos, y_pos):
-        # private function for getting grid cell row/col ranging from 0...N
+        """
+        private function for getting grid cell row/col ranging from 0...N
+        """
         row = math.floor(y_pos / self.grid_height)
         col = math.floor(x_pos / self.grid_width)
         return row, col
 
     def __overlap_area(self, block_i, block_j):
-        # private function for computing block overlapping
+        """
+        private function for computing block overlapping
+        """
         x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
         y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
         if x_diff >= 0 and y_diff >= 0:
@@ -448,14 +452,11 @@ class PlacementCost(object):
         return 0
 
     def __add_module_to_grid_cells(self, mod_x, mod_y, mod_w, mod_h):
-        # private function for add module to grid cells
-        # row/col ranging from 0...N
-        row, col = self.__get_grid_cell_location(mod_x, mod_y)
-
-        # Four corners
+        """
+        private function for add module to grid cells
+        """
+        # Two corners
         ur = (mod_x + (mod_w/2), mod_y + (mod_h/2))
-        br = (mod_x + (mod_w/2), mod_y - (mod_h/2))
-        ul = (mod_x - (mod_w/2), mod_y + (mod_h/2))
         bl = (mod_x - (mod_w/2), mod_y - (mod_h/2))
 
         # construct block based on current module
@@ -466,10 +467,8 @@ class PlacementCost(object):
                             y_min=mod_y - (mod_h/2)
                             )
 
-        # Four corner grid cells
+        # Only need two corners of a grid cell
         ur_row, ur_col = self.__get_grid_cell_location(*ur)
-        br_row, br_col = self.__get_grid_cell_location(*br)
-        ul_row, ul_col = self.__get_grid_cell_location(*ul)
         bl_row, bl_col = self.__get_grid_cell_location(*bl)
 
         # check if out of bound
@@ -506,10 +505,10 @@ class PlacementCost(object):
                 self.grid_occupied[self.grid_col * r_i + c_i] += \
                     self.__overlap_area(grid_cell_block, module_block)
 
-                # if abs(self.grid_occupied[self.grid_row * r_i + c_i] - 1) < 1e-6:
-                #     self.grid_occupied[self.grid_row * r_i + c_i] = 1
-
     def get_grid_cells_density(self):
+        """
+        compute density for all grid cells
+        """
         # by default grid row/col is 10/10
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
@@ -538,6 +537,9 @@ class PlacementCost(object):
         return self.grid_cells
 
     def get_density_cost(self) -> float:
+        """
+        compute average of top 10% of grid cell density and take half of it
+        """
         occupied_cells = sorted([gc for gc in self.grid_cells if gc != 0.0], reverse=True)
         density_cost = 0.0
 

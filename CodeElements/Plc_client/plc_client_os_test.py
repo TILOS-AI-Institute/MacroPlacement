@@ -12,8 +12,8 @@ class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/ariane_soft2hard/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane_port2soft/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
 
     def test_proxy_cost(self):
@@ -37,10 +37,10 @@ class CircuitDataBaseTest():
         # GRID_ROW = 50
 
         # Sample clustered
-        CANVAS_WIDTH = 80
-        CANVAS_HEIGHT = 80
-        GRID_COL = 5
-        GRID_ROW = 5
+        # CANVAS_WIDTH = 80
+        # CANVAS_HEIGHT = 80
+        # GRID_COL = 5
+        # GRID_ROW = 5
 
         self.plc.set_canvas_size(CANVAS_WIDTH, CANVAS_HEIGHT)
         self.plc.set_placement_grid(GRID_COL, GRID_ROW)
