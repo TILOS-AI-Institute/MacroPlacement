@@ -17,7 +17,7 @@
 
 set nets [list VDD VSS]
 #### Un Place Global Placed cells and cut Row ####
-dbset [dbget top.insts.isHaloBlock 0 -p ].pStatus unplaced
+dbset [dbget top.insts.cell.subClass core -p2 ].pStatus unplaced
 finishFloorplan -fillPlaceBlockage hard $minCh
 cutRow
 finishFloorplan -fillPlaceBlockage hard $minCh 
@@ -27,6 +27,10 @@ finishFloorplan -fillPlaceBlockage hard $minCh
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst *   -override
 globalNetConnect VSS -type pgpin -pin VSS -inst *   -override
+
+######################## For SKY130HD  #######################
+globalNetConnect VDD -type pgpin -pin VPWR -inst *   -override
+globalNetConnect VSS -type pgpin -pin VGND -inst *   -override
 
 # globalNetConnect VDD -type pgpin -pin VDDCE -inst *   -override
 # globalNetConnect VDD -type pgpin -pin VDDPE -inst *   -override
@@ -39,6 +43,10 @@ globalNetConnect VDD -type tiehi -all  -override
 globalNetConnect VSS -type tielo -all  -override
 ####################################################
 
+deselectAll
+select_obj [dbget top.fplan.pBlkgs.name finishfp_place_blkg_* -p1]
+deleteSelectedFromFPlan
+deselectAll
 
 setGenerateViaMode -auto true
 generateVias
@@ -63,6 +71,7 @@ set flag1 0
 while { $i < $lcount } {
     set lname [lindex $layers $i]
     set isfp [lindex $isFP $i]
+    set wdth [lindex $width $i]
     set dir "vertical"
     
     if { [lindex $ldir $i] == 0 } {
@@ -71,12 +80,18 @@ while { $i < $lcount } {
 
     if { $isfp == 1 } {
         puts "Add follow pin creation script"
+        deselectAll
+        editSelect -layer [lindex $layers 0] -net $nets
+        editDuplicate -layer_horizontal $lname
+        deselectAll
+        editSelect -layer $lname -net $nets
+        editResize -to $wdth -side high -direction y -keep_center_line 1
+        deselectAll
     } else {
         set isbm [lindex $isBM $i]
         set ism [lindex $isMacro $i]
         set isam [lindex $isAM $i]
         set spc [lindex $spacing $i]
-        set wdth [lindex $width $i]
         set ptch [lindex $pitch $i]
         set sofst [lindex $soffset $i]
         set isch [lindex $addch $i]
@@ -98,11 +113,11 @@ while { $i < $lcount } {
         } elseif { $ism == 1 } {
             setAddStripeMode -extend_to_closest_target none 
             setAddStripeMode -inside_cell_only true
-            foreach mcell [dbget [dbget top.insts.isHaloBlock 1 -p ].cell.name -u] {
+            foreach mcell [dbget [dbget top.insts.cell.subClass block -p2 ].cell.name -u] {
                 addStripe -layer $lname -direction $dir -nets $nets -width $wdth -spacing $spc \
                     -start_offset $sofst -set_to_set_distance $ptch -master $mcell
             }
-            foreach inst [dbget [dbget top.insts.isHaloBlock 1 -p ].name ] {
+            foreach inst [dbget [dbget top.insts.cell.subClass block -p2 ].name ] {
                 createRouteBlk -inst $inst -cover -layer $prevLayer -name mcro_blk
             }
         } elseif { $isam == 1 } {
@@ -112,7 +127,7 @@ while { $i < $lcount } {
                 setAddStripeMode -stacked_via_bottom_layer $prevLayer -stacked_via_top_layer $lname
             }
             addStripe -layer $lname -direction $dir -nets $nets -width $wdth -spacing $spc \
-                -start_offset $sofst -set_to_set_distance $ptch
+                -start_offset $sofst -set_to_set_distance $ptch -extend_to design_boundary
             if { $isch == 1 } {
                 setAddStripeMode -extend_to_closest_target same_dir_stripe 
                 addStripe -layer $lname -direction $dir -nets $nets -width $wdth -spacing $spc \
@@ -121,13 +136,13 @@ while { $i < $lcount } {
         } else {
             puts "Layer:$lname is not routed"
         }
-        set prevLayer $lname
-        set i [expr $i + 1]
     }
+    set prevLayer $lname
+    set i [expr $i + 1]
 }
 deleteRouteBlk -name mcro_blk
-verify_connectivity -net $nets -geom_connect -no_antenna -error 0
+# verify_connectivity -net $nets -geom_connect -no_antenna -error 0
 
 # placeDesign -concurrent_macro changes the default placement 
 # settings
-#setPlaceMode -place_opt_run_global_place full
+setPlaceMode -place_opt_run_global_place full

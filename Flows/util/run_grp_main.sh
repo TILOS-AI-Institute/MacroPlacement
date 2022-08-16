@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+##########################################################################
+# Update HMETIS_DIR PLC_WRAPPER_MAIN and CT_PATH
+##########################################################################
 if [ $PHY_SYNTH -eq 1 ]; then
     export PROJ_DIR=`pwd | grep -o '\S*/MacroPlacement'`
     export NETLIST_FILE=`readlink -f *.pb.txt`
