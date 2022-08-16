@@ -29,6 +29,9 @@ defOut -floorplan ./def/${top_module}_fp_placed_macros.def
 #### Unplace the macros ###
 dbset [dbget top.insts.cell.subClass block -p2 ].pStatus unplaced
 
+### Remove Halo as OR do not support ###
+deleteHaloFromBlock -allBlock
+
 ### Write out Pin Placed def only ###
 defOut -floorplan ./def/${top_module}_fp.def
 
