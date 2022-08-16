@@ -65,7 +65,13 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     place_design -concurrent_macros
     refine_macro_place
 }
+
+### Write out the def files ###
 source ../../../../util/write_required_def.tcl
+
+### Add power plan ###
+source ../../../../../Enablements/SKY130HD/util/pdn_config.tcl
+source ../../../../util/pdn_flow.tcl
 
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
@@ -122,6 +128,10 @@ setNanoRouteMode -grouteExpWithTimingDriven false
 routeDesign
 #route_opt_design
 saveDesign ${encDir}/${DESIGN}_route.enc
+
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
 
 set rpt_post_route [extract_report postRoute]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt

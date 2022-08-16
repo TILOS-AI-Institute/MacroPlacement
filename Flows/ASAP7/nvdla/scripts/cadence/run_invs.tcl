@@ -66,8 +66,15 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     addHaloToBlock -allMacro $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH
     place_design -concurrent_macros
     refine_macro_place
-    snapFPlan -pin
+    #snapFPlan -pin
 }
+
+### Write out the def files ###
+source ../../../../util/write_required_def.tcl
+
+### Add power plan ###
+source ../../../../../Enablements/ASAP7/util/pdn_config.tcl
+source ../../../../util/pdn_flow.tcl
 
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
@@ -99,6 +106,7 @@ saveDesign $encDir/${DESIGN}_cts.enc
 set rpt_post_cts [extract_report postCTS]
 echo "$rpt_post_cts" >> ${DESIGN}_DETAILS.rpt
 
+
 # ------------------------------------------------------------------------------
 # Routing
 # ------------------------------------------------------------------------------
@@ -124,6 +132,15 @@ setNanoRouteMode -grouteExpWithTimingDriven false
 routeDesign
 #route_opt_design
 saveDesign ${encDir}/${DESIGN}_route.enc
+
+
+### Add V1 vias ###
+setViaGenMode -reset
+editPowerVia -top_layer M2 -bottom_layer M1 -orthogonal_only 0 -add_vias 1
+
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
 
 set rpt_post_route [extract_report postRoute]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
