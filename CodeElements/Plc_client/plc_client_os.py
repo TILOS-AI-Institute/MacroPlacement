@@ -676,7 +676,7 @@ class PlacementCost(object):
 
     def get_macro_adjacency(self) -> list:
         """
-        Compute Adjacency Matrix (Unclustered PORTs)
+        Compute Adjacency Matrix
         """
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
         #[MACRO][macro]
@@ -745,12 +745,8 @@ class PlacementCost(object):
         """
         Compute Adjacency Matrix (Unclustered PORTs)
         """
-        # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
-        macro_adj = [0] * self.module_cnt * self.module_cnt
-        assert len(macro_adj) == self.module_cnt * self.module_cnt
-
         #[MACRO][macro][PORT]
-        module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
+        module_indices = self.hard_macro_indices + self.soft_macro_indices
 
         #[Grid Cell] => [PORT]
         clustered_ports = {}
@@ -764,8 +760,61 @@ class PlacementCost(object):
                 clustered_ports[(row, col)].append(port)
             else:
                 clustered_ports[(row, col)] = [port]
+        
+        # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
+        macro_adj = [0] * (len(module_indices) + len(clustered_ports)) * (len(module_indices) + len(clustered_ports))
 
-        return clustered_ports
+        # instantiate macros
+        for row_idx, module_idx in enumerate(module_indices):
+            # row index
+            # store temp module
+            curr_module = self.modules_w_pins[module_idx]
+            # get module name
+            curr_module_name = curr_module.get_name()
+
+            for col_idx, h_module_idx in enumerate(module_indices):
+                # col index
+                entry = 0
+                # store connected module
+                h_module = self.modules_w_pins[h_module_idx]
+                # get connected module name
+                h_module_name = h_module.get_name()
+
+                if curr_module_name in h_module.get_connection():
+                    entry += h_module.get_connection()[curr_module_name]
+
+                if h_module_name in curr_module.get_connection():
+                    entry += curr_module.get_connection()[h_module_name]
+
+                macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + col_idx] = entry
+                macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + row_idx] = entry
+        
+        # instantiate clustered ports
+        for cluster_idx, cluster_cell in enumerate(clustered_ports):
+            
+            for port in clustered_ports[cluster_cell]:
+                # get module name
+                curr_port_name = port.get_name()
+                # assuming ports only connects to macros
+                for col_idx, h_module_idx in enumerate(module_indices):
+                    # col index
+                    entry = 0
+                    # store connected module
+                    h_module = self.modules_w_pins[h_module_idx]
+                    # get connected module name
+                    h_module_name = h_module.get_name()
+                
+                if curr_module_name in h_module.get_connection():
+                    entry += h_module.get_connection()[curr_port_name]
+
+                if h_module_name in curr_module.get_connection():
+                    entry += curr_module.get_connection()[h_module_name]
+            
+            macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt + cluster_idx) + col_idx] = entry
+            macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt + cluster_idx) + row_idx] = entry
+                
+
+        return macro_adj
 
     def get_node_location(self):
         pass
@@ -1182,13 +1231,6 @@ def main():
     # print(plc.set_placement_grid(5, 5))
     print(plc.get_grid_cells_density())
     print(plc.get_density_cost())
-
-    temppins = plc.soft_macros_to_inpins[plc.modules_w_pins[plc.soft_macro_indices[0]].get_name()]
-    print(plc.modules_w_pins[plc.mod_name_to_indices[temppins[17]]].get_name())
-    print(plc.modules_w_pins[plc.mod_name_to_indices[temppins[17]]].get_sink())
-
-    print(plc.modules_w_pins[plc.soft_macro_indices[54]].get_name())
-    temppins2 = plc.soft_macros_to_inpins[plc.modules_w_pins[plc.soft_macro_indices[54]].get_name()]
 
 if __name__ == '__main__':
     main()
