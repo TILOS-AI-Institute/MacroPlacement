@@ -11,8 +11,6 @@ import numpy as np
 
 Block = namedtuple('Block', 'x_max y_max x_min y_min')
 
-# FLAGS = flags.FLAG
-
 class PlacementCost(object):
 
     def __init__(self,
@@ -338,9 +336,14 @@ class PlacementCost(object):
             for pin_name in pin_names:
                 pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
                 inputs = pin.get_sink()
+
                 if inputs:
                     for k in inputs.keys():
-                        macro.add_connections(inputs[k])
+                        if macro_type == "MACRO":
+                            macro.add_connections(inputs[k])
+                        elif macro_type == "macro":
+                            weight = pin.get_weight()
+                            macro.add_connections(inputs[k], weight)
 
 
     def get_cost(self) -> float:
@@ -462,8 +465,6 @@ class PlacementCost(object):
                             x_min=mod_x - (mod_w/2),
                             y_min=mod_y - (mod_h/2)
                             )
-        print("Module Four corners")
-        print("Upper Left",ur, "\nBottom Right", br, "\nUpper Left", ul, "\nBottom Left",bl)
 
         # Four corner grid cells
         ur_row, ur_col = self.__get_grid_cell_location(*ur)
@@ -480,7 +481,6 @@ class PlacementCost(object):
                 bl_col = 0
         else:
             # OOB, skip module
-            print("OOB skipped")
             return
 
         if bl_row >= 0 and bl_col >= 0:
@@ -491,15 +491,10 @@ class PlacementCost(object):
                 ur_col = self.grid_col - 1
         else:
             # OOB, skip module
-            print("OOB skipped")
             return
-
-        print("Four Corner Grid")
-        print("UR row",ur_row, "\nUR col", ur_col, "\nBL row", bl_row, "\nBL col",bl_col)
 
         for r_i in range(bl_row, ur_row + 1):
             for c_i in range(bl_col, ur_col + 1):
-                print(r_i, c_i)
                 # construct block based on current cell row/col
                 grid_cell_block = Block(
                                         x_max= (c_i + 1) * self.grid_width,
@@ -513,9 +508,6 @@ class PlacementCost(object):
 
                 # if abs(self.grid_occupied[self.grid_row * r_i + c_i] - 1) < 1e-6:
                 #     self.grid_occupied[self.grid_row * r_i + c_i] = 1
-
-                print("module_block", module_block)
-
 
     def get_grid_cells_density(self):
         # by default grid row/col is 10/10
@@ -685,11 +677,10 @@ class PlacementCost(object):
         Compute Adjacency Matrix (Unclustered PORTs)
         """
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
-        macro_adj = [0] * self.module_cnt * self.module_cnt
-        assert len(macro_adj) == self.module_cnt * self.module_cnt
-
-        #[MACRO][macro][PORT]
-        module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
+        #[MACRO][macro]
+        module_indices = self.hard_macro_indices + self.soft_macro_indices
+        macro_adj = [0] * (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
+        assert len(macro_adj) == (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
 
         for row_idx, module_idx in enumerate(module_indices):
             # row index
@@ -712,7 +703,8 @@ class PlacementCost(object):
                 if h_module_name in curr_module.get_connection():
                     entry += curr_module.get_connection()[h_module_name]
 
-                macro_adj[row_idx * self.module_cnt + col_idx] = entry
+                macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + col_idx] = entry
+                macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + row_idx] = entry
 
         return macro_adj
 
@@ -927,13 +919,12 @@ class PlacementCost(object):
             self.height = float(height)
             self.x = float(x)
             self.y = float(y)
-            self.sink = {} # [MACRO_NAME] => [PIN_NAME]
             self.connection = {} # [module_name] => edge degree
 
         def get_name(self):
             return self.name
 
-        def add_connection(self, module_name):
+        def add_connection(self, module_name, weight):
             # NOTE: assume PORT names does not contain slash
             ifPORT = False
             module_name_splited = module_name.rsplit('/', 1)
@@ -942,18 +933,19 @@ class PlacementCost(object):
 
             if ifPORT:
                 # adding PORT
-                self.connection[module_name] = 1
+                self.connection[module_name] = 1 * weight
             else:
                 # adding soft/hard macros
                 if module_name_splited[0] in self.connection.keys():
-                    self.connection[module_name_splited[0]] += 1
+                    self.connection[module_name_splited[0]] += 1 * weight
                 else:
-                    self.connection[module_name_splited[0]] = 1
+                    self.connection[module_name_splited[0]] = 1 * weight
 
-        def add_connections(self, module_names):
+        def add_connections(self, module_names, weight):
             # NOTE: assume PORT names does not contain slash
+            # consider weight on soft macro pins
             for module_name in module_names:
-                self.add_connection(module_name)
+                self.add_connection(module_name, weight)
 
         def set_pos(self, x, y):
             self.x = x
@@ -961,9 +953,6 @@ class PlacementCost(object):
 
         def get_pos(self):
             return self.x, self.y
-
-        def get_sink(self):
-            return self.sink
 
         def get_type(self):
             return "macro"
@@ -982,7 +971,7 @@ class PlacementCost(object):
 
     class SoftMacroPin:
         def __init__(self, name,
-                    x = 0.0, y = 0.0, macro_name = "", weight = 0.0):
+                    x = 0.0, y = 0.0, macro_name = "", weight = 1.0):
             self.name = name
             self.x = float(x)
             self.y = float(y)
@@ -1035,6 +1024,9 @@ class PlacementCost(object):
 
         def get_sink(self):
             return self.sink
+        
+        def get_weight(self):
+            return self.weight
 
         def get_type(self):
             return "macro_pin"
@@ -1188,9 +1180,13 @@ def main():
     # print(plc.set_placement_grid(5, 5))
     print(plc.get_grid_cells_density())
     print(plc.get_density_cost())
-    print(plc.display_canvas())
-    print(len(plc.get_macro_and_clustered_port_adjacency()))
-    
+
+    temppins = plc.soft_macros_to_inpins[plc.modules_w_pins[plc.soft_macro_indices[0]].get_name()]
+    print(plc.modules_w_pins[plc.mod_name_to_indices[temppins[17]]].get_name())
+    print(plc.modules_w_pins[plc.mod_name_to_indices[temppins[17]]].get_sink())
+
+    print(plc.modules_w_pins[plc.soft_macro_indices[54]].get_name())
+    temppins2 = plc.soft_macros_to_inpins[plc.modules_w_pins[plc.soft_macro_indices[54]].get_name()]
 
 if __name__ == '__main__':
     main()
