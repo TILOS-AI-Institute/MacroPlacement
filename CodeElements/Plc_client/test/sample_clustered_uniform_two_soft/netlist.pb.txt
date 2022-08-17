@@ -68,6 +68,7 @@ node {
 }
 node {
   name: "Grp_2/Poutput_single_0"
+  input: "Grp_3/Pinput"
   attr {
     key: "macro_name"
     value {
@@ -83,7 +84,7 @@ node {
   attr {
     key: "x"
     value {
-      f: 20
+      f: 4
     }
   }
   attr {
@@ -95,7 +96,7 @@ node {
   attr {
     key: "y"
     value {
-      f: 45
+      f: 4
     }
   }
   attr {
@@ -122,6 +123,46 @@ node {
   attr {
     key: "x"
     value {
+      f: 4
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 4
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
+node {
+  name: "Grp_3/Poutput_single_0"
+  input: "Grp_2/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_3"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
       f: 20
     }
   }
@@ -134,7 +175,46 @@ node {
   attr {
     key: "y"
     value {
-      f: 45
+      f: 20
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
+node {
+  name: "Grp_3/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_3"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 20
     }
   }
   attr {

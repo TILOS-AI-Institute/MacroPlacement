@@ -42,6 +42,9 @@ class PlacementCost(object):
         self.hrouting_alloc = 0.0
         self.vrouting_alloc = 0.0
 
+        # net information
+        self.net_cnt = 0
+
         # All modules look-up table
         self.modules = []
         self.modules_w_pins = []
@@ -194,11 +197,16 @@ class PlacementCost(object):
                                                            x = attr_dict['x'][1],
                                                            y = attr_dict['y'][1],
                                                            macro_name = attr_dict['macro_name'][1])
-                        if 'weight' in attr_dict.keys():
-                            soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         if input_list:
+                            if 'weight' in attr_dict.keys():
+                                self.net_cnt += 1 * float(attr_dict['weight'][1])
+                            else:
+                                self.net_cnt += 1
                             soft_macro_pin.add_sinks(input_list)
+                        
+                        if 'weight' in attr_dict.keys():
+                            soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         self.modules_w_pins.append(soft_macro_pin)
                         # mapping node_name ==> node idx
@@ -247,6 +255,7 @@ class PlacementCost(object):
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         if input_list:
+                            self.net_cnt += 1
                             hard_macro_pin.add_sinks(input_list)
 
                         self.modules_w_pins.append(hard_macro_pin)
@@ -273,7 +282,9 @@ class PlacementCost(object):
                                         side = attr_dict['side'][1])
 
                         if input_list:
+                            self.net_cnt += 1
                             port.add_sinks(input_list)
+                            # ports does not have pins so update connection immediately
                             port.add_connections(input_list)
 
                         self.modules_w_pins.append(port)
@@ -350,8 +361,17 @@ class PlacementCost(object):
         """
         Compute wirelength cost from wirelength
         """
-        
-        return 0.0
+        # temp_net_cnt = math.floor(self.net_cnt * 0.15)
+
+        # if temp_net_cnt == 0:
+        #     temp_net_cnt = 1
+
+        # unknown_threshold = 100
+
+        # if self.net_cnt <= unknown_threshold:
+        #     return self.get_wirelength() / ((self.get_canvas_width_height()[0] + self.get_canvas_width_height()[1]) * temp_net_cnt)
+        # else:
+        return self.get_wirelength() / ((self.get_canvas_width_height()[0] + self.get_canvas_width_height()[1]) * self.net_cnt)
 
     def get_area(self) -> float:
         """
@@ -431,7 +451,6 @@ class PlacementCost(object):
                 else:
                     total_hpwl += (abs(max(x_coord) - min(x_coord))\
                          + abs(max(y_coord) - min(y_coord)))
-
         return total_hpwl
 
     def get_congestion_cost(self) -> float:

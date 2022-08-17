@@ -14,8 +14,8 @@ class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/ariane_port2soft/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
 
     # Google's Ariane
     # CANVAS_WIDTH = 356.592
@@ -24,16 +24,16 @@ class CircuitDataBaseTest():
     # GRID_ROW = 33
 
     # Ariane133
-    # CANVAS_WIDTH = 1599.99
-    # CANVAS_HEIGHT = 1598.8
-    # GRID_COL = 50
-    # GRID_ROW = 50
+    CANVAS_WIDTH = 1599.99
+    CANVAS_HEIGHT = 1598.8
+    GRID_COL = 50
+    GRID_ROW = 50
 
     # Sample clustered
-    CANVAS_WIDTH = 500
-    CANVAS_HEIGHT = 500
-    GRID_COL = 5
-    GRID_ROW = 5
+    # CANVAS_WIDTH = 500
+    # CANVAS_HEIGHT = 500
+    # GRID_COL = 4
+    # GRID_ROW = 4
 
     def test_proxy_cost(self):
         # Google's Binary Executable
@@ -48,16 +48,17 @@ class CircuitDataBaseTest():
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        print(self.plc_os.display_canvas())
+        # print(self.plc_os.display_canvas())
         
         print(self.plc_os.get_wirelength(), self.plc.get_wirelength())
         assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+        print("os wl cost", self.plc_os.get_cost())
+        print("gl wl cost", self.plc.get_cost())
+        assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 10e-3
         assert int(sum(self.plc_os.get_grid_cells_density())) == int(sum(self.plc.get_grid_cells_density()))
         assert int(self.plc_os.get_density_cost()) == int(self.plc.get_density_cost())
-        print("os density", self.plc_os.get_density_cost())
-        print("gl density", self.plc.get_density_cost())
-
-        print("wirelength cost", self.plc.get_wirelength(), self.plc.get_cost())
+        print("os density cost", self.plc_os.get_density_cost())
+        print("gl density cost", self.plc.get_density_cost())
     
     def test_metadata(self):
         # Google's Binary Executable
