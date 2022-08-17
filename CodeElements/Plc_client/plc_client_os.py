@@ -347,6 +347,10 @@ class PlacementCost(object):
 
 
     def get_cost(self) -> float:
+        """
+        Compute wirelength cost from wirelength
+        """
+        
         return 0.0
 
     def get_area(self) -> float:
@@ -745,7 +749,7 @@ class PlacementCost(object):
         """
         Compute Adjacency Matrix (Unclustered PORTs)
         """
-        #[MACRO][macro][PORT]
+        #[MACRO][macro]
         module_indices = self.hard_macro_indices + self.soft_macro_indices
 
         #[Grid Cell] => [PORT]
@@ -763,10 +767,10 @@ class PlacementCost(object):
         
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
         macro_adj = [0] * (len(module_indices) + len(clustered_ports)) * (len(module_indices) + len(clustered_ports))
+        cell_location = [0] * len(clustered_ports)
 
         # instantiate macros
         for row_idx, module_idx in enumerate(module_indices):
-            # row index
             # store temp module
             curr_module = self.modules_w_pins[module_idx]
             # get module name
@@ -786,15 +790,23 @@ class PlacementCost(object):
                 if h_module_name in curr_module.get_connection():
                     entry += curr_module.get_connection()[h_module_name]
 
-                macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + col_idx] = entry
-                macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + row_idx] = entry
+                macro_adj[row_idx * (len(module_indices) + len(clustered_ports)) + col_idx] = entry
+                macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] = entry
         
         # instantiate clustered ports
-        for cluster_idx, cluster_cell in enumerate(clustered_ports):
-            
-            for port in clustered_ports[cluster_cell]:
+        for row_idx, cluster_cell in enumerate(clustered_ports):
+            # add cell location
+            cell_location[row_idx] = cluster_cell[0] * self.grid_row + cluster_cell[1]
+
+            # relocate to after macros
+            row_idx += len(module_indices)
+
+            # for each port within a grid cell
+            for curr_port in clustered_ports[cluster_cell]:
                 # get module name
-                curr_port_name = port.get_name()
+                curr_port_name = curr_port.get_name()
+                # print("curr_port_name", curr_port_name)
+                # print("connections", curr_port.get_connection())
                 # assuming ports only connects to macros
                 for col_idx, h_module_idx in enumerate(module_indices):
                     # col index
@@ -803,18 +815,19 @@ class PlacementCost(object):
                     h_module = self.modules_w_pins[h_module_idx]
                     # get connected module name
                     h_module_name = h_module.get_name()
-                
-                if curr_module_name in h_module.get_connection():
-                    entry += h_module.get_connection()[curr_port_name]
 
-                if h_module_name in curr_module.get_connection():
-                    entry += curr_module.get_connection()[h_module_name]
-            
-            macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt + cluster_idx) + col_idx] = entry
-            macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt + cluster_idx) + row_idx] = entry
+                    # print("other connections", h_module.get_connection(), curr_port_name)
                 
+                    if curr_port_name in h_module.get_connection():
+                        entry += h_module.get_connection()[curr_port_name]
 
-        return macro_adj
+                    if h_module_name in curr_port.get_connection():
+                        entry += curr_port.get_connection()[h_module_name]
+             
+                    macro_adj[row_idx * (len(module_indices) + len(clustered_ports)) + col_idx] += entry
+                    macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] += entry
+                
+        return macro_adj, sorted(cell_location)
 
     def get_node_location(self):
         pass
@@ -862,12 +875,12 @@ class PlacementCost(object):
              np.linspace(0, self.width, self.grid_col + 1))
 
         ax.plot(x, y, c='b', alpha=0.1) # use plot, not scatter
-        ax.plot(np.transpose(x), np.transpose(y), c='b', alpha=0.1) # add this here
+        ax.plot(np.transpose(x), np.transpose(y), c='b', alpha=0.2) # add this here
 
         # Construct module blocks
         for mod in self.modules_w_pins:
             if mod.get_type() == 'PORT':
-                plt.plot(*mod.get_pos(),'ro', markersize=1)
+                plt.plot(*mod.get_pos(),'ro', markersize=2)
             elif mod.get_type() == 'MACRO':
                 ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
                     mod.get_width(), mod.get_height(),\
