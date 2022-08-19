@@ -4,6 +4,8 @@ from Plc_client import plc_client_os as plc_client_os
 from Plc_client import plc_client as plc_client
 import numpy as np
 import sys
+import time
+import math
 np.set_printoptions(threshold=sys.maxsize)
 FLAGS = flags.FLAGS
 
@@ -13,9 +15,9 @@ class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/ariane_soft2hard/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane_port2soft/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
 
     # Google's Ariane
     # CANVAS_WIDTH = 356.592
@@ -24,21 +26,27 @@ class CircuitDataBaseTest():
     # GRID_ROW = 33
 
     # Ariane133
-    CANVAS_WIDTH = 1599.99
-    CANVAS_HEIGHT = 1598.8
-    GRID_COL = 50
-    GRID_ROW = 50
+    # CANVAS_WIDTH = 1430.723
+    # CANVAS_HEIGHT = 1430.723
+    # GRID_COL = 24
+    # GRID_ROW = 21
 
     # Sample clustered
-    # CANVAS_WIDTH = 500
-    # CANVAS_HEIGHT = 500
-    # GRID_COL = 4
-    # GRID_ROW = 4
+    CANVAS_WIDTH = 500
+    CANVAS_HEIGHT = 500
+    GRID_COL = 4
+    GRID_ROW = 4
 
     def test_proxy_cost(self):
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
-        print(self.plc.get_canvas_width_height())
+        
+        print("start timing")
+        start = time.time()
+        print(self.plc.get_congestion_cost())
+        end = time.time()
+        print("time elapsed:", end - start)
+        print("end timing")
         # Open-sourced Implementation
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                 macro_macro_x_spacing = 50,
@@ -48,6 +56,7 @@ class CircuitDataBaseTest():
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
         # print(self.plc_os.display_canvas())
         
         print(self.plc_os.get_wirelength(), self.plc.get_wirelength())
@@ -93,24 +102,31 @@ class CircuitDataBaseTest():
         self.plc_os.set_macro_routing_allocation(3.0, 4.0)
         assert self.plc.get_macro_routing_allocation() == self.plc_os.get_macro_routing_allocation()
         
+        # test get_macro_adjacency
         plc_macroadj = self.plc.get_macro_adjacency()
+        plc_macroadj = np.array(plc_macroadj).reshape(int(math.sqrt(len(plc_macroadj))),\
+             int(math.sqrt(len(plc_macroadj))))
+
         plcos_macroadj = self.plc_os.get_macro_adjacency()
-        # print("diff macro", np.nonzero(np.array(plc_macroadj) - np.array(plcos_macroadj)))
+        plcos_macroadj = np.array(plcos_macroadj).reshape(int(math.sqrt(len(plcos_macroadj))),\
+             int(math.sqrt(len(plcos_macroadj))))
 
-        # print(self.plc_os.get_macro_and_clustered_port_adjacency())
-        # print(self.plc.get_macro_and_clustered_port_adjacency()[0])
-        # print("gl number of clustered ports found:", self.plc.get_macro_and_clustered_port_adjacency()[0])
-        # print("our number of clustered ports found:", self.plc_os.get_macro_and_clustered_port_adjacency()[0])
-        # print(self.plc_os.display_canvas())
+        assert(np.sum(np.nonzero(plc_macroadj - plcos_macroadj)) == 0)
+        
+        # test get_macro_and_clustered_port_adjacency
+        plc_clusteradj, plc_cell = self.plc.get_macro_and_clustered_port_adjacency()
+        plc_clusteradj = np.array(plc_clusteradj).reshape(int(math.sqrt(len(plc_clusteradj))),\
+             int(math.sqrt(len(plc_clusteradj))))
 
-        # print("count", self.plc_os.soft_macro_cnt, self.plc_os.hard_macro_cnt, self.plc_os.port_cnt)
+        plcos_clusteradj, plcos_cell = self.plc_os.get_macro_and_clustered_port_adjacency()
+        plcos_clusteradj = np.array(plcos_clusteradj).reshape(int(math.sqrt(len(plcos_clusteradj))),\
+             int(math.sqrt(len(plcos_clusteradj))))
 
+        assert(plc_cell == plcos_cell)
 
-        # compare both macro and clustered ports array
-        for plc_adj, plcos_adj in zip(self.plc.get_macro_and_clustered_port_adjacency(), self.plc_os.get_macro_and_clustered_port_adjacency()):
-            # print("diff macro cluster", np.nonzero(np.array(plc_adj) - np.array(plcos_adj)))
-            assert sum(plc_adj) == sum(plcos_adj)
-    
+        for plc_adj, plcos_adj in zip(plc_clusteradj, plcos_clusteradj):
+            assert(np.sum(np.nonzero(plc_adj - plcos_adj)) == 0)
+
     def test_miscellaneous(self):
         # Google's Binary Executable
         self.plc = plc_client_os.PlacementCost(self.NETLIST_PATH)

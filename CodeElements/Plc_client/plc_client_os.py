@@ -31,10 +31,6 @@ class PlacementCost(object):
         self.init_plc = None
         self.project_name = "circuit_training"
         self.block_name = netlist_file.rsplit('/', -1)[-2]
-        self.width = 0.0
-        self.height = 0.0
-        self.grid_col = 10
-        self.grid_row = 10
         self.hroutes_per_micron = 0.0
         self.vroutes_per_micron = 0.0
         self.smooth_range = 0.0
@@ -62,6 +58,13 @@ class PlacementCost(object):
         self.soft_macros_to_inpins = {}
         # read netlist
         self.__read_protobuf()
+
+        # default canvas width/height based on cell area
+        self.width = math.sqrt(self.get_area()/0.6)
+        self.height = math.sqrt(self.get_area()/0.6)
+        # default gridding
+        self.grid_col = 10
+        self.grid_row = 10
         # store module/component count
         self.port_cnt = len(self.port_indices)
         self.hard_macro_cnt = len(self.hard_macro_indices)
@@ -361,16 +364,6 @@ class PlacementCost(object):
         """
         Compute wirelength cost from wirelength
         """
-        # temp_net_cnt = math.floor(self.net_cnt * 0.15)
-
-        # if temp_net_cnt == 0:
-        #     temp_net_cnt = 1
-
-        # unknown_threshold = 100
-
-        # if self.net_cnt <= unknown_threshold:
-        #     return self.get_wirelength() / ((self.get_canvas_width_height()[0] + self.get_canvas_width_height()[1]) * temp_net_cnt)
-        # else:
         return self.get_wirelength() / ((self.get_canvas_width_height()[0] + self.get_canvas_width_height()[1]) * self.net_cnt)
 
     def get_area(self) -> float:
@@ -707,14 +700,14 @@ class PlacementCost(object):
         macro_adj = [0] * (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
         assert len(macro_adj) == (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
 
-        for row_idx, module_idx in enumerate(module_indices):
+        for row_idx, module_idx in enumerate(sorted(module_indices)):
             # row index
             # store temp module
             curr_module = self.modules_w_pins[module_idx]
             # get module name
             curr_module_name = curr_module.get_name()
 
-            for col_idx, h_module_idx in enumerate(module_indices):
+            for col_idx, h_module_idx in enumerate(sorted(module_indices)):
                 # col index
                 entry = 0
                 # store connected module
@@ -767,6 +760,7 @@ class PlacementCost(object):
     def get_macro_and_clustered_port_adjacency(self):
         """
         Compute Adjacency Matrix (Unclustered PORTs)
+        if module is a PORT, assign nearest cell location even if OOB
         """
         #[MACRO][macro]
         module_indices = self.hard_macro_indices + self.soft_macro_indices
@@ -779,6 +773,19 @@ class PlacementCost(object):
 
             row, col = self.__get_grid_cell_location(x_pos=x_pos, y_pos=y_pos)
 
+            # prevent OOB
+            if row >= self.grid_row:
+                row = self.grid_row - 1
+            
+            if row < 0:
+                row = 0
+
+            if col >= self.grid_col:
+                col = self.grid_col - 1
+            
+            if col < 0:
+                col = 0
+
             if (row, col) in clustered_ports:
                 clustered_ports[(row, col)].append(port)
             else:
@@ -789,13 +796,13 @@ class PlacementCost(object):
         cell_location = [0] * len(clustered_ports)
 
         # instantiate macros
-        for row_idx, module_idx in enumerate(module_indices):
+        for row_idx, module_idx in enumerate(sorted(module_indices)):
             # store temp module
             curr_module = self.modules_w_pins[module_idx]
             # get module name
             curr_module_name = curr_module.get_name()
 
-            for col_idx, h_module_idx in enumerate(module_indices):
+            for col_idx, h_module_idx in enumerate(sorted(module_indices)):
                 # col index
                 entry = 0
                 # store connected module
@@ -813,9 +820,11 @@ class PlacementCost(object):
                 macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] = entry
         
         # instantiate clustered ports
-        for row_idx, cluster_cell in enumerate(clustered_ports):
+        for row_idx, cluster_cell in enumerate(sorted(clustered_ports, key=lambda tup: tup[1])):
+            # print("cluster_cell", cluster_cell)
+            # print("port cnt", len(clustered_ports[cluster_cell]))
             # add cell location
-            cell_location[row_idx] = cluster_cell[0] * self.grid_row + cluster_cell[1]
+            cell_location[row_idx] = cluster_cell[0] * self.grid_col + cluster_cell[1]
 
             # relocate to after macros
             row_idx += len(module_indices)
@@ -824,8 +833,7 @@ class PlacementCost(object):
             for curr_port in clustered_ports[cluster_cell]:
                 # get module name
                 curr_port_name = curr_port.get_name()
-                # print("curr_port_name", curr_port_name)
-                # print("connections", curr_port.get_connection())
+                # print("curr_port_name", curr_port_name, curr_port.get_pos())
                 # assuming ports only connects to macros
                 for col_idx, h_module_idx in enumerate(module_indices):
                     # col index
@@ -842,7 +850,7 @@ class PlacementCost(object):
 
                     if h_module_name in curr_port.get_connection():
                         entry += curr_port.get_connection()[h_module_name]
-             
+            
                     macro_adj[row_idx * (len(module_indices) + len(clustered_ports)) + col_idx] += entry
                     macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] += entry
                 
@@ -890,8 +898,8 @@ class PlacementCost(object):
         ax.set_aspect('equal', adjustable='box')
 
         # Construct grid
-        x, y = np.meshgrid(np.linspace(0, self.height, self.grid_row + 1),\
-             np.linspace(0, self.width, self.grid_col + 1))
+        x, y = np.meshgrid(np.linspace(0, self.width, self.grid_col + 1),\
+             np.linspace(0, self.height, self.grid_row + 1))
 
         ax.plot(x, y, c='b', alpha=0.1) # use plot, not scatter
         ax.plot(np.transpose(x), np.transpose(y), c='b', alpha=0.2) # add this here
@@ -899,7 +907,7 @@ class PlacementCost(object):
         # Construct module blocks
         for mod in self.modules_w_pins:
             if mod.get_type() == 'PORT':
-                plt.plot(*mod.get_pos(),'ro', markersize=2)
+                plt.plot(*mod.get_pos(),'ro', markersize=4)
             elif mod.get_type() == 'MACRO':
                 ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
                     mod.get_width(), mod.get_height(),\
@@ -928,6 +936,7 @@ class PlacementCost(object):
             self.side = side # "BOTTOM", "TOP", "LEFT", "RIGHT"
             self.sink = {} # standard cells, macro pins, ports driven by this cell
             self.connection = {} # [module_name] => edge degree
+            self.ifFixed = True
 
         def get_name(self):
             return self.name
@@ -1003,6 +1012,7 @@ class PlacementCost(object):
             self.x = float(x)
             self.y = float(y)
             self.connection = {} # [module_name] => edge degree
+            self.ifFixed = False
 
         def get_name(self):
             return self.name
@@ -1124,6 +1134,7 @@ class PlacementCost(object):
             self.y = float(y)
             self.orientation = orientation
             self.connection = {} # [module_name] => edge degree
+            self.ifFixed = False
 
         def get_name(self):
             return self.name
@@ -1238,7 +1249,7 @@ class PlacementCost(object):
 
 def main():
     test_netlist_dir = './Plc_client/test/'+\
-        'ariane'
+        'ariane133'
     netlist_file = os.path.join(test_netlist_dir,
                                 'netlist.pb.txt')
     plc = PlacementCost(netlist_file)
@@ -1254,15 +1265,6 @@ def main():
     print("# SOFT_MACROs     :         %d"%(plc.get_soft_macro_count()))
     print("# SOFT_MACRO_PINs :         %d"%(plc.get_soft_macro_pin_count()))
     print("# STDCELLs        :         0")
-    
-    # print(adj[137])
-    # print(np.unique(adj))
-    print(plc.set_canvas_size(356.592, 356.640))
-    print(plc.set_placement_grid(35, 33))
-    # print(plc.set_canvas_size(80, 80))
-    # print(plc.set_placement_grid(5, 5))
-    print(plc.get_grid_cells_density())
-    print(plc.get_density_cost())
 
 if __name__ == '__main__':
     main()
