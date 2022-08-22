@@ -354,7 +354,8 @@ class PlacementCost(object):
                 if inputs:
                     for k in inputs.keys():
                         if macro_type == "MACRO":
-                            macro.add_connections(inputs[k])
+                            weight = pin.get_weight()
+                            macro.add_connections(inputs[k], weight)
                         elif macro_type == "macro":
                             weight = pin.get_weight()
                             macro.add_connections(inputs[k], weight)
@@ -889,9 +890,20 @@ class PlacementCost(object):
     def save_placement(self):
         pass
 
-    def display_canvas(self, annotate=True):
+    def display_canvas( self,
+                        annotate=True, 
+                        amplify=False):
         #define Matplotlib figure and axis
         fig, ax = plt.subplots(figsize=(8,8), dpi=50)
+
+        if amplify:
+            PORT_SIZE = 4
+            FONT_SIZE = 10
+            PIN_SIZE = 4
+        else:
+            PORT_SIZE = 2
+            FONT_SIZE = 5
+            PIN_SIZE = 2
 
         # Plt config
         ax.margins(x=0.05, y=0.05)
@@ -907,21 +919,21 @@ class PlacementCost(object):
         # Construct module blocks
         for mod in self.modules_w_pins:
             if mod.get_type() == 'PORT':
-                plt.plot(*mod.get_pos(),'ro', markersize=4)
+                plt.plot(*mod.get_pos(),'ro', markersize=PORT_SIZE)
             elif mod.get_type() == 'MACRO':
                 ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
                     mod.get_width(), mod.get_height(),\
                     alpha=0.5, zorder=1000, facecolor='b', edgecolor='darkblue'))
                 if annotate:
-                    ax.annotate(mod.get_name(), mod.get_pos(), color='r', weight='bold', fontsize=7, ha='center', va='center')
+                    ax.annotate(mod.get_name(), mod.get_pos(), color='r', weight='bold', fontsize=FONT_SIZE, ha='center', va='center')
             elif mod.get_type() == 'MACRO_PIN':
-                plt.plot(*mod.get_pos(),'bo', markersize=1)
+                plt.plot(*mod.get_pos(),'bo', markersize=PIN_SIZE)
             elif mod.get_type() == 'macro':
                 ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
                     mod.get_width(), mod.get_height(),\
                     alpha=0.5, zorder=1000, facecolor='y'))
                 if annotate:
-                    ax.annotate(mod.get_name(), mod.get_pos(), wrap=True,color='r', weight='bold', fontsize=7, ha='center', va='center')
+                    ax.annotate(mod.get_name(), mod.get_pos(), wrap=True,color='r', weight='bold', fontsize=FONT_SIZE, ha='center', va='center')
 
         plt.show()
         plt.close('all')
@@ -1063,8 +1075,9 @@ class PlacementCost(object):
             return self.width
 
     class SoftMacroPin:
-        def __init__(self, name,
-                    x = 0.0, y = 0.0, macro_name = "", weight = 1.0):
+        def __init__(   self, name,
+                        x = 0.0, y = 0.0,
+                        macro_name = "", weight = 1.0):
             self.name = name
             self.x = float(x)
             self.y = float(y)
@@ -1139,7 +1152,7 @@ class PlacementCost(object):
         def get_name(self):
             return self.name
 
-        def add_connection(self, module_name):
+        def add_connection(self, module_name, weight):
             # NOTE: assume PORT names does not contain slash
             ifPORT = False
             module_name_splited = module_name.rsplit('/', 1)
@@ -1148,18 +1161,19 @@ class PlacementCost(object):
 
             if ifPORT:
                 # adding PORT
-                self.connection[module_name] = 1
+                self.connection[module_name] = 1 * weight
             else:
                 # adding soft/hard macros
                 if module_name_splited[0] in self.connection.keys():
-                    self.connection[module_name_splited[0]] += 1
+                    self.connection[module_name_splited[0]] += 1 * weight
                 else:
-                    self.connection[module_name_splited[0]] = 1
+                    self.connection[module_name_splited[0]] = 1 * weight
 
-        def add_connections(self, module_names):
+        def add_connections(self, module_names, weight):
             # NOTE: assume PORT names does not contain slash
+            # consider weight on soft macro pins
             for module_name in module_names:
-                self.add_connection(module_name)
+                self.add_connection(module_name, weight)
 
         def get_connection(self):
             return self.connection
@@ -1190,7 +1204,7 @@ class PlacementCost(object):
         def __init__(self, name,
                         x = 0.0, y = 0.0,
                         x_offset = 0.0, y_offset = 0.0,
-                        macro_name = "", weight = 0.0):
+                        macro_name = "", weight = 1.0):
             self.name = name
             self.x = float(x)
             self.y = float(y)
