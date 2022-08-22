@@ -1,57 +1,81 @@
 # proto-file: tensorflow/core/framework/graph.proto
 # proto-message: tensorflow.GraphDef
 node {
-  name: "P0"
-  input: "Grp_2/Pinput"
+  name: "M0"
   attr {
-    key: "side"
+    key: "height"
     value {
-      placeholder: "LEFT"
+      f: 50
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
     }
   }
   attr {
     key: "type"
     value {
-      placeholder: "PORT"
+      placeholder: "MACRO"
     }
   }
   attr {
     key: "x"
     value {
-      f: 0
+      f: 350
     }
   }
   attr {
     key: "y"
     value {
-      f: 100
+      f: 350
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50
     }
   }
 }
 node {
-  name: "P1"
+  name: "M0/P1"
+  input: "Grp_2/Pinput"
   attr {
-    key: "side"
+    key: "macro_name"
     value {
-      placeholder: "TOP"
+      placeholder: "M0"
     }
   }
   attr {
     key: "type"
     value {
-      placeholder: "PORT"
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 25
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: -25
     }
   }
   attr {
     key: "x"
     value {
-      f: 499
+      f: 75
     }
   }
   attr {
     key: "y"
     value {
-      f: 499
+      f: 25
     }
   }
 }
@@ -60,7 +84,7 @@ node {
   attr {
     key: "height"
     value {
-      f: 0.20625865
+      f: 50
     }
   }
   attr {
@@ -72,59 +96,19 @@ node {
   attr {
     key: "width"
     value {
-      f: 17.128008
+      f: 50
     }
   }
   attr {
     key: "x"
     value {
-      f: 20
+      f: 150
     }
   }
   attr {
     key: "y"
     value {
-      f: 45
-    }
-  }
-}
-node {
-  name: "Grp_2/Poutput_single_0"
-  input: "P0"
-  attr {
-    key: "macro_name"
-    value {
-      placeholder: "Grp_2"
-    }
-  }
-  attr {
-    key: "type"
-    value {
-      placeholder: "macro_pin"
-    }
-  }
-  attr {
-    key: "x"
-    value {
-      f: 20
-    }
-  }
-  attr {
-    key: "x_offset"
-    value {
-      f: 0
-    }
-  }
-  attr {
-    key: "y"
-    value {
-      f: 45
-    }
-  }
-  attr {
-    key: "y_offset"
-    value {
-      f: 0
+      f: 50
     }
   }
 }
@@ -145,7 +129,7 @@ node {
   attr {
     key: "x"
     value {
-      f: 20
+      f: 150
     }
   }
   attr {
@@ -157,7 +141,7 @@ node {
   attr {
     key: "y"
     value {
-      f: 45
+      f: 50
     }
   }
   attr {
