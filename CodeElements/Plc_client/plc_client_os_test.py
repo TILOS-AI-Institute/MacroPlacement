@@ -15,9 +15,13 @@ class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/ariane_soft2hard/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane_port2soft/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/0P2M0m/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/0P1M1m/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/0P3M0m/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/0P4M0m/netlist.pb.txt"
 
     # Google's Ariane
     # CANVAS_WIDTH = 356.592
@@ -32,21 +36,38 @@ class CircuitDataBaseTest():
     # GRID_ROW = 21
 
     # Sample clustered
-    CANVAS_WIDTH = 500
-    CANVAS_HEIGHT = 500
+    # CANVAS_WIDTH = 700
+    # CANVAS_HEIGHT = 700
+    # GRID_COL = 4
+    # GRID_ROW = 4
+
+    # PMm
+    CANVAS_WIDTH = 400
+    CANVAS_HEIGHT = 400
     GRID_COL = 4
     GRID_ROW = 4
+
+    def test_proxy_congestion(self):
+        # Google's Binary Executable
+        self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
+        start = time.time()
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc.set_routes_per_micron(10,10)
+        self.plc.set_macro_routing_allocation(10,10)
+        self.plc.set_congestion_smooth_range(0.0)
+        print("H Congestion: ", self.plc.get_horizontal_routing_congestion())
+        print("V Congestion: ", self.plc.get_vertical_routing_congestion())
+        print("Congestion: ", self.plc.get_congestion_cost())
+        print("Congestion Smoothing", self.plc.get_congestion_smooth_range())
+        print("Density: ", self.plc.get_density_cost())
+        end = time.time()
+        print("time elapsed:", end - start)
 
     def test_proxy_cost(self):
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
         
-        print("start timing")
-        start = time.time()
-        print(self.plc.get_congestion_cost())
-        end = time.time()
-        print("time elapsed:", end - start)
-        print("end timing")
         # Open-sourced Implementation
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                 macro_macro_x_spacing = 50,
@@ -57,9 +78,10 @@ class CircuitDataBaseTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        # print(self.plc_os.display_canvas())
+        print(self.plc_os.display_canvas())
         
         print(self.plc_os.get_wirelength(), self.plc.get_wirelength())
+
         assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
         print("os wl cost", self.plc_os.get_cost())
         print("gl wl cost", self.plc.get_cost())
@@ -134,9 +156,11 @@ class CircuitDataBaseTest():
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                 macro_macro_x_spacing = 50,
                                                 macro_macro_y_spacing = 50)
+    
         
 def main(argv):
     temp = CircuitDataBaseTest()
+    temp.test_proxy_congestion()
     temp.test_proxy_cost()
     temp.test_metadata()
     temp.test_miscellaneous()
