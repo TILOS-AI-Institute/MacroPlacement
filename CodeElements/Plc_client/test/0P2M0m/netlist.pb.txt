@@ -5,7 +5,7 @@ node {
   attr {
     key: "height"
     value {
-      f: 50
+      f: 200
     }
   }
   attr {
@@ -23,19 +23,19 @@ node {
   attr {
     key: "x"
     value {
-      f: 350
+      f: 399
     }
   }
   attr {
     key: "y"
     value {
-      f: 350
+      f: 399
     }
   }
   attr {
     key: "width"
     value {
-      f: 50
+      f: 200
     }
   }
 }
@@ -108,13 +108,13 @@ node {
   attr {
     key: "x"
     value {
-      f: 325
+      f: 374
     }
   }
   attr {
     key: "y"
     value {
-      f: 325
+      f: 374
     }
   }
   attr {
@@ -153,13 +153,13 @@ node {
   attr {
     key: "x"
     value {
-      f: 325
+      f: 374
     }
   }
   attr {
     key: "y"
     value {
-      f: 375
+      f: 424
     }
   }
   attr {

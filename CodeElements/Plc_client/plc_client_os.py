@@ -1,5 +1,6 @@
 """Open-Sourced PlacementCost client class."""
 import os, io
+from platform import node
 import re
 import math
 from typing import Text, Tuple
@@ -65,6 +66,8 @@ class PlacementCost(object):
         # default gridding
         self.grid_col = 10
         self.grid_row = 10
+        # initial grid mask
+        self.global_node_mask = [0] * self.grid_col * self.grid_row
         # store module/component count
         self.port_cnt = len(self.port_indices)
         self.hard_macro_cnt = len(self.hard_macro_indices)
@@ -258,7 +261,10 @@ class PlacementCost(object):
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         if input_list:
-                            self.net_cnt += 1
+                            if 'weight' in attr_dict.keys():
+                                self.net_cnt += 1 * float(attr_dict['weight'][1])
+                            else:
+                                self.net_cnt += 1
                             hard_macro_pin.add_sinks(input_list)
 
                         self.modules_w_pins.append(hard_macro_pin)
@@ -353,12 +359,13 @@ class PlacementCost(object):
 
                 if inputs:
                     for k in inputs.keys():
-                        if macro_type == "MACRO":
+                        if macro_type == "MACRO" or macro_type == "macro":
                             weight = pin.get_weight()
                             macro.add_connections(inputs[k], weight)
-                        elif macro_type == "macro":
-                            weight = pin.get_weight()
-                            macro.add_connections(inputs[k], weight)
+    
+    def __update_placement(self):
+        # assign modules to grid cells
+        pass
 
 
     def get_cost(self) -> float:
@@ -676,11 +683,32 @@ class PlacementCost(object):
         """
         return self.hrouting_alloc, self.vrouting_alloc
 
-    def is_node_soft_macro(self) -> bool:
-        return True
+    def is_node_soft_macro(self, node_idx) -> bool:
+        return self.get_node_type(node_idx) == "soft_macro"
+
+    def is_node_hard_macro(self, node_idx) -> bool:
+        return self.get_node_type(node_idx) == "hard_macro"
+
+    def get_node_name(self, node_idx: int) -> str:
+        return self.indices_to_mod_name[node_idx]
 
     def get_node_mask(self, node_idx: int, node_name: str) -> list:
-        return list
+        """
+            Return Grid_col x Grid_row:
+                1 == placable
+                0 == unplacable
+
+                (100, 100)  =>  5
+                (99, 99)    =>  0
+                (100, 99)   =>  1
+                (99, 100)   =>  4
+
+            Placement Constraint:
+            -   center @ grid cell
+            -   no overlapping other macro
+            -   no OOB
+        """
+        module = self.modules_w_pins[node_idx]
 
     def get_node_type(self, node_idx: int) -> str:
         """
@@ -728,12 +756,6 @@ class PlacementCost(object):
         return macro_adj
 
     def is_node_fixed(self):
-        pass
-
-    def unplace_all_nodes(self):
-        pass
-
-    def place_node(self):
         pass
 
     def restore_placement(self, init_plc_pth: str):
@@ -857,35 +879,68 @@ class PlacementCost(object):
                 
         return macro_adj, sorted(cell_location)
 
-    def get_node_location(self):
+    def get_node_location(self, node_idx):
         pass
 
-    def get_grid_cell_of_node(self):
-        pass
+    def get_grid_cell_of_node(self, node_idx):
+        """ if grid_cell at grid crossing, break-tie to upper right
+        """
+        return self.modules_w_pins(node_idx).get_location()
 
-    def update_macro_orientation(self):
+    def update_macro_orientation(self, node_idx, orientation):
         pass
 
     def get_macro_orientation(self):
         pass
 
     def unfix_node_coord(self):
+        """In case plc is loaded with fixed macros
+        """
         pass
 
-    def unplace_node(self):
+    def fix_node_coord(self):
+        """Find all ports and fix their coordinates.
+        """
         pass
 
-    def is_node_placed(self):
+    def unplace_all_nodes(self):
+        pass
+
+    def place_node(self, node_idx, grid_cell_idx):
+        pass
+
+    def can_place_node(self, node_idx, grid_cell_idx):
+        return self.get_node_mask(node_idx=node_idx)[grid_cell_idx]
+
+    def unplace_node(self, node_idx):
+        # update node_mask
+        pass
+
+    def is_node_placed(self, node_idx):
+        pass
+
+    def disconnect_nets(self):
         pass
 
     def get_source_filename(self):
-        pass
+        """return netlist path
+        """
+        return self.netlist_file
 
     def get_blockages(self):
         pass
 
-    def get_ref_node_id(self):
-        pass
+    def get_ref_node_id(self, node_idx=-1):
+        """ref_node_id is used for macro_pins. Refers to the macro it belongs to.
+        """
+        if node_idx != -1:
+            if node_idx in self.soft_macro_pin_indices:
+                pin = self.modules_w_pins[node_idx]
+                return self.mod_name_to_indices[pin.get_macro_name()]
+            elif node_idx in self.hard_macro_pin_indices:
+                pin = self.modules_w_pins[node_idx]
+                return self.mod_name_to_indices[pin.get_macro_name()]
+        return -1
 
     def save_placement(self):
         pass
@@ -949,6 +1004,7 @@ class PlacementCost(object):
             self.sink = {} # standard cells, macro pins, ports driven by this cell
             self.connection = {} # [module_name] => edge degree
             self.ifFixed = True
+            self.placement = 0 # needs to be updated
 
         def get_name(self):
             return self.name
@@ -1025,6 +1081,8 @@ class PlacementCost(object):
             self.y = float(y)
             self.connection = {} # [module_name] => edge degree
             self.ifFixed = False
+            self.ifPlaced = True
+            self.location = 0 # needs to be updated
 
         def get_name(self):
             return self.name
@@ -1073,6 +1131,12 @@ class PlacementCost(object):
 
         def get_width(self):
             return self.width
+        
+        def set_location(self, grid_cell_idx):
+            self.location = grid_cell_idx
+        
+        def get_location(self):
+            return self.location
 
     class SoftMacroPin:
         def __init__(   self, name,
@@ -1095,6 +1159,9 @@ class PlacementCost(object):
 
         def get_name(self):
             return self.name
+
+        def get_macro_name(self):
+            return self.macro_name
 
         def set_pos(self, x, y):
             self.x = x
@@ -1148,6 +1215,8 @@ class PlacementCost(object):
             self.orientation = orientation
             self.connection = {} # [module_name] => edge degree
             self.ifFixed = False
+            self.ifPlaced = True
+            self.location = 0 # needs to be updated
 
         def get_name(self):
             return self.name
@@ -1199,6 +1268,12 @@ class PlacementCost(object):
 
         def get_width(self):
             return self.width
+        
+        def set_location(self, grid_cell_idx):
+            self.location = grid_cell_idx
+        
+        def get_location(self):
+            return self.location
 
     class HardMacroPin:
         def __init__(self, name,
@@ -1213,6 +1288,7 @@ class PlacementCost(object):
             self.macro_name = macro_name
             self.weight = weight
             self.sink = {}
+            self.ifPlaced = True
 
         def set_weight(self, weight):
             self.weight = weight
@@ -1232,6 +1308,9 @@ class PlacementCost(object):
 
         def get_name(self):
             return self.name
+
+        def get_macro_name(self):
+            return self.macro_name
 
         def add_sink(self, sink_name):
             # NOTE: assume PORT names does not contain slash

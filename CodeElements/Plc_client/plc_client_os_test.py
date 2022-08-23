@@ -18,10 +18,10 @@ class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/0P2M0m/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/0P2M0m/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/0P1M1m/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/0P3M0m/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/0P4M0m/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/0P4M0m/netlist.pb.txt"
 
     # Google's Ariane
     # CANVAS_WIDTH = 356.592
@@ -151,12 +151,30 @@ class CircuitDataBaseTest():
 
     def test_miscellaneous(self):
         # Google's Binary Executable
-        self.plc = plc_client_os.PlacementCost(self.NETLIST_PATH)
-        # Open-sourced Implementation
+        self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                 macro_macro_x_spacing = 50,
                                                 macro_macro_y_spacing = 50)
-    
+        print("****************** miscellaneous ******************")
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        NODE_IDX = 0
+        print("get_macro_indices", self.plc.get_macro_indices(), self.plc_os.get_macro_indices())
+        print("get_node_name", self.plc.get_node_name(NODE_IDX))
+        print("get_node_location", self.plc.get_node_location(NODE_IDX))
+        print("get_grid_cell_of_node", self.plc.get_grid_cell_of_node(NODE_IDX))
+        print("get_node_location", self.plc.get_node_location(NODE_IDX))
+        print("get_macro_orientation", self.plc.get_macro_orientation(NODE_IDX))
+        print("is_node_placed", self.plc.is_node_placed(NODE_IDX))
+        print("get_source_filename", self.plc.get_source_filename())
+        print("get_blockages", self.plc.get_blockages())
+        print("get_ref_node_id", self.plc.get_ref_node_id(NODE_IDX), self.plc.get_ref_node_id(NODE_IDX))
+        print("get_node_mask\n", np.array(self.plc.get_node_mask(NODE_IDX)).reshape((4,4)))
+        print("can_place_node", self.plc.can_place_node(0, 1))
+        print("***************************************************")
+
         
 def main(argv):
     temp = CircuitDataBaseTest()
