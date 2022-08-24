@@ -11,17 +11,20 @@ FLAGS = flags.FLAGS
 
 class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_uniform_two_soft/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane_hard2soft/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/ariane_hard2soft/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane_soft2hard/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane_port2soft/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/0P2M0m/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/testcases/TC1_MP1_0_0_P2_0_1.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/testcases/TC24_MP1_0_0_MP2_4_4.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/0P1M1m/netlist.pb.txt"
+    NETLIST_PATH = "./Plc_client/test/0P2M0m/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/0P3M0m/netlist.pb.txt"
     # NETLIST_PATH = "./Plc_client/test/0P4M0m/netlist.pb.txt"
+    # NETLIST_PATH = "./Plc_client/test/testcases_xm/TC_MP1_4_1_MP2_2_2_MP3_3_4_MP4_0_0.pb.txt"
 
     # Google's Ariane
     # CANVAS_WIDTH = 356.592
@@ -36,33 +39,65 @@ class CircuitDataBaseTest():
     # GRID_ROW = 21
 
     # Sample clustered
-    # CANVAS_WIDTH = 700
-    # CANVAS_HEIGHT = 700
-    # GRID_COL = 4
-    # GRID_ROW = 4
-
-    # PMm
     CANVAS_WIDTH = 400
     CANVAS_HEIGHT = 400
     GRID_COL = 4
     GRID_ROW = 4
 
+    # PMm
+    # CANVAS_WIDTH = 100
+    # CANVAS_HEIGHT = 100
+    # GRID_COL = 5
+    # GRID_ROW = 5
+
     def test_proxy_congestion(self):
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
-        start = time.time()
+        self.plc_os = plc_client_os.PlacementCost(self.NETLIST_PATH)
+
+        # set rpm
+        self.plc.set_routes_per_micron(10, 10)
+        self.plc_os.set_routes_per_micron(10, 10)
+
+        self.plc.set_macro_routing_allocation(10, 10)
+        self.plc_os.set_macro_routing_allocation(10, 10)
+
+        self.plc.set_congestion_smooth_range(1.0)
+        self.plc_os.set_congestion_smooth_range(1.0)
+
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        self.plc.set_routes_per_micron(10,10)
-        self.plc.set_macro_routing_allocation(10,10)
-        self.plc.set_congestion_smooth_range(0.0)
-        print("H Congestion: ", self.plc.get_horizontal_routing_congestion())
-        print("V Congestion: ", self.plc.get_vertical_routing_congestion())
-        print("Congestion: ", self.plc.get_congestion_cost())
-        print("Congestion Smoothing", self.plc.get_congestion_smooth_range())
-        print("Density: ", self.plc.get_density_cost())
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        self.plc_os.display_canvas()
+
+        start = time.time()
+        temp_gl_h = self.plc.get_horizontal_routing_congestion()
+        temp_os_h = self.plc_os.get_horizontal_routing_congestion()
+        # print(np.array(temp_gl_h).reshape(self.GRID_COL, self.GRID_ROW))
+        # print(np.array(temp_os_h).reshape(self.GRID_COL, self.GRID_ROW))
+
+        # print("GL H Congestion: ", temp_gl_h)
+        # print("OS H Congestion: ", temp_os_h)
+
+        temp_gl_v = self.plc.get_vertical_routing_congestion()
+        temp_os_v = self.plc_os.get_vertical_routing_congestion()
+        
+        # print(np.array(temp_gl_v).reshape(self.GRID_COL, self.GRID_ROW))
+        # print(np.array(temp_os_v).reshape(self.GRID_COL, self.GRID_ROW))
+
+        # print("GL V Congestion: ", self.plc.get_vertical_routing_congestion())
+        # print("OS V Congestion: ", self.plc_os.get_vertical_routing_congestion())
+        # print("Congestion: ", self.plc.get_congestion_cost())
         end = time.time()
         print("time elapsed:", end - start)
+
+        for idx in range(len(temp_gl_h)):
+            print("gl, os:", temp_gl_h[idx], temp_os_h[idx], temp_gl_v[idx], temp_os_v[idx])
+
+        print("congestion summation gl os", sum(temp_gl_h), sum(temp_os_h), sum(temp_gl_v), sum(temp_os_v))
+        print("congestion gl, os", self.plc.get_congestion_cost(), self.plc_os.get_congestion_cost())
 
     def test_proxy_cost(self):
         # Google's Binary Executable
@@ -78,14 +113,17 @@ class CircuitDataBaseTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        print(self.plc_os.display_canvas())
+        # print(self.plc_os.display_canvas())
         
         print(self.plc_os.get_wirelength(), self.plc.get_wirelength())
 
-        assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+        # assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
         print("os wl cost", self.plc_os.get_cost())
         print("gl wl cost", self.plc.get_cost())
         assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 10e-3
+        print("gl density\n", np.array(self.plc.get_grid_cells_density()).reshape(self.GRID_COL, self.GRID_ROW))
+        print("os density\n", np.array(self.plc_os.get_grid_cells_density()).reshape(self.GRID_COL, self.GRID_ROW))
+
         assert int(sum(self.plc_os.get_grid_cells_density())) == int(sum(self.plc.get_grid_cells_density()))
         assert int(self.plc_os.get_density_cost()) == int(self.plc.get_density_cost())
         print("os density cost", self.plc_os.get_density_cost())
@@ -179,9 +217,9 @@ class CircuitDataBaseTest():
 def main(argv):
     temp = CircuitDataBaseTest()
     temp.test_proxy_congestion()
-    temp.test_proxy_cost()
-    temp.test_metadata()
-    temp.test_miscellaneous()
+    # temp.test_proxy_cost()
+    # temp.test_metadata()
+    # temp.test_miscellaneous()
 
 if __name__ == "__main__":
   app.run(main)

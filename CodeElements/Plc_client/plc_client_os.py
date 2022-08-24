@@ -39,6 +39,9 @@ class PlacementCost(object):
         self.hrouting_alloc = 0.0
         self.vrouting_alloc = 0.0
 
+        self.macro_horizontal_routing_allocation = 0.0
+        self.macro_vertical_routing_allocation = 0.0
+
         # net information
         self.net_cnt = 0
 
@@ -66,6 +69,12 @@ class PlacementCost(object):
         # default gridding
         self.grid_col = 10
         self.grid_row = 10
+        # initialize congestion map
+        # TODO recompute after new gridding
+        self.V_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_routing_cong = [0] * self.grid_col * self.grid_row
+        self.V_macro_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_macro_routing_cong = [0] * self.grid_col * self.grid_row
         # initial grid mask
         self.global_node_mask = [0] * self.grid_col * self.grid_row
         # store module/component count
@@ -418,15 +427,15 @@ class PlacementCost(object):
                 # add source position
                 x_coord.append(mod.get_pos()[0])
                 y_coord.append(mod.get_pos()[1])
-
                 for sink_name in mod.get_sink():
-                    # retrieve indx in modules_w_pins
-                    sink_idx = self.mod_name_to_indices[sink_name]
-                    # retrieve sink object
-                    sink = self.modules_w_pins[sink_idx]
-                    # retrieve location
-                    x_coord.append(sink.get_pos()[0])
-                    y_coord.append(sink.get_pos()[1])
+                    for sink_pin in mod.get_sink()[sink_name]:
+                        # retrieve indx in modules_w_pins
+                        sink_idx = self.mod_name_to_indices[sink_pin]
+                        # retrieve sink object
+                        sink = self.modules_w_pins[sink_idx]
+                        # retrieve location
+                        x_coord.append(sink.get_pos()[0])
+                        y_coord.append(sink.get_pos()[1])
             elif curr_type == "macro_pin" or curr_type == "MACRO_PIN":
                 # add source position
                 x_coord.append(mod.get_pos()[0])
@@ -444,6 +453,7 @@ class PlacementCost(object):
                             # retrieve location
                             x_coord.append(input.get_pos()[0])
                             y_coord.append(input.get_pos()[1])
+
             if x_coord:
                 if norm_fact != 1.0:
                     total_hpwl += norm_fact * \
@@ -454,8 +464,77 @@ class PlacementCost(object):
                          + abs(max(y_coord) - min(y_coord)))
         return total_hpwl
 
-    def get_congestion_cost(self) -> float:
-        return 0.0
+    def get_V_congestion_cost(self) -> float:
+        """
+        compute average of top 10% of grid cell cong and take half of it
+        """
+        occupied_cells = sorted([gc for gc in self.V_routing_cong if gc != 0.0], reverse=True)
+        cong_cost = 0.0
+
+        # take top 10%
+        cong_cnt = math.floor(len(self.V_routing_cong) * 0.1)
+
+        # if grid cell smaller than 10, take the average over occupied cells
+        if len(self.V_routing_cong) < 10:
+            cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return cong_cost
+
+        idx = 0
+        sum_cong = 0
+        # take top 10%
+        while idx < cong_cnt and idx < len(occupied_cells):
+            sum_cong += occupied_cells[idx]
+            idx += 1
+
+        return float(sum_cong / cong_cnt)
+    
+    def get_H_congestion_cost(self) -> float:
+        """
+        compute average of top 10% of grid cell cong and take half of it
+        """
+        occupied_cells = sorted([gc for gc in self.H_routing_cong if gc != 0.0], reverse=True)
+        cong_cost = 0.0
+
+        # take top 10%
+        cong_cnt = math.floor(len(self.H_routing_cong) * 0.1)
+
+        # if grid cell smaller than 10, take the average over occupied cells
+        if len(self.H_routing_cong) < 10:
+            cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return cong_cost
+
+        idx = 0
+        sum_cong = 0
+        # take top 10%
+        while idx < cong_cnt and idx < len(occupied_cells):
+            sum_cong += occupied_cells[idx]
+            idx += 1
+
+        return float(sum_cong / cong_cnt)
+    
+    def get_congestion_cost(self):
+        return max(self.get_H_congestion_cost(), self.get_V_congestion_cost())
+        # temp_cong = [sum(x) for x in zip(self.V_routing_cong, self.H_routing_cong)]
+
+        # occupied_cells = sorted([gc for gc in temp_cong if gc != 0.0], reverse=True)
+        # cong_cost = 0.0
+
+        # # take top 10%
+        # cong_cnt = math.floor(len(temp_cong) * 0.1)
+
+        # # if grid cell smaller than 10, take the average over occupied cells
+        # if len(temp_cong) < 10:
+        #     cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+        #     return cong_cost
+
+        # idx = 0
+        # sum_cong = 0
+        # # take top 10%
+        # while idx < cong_cnt and idx < len(occupied_cells):
+        #     sum_cong += occupied_cells[idx]
+        #     idx += 1
+
+        # return float(sum_cong / cong_cnt)
 
     def __get_grid_cell_location(self, x_pos, y_pos):
         """
@@ -474,6 +553,16 @@ class PlacementCost(object):
         if x_diff >= 0 and y_diff >= 0:
             return x_diff * y_diff
         return 0
+    
+    def __overlap_dist(self, block_i, block_j):
+        """
+        private function for computing block overlapping
+        """
+        x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
+        y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
+        if x_diff > 0 and y_diff > 0:
+            return x_diff, y_diff
+        return 0, 0
 
     def __add_module_to_grid_cells(self, mod_x, mod_y, mod_w, mod_h):
         """
@@ -590,6 +679,9 @@ class PlacementCost(object):
         """
         self.width = width
         self.height = height
+
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
         return True
 
     def get_canvas_width_height(self) -> Tuple[float, float]:
@@ -604,6 +696,14 @@ class PlacementCost(object):
         """
         self.grid_col = grid_col
         self.grid_row = grid_row
+
+        self.V_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_routing_cong = [0] * self.grid_col * self.grid_row
+        self.V_macro_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_macro_routing_cong = [0] * self.grid_col * self.grid_row
+
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
         return True
 
     def get_grid_num_columns_rows(self) -> Tuple[int, int]:
@@ -647,7 +747,7 @@ class PlacementCost(object):
         """
         Set congestion smooth range
         """
-        self.smooth_range = smooth_range
+        self.smooth_range = int(smooth_range)
 
     def get_congestion_smooth_range(self) -> float:
         """
@@ -682,6 +782,321 @@ class PlacementCost(object):
         Return Vertical/Horizontal Macro Allocation
         """
         return self.hrouting_alloc, self.vrouting_alloc
+
+    def __two_pin_net_routing(self, source_gcell, node_gcells, weight):
+        temp_gcell = list(node_gcells)
+        if temp_gcell[0] == source_gcell:
+            sink_gcell = temp_gcell[1]
+        else:
+            sink_gcell = temp_gcell[0]
+
+        # y
+        row_min = min(sink_gcell[0], source_gcell[0])
+        row_max = max(sink_gcell[0], source_gcell[0])
+
+        # x
+        col_min = min(sink_gcell[1], source_gcell[1])
+        col_max = max(sink_gcell[1], source_gcell[1])
+
+        # H routing
+        for col_idx in range(col_min, col_max, 1):
+            col = col_idx
+            row = source_gcell[0]
+            self.H_routing_cong[row * self.grid_col + col] += weight
+
+        # V routing
+        for row_idx in range(row_min, row_max, 1):
+            row = row_idx
+            col = sink_gcell[1]
+            self.V_routing_cong[row * self.grid_col + col] += weight
+
+    def __three_pin_net_routing(self, node_gcells, weight):
+        temp_gcell = sorted(node_gcells)
+
+        # y, x
+        temp_gcell_first_row, temp_gcell_first_col = temp_gcell[0]
+        temp_gcell_second_row, temp_gcell_second_col = temp_gcell[1]
+        temp_gcell_third_row, temp_gcell_third_col = temp_gcell[2]
+
+        if ((temp_gcell_first_row >= temp_gcell_second_row) and (temp_gcell_second_row >= temp_gcell_third_row)) \
+            or ((temp_gcell_first_row <= temp_gcell_second_row) and (temp_gcell_second_row <= temp_gcell_third_row)):
+            # H routing (x1,y1) to (x2-1, y1)
+            for col_idx in range(temp_gcell_first_col, temp_gcell_second_col, 1):
+                col = col_idx
+                row = temp_gcell_first_row
+                self.H_routing_cong[row * self.grid_col + col] += weight
+
+            # H routing (x2, y2) to (x3-1, y2)
+            for col_idx in range(temp_gcell_second_col, temp_gcell_third_col, 1):
+                col = col_idx
+                row = temp_gcell_second_row
+                self.H_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing (x2,min(y1,y2)) to (x2, max(y1,y2)-1)
+            for row_idx in range(min(temp_gcell_first_row, temp_gcell_second_row), max(temp_gcell_first_row, temp_gcell_second_row), 1):
+                row = row_idx
+                col = temp_gcell_second_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing (x3,min(y2,y3)) to (x3, max(y2,y3)-1)
+            for row_idx in range(min(temp_gcell_second_row, temp_gcell_third_row), max(temp_gcell_second_row, temp_gcell_third_row), 1):
+                row = row_idx
+                col = temp_gcell_third_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+        elif temp_gcell_first_row == temp_gcell_third_row:
+            # H routing from (x1, y1)  to (x3-1, y1)
+            for col_idx in range(temp_gcell_first_col, temp_gcell_third_col, 1):
+                col = col_idx
+                row = temp_gcell_first_row
+                self.H_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing from (x2, min(y1,y2)) to (x2, max(y1,y2)-1)
+            for row_idx in range(min(temp_gcell_first_row, temp_gcell_second_row), max(temp_gcell_first_row, temp_gcell_second_row), 1):
+                row = row_idx
+                col = temp_gcell_second_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+        elif temp_gcell_first_row > temp_gcell_third_row and temp_gcell_third_row > temp_gcell_second_row:
+            # H routing from (x1, y3) to (x3-1, y3)
+            for col_idx in range(temp_gcell_first_col, temp_gcell_third_col, 1):
+                col = col_idx
+                row = temp_gcell_third_row
+                self.H_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing from (x1,y3) to (x1,y1-1)
+            for row_idx in range(temp_gcell_third_row, temp_gcell_first_row, 1):
+                row = row_idx
+                col = temp_gcell_first_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing from (x2, min(y2,y3)) to (x2, max(y2,y3)-1)
+            for row_idx in range(min(temp_gcell_second_row, temp_gcell_third_row), max(temp_gcell_second_row, temp_gcell_third_row), 1):
+                row = row_idx
+                col = temp_gcell_second_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+        elif temp_gcell_third_row > temp_gcell_first_row and temp_gcell_first_row > temp_gcell_second_row:
+            # H routing from (x1, y3) to (x3-1, y3)
+            for col_idx in range(temp_gcell_first_row, temp_gcell_third_col, 1):
+                col = col_idx
+                row = temp_gcell_third_row
+                self.H_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing from (x1,y3) to (x1,y1-1)
+            for row_idx in range(temp_gcell_third_col, temp_gcell_first_col, 1):
+                row = row_idx
+                col = temp_gcell_first_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+            # V routing from (x2, min(y2,y3)) to (x2, max(y2,y3)-1)
+            for row_idx in range(min(temp_gcell_second_row, temp_gcell_third_row), max(temp_gcell_second_row, temp_gcell_third_row), 1):
+                row = row_idx
+                col = temp_gcell_second_col
+                self.V_routing_cong[row * self.grid_col + col] += weight
+
+    def __macro_route_over_grid_cell(self, mod_x, mod_y, mod_w, mod_h):
+        """
+        private function for add module to grid cells
+        """
+        # Two corners
+        ur = (mod_x + (mod_w/2), mod_y + (mod_h/2))
+        bl = (mod_x - (mod_w/2), mod_y - (mod_h/2))
+
+        # construct block based on current module
+        module_block = Block(
+                            x_max=mod_x + (mod_w/2),
+                            y_max=mod_y + (mod_h/2),
+                            x_min=mod_x - (mod_w/2),
+                            y_min=mod_y - (mod_h/2)
+                            )
+
+        # Only need two corners of a grid cell
+        ur_row, ur_col = self.__get_grid_cell_location(*ur)
+        bl_row, bl_col = self.__get_grid_cell_location(*bl)
+
+        # check if out of bound
+        if ur_row >= 0 and ur_col >= 0:
+            if bl_row < 0:
+                bl_row = 0
+
+            if bl_col < 0:
+                bl_col = 0
+        else:
+            # OOB, skip module
+            return
+
+        if bl_row >= 0 and bl_col >= 0:
+            if ur_row > self.grid_row - 1:
+                ur_row = self.grid_row - 1
+
+            if ur_col > self.grid_col - 1:
+                ur_col = self.grid_col - 1
+        else:
+            # OOB, skip module
+            return
+
+        for r_i in range(bl_row, ur_row + 1):
+            for c_i in range(bl_col, ur_col + 1):
+                # construct block based on current cell row/col
+                grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
+                self.V_macro_routing_cong[r_i * self.grid_col + c_i] = x_dist * self.vrouting_alloc
+                self.H_macro_routing_cong[r_i * self.grid_col + c_i] = y_dist * self.hrouting_alloc
+
+    def __split_net(self, source_gcell, node_gcells):
+        splitted_netlist = []
+        for node_gcell in node_gcells:
+            if node_gcell != source_gcell:
+                splitted_netlist.append({source_gcell, node_gcell})
+        return splitted_netlist
+
+    def get_vertical_routing_congestion(self):
+        # TODO: detect if we need to run
+        self.get_routing()
+        return self.V_routing_cong
+
+    def get_horizontal_routing_congestion(self):
+        # TODO: detect if we need to run
+        self.get_routing()
+        return self.H_routing_cong
+
+    def get_routing(self):
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
+
+        self.grid_v_routes = self.grid_width * self.vroutes_per_micron
+        self.grid_h_routes = self.grid_height * self.hroutes_per_micron
+
+        self.H_routing_cong = [0] * self.grid_row * self.grid_col
+        self.V_routing_cong = [0] * self.grid_row * self.grid_col
+
+        for mod in self.modules_w_pins:
+            norm_fact = 1.0
+            curr_type = mod.get_type()
+            # bounding box data structure
+            node_gcells = set()
+            source_gcell = None
+            weight = 1
+
+            # NOTE: connection only defined on PORT, soft/hard macro pins
+            if curr_type == "PORT" and mod.get_sink():
+                # add source grid location
+                source_gcell = self.__get_grid_cell_location(*(mod.get_pos()))
+                node_gcells.add(self.__get_grid_cell_location(*(mod.get_pos())))
+
+                for sink_name in mod.get_sink():
+                    for sink_pin in mod.get_sink()[sink_name]:
+                        # retrieve indx in modules_w_pins
+                        sink_idx = self.mod_name_to_indices[sink_pin]
+                        # retrieve sink object
+                        sink = self.modules_w_pins[sink_idx]
+                        # retrieve grid location
+                        node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
+
+            elif (curr_type == "macro_pin" or curr_type == "MACRO_PIN") and mod.get_sink():
+                # add source position
+                node_gcells.add(self.__get_grid_cell_location(*(mod.get_pos())))
+                source_gcell = self.__get_grid_cell_location(*(mod.get_pos()))
+
+                if mod.get_weight() != 1:
+                    weight = mod.get_weight()
+
+                for input_list in mod.get_sink().values():
+                    for sink_name in input_list:
+                        # retrieve indx in modules_w_pins
+                        sink_idx = self.mod_name_to_indices[sink_name]
+                        # retrieve sink object
+                        sink = self.modules_w_pins[sink_idx]
+                        # retrieve grid location
+                        node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
+            
+            elif curr_type == "MACRO":
+                module_h = mod.get_height()
+                module_w = mod.get_width()
+                module_x, module_y = mod.get_pos()
+                # compute overlap
+                self.__macro_route_over_grid_cell(module_x, module_y, module_w, module_h)
+            
+            if len(node_gcells) == 2:
+                self.__two_pin_net_routing(source_gcell=source_gcell,node_gcells=node_gcells, weight=weight)
+            elif len(node_gcells) == 3:
+                self.__three_pin_net_routing(node_gcells=node_gcells, weight=weight)
+            elif len(node_gcells) > 3:
+                for curr_net in self.__split_net(source_gcell=source_gcell, node_gcells=node_gcells):
+                    self.__two_pin_net_routing(source_gcell=source_gcell, node_gcells=curr_net, weight=weight)
+
+        # print("V_routing_cong", self.V_routing_cong)
+        # print("H_routing_cong", self.H_routing_cong)
+        # normalize routing congestion
+        for idx, v_gcell in enumerate(self.V_routing_cong):
+            self.V_routing_cong[idx] = float(v_gcell / self.grid_v_routes)
+        
+        for idx, h_gcell in enumerate(self.H_routing_cong):
+            self.H_routing_cong[idx] = float(h_gcell / self.grid_h_routes)
+        
+        for idx, v_gcell in enumerate(self.V_macro_routing_cong):
+            self.V_macro_routing_cong[idx] = float(v_gcell / self.grid_v_routes)
+        
+        for idx, h_gcell in enumerate(self.H_macro_routing_cong):
+            self.H_macro_routing_cong[idx] = float(h_gcell / self.grid_h_routes)
+        
+        self.__smooth_routing_cong()
+
+        # sum up routing congestion with macro congestion
+        self.V_routing_cong = [sum(x) for x in zip(self.V_routing_cong, self.V_macro_routing_cong)]
+        self.H_routing_cong = [sum(x) for x in zip(self.H_routing_cong, self.H_macro_routing_cong)]
+
+    
+    def __smooth_routing_cong(self):
+        temp_V_routing_cong = [0] * self.grid_col * self.grid_row
+        temp_H_routing_cong = [0] * self.grid_col * self.grid_row
+
+        # v routing cong
+        for row in range(self.grid_row):
+            for col in range(self.grid_col):
+                lp = col - self.smooth_range
+                if lp < 0:
+                    lp = 0
+
+                rp = col + self.smooth_range
+                if rp >= self.grid_col:
+                    rp = self.grid_col - 1
+                
+                gcell_cnt = rp - lp + 1
+
+                val = self.V_routing_cong[row * self.grid_col + col] / gcell_cnt
+
+                for ptr in range(lp, rp + 1, 1):
+                    temp_V_routing_cong[row * self.grid_col + ptr] += val
+        
+        self.V_routing_cong = temp_V_routing_cong
+
+        # h routing cong
+        for row in range(self.grid_row):
+            for col in range(self.grid_col):
+                lp = row - self.smooth_range
+                if lp < 0:
+                    lp = 0
+
+                up = row + self.smooth_range
+                if up >= self.grid_row:
+                    up = self.grid_row - 1
+                
+                gcell_cnt = up - lp + 1
+
+                val = self.H_routing_cong[row * self.grid_col + col] / gcell_cnt
+
+                for ptr in range(lp, up + 1, 1):
+                    temp_H_routing_cong[ptr * self.grid_col + col] += val
+        
+        self.H_routing_cong = temp_H_routing_cong
 
     def is_node_soft_macro(self, node_idx) -> bool:
         return self.get_node_type(node_idx) == "soft_macro"
@@ -1339,6 +1754,19 @@ class PlacementCost(object):
 
         def get_type(self):
             return "MACRO_PIN"
+
+    # TODO finish this
+    # class StandardCell:
+    #     def __init__(   self, name,
+    #                     x = 0.0, y = 0.0, weight = 1.0):
+    #         self.name = name
+    #         self.x = float(x)
+    #         self.y = float(y)
+    #         self.x_offset = 0.0 # not used
+    #         self.y_offset = 0.0 # not used
+    #         self.macro_name = macro_name
+    #         self.weight = weight
+    #         self.sink = {}
 
 def main():
     test_netlist_dir = './Plc_client/test/'+\
