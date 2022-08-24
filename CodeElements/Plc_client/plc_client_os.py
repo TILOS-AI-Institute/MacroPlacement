@@ -513,28 +513,29 @@ class PlacementCost(object):
         return float(sum_cong / cong_cnt)
     
     def get_congestion_cost(self):
-        return max(self.get_H_congestion_cost(), self.get_V_congestion_cost())
-        # temp_cong = [sum(x) for x in zip(self.V_routing_cong, self.H_routing_cong)]
+        # return max(self.get_H_congestion_cost(), self.get_V_congestion_cost())
+        temp_cong = self.V_routing_cong + self.H_routing_cong
 
-        # occupied_cells = sorted([gc for gc in temp_cong if gc != 0.0], reverse=True)
-        # cong_cost = 0.0
+        occupied_cells = sorted([gc for gc in temp_cong if gc != 0.0], reverse=True)
+        cong_cost = 0.0
 
-        # # take top 10%
-        # cong_cnt = math.floor(len(temp_cong) * 0.1)
+        # take top 5%
+        cong_cnt = math.floor(len(temp_cong) * 0.05)
+        if cong_cnt == 0: cong_cnt = 1
 
-        # # if grid cell smaller than 10, take the average over occupied cells
-        # if len(temp_cong) < 10:
-        #     cong_cost = float(sum(occupied_cells) / len(occupied_cells))
-        #     return cong_cost
+        # if grid cell smaller than 5, take the average over occupied cells
+        if len(temp_cong) < 5:
+            cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return cong_cost
 
-        # idx = 0
-        # sum_cong = 0
-        # # take top 10%
-        # while idx < cong_cnt and idx < len(occupied_cells):
-        #     sum_cong += occupied_cells[idx]
-        #     idx += 1
+        idx = 0
+        sum_cong = 0
+        # take top 10%
+        while idx < cong_cnt and idx < len(occupied_cells):
+            sum_cong += occupied_cells[idx]
+            idx += 1
 
-        # return float(sum_cong / cong_cnt)
+        return float(sum_cong / cong_cnt)
 
     def __get_grid_cell_location(self, x_pos, y_pos):
         """
@@ -802,12 +803,18 @@ class PlacementCost(object):
         for col_idx in range(col_min, col_max, 1):
             col = col_idx
             row = source_gcell[0]
+            # ignore OOB
+            if row * self.grid_col + col > len(self.H_routing_cong):
+                continue
             self.H_routing_cong[row * self.grid_col + col] += weight
 
         # V routing
         for row_idx in range(row_min, row_max, 1):
             row = row_idx
             col = sink_gcell[1]
+            # ignore OOB
+            if row * self.grid_col + col > len(self.V_routing_cong):
+                continue
             self.V_routing_cong[row * self.grid_col + col] += weight
 
     def __three_pin_net_routing(self, node_gcells, weight):
@@ -824,24 +831,36 @@ class PlacementCost(object):
             for col_idx in range(temp_gcell_first_col, temp_gcell_second_col, 1):
                 col = col_idx
                 row = temp_gcell_first_row
+                # ignore OOB
+                if row * self.grid_col + col > len(self.H_routing_cong):
+                    continue
                 self.H_routing_cong[row * self.grid_col + col] += weight
 
             # H routing (x2, y2) to (x3-1, y2)
             for col_idx in range(temp_gcell_second_col, temp_gcell_third_col, 1):
                 col = col_idx
                 row = temp_gcell_second_row
+                # ignore OOB
+                if row * self.grid_col + col > len(self.H_routing_cong):
+                    continue
                 self.H_routing_cong[row * self.grid_col + col] += weight
 
             # V routing (x2,min(y1,y2)) to (x2, max(y1,y2)-1)
             for row_idx in range(min(temp_gcell_first_row, temp_gcell_second_row), max(temp_gcell_first_row, temp_gcell_second_row), 1):
                 row = row_idx
                 col = temp_gcell_second_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
             # V routing (x3,min(y2,y3)) to (x3, max(y2,y3)-1)
             for row_idx in range(min(temp_gcell_second_row, temp_gcell_third_row), max(temp_gcell_second_row, temp_gcell_third_row), 1):
                 row = row_idx
                 col = temp_gcell_third_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
         elif temp_gcell_first_row == temp_gcell_third_row:
@@ -849,12 +868,18 @@ class PlacementCost(object):
             for col_idx in range(temp_gcell_first_col, temp_gcell_third_col, 1):
                 col = col_idx
                 row = temp_gcell_first_row
+                # ignore OOB
+                if row * self.grid_col + col > len(self.H_routing_cong):
+                    continue
                 self.H_routing_cong[row * self.grid_col + col] += weight
 
             # V routing from (x2, min(y1,y2)) to (x2, max(y1,y2)-1)
             for row_idx in range(min(temp_gcell_first_row, temp_gcell_second_row), max(temp_gcell_first_row, temp_gcell_second_row), 1):
                 row = row_idx
                 col = temp_gcell_second_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
         elif temp_gcell_first_row > temp_gcell_third_row and temp_gcell_third_row > temp_gcell_second_row:
@@ -862,18 +887,27 @@ class PlacementCost(object):
             for col_idx in range(temp_gcell_first_col, temp_gcell_third_col, 1):
                 col = col_idx
                 row = temp_gcell_third_row
+                # ignore OOB
+                if row * self.grid_col + col > len(self.H_routing_cong):
+                    continue
                 self.H_routing_cong[row * self.grid_col + col] += weight
 
             # V routing from (x1,y3) to (x1,y1-1)
             for row_idx in range(temp_gcell_third_row, temp_gcell_first_row, 1):
                 row = row_idx
                 col = temp_gcell_first_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
             # V routing from (x2, min(y2,y3)) to (x2, max(y2,y3)-1)
             for row_idx in range(min(temp_gcell_second_row, temp_gcell_third_row), max(temp_gcell_second_row, temp_gcell_third_row), 1):
                 row = row_idx
                 col = temp_gcell_second_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
         elif temp_gcell_third_row > temp_gcell_first_row and temp_gcell_first_row > temp_gcell_second_row:
@@ -881,18 +915,27 @@ class PlacementCost(object):
             for col_idx in range(temp_gcell_first_row, temp_gcell_third_col, 1):
                 col = col_idx
                 row = temp_gcell_third_row
+                # ignore OOB
+                if row * self.grid_col + col > len(self.H_routing_cong):
+                    continue
                 self.H_routing_cong[row * self.grid_col + col] += weight
 
             # V routing from (x1,y3) to (x1,y1-1)
             for row_idx in range(temp_gcell_third_col, temp_gcell_first_col, 1):
                 row = row_idx
                 col = temp_gcell_first_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
             # V routing from (x2, min(y2,y3)) to (x2, max(y2,y3)-1)
             for row_idx in range(min(temp_gcell_second_row, temp_gcell_third_row), max(temp_gcell_second_row, temp_gcell_third_row), 1):
                 row = row_idx
                 col = temp_gcell_second_col
+                # ignore OOB
+                if row * self.grid_col + col > len(self.V_routing_cong):
+                    continue
                 self.V_routing_cong[row * self.grid_col + col] += weight
 
     def __macro_route_over_grid_cell(self, mod_x, mod_y, mod_w, mod_h):
