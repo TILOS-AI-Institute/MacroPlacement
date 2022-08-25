@@ -956,6 +956,9 @@ class PlacementCost(object):
         else:
             # OOB, skip module
             return
+        
+        if_PARTIAL_OVERLAP_VERTICAL = False
+        if_PARTIAL_OVERLAP_HORIZONTAL = False
 
         for r_i in range(bl_row, ur_row + 1):
             for c_i in range(bl_col, ur_col + 1):
@@ -968,8 +971,29 @@ class PlacementCost(object):
                                         )
 
                 x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
-                self.V_macro_routing_cong[r_i * self.grid_col + c_i] = x_dist * self.vrouting_alloc
-                self.H_macro_routing_cong[r_i * self.grid_col + c_i] = y_dist * self.hrouting_alloc
+
+                if ur_row != bl_row\
+                    and ((r_i == bl_row and abs(y_dist - self.grid_height) > 1e-5)\
+                    or (r_i == ur_row and abs(y_dist - self.grid_height) > 1e-5)):
+                    if_PARTIAL_OVERLAP_VERTICAL = True
+                
+                if ur_col != bl_col\
+                    and (c_i == bl_col and abs(x_dist - self.grid_width) > 1e-5)\
+                    or (c_i == ur_col and abs(x_dist - self.grid_width) > 1e-5):
+                    if_PARTIAL_OVERLAP_HORIZONTAL = True
+
+                self.V_macro_routing_cong[r_i * self.grid_col + c_i] += x_dist * self.vrouting_alloc
+                self.H_macro_routing_cong[r_i * self.grid_col + c_i] += y_dist * self.hrouting_alloc
+
+        if if_PARTIAL_OVERLAP_VERTICAL:
+            for r_i in range(ur_row, ur_row + 1):
+                for c_i in range(bl_col, ur_col + 1):
+                    self.V_macro_routing_cong[r_i * self.grid_col + c_i] = 0
+
+        if if_PARTIAL_OVERLAP_HORIZONTAL:
+            for r_i in range(bl_row, ur_row + 1):
+                for c_i in range(ur_col, ur_col + 1):
+                    self.H_macro_routing_cong[r_i * self.grid_col + c_i] = 0
 
     def __split_net(self, source_gcell, node_gcells):
         splitted_netlist = []
@@ -995,8 +1019,12 @@ class PlacementCost(object):
         self.grid_v_routes = self.grid_width * self.vroutes_per_micron
         self.grid_h_routes = self.grid_height * self.hroutes_per_micron
 
+        # reset grid
         self.H_routing_cong = [0] * self.grid_row * self.grid_col
         self.V_routing_cong = [0] * self.grid_row * self.grid_col
+
+        self.H_macro_routing_cong = [0] * self.grid_row * self.grid_col
+        self.V_macro_routing_cong = [0] * self.grid_row * self.grid_col
 
         net_count = 0
         for mod in self.modules_w_pins:
