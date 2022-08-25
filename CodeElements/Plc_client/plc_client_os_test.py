@@ -45,10 +45,10 @@ class CircuitDataBaseTest():
     # GRID_ROW = 4
 
     # PMm
-    CANVAS_WIDTH = 100
-    CANVAS_HEIGHT = 100
-    GRID_COL = 3
-    GRID_ROW = 3
+    # CANVAS_WIDTH = 100
+    # CANVAS_HEIGHT = 100
+    # GRID_COL = 20
+    # GRID_ROW = 20
 
     def __init__(self, NETLIST_PATH) -> None:
         self.NETLIST_PATH = NETLIST_PATH
@@ -65,8 +65,8 @@ class CircuitDataBaseTest():
         self.plc.set_macro_routing_allocation(10, 10)
         self.plc_os.set_macro_routing_allocation(10, 10)
 
-        self.plc.set_congestion_smooth_range(2.0)
-        self.plc_os.set_congestion_smooth_range(2.0)
+        self.plc.set_congestion_smooth_range(0.0)
+        self.plc_os.set_congestion_smooth_range(0.0)
 
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
@@ -75,7 +75,7 @@ class CircuitDataBaseTest():
 
         print("Name: ", self.plc.get_source_filename().rsplit("/", 1)[1])
 
-        self.plc_os.display_canvas()
+        # self.plc_os.display_canvas()
 
         # start = time.time()
         temp_gl_h = self.plc.get_horizontal_routing_congestion()
