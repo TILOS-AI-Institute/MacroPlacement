@@ -3,7 +3,6 @@
 node {
   name: "P0"
   input: "Grp_2/Pinput"
-  input: "P1"
   attr {
     key: "side"
     value {
