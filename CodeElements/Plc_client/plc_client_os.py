@@ -982,18 +982,35 @@ class PlacementCost(object):
                     or (c_i == ur_col and abs(x_dist - self.grid_width) > 1e-5):
                     if_PARTIAL_OVERLAP_HORIZONTAL = True
 
+
                 self.V_macro_routing_cong[r_i * self.grid_col + c_i] += x_dist * self.vrouting_alloc
                 self.H_macro_routing_cong[r_i * self.grid_col + c_i] += y_dist * self.hrouting_alloc
 
         if if_PARTIAL_OVERLAP_VERTICAL:
             for r_i in range(ur_row, ur_row + 1):
                 for c_i in range(bl_col, ur_col + 1):
-                    self.V_macro_routing_cong[r_i * self.grid_col + c_i] = 0
+                    grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                    x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
+                    self.V_macro_routing_cong[r_i * self.grid_col + c_i] -= x_dist * self.vrouting_alloc
 
         if if_PARTIAL_OVERLAP_HORIZONTAL:
             for r_i in range(bl_row, ur_row + 1):
                 for c_i in range(ur_col, ur_col + 1):
-                    self.H_macro_routing_cong[r_i * self.grid_col + c_i] = 0
+                    grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                    x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
+                    self.H_macro_routing_cong[r_i * self.grid_col + c_i] -= y_dist * self.hrouting_alloc
 
     def __split_net(self, source_gcell, node_gcells):
         splitted_netlist = []
