@@ -972,15 +972,13 @@ class PlacementCost(object):
 
                 x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
 
-                if ur_row != bl_row\
-                    and ((r_i == bl_row and abs(y_dist - self.grid_height) > 1e-5)\
-                    or (r_i == ur_row and abs(y_dist - self.grid_height) > 1e-5)):
-                    if_PARTIAL_OVERLAP_VERTICAL = True
+                if ur_row != bl_row:
+                    if (r_i == bl_row and abs(y_dist - self.grid_height) > 1e-5) or (r_i == ur_row and abs(y_dist - self.grid_height) > 1e-5):
+                        if_PARTIAL_OVERLAP_VERTICAL = True
                 
-                if ur_col != bl_col\
-                    and (c_i == bl_col and abs(x_dist - self.grid_width) > 1e-5)\
-                    or (c_i == ur_col and abs(x_dist - self.grid_width) > 1e-5):
-                    if_PARTIAL_OVERLAP_HORIZONTAL = True
+                if ur_col != bl_col:
+                    if (c_i == bl_col and abs(x_dist - self.grid_width) > 1e-5) or (c_i == ur_col and abs(x_dist - self.grid_width) > 1e-5):
+                        if_PARTIAL_OVERLAP_HORIZONTAL = True
 
 
                 self.V_macro_routing_cong[r_i * self.grid_col + c_i] += x_dist * self.vrouting_alloc
