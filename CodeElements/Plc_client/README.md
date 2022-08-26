@@ -63,11 +63,11 @@ To compute the congestion for each grid cell, a fast routing technique is applie
 On a high level, for each grid cell, we compute the following:
 
 $$
-Grid horizontal congestion = horizontal congestion due to macros + horizontal congestion due to net routing after smoothing.
+\text{Grid horizontal congestion = horizontal congestion due to macros + horizontal congestion due to net routing after smoothing.}
 $$
 
 $$
-Grid vertical congestion = vertical congestion due to macros + vertical congestion due to net routing after smoothing.
+\text{Grid vertical congestion = vertical congestion due to macros + vertical congestion due to net routing after smoothing.}
 $$
 
 Notice a smoothing range can be set for congestion. This is only applied to congestion due to net routing which by counting adjacent cells and adding the averaged congestion to these adjacent cells. More details are provided in the document above.
