@@ -1,5 +1,6 @@
 from absl import flags
 from absl import app
+from torch import feature_alpha_dropout
 from Plc_client import plc_client_os as plc_client_os
 from Plc_client import plc_client as plc_client
 import numpy as np
@@ -27,16 +28,16 @@ class CircuitDataBaseTest():
     # NETLIST_PATH = "./Plc_client/test/testcases_xm/TC_MP1_4_1_MP2_2_2_MP3_3_4_MP4_0_0.pb.txt"
 
     # Google's Ariane
-    CANVAS_WIDTH = 356.592
-    CANVAS_HEIGHT = 356.640
-    GRID_COL = 35
-    GRID_ROW = 33
+    # CANVAS_WIDTH = 356.592
+    # CANVAS_HEIGHT = 356.640
+    # GRID_COL = 35
+    # GRID_ROW = 33
 
     # Ariane133
-    # CANVAS_WIDTH = 1599.99
-    # CANVAS_HEIGHT = 1600.06
-    # GRID_COL = 24
-    # GRID_ROW = 21
+    CANVAS_WIDTH = 1599.99
+    CANVAS_HEIGHT = 1600.06
+    GRID_COL = 24
+    GRID_ROW = 21
 
     # Sample clustered
     # CANVAS_WIDTH = 400
@@ -47,8 +48,8 @@ class CircuitDataBaseTest():
     # PMm
     # CANVAS_WIDTH = 100
     # CANVAS_HEIGHT = 100
-    # GRID_COL = 20
-    # GRID_ROW = 20
+    # GRID_COL = 5
+    # GRID_ROW = 5
 
     def __init__(self, NETLIST_PATH) -> None:
         self.NETLIST_PATH = NETLIST_PATH
@@ -62,8 +63,11 @@ class CircuitDataBaseTest():
         self.plc.set_routes_per_micron(10, 10)
         self.plc_os.set_routes_per_micron(10, 10)
 
-        self.plc.set_macro_routing_allocation(10, 10)
-        self.plc_os.set_macro_routing_allocation(10, 10)
+        # self.plc.set_macro_routing_allocation(5, 5)
+        # self.plc_os.set_macro_routing_allocation(5, 5)
+
+        self.plc.set_macro_routing_allocation(0, 0)
+        self.plc_os.set_macro_routing_allocation(0, 0)
 
         self.plc.set_congestion_smooth_range(0.0)
         self.plc_os.set_congestion_smooth_range(0.0)
@@ -75,25 +79,64 @@ class CircuitDataBaseTest():
 
         print("Name: ", self.plc.get_source_filename().rsplit("/", 1)[1])
 
-        # self.plc_os.display_canvas()
+        # self.plc_os.display_canvas(amplify=True)
 
         # start = time.time()
-        temp_gl_h = self.plc.get_horizontal_routing_congestion()
-        temp_os_h = self.plc_os.get_horizontal_routing_congestion()
-        # print(np.array(temp_gl_h).reshape(self.GRID_COL, self.GRID_ROW))
-        # print(np.array(temp_os_h).reshape(self.GRID_COL, self.GRID_ROW))
+        temp_gl_h = np.array(self.plc.get_horizontal_routing_congestion())
+        temp_os_h =  np.array(self.plc_os.get_horizontal_routing_congestion())
+        print(temp_gl_h.reshape(self.GRID_COL, self.GRID_ROW))
+        print(temp_os_h.reshape(self.GRID_COL, self.GRID_ROW))
 
         print("GL H Congestion: ", temp_gl_h)
         print("OS H Congestion: ", temp_os_h)
 
-        temp_gl_v = self.plc.get_vertical_routing_congestion()
-        temp_os_v = self.plc_os.get_vertical_routing_congestion()
+        temp_gl_v = np.array(self.plc.get_vertical_routing_congestion())
+        temp_os_v = np.array(self.plc_os.get_vertical_routing_congestion())
         
-        # print(np.array(temp_gl_v).reshape(self.GRID_COL, self.GRID_ROW))
-        # print(np.array(temp_os_v).reshape(self.GRID_COL, self.GRID_ROW))
+        print(temp_gl_v.reshape(self.GRID_COL, self.GRID_ROW))
+        print(temp_os_v.reshape(self.GRID_COL, self.GRID_ROW))
 
         print("GL V Congestion: ", self.plc.get_vertical_routing_congestion())
         print("OS V Congestion: ", self.plc_os.get_vertical_routing_congestion())
+
+        print("congestion GL: ", self.plc.get_congestion_cost())
+        print("congestion OS: ", self.plc_os.get_congestion_cost())
+        if abs(self.plc.get_congestion_cost() - self.plc_os.get_congestion_cost()) > 1e-3:
+            print("MISMATCH FOUND!!!****************")
+        else:
+            print("MATCHED!!! **********************")
+
+        ###################################################################### EXTRACT ROUTING CONGESTION
+        self.plc.set_macro_routing_allocation(0, 0)
+        self.plc_os.set_macro_routing_allocation(0, 0)
+
+        temp_gl_h_rt = np.array(self.plc.get_horizontal_routing_congestion())
+        temp_os_h_rt =  np.array(self.plc_os.get_horizontal_routing_congestion())
+
+        temp_gl_v_rt = np.array(self.plc.get_vertical_routing_congestion())
+        temp_os_v_rt = np.array(self.plc_os.get_vertical_routing_congestion())
+
+        temp_gl_h_mc = (temp_gl_h - temp_gl_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        temp_os_h_mc = (temp_os_h - temp_os_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
+
+        temp_gl_v_mc = (temp_gl_v - temp_gl_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        temp_os_v_mc = (temp_os_v - temp_os_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
+
+        # print("GL H MACRO Congestion", (temp_gl_h_mc).reshape(self.GRID_COL, self.GRID_ROW))
+        # print("OS H MACRO Congestion", (temp_os_h_mc).reshape(self.GRID_COL, self.GRID_ROW))
+        print("H MACRO Congestion DIFF", np.where(abs(temp_gl_h_mc - temp_os_h_mc) > 1e-5))
+
+        # print("GL V MACRO Congestion", (temp_gl_v_mc).reshape(self.GRID_COL, self.GRID_ROW))
+        # print("OS V MACRO Congestion", (temp_os_v_mc).reshape(self.GRID_COL, self.GRID_ROW))
+        print("V MACRO Congestion DIFF", np.where(abs(temp_gl_v_mc - temp_os_v_mc) > 1e-5))
+
+        ####################################################################### BY ENTRY
+        print("**************BY ENTRY DIFF")
+        print(temp_gl_h_mc[0][6], temp_os_h_mc[0][6])
+        # print(temp_gl_v_mc[1][6], temp_os_v_mc[1][6])
+
+
+        ######################################################################
         # end = time.time()
         # print("time elapsed:", end - start)
 
@@ -101,8 +144,6 @@ class CircuitDataBaseTest():
         #     print("gl, os:", temp_gl_h[idx], temp_os_h[idx], temp_gl_v[idx], temp_os_v[idx])
 
         # print("congestion summation gl os", sum(temp_gl_h), sum(temp_os_h), sum(temp_gl_v), sum(temp_os_v))
-        print("congestion GL: ", self.plc.get_congestion_cost())
-        print("congestion OS: ", self.plc_os.get_congestion_cost())
 
     def test_proxy_cost(self):
         # Google's Binary Executable
@@ -122,7 +163,7 @@ class CircuitDataBaseTest():
         
         print(self.plc_os.get_wirelength(), self.plc.get_wirelength())
 
-        # assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+        assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
         print("os wl cost", self.plc_os.get_cost())
         print("gl wl cost", self.plc.get_cost())
         assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 10e-3
