@@ -94,8 +94,8 @@ for line in lines:
     if id_pattern.match(words[0]) and (len(words) == 5):
         idx = int(words[0])
         if node_list[idx].pb_type == '"MACRO"':
-            x = words[1]
-            y = words[2]
+            x = float(words[1]) - float(node_list[idx].width)/2.0
+            y = float(words[2]) - float(node_list[idx].height)/2.0
             orient = orientMap[words[3]]
             isFixed = words[4]
             macro_name = node_list[idx].name.replace('_[', '\[')

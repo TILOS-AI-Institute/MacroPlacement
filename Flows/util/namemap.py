@@ -1,0 +1,1 @@
+/home/mgwoo/95_openroad/rosettaStone/github/RosettaStone/odbComm/namemap.py
