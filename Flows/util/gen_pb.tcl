@@ -197,16 +197,14 @@ proc write_node_macro_pin { macro_pin_ptr fp } {
   ### Attribute: type ###
   print_placeholder $fp "type" "macro_pin"
   
-  set macro_x1 [lindex [dbget ${macro_pin_ptr}.inst.box] 0 0]
-  set macro_x2 [lindex [dbget ${macro_pin_ptr}.inst.box] 0 2]
-  set macro_y1 [lindex [dbget ${macro_pin_ptr}.inst.box] 0 1]
-  set macro_y2 [lindex [dbget ${macro_pin_ptr}.inst.box] 0 3]
-  set macro_x [expr ($macro_x1 + $macro_x2)/2]
-  set macro_y [expr ($macro_y1 + $macro_y2)/2]
   set X [dbget ${macro_pin_ptr}.pt_x]
   set Y [dbget ${macro_pin_ptr}.pt_y]
-  set x_offset [expr $X - $macro_x]
-  set y_offset [expr $Y - $macro_y]
+  set cell_height [dbget ${macro_pin_ptr}.cellTerm.cell.size_y]
+  set cell_width [dbget ${macro_pin_ptr}.cellTerm.cell.size_x]
+  set pin_x [dbget ${macro_pin_ptr}.cellTerm.pt_x]
+  set pin_y [dbget ${macro_pin_ptr}.cellTerm.pt_y]
+  set x_offset [expr $pin_x - $cell_width/2]
+  set y_offset [expr $pin_y - $cell_height/2]
 
   ### Attribute: x_offset ###
   print_float $fp "x_offset" $x_offset

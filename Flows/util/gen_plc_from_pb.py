@@ -104,6 +104,8 @@ for node in soft_macro_list:
   soft_macro_count += 1
 
 area = area1 + area2
+fp.write(f"# HARD MACRO AREA: {area1}\n")
+fp.write(f"# SOFT MACRO AREA: {area2}\n")
 fp.write(f"# Area: {area}\n")
 fp.write(f"# SOFT MACRO COUNT: {soft_macro_count}\n")
 fp.write(f"# HARD MACRO COUNT: {hard_macro_count}\n")

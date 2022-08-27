@@ -56,7 +56,7 @@ grouping_src_dir = f'{work_dir}/CodeElements/Grouping/src'
 grouping_rpt_dir = f'{output_dir}/grouping_rpt'
 K_in = 1
 K_out = 1
-global_net_threshold = 300
+global_net_threshold = 500
 grouping = Grouping(design, num_rows, num_cols, K_in, K_out, setup_file, global_net_threshold, grouping_src_dir)
 
 # clean the rpt_dir
