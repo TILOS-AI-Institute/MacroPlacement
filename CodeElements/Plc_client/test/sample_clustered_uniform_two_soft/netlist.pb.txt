@@ -1,0 +1,226 @@
+# proto-file: tensorflow/core/framework/graph.proto
+# proto-message: tensorflow.GraphDef
+node {
+  name: "Grp_2"
+  attr {
+    key: "height"
+    value {
+      f: 8
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 8
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 4
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 4
+    }
+  }
+}
+node {
+  name: "Grp_3"
+  attr {
+    key: "height"
+    value {
+      f: 8
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 8
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 20
+    }
+  }
+}
+node {
+  name: "Grp_2/Poutput_single_0"
+  input: "Grp_3/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_2"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 4
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 4
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
+node {
+  name: "Grp_2/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_2"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 4
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 4
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
+node {
+  name: "Grp_3/Poutput_single_0"
+  input: "Grp_2/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_3"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}
+node {
+  name: "Grp_3/Pinput"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "Grp_3"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro_pin"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 20
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 0
+    }
+  }
+}

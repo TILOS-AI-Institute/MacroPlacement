@@ -1,0 +1,328 @@
+# proto-file: tensorflow/core/framework/graph.proto
+# proto-message: tensorflow.GraphDef
+node {
+  name: "M0"
+  attr {
+    key: "height"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 350
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 350
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50
+    }
+  }
+}
+node {
+  name: "M1"
+  attr {
+    key: "height"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50
+    }
+  }
+}
+node {
+  name: "M2"
+  attr {
+    key: "height"
+    value {
+      f: 50
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: "N"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 150
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 250
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50
+    }
+  }
+}
+node {
+  name: "M0/P1"
+  input: "M1/P1"
+  input: "M2/P1"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M0"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: -25
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: -25
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 325
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 325
+    }
+  }
+  attr {
+    key: "weight"
+    value {
+      f: 1000
+    }
+  }
+}
+node {
+  name: "M0/P2"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M0"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: -25
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 25
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 325
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 375
+    }
+  }
+  attr {
+    key: "weight"
+    value {
+      f: 1000
+    }
+  }
+}
+node {
+  name: "M1/P1"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M1"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 25
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: -25
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 75
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 25
+    }
+  }
+}
+node {
+  name: "M1/P2"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M1"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 25
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: 25
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 75
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 75
+    }
+  }
+}
+node {
+  name: "M2/P1"
+  attr {
+    key: "macro_name"
+    value {
+      placeholder: "M2"
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO_PIN"
+    }
+  }
+  attr {
+    key: "x_offset"
+    value {
+      f: 25
+    }
+  }
+  attr {
+    key: "y_offset"
+    value {
+      f: -25
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 175
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 225
+    }
+  }
+}

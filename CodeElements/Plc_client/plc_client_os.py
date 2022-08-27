@@ -1,10 +1,16 @@
 """Open-Sourced PlacementCost client class."""
 import os, io
+from platform import node
 import re
+import math
 from typing import Text, Tuple
 from absl import logging
+from collections import namedtuple
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import numpy as np
 
-# FLAGS = flags.FLAG
+Block = namedtuple('Block', 'x_max y_max x_min y_min')
 
 class PlacementCost(object):
 
@@ -26,16 +32,18 @@ class PlacementCost(object):
         self.init_plc = None
         self.project_name = "circuit_training"
         self.block_name = netlist_file.rsplit('/', -1)[-2]
-        self.width = 0.0
-        self.height = 0.0
-        self.grid_col = 0
-        self.grid_row = 0
         self.hroutes_per_micron = 0.0
         self.vroutes_per_micron = 0.0
         self.smooth_range = 0.0
         self.overlap_thres = 0.0
         self.hrouting_alloc = 0.0
         self.vrouting_alloc = 0.0
+
+        self.macro_horizontal_routing_allocation = 0.0
+        self.macro_vertical_routing_allocation = 0.0
+
+        # net information
+        self.net_cnt = 0
 
         # All modules look-up table
         self.modules = []
@@ -54,6 +62,21 @@ class PlacementCost(object):
         self.soft_macros_to_inpins = {}
         # read netlist
         self.__read_protobuf()
+
+        # default canvas width/height based on cell area
+        self.width = math.sqrt(self.get_area()/0.6)
+        self.height = math.sqrt(self.get_area()/0.6)
+        # default gridding
+        self.grid_col = 10
+        self.grid_row = 10
+        # initialize congestion map
+        # TODO recompute after new gridding
+        self.V_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_routing_cong = [0] * self.grid_col * self.grid_row
+        self.V_macro_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_macro_routing_cong = [0] * self.grid_col * self.grid_row
+        # initial grid mask
+        self.global_node_mask = [0] * self.grid_col * self.grid_row
         # store module/component count
         self.port_cnt = len(self.port_indices)
         self.hard_macro_cnt = len(self.hard_macro_indices)
@@ -189,11 +212,16 @@ class PlacementCost(object):
                                                            x = attr_dict['x'][1],
                                                            y = attr_dict['y'][1],
                                                            macro_name = attr_dict['macro_name'][1])
-                        if 'weight' in attr_dict.keys():
-                            soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         if input_list:
+                            if 'weight' in attr_dict.keys():
+                                self.net_cnt += 1 * float(attr_dict['weight'][1])
+                            else:
+                                self.net_cnt += 1
                             soft_macro_pin.add_sinks(input_list)
+                        
+                        if 'weight' in attr_dict.keys():
+                            soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         self.modules_w_pins.append(soft_macro_pin)
                         # mapping node_name ==> node idx
@@ -242,6 +270,10 @@ class PlacementCost(object):
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         if input_list:
+                            if 'weight' in attr_dict.keys():
+                                self.net_cnt += 1 * float(attr_dict['weight'][1])
+                            else:
+                                self.net_cnt += 1
                             hard_macro_pin.add_sinks(input_list)
 
                         self.modules_w_pins.append(hard_macro_pin)
@@ -268,7 +300,9 @@ class PlacementCost(object):
                                         side = attr_dict['side'][1])
 
                         if input_list:
+                            self.net_cnt += 1
                             port.add_sinks(input_list)
+                            # ports does not have pins so update connection immediately
                             port.add_connections(input_list)
 
                         self.modules_w_pins.append(port)
@@ -331,13 +365,23 @@ class PlacementCost(object):
             for pin_name in pin_names:
                 pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
                 inputs = pin.get_sink()
+
                 if inputs:
                     for k in inputs.keys():
-                        macro.add_connections(inputs[k])
+                        if macro_type == "MACRO" or macro_type == "macro":
+                            weight = pin.get_weight()
+                            macro.add_connections(inputs[k], weight)
+    
+    def __update_placement(self):
+        # assign modules to grid cells
+        pass
 
 
     def get_cost(self) -> float:
-        return 0.0
+        """
+        Compute wirelength cost from wirelength
+        """
+        return self.get_wirelength() / ((self.get_canvas_width_height()[0] + self.get_canvas_width_height()[1]) * self.net_cnt)
 
     def get_area(self) -> float:
         """
@@ -383,15 +427,15 @@ class PlacementCost(object):
                 # add source position
                 x_coord.append(mod.get_pos()[0])
                 y_coord.append(mod.get_pos()[1])
-
                 for sink_name in mod.get_sink():
-                    # retrieve indx in modules_w_pins
-                    sink_idx = self.mod_name_to_indices[sink_name]
-                    # retrieve sink object
-                    sink = self.modules_w_pins[sink_idx]
-                    # retrieve location
-                    x_coord.append(sink.get_pos()[0])
-                    y_coord.append(sink.get_pos()[1])
+                    for sink_pin in mod.get_sink()[sink_name]:
+                        # retrieve indx in modules_w_pins
+                        sink_idx = self.mod_name_to_indices[sink_pin]
+                        # retrieve sink object
+                        sink = self.modules_w_pins[sink_idx]
+                        # retrieve location
+                        x_coord.append(sink.get_pos()[0])
+                        y_coord.append(sink.get_pos()[1])
             elif curr_type == "macro_pin" or curr_type == "MACRO_PIN":
                 # add source position
                 x_coord.append(mod.get_pos()[0])
@@ -409,6 +453,7 @@ class PlacementCost(object):
                             # retrieve location
                             x_coord.append(input.get_pos()[0])
                             y_coord.append(input.get_pos()[1])
+
             if x_coord:
                 if norm_fact != 1.0:
                     total_hpwl += norm_fact * \
@@ -417,14 +462,224 @@ class PlacementCost(object):
                 else:
                     total_hpwl += (abs(max(x_coord) - min(x_coord))\
                          + abs(max(y_coord) - min(y_coord)))
-
         return total_hpwl
 
-    def get_congestion_cost(self) -> float:
-        return 0.0
+    def abu(self, xx, n = 0.1):
+        xxs = sorted(xx, reverse = True)
+        cnt = math.floor(len(xxs)*n)
+        if cnt == 0:
+            return max(xxs)
+        return sum(xxs[0:cnt])/cnt
+    
+    def get_V_congestion_cost(self) -> float:
+        """
+        compute average of top 10% of grid cell cong and take half of it
+        """
+        occupied_cells = sorted([gc for gc in self.V_routing_cong if gc != 0.0], reverse=True)
+        cong_cost = 0.0
+
+        # take top 10%
+        cong_cnt = math.floor(len(self.V_routing_cong) * 0.1)
+
+        # if grid cell smaller than 10, take the average over occupied cells
+        if len(self.V_routing_cong) < 10:
+            cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return cong_cost
+
+        idx = 0
+        sum_cong = 0
+        # take top 10%
+        while idx < cong_cnt and idx < len(occupied_cells):
+            sum_cong += occupied_cells[idx]
+            idx += 1
+
+        return float(sum_cong / cong_cnt)
+    
+    def get_H_congestion_cost(self) -> float:
+        """
+        compute average of top 10% of grid cell cong and take half of it
+        """
+        occupied_cells = sorted([gc for gc in self.H_routing_cong if gc != 0.0], reverse=True)
+        cong_cost = 0.0
+
+        # take top 10%
+        cong_cnt = math.floor(len(self.H_routing_cong) * 0.1)
+
+        # if grid cell smaller than 10, take the average over occupied cells
+        if len(self.H_routing_cong) < 10:
+            cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return cong_cost
+
+        idx = 0
+        sum_cong = 0
+        # take top 10%
+        while idx < cong_cnt and idx < len(occupied_cells):
+            sum_cong += occupied_cells[idx]
+            idx += 1
+
+        return float(sum_cong / cong_cnt)
+    
+    def get_congestion_cost(self):
+        #return max(self.get_H_congestion_cost(), self.get_V_congestion_cost())
+        return self.abu(self.V_routing_cong + self.H_routing_cong, 0.05)
+        # temp_cong = [sum(x) for x in zip(self.V_routing_cong, self.H_routing_cong)]
+
+        # occupied_cells = sorted([gc for gc in temp_cong if gc != 0.0], reverse=True)
+        # cong_cost = 0.0
+
+        # # take top 10%
+        # cong_cnt = math.floor(len(temp_cong) * 0.1)
+
+        # # if grid cell smaller than 10, take the average over occupied cells
+        # if len(temp_cong) < 10:
+        #     cong_cost = float(sum(occupied_cells) / len(occupied_cells))
+        #     return cong_cost
+
+        # idx = 0
+        # sum_cong = 0
+        # # take top 10%
+        # while idx < cong_cnt and idx < len(occupied_cells):
+        #     sum_cong += occupied_cells[idx]
+        #     idx += 1
+
+        # return float(sum_cong / cong_cnt)
+
+    def __get_grid_cell_location(self, x_pos, y_pos):
+        """
+        private function for getting grid cell row/col ranging from 0...N
+        """
+        row = math.floor(y_pos / self.grid_height)
+        col = math.floor(x_pos / self.grid_width)
+        return row, col
+
+    def __overlap_area(self, block_i, block_j):
+        """
+        private function for computing block overlapping
+        """
+        x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
+        y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
+        if x_diff >= 0 and y_diff >= 0:
+            return x_diff * y_diff
+        return 0
+    
+    def __overlap_dist(self, block_i, block_j):
+        """
+        private function for computing block overlapping
+        """
+        x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
+        y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
+        if x_diff > 0 and y_diff > 0:
+            return x_diff, y_diff
+        return 0, 0
+
+    def __add_module_to_grid_cells(self, mod_x, mod_y, mod_w, mod_h):
+        """
+        private function for add module to grid cells
+        """
+        # Two corners
+        ur = (mod_x + (mod_w/2), mod_y + (mod_h/2))
+        bl = (mod_x - (mod_w/2), mod_y - (mod_h/2))
+
+        # construct block based on current module
+        module_block = Block(
+                            x_max=mod_x + (mod_w/2),
+                            y_max=mod_y + (mod_h/2),
+                            x_min=mod_x - (mod_w/2),
+                            y_min=mod_y - (mod_h/2)
+                            )
+
+        # Only need two corners of a grid cell
+        ur_row, ur_col = self.__get_grid_cell_location(*ur)
+        bl_row, bl_col = self.__get_grid_cell_location(*bl)
+
+        # check if out of bound
+        if ur_row >= 0 and ur_col >= 0:
+            if bl_row < 0:
+                bl_row = 0
+
+            if bl_col < 0:
+                bl_col = 0
+        else:
+            # OOB, skip module
+            return
+
+        if bl_row >= 0 and bl_col >= 0:
+            if ur_row > self.grid_row - 1:
+                ur_row = self.grid_row - 1
+
+            if ur_col > self.grid_col - 1:
+                ur_col = self.grid_col - 1
+        else:
+            # OOB, skip module
+            return
+
+        for r_i in range(bl_row, ur_row + 1):
+            for c_i in range(bl_col, ur_col + 1):
+                # construct block based on current cell row/col
+                grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                self.grid_occupied[self.grid_col * r_i + c_i] += \
+                    self.__overlap_area(grid_cell_block, module_block)
+
+    def get_grid_cells_density(self):
+        """
+        compute density for all grid cells
+        """
+        # by default grid row/col is 10/10
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
+
+        grid_area = self.grid_width * self.grid_height
+        self.grid_occupied = [0] * (self.grid_col * self.grid_row)
+        self.grid_cells = [0] * (self.grid_col * self.grid_row)
+
+        for module_idx in (self.soft_macro_indices + self.hard_macro_indices):
+            # extract module information
+            module = self.modules_w_pins[module_idx]
+            module_h = module.get_height()
+            module_w = module.get_width()
+            module_x, module_y = module.get_pos()
+
+            self.__add_module_to_grid_cells(
+                                            mod_x=module_x,
+                                            mod_y=module_y,
+                                            mod_h=module_h,
+                                            mod_w=module_w
+                                            )
+
+        for i, gcell in enumerate(self.grid_occupied):
+            self.grid_cells[i] = gcell / grid_area
+
+        return self.grid_cells
 
     def get_density_cost(self) -> float:
-        pass
+        """
+        compute average of top 10% of grid cell density and take half of it
+        """
+        occupied_cells = sorted([gc for gc in self.grid_cells if gc != 0.0], reverse=True)
+        density_cost = 0.0
+
+        # take top 10%
+        density_cnt = math.floor(len(self.grid_cells) * 0.1)
+
+        # if grid cell smaller than 10, take the average over occupied cells
+        if len(self.grid_cells) < 10:
+            density_cost = float(sum(occupied_cells) / len(occupied_cells))
+            return 0.5 * density_cost
+
+        idx = 0
+        sum_density = 0
+        # take top 10%
+        while idx < density_cnt and idx < len(occupied_cells):
+            sum_density += occupied_cells[idx]
+            idx += 1
+
+        return 0.5 * float(sum_density / density_cnt)
 
     def set_canvas_size(self, width:float, height:float) -> float:
         """
@@ -432,6 +687,9 @@ class PlacementCost(object):
         """
         self.width = width
         self.height = height
+
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
         return True
 
     def get_canvas_width_height(self) -> Tuple[float, float]:
@@ -446,6 +704,14 @@ class PlacementCost(object):
         """
         self.grid_col = grid_col
         self.grid_row = grid_row
+
+        self.V_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_routing_cong = [0] * self.grid_col * self.grid_row
+        self.V_macro_routing_cong = [0] * self.grid_col * self.grid_row
+        self.H_macro_routing_cong = [0] * self.grid_col * self.grid_row
+
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
         return True
 
     def get_grid_num_columns_rows(self) -> Tuple[int, int]:
@@ -489,7 +755,7 @@ class PlacementCost(object):
         """
         Set congestion smooth range
         """
-        self.smooth_range = smooth_range
+        self.smooth_range = int(smooth_range)
 
     def get_congestion_smooth_range(self) -> float:
         """
@@ -525,11 +791,404 @@ class PlacementCost(object):
         """
         return self.hrouting_alloc, self.vrouting_alloc
 
-    def is_node_soft_macro(self) -> bool:
-        return True
+    def __two_pin_net_routing(self, source_gcell, node_gcells, weight):
+        temp_gcell = list(node_gcells)
+        if temp_gcell[0] == source_gcell:
+            sink_gcell = temp_gcell[1]
+        else:
+            sink_gcell = temp_gcell[0]
+
+        # y
+        row_min = min(sink_gcell[0], source_gcell[0])
+        row_max = max(sink_gcell[0], source_gcell[0])
+
+        # x
+        col_min = min(sink_gcell[1], source_gcell[1])
+        col_max = max(sink_gcell[1], source_gcell[1])
+
+        # H routing
+        for col_idx in range(col_min, col_max, 1):
+            col = col_idx
+            row = source_gcell[0]
+            self.H_routing_cong[row * self.grid_col + col] += weight
+
+        # V routing
+        for row_idx in range(row_min, row_max, 1):
+            row = row_idx
+            col = sink_gcell[1]
+            self.V_routing_cong[row * self.grid_col + col] += weight
+
+    def l_routing(self, node_gcells, weight):
+        node_gcells.sort(key = lambda x: (x[1], x[0]))
+        y1, x1 = node_gcells[0]
+        y2, x2 = node_gcells[1]
+        y3, x3 = node_gcells[2]
+        # H routing (x1, y1) to (x2, y1)
+        for col in range(x1, x2):
+            row = y1
+            self.H_routing_cong[row * self.grid_col + col] += weight
+        
+        # H routing (x2, y2) to (x2, y3)
+        for col in range(x2,x3):
+            row = y2
+            self.H_routing_cong[row * self.grid_col + col] += weight
+        
+        # V routing (x2, min(y1, y2)) to (x2, max(y1, y2))
+        for row in range(min(y1, y2), max(y1, y2)):
+            col = x2
+            self.V_routing_cong[row * self.grid_col + col] += weight
+        
+        # V routing (x3, min(y2, y3)) to (x3, max(y2, y3))
+        for row in range(min(y2, y3), max(y2, y3)):
+            col = x3
+            self.V_routing_cong[row * self.grid_col + col] += weight
+        return
+
+    def t_routing(self, node_gcells, weight):
+        node_gcells.sort()
+        #print(node_gcells)
+        y1, x1 = node_gcells[0]
+        y2, x2 = node_gcells[1]
+        y3, x3 = node_gcells[2]
+        xmin = min(x1, x2, x3)
+        xmax = max(x1, x2, x3)
+
+        # H routing (xmin, y2) to (xmax, y2)
+        for col in range(xmin, xmax):
+            row = y2
+            self.H_routing_cong[row * self.grid_col + col] += weight
+        
+        # V routing (x1, y1) to (x1, y2)
+        for row in range(min(y1, y2), max(y1, y2)):
+            col = x1
+            self.V_routing_cong[row * self.grid_col + col] += weight
+        
+        # V routing (x3, y3) to (x3, y2)
+        for row in range(min(y2, y3), max(y2, y3)):
+            col = x3
+            self.V_routing_cong[row * self.grid_col + col] += weight
+        pass
+
+    def __three_pin_net_routing(self, node_gcells, weight):
+        temp_gcell = list(node_gcells)
+        ## Sorted based on X
+        temp_gcell.sort(key = lambda x: (x[1], x[0]))
+        y1, x1 = temp_gcell[0]
+        y2, x2 = temp_gcell[1]
+        y3, x3 = temp_gcell[2]
+
+        if x1 < x2 and x2 < x3 and min(y1, y3) < y2 and max(y1, y3) > y2:
+            # print('sk1')
+            self.l_routing(temp_gcell, weight)
+            return
+        
+        if x2 == x3 and x1 < x2 and y1 < min(y2, y3):
+            # print('sk2')
+            for col_idx in range(x1,x2,1):
+                row = y1
+                col = col_idx
+                self.H_routing_cong[row * self.grid_col + col] += weight
+            
+            for row_idx in range(y1, max(y2,y3)):
+                col = x2
+                row = row_idx
+                self.V_routing_cong[row * self.grid_col + col] += weight
+            return
+
+        if y2 == y3:
+            # print('sk3')
+            for col in range(x1, x2):
+                row = y1
+                self.H_routing_cong[row * self.grid_col + col] += weight
+            
+            for col in range(x2, x3):
+                row = y2
+                self.H_routing_cong[row * self.grid_col + col] += weight
+            
+            for row in range(min(y2, y1), max(y2, y1)):
+                col = x2
+                self.V_routing_cong[row * self.grid_col + col] += weight
+            return
+        
+        
+        # print('sk4')
+        self.t_routing(temp_gcell, weight)
+        return
+
+
+    def __macro_route_over_grid_cell(self, mod_x, mod_y, mod_w, mod_h):
+        """
+        private function for add module to grid cells
+        """
+        # Two corners
+        ur = (mod_x + (mod_w/2), mod_y + (mod_h/2))
+        bl = (mod_x - (mod_w/2), mod_y - (mod_h/2))
+
+        # construct block based on current module
+        module_block = Block(
+                            x_max=mod_x + (mod_w/2),
+                            y_max=mod_y + (mod_h/2),
+                            x_min=mod_x - (mod_w/2),
+                            y_min=mod_y - (mod_h/2)
+                            )
+
+        # Only need two corners of a grid cell
+        ur_row, ur_col = self.__get_grid_cell_location(*ur)
+        bl_row, bl_col = self.__get_grid_cell_location(*bl)
+
+        # check if out of bound
+        if ur_row >= 0 and ur_col >= 0:
+            if bl_row < 0:
+                bl_row = 0
+
+            if bl_col < 0:
+                bl_col = 0
+        else:
+            # OOB, skip module
+            return
+
+        if bl_row >= 0 and bl_col >= 0:
+            if ur_row > self.grid_row - 1:
+                ur_row = self.grid_row - 1
+
+            if ur_col > self.grid_col - 1:
+                ur_col = self.grid_col - 1
+        else:
+            # OOB, skip module
+            return
+        
+        if_PARTIAL_OVERLAP_VERTICAL = False
+        if_PARTIAL_OVERLAP_HORIZONTAL = False
+
+        for r_i in range(bl_row, ur_row + 1):
+            for c_i in range(bl_col, ur_col + 1):
+                # construct block based on current cell row/col
+                grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
+
+                if ur_row != bl_row:
+                    if (r_i == bl_row and abs(y_dist - self.grid_height) > 1e-5) or (r_i == ur_row and abs(y_dist - self.grid_height) > 1e-5):
+                        if_PARTIAL_OVERLAP_VERTICAL = True
+                
+                if ur_col != bl_col:
+                    if (c_i == bl_col and abs(x_dist - self.grid_width) > 1e-5) or (c_i == ur_col and abs(x_dist - self.grid_width) > 1e-5):
+                        if_PARTIAL_OVERLAP_HORIZONTAL = True
+
+
+                self.V_macro_routing_cong[r_i * self.grid_col + c_i] += x_dist * self.vrouting_alloc
+                self.H_macro_routing_cong[r_i * self.grid_col + c_i] += y_dist * self.hrouting_alloc
+
+        if if_PARTIAL_OVERLAP_VERTICAL:
+            for r_i in range(ur_row, ur_row + 1):
+                for c_i in range(bl_col, ur_col + 1):
+                    grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                    x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
+                    self.V_macro_routing_cong[r_i * self.grid_col + c_i] -= x_dist * self.vrouting_alloc
+
+        if if_PARTIAL_OVERLAP_HORIZONTAL:
+            for r_i in range(bl_row, ur_row + 1):
+                for c_i in range(ur_col, ur_col + 1):
+                    grid_cell_block = Block(
+                                        x_max= (c_i + 1) * self.grid_width,
+                                        y_max= (r_i + 1) * self.grid_height,
+                                        x_min= c_i * self.grid_width,
+                                        y_min= r_i * self.grid_height
+                                        )
+
+                    x_dist, y_dist = self.__overlap_dist(module_block, grid_cell_block)
+                    self.H_macro_routing_cong[r_i * self.grid_col + c_i] -= y_dist * self.hrouting_alloc
+
+    def __split_net(self, source_gcell, node_gcells):
+        splitted_netlist = []
+        for node_gcell in node_gcells:
+            if node_gcell != source_gcell:
+                splitted_netlist.append({source_gcell, node_gcell})
+        return splitted_netlist
+
+    def get_vertical_routing_congestion(self):
+        # TODO: detect if we need to run
+        self.get_routing()
+        return self.V_routing_cong
+
+    def get_horizontal_routing_congestion(self):
+        # TODO: detect if we need to run
+        self.get_routing()
+        return self.H_routing_cong
+
+    def get_routing(self):
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
+
+        self.grid_v_routes = self.grid_width * self.vroutes_per_micron
+        self.grid_h_routes = self.grid_height * self.hroutes_per_micron
+
+        # reset grid
+        self.H_routing_cong = [0] * self.grid_row * self.grid_col
+        self.V_routing_cong = [0] * self.grid_row * self.grid_col
+
+        self.H_macro_routing_cong = [0] * self.grid_row * self.grid_col
+        self.V_macro_routing_cong = [0] * self.grid_row * self.grid_col
+
+        net_count = 0
+        for mod in self.modules_w_pins:
+            norm_fact = 1.0
+            curr_type = mod.get_type()
+            # bounding box data structure
+            node_gcells = set()
+            source_gcell = None
+            weight = 1
+
+            # NOTE: connection only defined on PORT, soft/hard macro pins
+            if curr_type == "PORT" and mod.get_sink():
+                # add source grid location
+                source_gcell = self.__get_grid_cell_location(*(mod.get_pos()))
+                node_gcells.add(self.__get_grid_cell_location(*(mod.get_pos())))
+
+                for sink_name in mod.get_sink():
+                    for sink_pin in mod.get_sink()[sink_name]:
+                        # retrieve indx in modules_w_pins
+                        sink_idx = self.mod_name_to_indices[sink_pin]
+                        # retrieve sink object
+                        sink = self.modules_w_pins[sink_idx]
+                        # retrieve grid location
+                        node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
+
+            elif (curr_type == "macro_pin" or curr_type == "MACRO_PIN") and mod.get_sink():
+                # add source position
+                node_gcells.add(self.__get_grid_cell_location(*(mod.get_pos())))
+                source_gcell = self.__get_grid_cell_location(*(mod.get_pos()))
+
+                if mod.get_weight() > 1:
+                    weight = mod.get_weight()
+
+                for input_list in mod.get_sink().values():
+                    for sink_name in input_list:
+                        # retrieve indx in modules_w_pins
+                        sink_idx = self.mod_name_to_indices[sink_name]
+                        # retrieve sink object
+                        sink = self.modules_w_pins[sink_idx]
+                        # retrieve grid location
+                        node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
+            
+            elif curr_type == "MACRO":
+                module_h = mod.get_height()
+                module_w = mod.get_width()
+                module_x, module_y = mod.get_pos()
+                # compute overlap
+                self.__macro_route_over_grid_cell(module_x, module_y, module_w, module_h)
+            
+            if len(node_gcells) == 2:
+                self.__two_pin_net_routing(source_gcell=source_gcell,node_gcells=node_gcells, weight=weight)
+            elif len(node_gcells) == 3:
+                self.__three_pin_net_routing(node_gcells=node_gcells, weight=weight)
+            elif len(node_gcells) > 3:
+                for curr_net in self.__split_net(source_gcell=source_gcell, node_gcells=node_gcells):
+                    self.__two_pin_net_routing(source_gcell=source_gcell, node_gcells=curr_net, weight=weight)
+
+        # print("V_routing_cong", self.V_routing_cong)
+        # print("H_routing_cong", self.H_routing_cong)
+        # normalize routing congestion
+        for idx, v_gcell in enumerate(self.V_routing_cong):
+            self.V_routing_cong[idx] = float(v_gcell / self.grid_v_routes)
+        
+        for idx, h_gcell in enumerate(self.H_routing_cong):
+            self.H_routing_cong[idx] = float(h_gcell / self.grid_h_routes)
+        
+        for idx, v_gcell in enumerate(self.V_macro_routing_cong):
+            self.V_macro_routing_cong[idx] = float(v_gcell / self.grid_v_routes)
+        
+        for idx, h_gcell in enumerate(self.H_macro_routing_cong):
+            self.H_macro_routing_cong[idx] = float(h_gcell / self.grid_h_routes)
+        
+        self.__smooth_routing_cong()
+
+        # sum up routing congestion with macro congestion
+        self.V_routing_cong = [sum(x) for x in zip(self.V_routing_cong, self.V_macro_routing_cong)]
+        self.H_routing_cong = [sum(x) for x in zip(self.H_routing_cong, self.H_macro_routing_cong)]
+
+    
+    def __smooth_routing_cong(self):
+        temp_V_routing_cong = [0] * self.grid_col * self.grid_row
+        temp_H_routing_cong = [0] * self.grid_col * self.grid_row
+
+        # v routing cong
+        for row in range(self.grid_row):
+            for col in range(self.grid_col):
+                lp = col - self.smooth_range
+                if lp < 0:
+                    lp = 0
+
+                rp = col + self.smooth_range
+                if rp >= self.grid_col:
+                    rp = self.grid_col - 1
+                
+                gcell_cnt = rp - lp + 1
+
+                val = self.V_routing_cong[row * self.grid_col + col] / gcell_cnt
+
+                for ptr in range(lp, rp + 1, 1):
+                    temp_V_routing_cong[row * self.grid_col + ptr] += val
+        
+        self.V_routing_cong = temp_V_routing_cong
+
+        # h routing cong
+        for row in range(self.grid_row):
+            for col in range(self.grid_col):
+                lp = row - self.smooth_range
+                if lp < 0:
+                    lp = 0
+
+                up = row + self.smooth_range
+                if up >= self.grid_row:
+                    up = self.grid_row - 1
+                
+                gcell_cnt = up - lp + 1
+
+                val = self.H_routing_cong[row * self.grid_col + col] / gcell_cnt
+
+                for ptr in range(lp, up + 1, 1):
+                    temp_H_routing_cong[ptr * self.grid_col + col] += val
+        
+        self.H_routing_cong = temp_H_routing_cong
+
+    def is_node_soft_macro(self, node_idx) -> bool:
+        return self.get_node_type(node_idx) == "soft_macro"
+
+    def is_node_hard_macro(self, node_idx) -> bool:
+        return self.get_node_type(node_idx) == "hard_macro"
+
+    def get_node_name(self, node_idx: int) -> str:
+        return self.indices_to_mod_name[node_idx]
 
     def get_node_mask(self, node_idx: int, node_name: str) -> list:
-        return list
+        """
+            Return Grid_col x Grid_row:
+                1 == placable
+                0 == unplacable
+
+                (100, 100)  =>  5
+                (99, 99)    =>  0
+                (100, 99)   =>  1
+                (99, 100)   =>  4
+
+            Placement Constraint:
+            -   center @ grid cell
+            -   no overlapping other macro
+            -   no OOB
+        """
+        module = self.modules_w_pins[node_idx]
 
     def get_node_type(self, node_idx: int) -> str:
         """
@@ -542,23 +1201,22 @@ class PlacementCost(object):
 
     def get_macro_adjacency(self) -> list:
         """
-        Compute Adjacency Matrix (Unclustered PORTs)
+        Compute Adjacency Matrix
         """
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
-        macro_adj = [0] * self.module_cnt * self.module_cnt
-        assert len(macro_adj) == self.module_cnt * self.module_cnt
+        #[MACRO][macro]
+        module_indices = self.hard_macro_indices + self.soft_macro_indices
+        macro_adj = [0] * (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
+        assert len(macro_adj) == (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
 
-        #[MACRO][macro][PORT]
-        module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
-
-        for row_idx, module_idx in enumerate(module_indices):
+        for row_idx, module_idx in enumerate(sorted(module_indices)):
             # row index
             # store temp module
             curr_module = self.modules_w_pins[module_idx]
             # get module name
             curr_module_name = curr_module.get_name()
 
-            for col_idx, h_module_idx in enumerate(module_indices):
+            for col_idx, h_module_idx in enumerate(sorted(module_indices)):
                 # col index
                 entry = 0
                 # store connected module
@@ -572,17 +1230,12 @@ class PlacementCost(object):
                 if h_module_name in curr_module.get_connection():
                     entry += curr_module.get_connection()[h_module_name]
 
-                macro_adj[row_idx * self.module_cnt + col_idx] = entry
+                macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + col_idx] = entry
+                macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + row_idx] = entry
 
         return macro_adj
 
     def is_node_fixed(self):
-        pass
-
-    def unplace_all_nodes(self):
-        pass
-
-    def place_node(self):
         pass
 
     def restore_placement(self, init_plc_pth: str):
@@ -610,22 +1263,49 @@ class PlacementCost(object):
     def get_macro_and_clustered_port_adjacency(self):
         """
         Compute Adjacency Matrix (Unclustered PORTs)
+        if module is a PORT, assign nearest cell location even if OOB
         """
+        #[MACRO][macro]
+        module_indices = self.hard_macro_indices + self.soft_macro_indices
+
+        #[Grid Cell] => [PORT]
+        clustered_ports = {}
+        for port_idx in self.port_indices:
+            port = self.modules_w_pins[port_idx]
+            x_pos, y_pos = port.get_pos()
+
+            row, col = self.__get_grid_cell_location(x_pos=x_pos, y_pos=y_pos)
+
+            # prevent OOB
+            if row >= self.grid_row:
+                row = self.grid_row - 1
+            
+            if row < 0:
+                row = 0
+
+            if col >= self.grid_col:
+                col = self.grid_col - 1
+            
+            if col < 0:
+                col = 0
+
+            if (row, col) in clustered_ports:
+                clustered_ports[(row, col)].append(port)
+            else:
+                clustered_ports[(row, col)] = [port]
+        
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
-        macro_adj = [0] * self.module_cnt * self.module_cnt
-        assert len(macro_adj) == self.module_cnt * self.module_cnt
+        macro_adj = [0] * (len(module_indices) + len(clustered_ports)) * (len(module_indices) + len(clustered_ports))
+        cell_location = [0] * len(clustered_ports)
 
-        #[MACRO][macro][PORT]
-        module_indices = self.hard_macro_indices + self.soft_macro_indices + self.port_indices
-
-        for row_idx, module_idx in enumerate(module_indices):
-            # row index
+        # instantiate macros
+        for row_idx, module_idx in enumerate(sorted(module_indices)):
             # store temp module
             curr_module = self.modules_w_pins[module_idx]
             # get module name
             curr_module_name = curr_module.get_name()
 
-            for col_idx, h_module_idx in enumerate(module_indices):
+            for col_idx, h_module_idx in enumerate(sorted(module_indices)):
                 # col index
                 entry = 0
                 # store connected module
@@ -639,42 +1319,160 @@ class PlacementCost(object):
                 if h_module_name in curr_module.get_connection():
                     entry += curr_module.get_connection()[h_module_name]
 
-                macro_adj[row_idx * self.module_cnt + col_idx] = entry
+                macro_adj[row_idx * (len(module_indices) + len(clustered_ports)) + col_idx] = entry
+                macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] = entry
+        
+        # instantiate clustered ports
+        for row_idx, cluster_cell in enumerate(sorted(clustered_ports, key=lambda tup: tup[1])):
+            # print("cluster_cell", cluster_cell)
+            # print("port cnt", len(clustered_ports[cluster_cell]))
+            # add cell location
+            cell_location[row_idx] = cluster_cell[0] * self.grid_col + cluster_cell[1]
 
-        return macro_adj
+            # relocate to after macros
+            row_idx += len(module_indices)
 
-    def get_node_location(self):
+            # for each port within a grid cell
+            for curr_port in clustered_ports[cluster_cell]:
+                # get module name
+                curr_port_name = curr_port.get_name()
+                # print("curr_port_name", curr_port_name, curr_port.get_pos())
+                # assuming ports only connects to macros
+                for col_idx, h_module_idx in enumerate(module_indices):
+                    # col index
+                    entry = 0
+                    # store connected module
+                    h_module = self.modules_w_pins[h_module_idx]
+                    # get connected module name
+                    h_module_name = h_module.get_name()
+
+                    # print("other connections", h_module.get_connection(), curr_port_name)
+                
+                    if curr_port_name in h_module.get_connection():
+                        entry += h_module.get_connection()[curr_port_name]
+
+                    if h_module_name in curr_port.get_connection():
+                        entry += curr_port.get_connection()[h_module_name]
+            
+                    macro_adj[row_idx * (len(module_indices) + len(clustered_ports)) + col_idx] += entry
+                    macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] += entry
+                
+        return macro_adj, sorted(cell_location)
+
+    def get_node_location(self, node_idx):
         pass
 
-    def get_grid_cell_of_node(self):
-        pass
+    def get_grid_cell_of_node(self, node_idx):
+        """ if grid_cell at grid crossing, break-tie to upper right
+        """
+        return self.modules_w_pins(node_idx).get_location()
 
-    def update_macro_orientation(self):
+    def update_macro_orientation(self, node_idx, orientation):
         pass
 
     def get_macro_orientation(self):
         pass
 
     def unfix_node_coord(self):
+        """In case plc is loaded with fixed macros
+        """
         pass
 
-    def unplace_node(self):
+    def fix_node_coord(self):
+        """Find all ports and fix their coordinates.
+        """
         pass
 
-    def is_node_placed(self):
+    def unplace_all_nodes(self):
+        pass
+
+    def place_node(self, node_idx, grid_cell_idx):
+        pass
+
+    def can_place_node(self, node_idx, grid_cell_idx):
+        return self.get_node_mask(node_idx=node_idx)[grid_cell_idx]
+
+    def unplace_node(self, node_idx):
+        # update node_mask
+        pass
+
+    def is_node_placed(self, node_idx):
+        pass
+
+    def disconnect_nets(self):
         pass
 
     def get_source_filename(self):
-        pass
+        """return netlist path
+        """
+        return self.netlist_file
 
     def get_blockages(self):
         pass
 
-    def get_ref_node_id(self):
-        pass
+    def get_ref_node_id(self, node_idx=-1):
+        """ref_node_id is used for macro_pins. Refers to the macro it belongs to.
+        """
+        if node_idx != -1:
+            if node_idx in self.soft_macro_pin_indices:
+                pin = self.modules_w_pins[node_idx]
+                return self.mod_name_to_indices[pin.get_macro_name()]
+            elif node_idx in self.hard_macro_pin_indices:
+                pin = self.modules_w_pins[node_idx]
+                return self.mod_name_to_indices[pin.get_macro_name()]
+        return -1
 
     def save_placement(self):
         pass
+
+    def display_canvas( self,
+                        annotate=True, 
+                        amplify=False):
+        #define Matplotlib figure and axis
+        fig, ax = plt.subplots(figsize=(8,8), dpi=50)
+
+        if amplify:
+            PORT_SIZE = 4
+            FONT_SIZE = 10
+            PIN_SIZE = 4
+        else:
+            PORT_SIZE = 2
+            FONT_SIZE = 5
+            PIN_SIZE = 2
+
+        # Plt config
+        ax.margins(x=0.05, y=0.05)
+        ax.set_aspect('equal', adjustable='box')
+
+        # Construct grid
+        x, y = np.meshgrid(np.linspace(0, self.width, self.grid_col + 1),\
+             np.linspace(0, self.height, self.grid_row + 1))
+
+        ax.plot(x, y, c='b', alpha=0.1) # use plot, not scatter
+        ax.plot(np.transpose(x), np.transpose(y), c='b', alpha=0.2) # add this here
+
+        # Construct module blocks
+        for mod in self.modules_w_pins:
+            if mod.get_type() == 'PORT':
+                plt.plot(*mod.get_pos(),'ro', markersize=PORT_SIZE)
+            elif mod.get_type() == 'MACRO':
+                ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
+                    mod.get_width(), mod.get_height(),\
+                    alpha=0.5, zorder=1000, facecolor='b', edgecolor='darkblue'))
+                if annotate:
+                    ax.annotate(mod.get_name(), mod.get_pos(), color='r', weight='bold', fontsize=FONT_SIZE, ha='center', va='center')
+            elif mod.get_type() == 'MACRO_PIN':
+                plt.plot(*mod.get_pos(),'bo', markersize=PIN_SIZE)
+            elif mod.get_type() == 'macro':
+                ax.add_patch(Rectangle((mod.get_pos()[0] - mod.get_width()/2, mod.get_pos()[1] - mod.get_height()/2),\
+                    mod.get_width(), mod.get_height(),\
+                    alpha=0.5, zorder=1000, facecolor='y'))
+                if annotate:
+                    ax.annotate(mod.get_name(), mod.get_pos(), wrap=True,color='r', weight='bold', fontsize=FONT_SIZE, ha='center', va='center')
+
+        plt.show()
+        plt.close('all')
+
 
     # Board Entity Definition
     class Port:
@@ -685,6 +1483,8 @@ class PlacementCost(object):
             self.side = side # "BOTTOM", "TOP", "LEFT", "RIGHT"
             self.sink = {} # standard cells, macro pins, ports driven by this cell
             self.connection = {} # [module_name] => edge degree
+            self.ifFixed = True
+            self.placement = 0 # needs to be updated
 
         def get_name(self):
             return self.name
@@ -759,13 +1559,15 @@ class PlacementCost(object):
             self.height = float(height)
             self.x = float(x)
             self.y = float(y)
-            self.sink = {} # [MACRO_NAME] => [PIN_NAME]
             self.connection = {} # [module_name] => edge degree
+            self.ifFixed = False
+            self.ifPlaced = True
+            self.location = 0 # needs to be updated
 
         def get_name(self):
             return self.name
 
-        def add_connection(self, module_name):
+        def add_connection(self, module_name, weight):
             # NOTE: assume PORT names does not contain slash
             ifPORT = False
             module_name_splited = module_name.rsplit('/', 1)
@@ -774,18 +1576,19 @@ class PlacementCost(object):
 
             if ifPORT:
                 # adding PORT
-                self.connection[module_name] = 1
+                self.connection[module_name] = 1 * weight
             else:
                 # adding soft/hard macros
                 if module_name_splited[0] in self.connection.keys():
-                    self.connection[module_name_splited[0]] += 1
+                    self.connection[module_name_splited[0]] += 1 * weight
                 else:
-                    self.connection[module_name_splited[0]] = 1
+                    self.connection[module_name_splited[0]] = 1 * weight
 
-        def add_connections(self, module_names):
+        def add_connections(self, module_names, weight):
             # NOTE: assume PORT names does not contain slash
+            # consider weight on soft macro pins
             for module_name in module_names:
-                self.add_connection(module_name)
+                self.add_connection(module_name, weight)
 
         def set_pos(self, x, y):
             self.x = x
@@ -793,9 +1596,6 @@ class PlacementCost(object):
 
         def get_pos(self):
             return self.x, self.y
-
-        def get_sink(self):
-            return self.sink
 
         def get_type(self):
             return "macro"
@@ -806,9 +1606,22 @@ class PlacementCost(object):
         def get_area(self):
             return self.width * self.height
 
+        def get_height(self):
+            return self.height
+
+        def get_width(self):
+            return self.width
+        
+        def set_location(self, grid_cell_idx):
+            self.location = grid_cell_idx
+        
+        def get_location(self):
+            return self.location
+
     class SoftMacroPin:
-        def __init__(self, name,
-                    x = 0.0, y = 0.0, macro_name = "", weight = 0.0):
+        def __init__(   self, name,
+                        x = 0.0, y = 0.0,
+                        macro_name = "", weight = 1.0):
             self.name = name
             self.x = float(x)
             self.y = float(y)
@@ -826,6 +1639,9 @@ class PlacementCost(object):
 
         def get_name(self):
             return self.name
+
+        def get_macro_name(self):
+            return self.macro_name
 
         def set_pos(self, x, y):
             self.x = x
@@ -861,6 +1677,9 @@ class PlacementCost(object):
 
         def get_sink(self):
             return self.sink
+        
+        def get_weight(self):
+            return self.weight
 
         def get_type(self):
             return "macro_pin"
@@ -875,11 +1694,14 @@ class PlacementCost(object):
             self.y = float(y)
             self.orientation = orientation
             self.connection = {} # [module_name] => edge degree
+            self.ifFixed = False
+            self.ifPlaced = True
+            self.location = 0 # needs to be updated
 
         def get_name(self):
             return self.name
 
-        def add_connection(self, module_name):
+        def add_connection(self, module_name, weight):
             # NOTE: assume PORT names does not contain slash
             ifPORT = False
             module_name_splited = module_name.rsplit('/', 1)
@@ -888,18 +1710,19 @@ class PlacementCost(object):
 
             if ifPORT:
                 # adding PORT
-                self.connection[module_name] = 1
+                self.connection[module_name] = 1 * weight
             else:
                 # adding soft/hard macros
                 if module_name_splited[0] in self.connection.keys():
-                    self.connection[module_name_splited[0]] += 1
+                    self.connection[module_name_splited[0]] += 1 * weight
                 else:
-                    self.connection[module_name_splited[0]] = 1
+                    self.connection[module_name_splited[0]] = 1 * weight
 
-        def add_connections(self, module_names):
+        def add_connections(self, module_names, weight):
             # NOTE: assume PORT names does not contain slash
+            # consider weight on soft macro pins
             for module_name in module_names:
-                self.add_connection(module_name)
+                self.add_connection(module_name, weight)
 
         def get_connection(self):
             return self.connection
@@ -920,11 +1743,23 @@ class PlacementCost(object):
         def get_area(self):
             return self.width * self.height
 
+        def get_height(self):
+            return self.height
+
+        def get_width(self):
+            return self.width
+        
+        def set_location(self, grid_cell_idx):
+            self.location = grid_cell_idx
+        
+        def get_location(self):
+            return self.location
+
     class HardMacroPin:
         def __init__(self, name,
                         x = 0.0, y = 0.0,
                         x_offset = 0.0, y_offset = 0.0,
-                        macro_name = "", weight = 0.0):
+                        macro_name = "", weight = 1.0):
             self.name = name
             self.x = float(x)
             self.y = float(y)
@@ -933,6 +1768,7 @@ class PlacementCost(object):
             self.macro_name = macro_name
             self.weight = weight
             self.sink = {}
+            self.ifPlaced = True
 
         def set_weight(self, weight):
             self.weight = weight
@@ -952,6 +1788,9 @@ class PlacementCost(object):
 
         def get_name(self):
             return self.name
+
+        def get_macro_name(self):
+            return self.macro_name
 
         def add_sink(self, sink_name):
             # NOTE: assume PORT names does not contain slash
@@ -980,3 +1819,38 @@ class PlacementCost(object):
 
         def get_type(self):
             return "MACRO_PIN"
+
+    # TODO finish this
+    # class StandardCell:
+    #     def __init__(   self, name,
+    #                     x = 0.0, y = 0.0, weight = 1.0):
+    #         self.name = name
+    #         self.x = float(x)
+    #         self.y = float(y)
+    #         self.x_offset = 0.0 # not used
+    #         self.y_offset = 0.0 # not used
+    #         self.macro_name = macro_name
+    #         self.weight = weight
+    #         self.sink = {}
+
+def main():
+    test_netlist_dir = './Plc_client/test/'+\
+        'ariane133'
+    netlist_file = os.path.join(test_netlist_dir,
+                                'netlist.pb.txt')
+    plc = PlacementCost(netlist_file)
+
+    print(plc.get_block_name())
+    print("Area: ", plc.get_area())
+    print("Wirelength: ", plc.get_wirelength())
+    print("# HARD_MACROs     :         %d"%(plc.get_hard_macro_count()))
+    print("# HARD_MACRO_PINs :         %d"%(plc.get_hard_macro_pin_count()))
+    print("# MACROs          :         %d"%(plc.get_hard_macro_count() + plc.get_soft_macro_count()))
+    print("# MACRO_PINs      :         %d"%(plc.get_hard_macro_pin_count() + plc.get_soft_macro_pin_count()))
+    print("# PORTs           :         %d"%(plc.get_port_count()))
+    print("# SOFT_MACROs     :         %d"%(plc.get_soft_macro_count()))
+    print("# SOFT_MACRO_PINs :         %d"%(plc.get_soft_macro_pin_count()))
+    print("# STDCELLs        :         0")
+
+if __name__ == '__main__':
+    main()
