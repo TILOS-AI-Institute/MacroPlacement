@@ -55,15 +55,23 @@ generateVias
 createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
-
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     defIn ${handoff_dir}/${DESIGN}.def
+    source ../../../../util/gen_pb.tcl
+    gen_pb_netlist
 } else {
     defIn $floorplan_def
     addHaloToBlock -allMacro $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH
     place_design -concurrent_macros
     refine_macro_place
 }
+
+### Write out the def files ###
+source ../../../../util/write_required_def.tcl
+
+### Add power plan ###
+source ../../../../../Enablements/NanGate45/util/pdn_config.tcl
+source ../../../../util/pdn_flow.tcl
 
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
@@ -75,7 +83,7 @@ setDesignMode -bottomRoutingLayer 2
 place_opt_design -out_dir $rptDir -prefix place
 saveDesign $encDir/${DESIGN}_placed.enc
 
-echo "stage,core_area,standard_cell_area,macro_area,total_power,wire_length,wns,tns,h_c,v_c" > ${DESIGN}_DETAILS.rpt
+echo "Physical Design Stage, Core Area (um^2), Standard Cell Area (um^2), Macro Area (um^2), Total Power (mW), Wirelength(um), WS(ns), TNS(ns), Congestion(H), Congestion(V)" > ${DESIGN}_DETAILS.rpt
 source ../../../../util/extract_report.tcl
 set rpt_pre_cts [extract_report preCTS]
 echo "$rpt_pre_cts" >> ${DESIGN}_DETAILS.rpt
@@ -120,6 +128,11 @@ setNanoRouteMode -grouteExpWithTimingDriven false
 routeDesign
 #route_opt_design
 saveDesign ${encDir}/${DESIGN}_route.enc
+
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
+
 set rpt_post_route [extract_report postRoute]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 defOut -netlist -floorplan -routing ${DESIGN}_route.def

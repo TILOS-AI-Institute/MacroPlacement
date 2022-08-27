@@ -13,7 +13,8 @@ from FormatTranslators import MacroPin
 class Clustering:
     def __init__(self, design, src_dir, fixed_file, step_threshold = 100.6, distance = 1000.0,
                  grid_width = 30.0, max_num_vertices = 1000000, net_size_threshold = 300,
-                 Nparts = 500, setup_file = "setup.tcl", RePlace = True, placement_density = 0.7, GUI = True):
+                 Nparts = 500, setup_file = "setup.tcl", result_dir = "./results",
+                 RePlace = True, placement_density = 0.7, GUI = True):
         """
         parameter: design,  help="design_name: ariane, MegaBoom_x2 ", type = str
         parameter: src_dir, help="directory for source codes", type = str
@@ -68,7 +69,6 @@ class Clustering:
         self.net_file = self.hypergraph_file + ".net"
 
         # set up result directories
-        result_dir = "./results"
         if not os.path.exists(result_dir):
             os.mkdir(result_dir)
 
@@ -772,12 +772,14 @@ class ProBufFormat:
             if (len(adj_list[macro_pin]) == 0):
                 offset = self.macro_pin_offset[macro_pin]
                 inst_name = self.macro_pin_map[macro_pin]
+                macro_type = self.insts[inst_name].GetType()
                 self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, \
-                                                           offset[0], offset[1]))
+                                    offset[0], offset[1], macro_type))
             else:
                 offset = self.macro_pin_offset[macro_pin]
                 inst_name = self.macro_pin_map[macro_pin]
-                Pin = MacroPin(macro_pin, inst_name, offset[0], offset[1])
+                macro_type = self.insts[inst_name].GetType()
+                Pin = MacroPin(macro_pin, inst_name, offset[0], offset[1], macro_type)
                 Pin.AddSinks(adj_list[macro_pin].keys())
                 self.insts[inst_name].AddOutputPin(Pin)
 
@@ -785,12 +787,13 @@ class ProBufFormat:
             # add input pin
             inst_name = "Grp_" + str(i)
             macro_pin = inst_name + "/Input"
-            self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, 0.0, 0.0))
+            macro_type = self.insts[inst_name].GetType()
+            self.insts[inst_name].AddInputPin(MacroPin(macro_pin, inst_name, 0.0, 0.0, macro_type))
             output_idx = 1
             for key, weight in adj_list[inst_name].items():
                 macro_pin = inst_name + "/Output_" + str(output_idx)
                 output_idx += 1
-                Pin = MacroPin(macro_pin, inst_name, 0.0, 0.0)
+                Pin = MacroPin(macro_pin, inst_name, 0.0, 0.0, macro_type)
                 Pin.AddSink(key)
                 if key not in self.ios or key not in self.macro_pin_map:
                     Pin.SpecifyWeight(weight)
@@ -802,7 +805,7 @@ class ProBufFormat:
         f = open(self.pbf_file, "w")
         for inst_name, inst in self.insts.items():
             f.write(str(inst))
-            if (inst.GetType() == "MACRO"):
+            if inst.GetType() in ["MACRO","macro"]:
                 for macro_pin in inst.GetPins():
                     f.write(str(macro_pin))
         f.close()

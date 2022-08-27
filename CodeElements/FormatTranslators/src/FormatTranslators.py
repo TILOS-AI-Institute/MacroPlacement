@@ -9,6 +9,24 @@ import shutil
 import sys
 sys.path.append('./utils')
 
+# String Helper #
+def print_placeholder(key, value):
+    line = "  attr {\n"
+    line += f'    key: "{key}"\n'
+    line += '    value {\n'
+    line += f'      placeholder: "{value}"\n'
+    line += '    }\n'
+    line += '  }\n'
+    return line
+
+def print_float(key, value):
+    line = "  attr {\n"
+    line += f'    key: "{key}"\n'
+    line += '    value {\n'
+    line += f'      f: {value}\n'
+    line += '    }\n'
+    line += '  }\n'
+    return line
 
 # Port
 class Port:
@@ -48,6 +66,7 @@ class Port:
             else:
                 name += char
         self.str += '  name: "' + name + '"\n'
+        
         for sink in self.sinks:
             sink_new = ''
             for char in sink:
@@ -57,30 +76,11 @@ class Port:
                     sink_new += char
             sink = sink_new
             self.str += '  input: "' + sink + '"\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "type"\n'
-        self.str += '    value {\n'
-        self.str += '      placeholder: "PORT"\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "side"\n'
-        self.str += '    value {\n'
-        self.str += '      placeholder: "' + self.side +  '"\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "x"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.x) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "y"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.y) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
+        
+        self.str += print_placeholder('type', 'PORT')
+        self.str += print_placeholder('side', self.side)
+        self.str += print_float('x', self.x)
+        self.str += print_float('y', self.y)
         self.str += "}\n"
         return self.str
 
@@ -135,36 +135,12 @@ class StandardCell:
                     sink_new += char
             sink = sink_new
             self.str += '  input: "' + sink + '"\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "type"\n'
-        self.str += '    value {\n'
-        self.str += '      placeholder: "STDCELL"\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "height"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.height) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "width"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.width) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "x"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.x) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "y"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.y) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
+        
+        self.str += print_placeholder('type', 'STDCELL')
+        self.str += print_float('height', self.height)
+        self.str += print_float('width', self.width)
+        self.str += print_float('x', self.x)
+        self.str += print_float('y', self.y)
         self.str += "}\n"
         return self.str
 
@@ -228,50 +204,22 @@ class Macro:
             else:
                 name += char
         self.str += '  name: "' + name + '"\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "type"\n'
-        self.str += '    value {\n'
-        self.str += '      placeholder: "'  + self.GetType() + '\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "orientation"\n'
-        self.str += '    value {\n'
-        self.str += '      placeholder: "' + self.orientation + '"\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "height"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.height) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "width"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.width) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "x"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.x) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "y"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.y) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
+        self.str += print_placeholder('type', self.GetType())
+        self.str += print_placeholder('orientation', self.orientation)
+        self.str += print_float('height', self.height)
+        self.str += print_float('width', self.width)
+        self.str += print_float('x', self.x)
+        self.str += print_float('y', self.y)
         self.str += "}\n"
         return self.str
 
 # Macro pin
 class MacroPin:
-    def __init__(self, name, macro_name, x_offset, y_offset, x = 0.0, y = 0.0):
+    def __init__(self, name, macro_name, x_offset, y_offset, macro_type,
+                x = 0.0, y = 0.0):
         self.name = name
         self.macro_name = macro_name
+        self.macro_type = macro_type
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.x = x
@@ -316,55 +264,25 @@ class MacroPin:
                     sink_new += char
             sink = sink_new
             self.str += '  input: "' + sink + '"\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "macro_name"\n'
-        self.str += '    value {\n'
+        
         macro_name = ''
         for char in self.macro_name:
             if char == '\\':
                 macro_name += '\\\\'
             else:
                 macro_name += char
-        self.str += '      placeholder: "' + str(macro_name) + '"\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "type"\n'
-        self.str += '    value {\n'
-        self.str += '      placeholder: "macro_pin"\n'
-        self.str += '    }\n'
-        self.str += '  }\n'
+        self.str += print_placeholder('macro_name', str(macro_name))
+        if self.macro_type == "MACRO":
+            self.str += print_placeholder('type', 'MACRO_PIN')
+        else:
+            self.str += print_placeholder('type', 'macro_pin')
         if (self.weight > 1):
-            self.str += "  attr {\n"
-            self.str += '    key: "weight"\n'
-            self.str += '    value {\n'
-            self.str += '      f: ' + str(self.weight) + "\n"
-            self.str += '    }\n'
-            self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "x_offset"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.x_offset) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "y_offset"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.y_offset) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "x"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.x) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
-        self.str += "  attr {\n"
-        self.str += '    key: "y"\n'
-        self.str += '    value {\n'
-        self.str += '      f: ' + str(self.y) + "\n"
-        self.str += '    }\n'
-        self.str += '  }\n'
+            self.str += print_float('weight', self.weight)
+            
+        self.str += print_float('x_offset', self.x_offset)
+        self.str += print_float('y_offset', self.y_offset)
+        self.str += print_float('x', self.x)
+        self.str += print_float('y', self.y)
         self.str += "}\n"
         return self.str
 
@@ -646,7 +564,8 @@ class BookShelf2ProBufFormat:
 # We use the OpenDB database in OpenROAD to read lef/def files
 # We have provided an openroad exe
 class ODB2ProBufFormat:
-    def __init__(self, file_dir, design, output_file, openroad_exe, net_size_threshold):
+    def __init__(self, file_dir, design, output_file, openroad_exe,
+                net_size_threshold):
         self.design = design
         self.file_dir = file_dir
         self.db_file = file_dir + "/" + design + ".odb"
@@ -667,7 +586,6 @@ class ODB2ProBufFormat:
         self.fp_ly = 0.0
         self.fp_ux = 0.0
         self.fp_uy = 0.0
-
 
         # functions
         self.CheckFiles()
@@ -692,18 +610,18 @@ class ODB2ProBufFormat:
 
         # inst file
         if (os.path.exists(self.inst_file) == False):
-             print("[INFO]  Error! ",  self.inst_file, " does not exist!!!\n")
-             exit()
+            print("[INFO]  Error! ",  self.inst_file, " does not exist!!!\n")
+            exit()
 
         # outline file
         if (os.path.exists(self.outline_file) == False):
-             print("[INFO]  Error! ",  self.outline_file, " does not exist!!!\n")
-             exit()
+            print("[INFO]  Error! ",  self.outline_file, " does not exist!!!\n")
+            exit()
 
         # net file
         if (os.path.exists(self.net_file) == False):
-             print("[INFO]  Error! ",  self.net_file, " does not exist!!!\n")
-             exit()
+            print("[INFO]  Error! ",  self.net_file, " does not exist!!!\n")
+            exit()
 
 
     # Read outline file
@@ -720,7 +638,8 @@ class ODB2ProBufFormat:
 
         print('*'*80)
         print("Outline Information")
-        print("[INFO] Core Size : ", self.fp_lx, self.fp_ly, self.fp_ux, self.fp_uy)
+        print("[INFO] Core Size : ", self.fp_lx, self.fp_ly, self.fp_ux,
+                self.fp_uy)
         print("\n\n")
 
 

@@ -9,6 +9,8 @@ plc_file = sys.argv[1]
 pb_file = sys.argv[2]
 place_tcl = sys.argv[3]
 
+print(f'PLC:\t{plc_file}\nPB:\t{pb_file}\nTCL:\t{place_tcl}')
+
 orientMap = {
     "N" : "R0",
     "S" : "R180",
@@ -81,6 +83,7 @@ for line in lines:
         elif key == key1[6]:
             node_list[-1].y_offset = words[1]
 fp.close()
+
 
 fp = open(plc_file, "r")
 lines = fp.readlines()

@@ -7,9 +7,11 @@ import time
 testcases = ['ariane136', 'ariane133', 'mempool_tile', 'nvdla']
 enablements = ['NanGate45', 'ASAP7', 'SKY130HD']
 flows = [1, 2]
-job_file = "all_jobs"
+if not os.path.exists("./job"):
+    os.makedirs("./job")
+job_file = "./job/all_jobs"
 
-fp = open(job_file, "w")
+fp = open(job_file, "w+")
 run_dir_name= f"run-{time.strftime('%Y%m%d-%H%M%S')}"
 for enablement in enablements:
   for testcase in testcases:
