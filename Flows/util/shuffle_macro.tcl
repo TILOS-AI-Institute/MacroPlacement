@@ -9,7 +9,24 @@ proc shuffle1 {list} {
     return $list
 }
 
-proc shuffle_macros {} {
+proc shuffle2 {ilist seed} {
+  set fp_name "temp_list.txt"
+  set fp [open $fp_name "w"]
+  foreach item $ilist {
+    puts $fp "$item"
+  }
+  close $fp
+  exec /home/sakundu/.conda/envs/py37-tf2/bin/python3.7 ../../../../util/shuffle_file_line.py $fp_name $seed
+  set new_list {}
+  set fp [open $fp_name "r"]
+  while {[gets $fp line] >= 0 } {
+    lappend new_list $line
+  }
+  exec rm -rf $fp_name
+  return $new_list
+}
+
+proc shuffle_macros {seed} {
   foreach macro_ref [dbget [dbget top.insts.cell.subClass block -p ].name -u] {
     set macro_list [dbget [dbget top.insts.cell.name $macro_ref -p2 ].name]
     set pt_x_list [dbget [dbget top.insts.cell.name $macro_ref -p2 ].pt_x]
@@ -17,7 +34,7 @@ proc shuffle_macros {} {
     set orient_list [dbget [dbget top.insts.cell.name $macro_ref -p2 ].orient]
 
     set number_macros [llength $macro_list]
-    set shuffle_macros [shuffle1 $macro_list]
+    set shuffle_macros [shuffle2 $macro_list $seed]
 
     ## Unplace all macros ##
     dbset [dbget top.insts.cell.name $macro_ref -p2 ].pStatus unplaced
