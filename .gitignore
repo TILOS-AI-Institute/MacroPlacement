@@ -2,3 +2,4 @@ Flows/*/*/run/*/
 Flows/*/*/run-*
 Flows/job
 CodeElements/*/*/__pycache__
+CodeElements/Plc_client/test/*
