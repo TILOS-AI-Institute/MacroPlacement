@@ -9,7 +9,6 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
-from optax import smooth_labels
 
 """plc_client_os docstrings.
 
@@ -354,9 +353,9 @@ class PlacementCost(object):
         # node information
         _hard_macros_cnt = 0
         _hard_macro_pins_cnt = 0
-        _macro_cnt = 0
+        _macros_cnt = 0
         _macro_pin_cnt = 0
-        _port_cnt = 0
+        _ports_cnt = 0
         _soft_macros_cnt = 0
         _soft_macro_pins_cnt = 0
         _stdcells_cnt = 0
@@ -377,11 +376,9 @@ class PlacementCost(object):
 
             if 'Columns' in line_item and 'Rows' in line_item:
                 # Columns and Rows should be defined on the same one-line
-                print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
                 _columns = int(line_item[1])
                 _rows = int(line_item[3])
             elif "Area" in line_item:
-                print("WTFFFFFFFFFf")
                 # Total core area of modules
                 _area = float(line_item[1])
             elif "Block" in line_item:
@@ -389,7 +386,6 @@ class PlacementCost(object):
                 _block = str(line_item[1])
             elif all(it in line_item for it in\
                 ['Routes', 'per', 'micron', 'hor', 'ver']):
-                print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
                 # For routing congestion computation
                 _routes_per_micron_hor = float(line_item[4])
                 _routes_per_micron_ver = float(line_item[6])
@@ -412,13 +408,13 @@ class PlacementCost(object):
                 _hard_macro_pins_cnt = int(line_item[3])
             elif all(it in line_item for it in ['PORTs'])\
                 and len(line_item) == 2:
-                _port_cnt = int(line_item[1])
+                _ports_cnt = int(line_item[1])
             elif all(it in line_item for it in ['SOFT', 'MACROs'])\
                 and len(line_item) == 3:
                 _soft_macros_cnt = int(line_item[2])
             elif all(it in line_item for it in ['SOFT', 'MACRO', 'PINs'])\
                 and len(line_item) == 4:
-                _soft_macros_pin_cnt = int(line_item[3])
+                _soft_macro_pins_cnt = int(line_item[3])
             elif all(it in line_item for it in ['STDCELLs'])\
                 and len(line_item) == 2:
                 _stdcells_cnt = int(line_item[1])
@@ -444,9 +440,9 @@ class PlacementCost(object):
                         "overlap_threshold":_overlap_threshold,
                         "hard_macros_cnt":_hard_macros_cnt,
                         "hard_macro_pins_cnt":_hard_macro_pins_cnt,
-                        "macro_cnt":_macro_cnt,
+                        "macros_cnt":_macros_cnt,
                         "macro_pin_cnt":_macro_pin_cnt,
-                        "port_cnt":_port_cnt,
+                        "ports_cnt":_ports_cnt,
                         "soft_macros_cnt":_soft_macros_cnt,
                         "soft_macro_pins_cnt":_soft_macro_pins_cnt,
                         "stdcells_cnt":_stdcells_cnt,
@@ -470,7 +466,6 @@ class PlacementCost(object):
 
         # validate netlist.pb.txt is on par with .plc
         if ifValidate:
-            print(self.hard_macro_cnt, info_dict['hard_macros_cnt'])
             assert(self.hard_macro_cnt == info_dict['hard_macros_cnt'])
             assert(self.hard_macro_pin_cnt == info_dict['hard_macro_pins_cnt'])
             assert(self.soft_macro_cnt == info_dict['soft_macros_cnt'])

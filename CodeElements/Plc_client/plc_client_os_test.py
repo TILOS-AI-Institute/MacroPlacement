@@ -18,7 +18,7 @@ Test Utility Class for Google's API plc_wrapper_main with plc_client.py and plc_
 Example:
     At ./MacroPlacement/CodeElement, run the following command:
 
-        $ python -m Plc_client.plc_client_os_test
+        $ python -m Plc_client.plc_client_os_test [NETLIST_PATH] [PLC_PATH]
 
 Todo:
     * Clean up code
