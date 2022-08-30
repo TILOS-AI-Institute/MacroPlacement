@@ -9,35 +9,37 @@ import time
 import math
 np.set_printoptions(threshold=sys.maxsize)
 FLAGS = flags.FLAGS
+import argparse
 
-class CircuitDataBaseTest():
-    # NETLIST_PATH = "./Plc_client/test/sample_clustered_uniform_two_soft/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane_hard2soft/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane_soft2hard/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane_port2soft/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/sample_clustered_nomacro/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/sample_clustered_macroxy/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/ariane133/netlist.pb.txt"
-    NETLIST_PATH = "./Plc_client/test/testcases/TC1_MP1_0_0_P2_0_1.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/testcases/TC24_MP1_0_0_MP2_4_4.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/0P1M1m/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/0P2M0m/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/0P3M0m/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/0P4M0m/netlist.pb.txt"
-    # NETLIST_PATH = "./Plc_client/test/testcases_xm/TC_MP1_4_1_MP2_2_2_MP3_3_4_MP4_0_0.pb.txt"
+"""plc_client_os_test docstrings
+
+Test Utility Class for Google's API plc_wrapper_main with plc_client.py and plc_client_os.py
+
+Example:
+    At ./MacroPlacement/CodeElement, run the following command:
+
+        $ python -m Plc_client.plc_client_os_test
+
+Todo:
+    * Clean up code
+    * Extract argument from command line
+    * Report index for each mismatch array entry 
+
+"""
+
+class PlacementCostTest():
 
     # Google's Ariane
-    # CANVAS_WIDTH = 356.592
-    # CANVAS_HEIGHT = 356.640
-    # GRID_COL = 35
-    # GRID_ROW = 33
+    CANVAS_WIDTH = 356.592
+    CANVAS_HEIGHT = 356.640
+    GRID_COL = 35
+    GRID_ROW = 33
 
     # Ariane133
-    CANVAS_WIDTH = 1599.99
-    CANVAS_HEIGHT = 1600.06
-    GRID_COL = 24
-    GRID_ROW = 21
+    # CANVAS_WIDTH = 1599.99
+    # CANVAS_HEIGHT = 1600.06
+    # GRID_COL = 24
+    # GRID_ROW = 21
 
     # Sample clustered
     # CANVAS_WIDTH = 400
@@ -51,11 +53,23 @@ class CircuitDataBaseTest():
     # GRID_COL = 5
     # GRID_ROW = 5
 
-    def __init__(self, NETLIST_PATH) -> None:
+    def __init__(self, NETLIST_PATH, PLC_PATH=None) -> None:
         self.NETLIST_PATH = NETLIST_PATH
+        if PLC_PATH:
+            self.PLC_PATH = PLC_PATH
+
+    def test_input(self):
+        self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
+        self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
+                                                macro_macro_x_spacing = 50,
+                                                macro_macro_y_spacing = 50)
+        
+        if self.PLC_PATH:
+            self.plc_os.restore_placement(self.PLC_PATH,
+                                            ifInital=True, ifValidate=True)
 
     def test_proxy_congestion(self):
-        # Google's Binary Executable
+        # Google's API
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
         self.plc_os = plc_client_os.PlacementCost(self.NETLIST_PATH)
 
@@ -66,8 +80,8 @@ class CircuitDataBaseTest():
         # self.plc.set_macro_routing_allocation(5, 5)
         # self.plc_os.set_macro_routing_allocation(5, 5)
 
-        self.plc.set_macro_routing_allocation(0, 0)
-        self.plc_os.set_macro_routing_allocation(0, 0)
+        self.plc.set_macro_routing_allocation(10, 10)
+        self.plc_os.set_macro_routing_allocation(10, 10)
 
         self.plc.set_congestion_smooth_range(0.0)
         self.plc_os.set_congestion_smooth_range(0.0)
@@ -87,8 +101,8 @@ class CircuitDataBaseTest():
         print(temp_gl_h.reshape(self.GRID_COL, self.GRID_ROW))
         print(temp_os_h.reshape(self.GRID_COL, self.GRID_ROW))
 
-        print("GL H Congestion: ", temp_gl_h)
-        print("OS H Congestion: ", temp_os_h)
+        print("GL H Congestion: ", self.plc.get_horizontal_routing_congestion())
+        print("OS H Congestion: ", self.plc_os.get_horizontal_routing_congestion())
 
         temp_gl_v = np.array(self.plc.get_vertical_routing_congestion())
         temp_os_v = np.array(self.plc_os.get_vertical_routing_congestion())
@@ -144,7 +158,19 @@ class CircuitDataBaseTest():
         #     print("gl, os:", temp_gl_h[idx], temp_os_h[idx], temp_gl_v[idx], temp_os_v[idx])
 
         # print("congestion summation gl os", sum(temp_gl_h), sum(temp_os_h), sum(temp_gl_v), sum(temp_os_v))
+    
+    def view_canvas(self):
+        self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
+                                                macro_macro_x_spacing = 50,
+                                                macro_macro_y_spacing = 50)
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        # show canvas
+        self.plc_os.display_canvas()
 
+        
     def test_proxy_cost(self):
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
@@ -154,12 +180,11 @@ class CircuitDataBaseTest():
                                                 macro_macro_x_spacing = 50,
                                                 macro_macro_y_spacing = 50)
 
+        print("************ SETTING UP CANVAS ************")
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-
-        # print(self.plc_os.display_canvas())
         
         print(self.plc_os.get_wirelength(), self.plc.get_wirelength())
 
@@ -262,11 +287,19 @@ class CircuitDataBaseTest():
         
 def main(argv):
     args = sys.argv[1:]
-    temp = CircuitDataBaseTest(args[0])
-    temp.test_proxy_congestion()
-    # temp.test_proxy_cost()
-    # temp.test_metadata()
-    # temp.test_miscellaneous()
+
+    if len(args) > 1:
+        # netlist+plc file
+        PCT = PlacementCostTest(args[0], args[1])
+    else:
+        # netlist
+        PCT = PlacementCostTest(args[0])
+    
+    PCT.test_input()
+    # PCT.test_proxy_congestion()
+    # PCT.test_proxy_cost()
+    # PCT.test_metadata()
+    # PCT.test_miscellaneous()
 
 if __name__ == "__main__":
   app.run(main)

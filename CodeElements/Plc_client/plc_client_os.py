@@ -9,6 +9,22 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
+from optax import smooth_labels
+
+"""plc_client_os docstrings.
+
+Open-sourced effort for plc_client and Google's API, plc_wrapper_main. This module
+is used to initialize a PlacementCost object that computes the meta-information and
+proxy cost function for RL agent's reward signal at the end of each placement.
+
+Example:
+    For testing, please refer to plc_client_os_test.py for more information.
+
+Todo:
+    * Add Documentation
+    * Clean up
+
+"""
 
 Block = namedtuple('Block', 'x_max y_max x_min y_min')
 
@@ -317,30 +333,151 @@ class PlacementCost(object):
         # mapping connection degree to each macros
         self.__update_connection()
 
-    def __read_plc(self):
+    def __read_plc(self, plc_pth: str):
         """
         Plc file Parser
         """
-        with open(self.init_plc) as fp:
-            line = fp.readline()
+        # meta information
+        _columns = 0
+        _rows = 0
+        _width = 0.0
+        _height = 0.0
+        _area = 0.0
+        _block = None
+        _routes_per_micron_hor = 0.0
+        _routes_per_micron_ver = 0.0
+        _routes_used_by_macros_hor = 0.0
+        _routes_used_by_macros_ver = 0.0
+        _smoothing_factor = 0
+        _overlap_threshold = 0.0
 
-            while line:
-                # skip comments
-                if re.search(r"\S", line)[0] == '#':
-                    # IMPORTANT: Advance pt
-                    line = fp.readline()
-                    continue
+        # node information
+        _hard_macros_cnt = 0
+        _hard_macro_pins_cnt = 0
+        _macro_cnt = 0
+        _macro_pin_cnt = 0
+        _port_cnt = 0
+        _soft_macros_cnt = 0
+        _soft_macro_pins_cnt = 0
+        _stdcells_cnt = 0
 
-                # words itemize into list
-                line_item = re.findall(r'[0-9A-Za-z\.\-]+', line)
+        # node placement
+        _node_plc = {}
 
-                # skip empty lines
-                if len(line_item) == 0:
-                    # IMPORTANT: Advance pt
-                    line = fp.readline()
-                    continue
+        for cnt, line in enumerate(open(plc_pth, 'r')):
+            line_item = re.findall(r'[0-9A-Za-z\.\-]+', line)
 
-            line = fp.readline()
+            # skip empty lines
+            if len(line_item) == 0:
+                continue
+            
+            # # skip comments
+            # if re.search(r"\S", line)[0] == '#':
+            #     continue
+
+            if 'Columns' in line_item and 'Rows' in line_item:
+                # Columns and Rows should be defined on the same one-line
+                print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+                _columns = int(line_item[1])
+                _rows = int(line_item[3])
+            elif "Area" in line_item:
+                print("WTFFFFFFFFFf")
+                # Total core area of modules
+                _area = float(line_item[1])
+            elif "Block" in line_item:
+                # The block name of the testcase
+                _block = str(line_item[1])
+            elif all(it in line_item for it in\
+                ['Routes', 'per', 'micron', 'hor', 'ver']):
+                print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+                # For routing congestion computation
+                _routes_per_micron_hor = float(line_item[4])
+                _routes_per_micron_ver = float(line_item[6])
+            elif all(it in line_item for it in\
+                    ['Routes', 'used', 'by', 'macros', 'hor', 'ver']):
+                # For MACRO congestion computation
+                _routes_used_by_macros_hor = float(line_item[5])
+                _routes_used_by_macros_ver = float(line_item[7])
+            elif all(it in line_item for it in ['Smoothing', 'factor']):
+                # smoothing factor for routing congestion
+                _smoothing_factor = int(line_item[2])
+            elif all(it in line_item for it in ['Overlap', 'threshold']):
+                # overlap
+                _overlap_threshold = float(line_item[2])
+            elif all(it in line_item for it in ['HARD', 'MACROs'])\
+                and len(line_item) == 3:
+                _hard_macros_cnt = int(line_item[2])
+            elif all(it in line_item for it in ['HARD', 'MACRO', 'PINs'])\
+                and len(line_item) == 4:
+                _hard_macro_pins_cnt = int(line_item[3])
+            elif all(it in line_item for it in ['PORTs'])\
+                and len(line_item) == 2:
+                _port_cnt = int(line_item[1])
+            elif all(it in line_item for it in ['SOFT', 'MACROs'])\
+                and len(line_item) == 3:
+                _soft_macros_cnt = int(line_item[2])
+            elif all(it in line_item for it in ['SOFT', 'MACRO', 'PINs'])\
+                and len(line_item) == 4:
+                _soft_macros_pin_cnt = int(line_item[3])
+            elif all(it in line_item for it in ['STDCELLs'])\
+                and len(line_item) == 2:
+                _stdcells_cnt = int(line_item[1])
+            elif all(it in line_item for it in ['MACROs'])\
+                and len(line_item) == 2:
+                _macros_cnt = int(line_item[1])
+            elif all(re.match(r'[0-9N\.\-]+', it) for it in line_item):
+                # NOTE: [node_index] [x] [y] [orientation] [fixed]
+                _node_plc[int(line_item[0])] = line_item[1:]
+        
+        # return as dictionary
+        info_dict = {   "columns":_columns, 
+                        "rows":_rows,
+                        "width":_width,
+                        "height":_height,
+                        "area":_area,
+                        "block":_block,
+                        "routes_per_micron_hor":_routes_per_micron_hor,
+                        "routes_per_micron_ver":_routes_per_micron_ver,
+                        "routes_used_by_macros_hor":_routes_used_by_macros_hor,
+                        "routes_used_by_macros_ver":_routes_used_by_macros_ver,
+                        "smoothing_factor":_smoothing_factor,
+                        "overlap_threshold":_overlap_threshold,
+                        "hard_macros_cnt":_hard_macros_cnt,
+                        "hard_macro_pins_cnt":_hard_macro_pins_cnt,
+                        "macro_cnt":_macro_cnt,
+                        "macro_pin_cnt":_macro_pin_cnt,
+                        "port_cnt":_port_cnt,
+                        "soft_macros_cnt":_soft_macros_cnt,
+                        "soft_macro_pins_cnt":_soft_macro_pins_cnt,
+                        "stdcells_cnt":_stdcells_cnt,
+                        "node_plc":_node_plc
+                    }
+
+        return info_dict
+
+    def restore_placement(self, plc_pth: str, ifInital=True, ifValidate=False):
+        """
+            Read and retrieve .plc file information
+            NOTE: DO NOT always set self.init_plc because
+            this function is also used to read final placement file 
+        """
+        # if plc is an initial placement
+        if ifInital:
+            self.init_plc = plc_pth
+        
+        # extracted information from .plc file
+        info_dict = self.__read_plc(plc_pth)
+
+        # validate netlist.pb.txt is on par with .plc
+        if ifValidate:
+            print(self.hard_macro_cnt, info_dict['hard_macros_cnt'])
+            assert(self.hard_macro_cnt == info_dict['hard_macros_cnt'])
+            assert(self.hard_macro_pin_cnt == info_dict['hard_macro_pins_cnt'])
+            assert(self.soft_macro_cnt == info_dict['soft_macros_cnt'])
+            assert(self.soft_macro_pin_cnt == info_dict['soft_macro_pins_cnt'])
+            assert(self.port_cnt == info_dict['ports_cnt'])
+        
+        # TODO restore placement for each module
 
     def __update_connection(self):
         """
@@ -371,11 +508,6 @@ class PlacementCost(object):
                         if macro_type == "MACRO" or macro_type == "macro":
                             weight = pin.get_weight()
                             macro.add_connections(inputs[k], weight)
-    
-    def __update_placement(self):
-        # assign modules to grid cells
-        pass
-
 
     def get_cost(self) -> float:
         """
@@ -1238,13 +1370,6 @@ class PlacementCost(object):
     def is_node_fixed(self):
         pass
 
-    def restore_placement(self, init_plc_pth: str):
-        """
-        Read and retrieve .plc file information
-        """
-        self.init_plc = init_plc_pth
-        self.__read_plc()
-
     def optimize_stdcells(self):
         pass
 
@@ -1472,6 +1597,18 @@ class PlacementCost(object):
 
         plt.show()
         plt.close('all')
+
+        # Internal Util Function For Testing, Not visible at original CT
+        def __random_swap_placement(self, final_plc, same_block=False):
+            """
+                Swapping HARD MACRO placement from final_plc file.
+                    - swapping between i_icache, tag sram
+                    - swapping between i_icache, data sram
+                    - swapping between i_nbdcache, tag sram
+                    - swapping between i_nbdcache, data sram
+            """
+            pass
+
 
 
     # Board Entity Definition
