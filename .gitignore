@@ -2,4 +2,8 @@ Flows/*/*/run/*/
 Flows/*/*/run-*
 Flows/job
 CodeElements/*/*/__pycache__
-CodeElements/Plc_client/test/*
+CodeElements/Plc_client/test/
+CodeElements/Plc_client/test/*/*
+CodeElements/Plc_client/plc_client_os.py
+CodeElements/Plc_client/__pycache__/*
+CodeElements/Plc_client/proto_reader.py

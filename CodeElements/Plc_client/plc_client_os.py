@@ -41,10 +41,12 @@ class PlacementCost(object):
         self.macro_macro_x_spacing = macro_macro_x_spacing
         self.macro_macro_y_spacing = macro_macro_y_spacing
 
-        # Update cost computation flags
+        # Update flags
         self.FLAG_UPDATE_WIRELENGTH = True
         self.FLAG_UPDATE_DENSITY = True
         self.FLAG_UPDATE_CONGESTION = True
+        self.FLAG_UPDATE_MACRO_ADJ = True
+        self.FLAG_UPDATE_MACRO_AND_CLUSTERED_PORT_ADJ = True
 
         # Check netlist existance
         assert os.path.isfile(self.netlist_file)
@@ -59,9 +61,9 @@ class PlacementCost(object):
         self.overlap_thres = 0.0
         self.hrouting_alloc = 0.0
         self.vrouting_alloc = 0.0
-
         self.macro_horizontal_routing_allocation = 0.0
         self.macro_vertical_routing_allocation = 0.0
+        self.canvas_boundary_check = True
 
         # net information
         self.net_cnt = 0
@@ -99,16 +101,16 @@ class PlacementCost(object):
         # initial grid mask
         self.global_node_mask = [0] * self.grid_col * self.grid_row
         # store module/component count
-        self.port_cnt = len(self.port_indices)
+        self.ports_cnt = len(self.port_indices)
         self.hard_macro_cnt = len(self.hard_macro_indices)
-        self.hard_macro_pin_cnt = len(self.hard_macro_pin_indices)
-        self.soft_macro_cnt = len(self.soft_macro_indices)
-        self.soft_macro_pin_cnt = len(self.soft_macro_pin_indices)
-        self.module_cnt = self.hard_macro_cnt + self.soft_macro_cnt + self.port_cnt
+        self.hard_macro_pins_cnt = len(self.hard_macro_pin_indices)
+        self.soft_macros_cnt = len(self.soft_macro_indices)
+        self.soft_macro_pins_cnt = len(self.soft_macro_pin_indices)
+        self.module_cnt = self.hard_macro_cnt + self.soft_macros_cnt + self.ports_cnt
         # assert module and pin count are correct
         assert (len(self.modules)) == self.module_cnt
         assert (len(self.modules_w_pins) - \
-            self.hard_macro_pin_cnt - self.soft_macro_pin_cnt) \
+            self.hard_macro_pins_cnt - self.soft_macro_pins_cnt) \
                 == self.module_cnt
 
     def __peek(self, f:io.TextIOWrapper):
@@ -206,12 +208,12 @@ class PlacementCost(object):
                         try:
                             assert 'x' in attr_dict.keys()
                         except AssertionError:
-                            logging.warning('x is not defined')
+                            logging.warning('[NETLIST PARSER ERROR] x is not defined')
 
                         try:
                             assert 'y' in attr_dict.keys()
                         except AssertionError:
-                            logging.warning('y is not defined')
+                            logging.warning('[NETLIST PARSER ERROR] y is not defined')
 
                         soft_macro = self.SoftMacro(name=node_name, width=attr_dict['width'][1],
                                                     height = attr_dict['height'][1],
@@ -375,15 +377,15 @@ class PlacementCost(object):
             # skip empty lines
             if len(line_item) == 0:
                 continue
-            
-            # # skip comments
-            # if re.search(r"\S", line)[0] == '#':
-            #     continue
 
             if 'Columns' in line_item and 'Rows' in line_item:
                 # Columns and Rows should be defined on the same one-line
                 _columns = int(line_item[1])
                 _rows = int(line_item[3])
+            elif "Width" in line_item and "Height" in line_item:
+                # Width and Height should be defined on the same one-line
+                _width = float(line_item[1])
+                _height = float(line_item[3])
             elif "Area" in line_item:
                 # Total core area of modules
                 _area = float(line_item[1])
@@ -428,7 +430,7 @@ class PlacementCost(object):
                 and len(line_item) == 2:
                 _macros_cnt = int(line_item[1])
             elif all(re.match(r'[0-9N\.\-]+', it) for it in line_item):
-                # NOTE: [node_index] [x] [y] [orientation] [fixed]
+                # [node_index] [x] [y] [orientation] [fixed]
                 _node_plc[int(line_item[0])] = line_item[1:]
         
         # return as dictionary
@@ -457,11 +459,15 @@ class PlacementCost(object):
 
         return info_dict
 
-    def restore_placement(self, plc_pth: str, ifInital=True, ifValidate=False):
+    def restore_placement(self, plc_pth: str, ifInital=True, ifValidate=False, ifReadComment = False):
         """
             Read and retrieve .plc file information
-            NOTE: DO NOT always set self.init_plc because
-            this function is also used to read final placement file 
+            NOTE: DO NOT always set self.init_plc because this function is also 
+            used to read final placement file.
+
+            ifReadComment: By default, Google's plc_client does not extract 
+            information from .plc comment. This is purely done in 
+            placement_util.py. For purpose of testing, we included this option.
         """
         # if plc is an initial placement
         if ifInital:
@@ -474,10 +480,10 @@ class PlacementCost(object):
         if ifValidate:
             try:
                 assert(self.hard_macro_cnt == info_dict['hard_macros_cnt'])
-                assert(self.hard_macro_pin_cnt == info_dict['hard_macro_pins_cnt'])
-                assert(self.soft_macro_cnt == info_dict['soft_macros_cnt'])
-                assert(self.soft_macro_pin_cnt == info_dict['soft_macro_pins_cnt'])
-                assert(self.port_cnt == info_dict['ports_cnt'])
+                assert(self.hard_macro_pins_cnt == info_dict['hard_macro_pins_cnt'])
+                assert(self.soft_macros_cnt == info_dict['soft_macros_cnt'])
+                assert(self.soft_macro_pins_cnt == info_dict['soft_macro_pins_cnt'])
+                assert(self.ports_cnt == info_dict['ports_cnt'])
             except AssertionError:
                 _, _, tb = sys.exc_info()
                 traceback.print_tb(tb)
@@ -506,6 +512,8 @@ class PlacementCost(object):
             except Exception as e:
                 print('[PLC PARSER ERROR] %s' % str(e))
 
+            #TODO ValueError: Error in calling RestorePlacement with ('./Plc_client/test/ariane/initial.plc',): Can't place macro i_ariane/i_frontend/i_icache/sram_block_3__tag_sram/mem/mem_inst_mem_256x45_256x16_0x0 at (341.75, 8.8835). Exceeds the boundaries of the placement area..
+
             self.modules_w_pins[mod_idx].set_pos(mod_x, mod_y)
             
             if mod_orient and mod_orient != '-':
@@ -517,16 +525,20 @@ class PlacementCost(object):
                 self.modules_w_pins[mod_idx].set_fix_flag(True)
         
         # set meta information
-        self.set_canvas_size(info_dict['width'], info_dict['height'])
-        self.set_placement_grid(info_dict['columns'], info_dict['rows'])
-        self.set_block_name(info_dict['block'])
-        self.set_routes_per_micron(info_dict['routes_per_micron_hor'],\
-            info_dict['routes_per_micron_ver'])
-        self.set_macro_routing_allocation(info_dict['routes_used_by_macros_hor'],\
-            info_dict['routes_used_by_macros_ver'])
-        self.set_congestion_smooth_range(info_dict['smoothing_factor'])
-        self.set_overlap_threshold(info_dict['overlap_threshold'])
-
+        if ifReadComment:
+            self.set_canvas_size(info_dict['width'], info_dict['height'])
+            self.set_placement_grid(info_dict['columns'], info_dict['rows'])
+            self.set_block_name(info_dict['block'])
+            self.set_routes_per_micron(
+                info_dict['routes_per_micron_hor'],
+                info_dict['routes_per_micron_ver']
+                )
+            self.set_macro_routing_allocation(
+                info_dict['routes_used_by_macros_hor'],
+                info_dict['routes_used_by_macros_ver']
+                )
+            self.set_congestion_smooth_range(info_dict['smoothing_factor'])
+            self.set_overlap_threshold(info_dict['overlap_threshold'])
 
     def __update_connection(self):
         """
@@ -558,34 +570,12 @@ class PlacementCost(object):
                             weight = pin.get_weight()
                             macro.add_connections(inputs[k], weight)
 
-    def __update_cost_info(self):
-        """
-        Update wirelength/density/congestion related computation
-        """
-        pass
-
-    def __update_wirelength(self):
-        """
-        Update wirelength computation
-        """
-        pass
-
-    def __update_density(self):
-        """
-        Update density computation
-        """
-        pass
-
-    def __update_congestion(self):
-        """
-        Update congestion computation
-        """
-        pass
-
     def get_cost(self) -> float:
         """
         Compute wirelength cost from wirelength
         """
+        if self.FLAG_UPDATE_WIRELENGTH:
+            self.FLAG_UPDATE_WIRELENGTH = False
         return self.get_wirelength() / ((self.get_canvas_width_height()[0]\
             + self.get_canvas_width_height()[1]) * self.net_cnt)
 
@@ -599,20 +589,20 @@ class PlacementCost(object):
                 total_area += mod.get_area()
         return total_area
 
-    def get_hard_macro_count(self) -> int:
+    def get_hard_macros_count(self) -> int:
         return self.hard_macro_cnt
 
-    def get_port_count(self) -> int:
-        return self.port_cnt
+    def get_ports_count(self) -> int:
+        return self.ports_cnt
 
-    def get_soft_macro_count(self) -> int:
-        return self.soft_macro_cnt
+    def get_soft_macros_count(self) -> int:
+        return self.soft_macros_cnt
 
-    def get_hard_macro_pin_count(self) -> int:
-        return self.hard_macro_pin_cnt
+    def get_hard_macro_pins_count(self) -> int:
+        return self.hard_macro_pins_cnt
 
-    def get_soft_macro_pin_count(self) -> int:
-        return self.soft_macro_pin_cnt
+    def get_soft_macro_pins_count(self) -> int:
+        return self.soft_macro_pins_cnt
 
     def get_wirelength(self) -> float:
         """
@@ -734,6 +724,8 @@ class PlacementCost(object):
         """
         private function for getting grid cell row/col ranging from 0...N
         """
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
         row = math.floor(y_pos / self.grid_height)
         col = math.floor(x_pos / self.grid_width)
         return row, col
@@ -847,6 +839,10 @@ class PlacementCost(object):
         """
         compute average of top 10% of grid cell density and take half of it
         """
+        if self.FLAG_UPDATE_DENSITY:
+            self.get_grid_cells_density()
+            self.FLAG_UPDATE_DENSITY=False
+
         occupied_cells = sorted([gc for gc in self.grid_cells if gc != 0.0], reverse=True)
         density_cost = 0.0
 
@@ -874,6 +870,11 @@ class PlacementCost(object):
         self.width = width
         self.height = height
 
+        # Flag updates
+        self.FLAG_UPDATE_CONGESTION = True
+        self.FLAG_UPDATE_DENSITY = True
+        self.FLAG_UPDATE_MACRO_AND_CLUSTERED_PORT_ADJ = True
+
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
         return True
@@ -891,6 +892,11 @@ class PlacementCost(object):
         print("#[PLACEMENT GRID] Col: %d, Row: %d" % (grid_col, grid_row))
         self.grid_col = grid_col
         self.grid_row = grid_row
+
+        # Flag updates
+        self.FLAG_UPDATE_CONGESTION = True
+        self.FLAG_UPDATE_DENSITY = True
+        self.FLAG_UPDATE_MACRO_AND_CLUSTERED_PORT_ADJ = True
 
         self.V_routing_cong = [0] * self.grid_col * self.grid_row
         self.H_routing_cong = [0] * self.grid_col * self.grid_row
@@ -936,6 +942,9 @@ class PlacementCost(object):
         Set Routes per Micron
         """
         print("#[ROUTES PER MICRON] Hor: %.2f, Ver: %.2f" % (hroutes_per_micron, vroutes_per_micron))
+        # Flag updates
+        self.FLAG_UPDATE_CONGESTION = True
+
         self.hroutes_per_micron = hroutes_per_micron
         self.vroutes_per_micron = vroutes_per_micron
 
@@ -950,6 +959,9 @@ class PlacementCost(object):
         Set congestion smooth range
         """
         print("#[CONGESTION SMOOTH RANGE] Smooth Range: %d" % (smooth_range))
+        # Flag updates
+        self.FLAG_UPDATE_CONGESTION = True
+
         self.smooth_range = math.floor(smooth_range)
 
     def get_congestion_smooth_range(self) -> float:
@@ -971,13 +983,25 @@ class PlacementCost(object):
         """
         return self.overlap_thres
 
+    def set_canvas_boundary_check(self, ifCheck:bool) -> None:
+        """
+        boundary_check: Do a boundary check during node placement.
+        """
+        self.canvas_boundary_check = ifCheck
+
     def get_canvas_boundary_check(self) -> bool:
-        return False
+        """
+        return canvas_boundary_check
+        """
+        return self.canvas_boundary_check
 
     def set_macro_routing_allocation(self, hrouting_alloc:float, vrouting_alloc:float) -> None:
         """
         Set Vertical/Horizontal Macro Allocation
         """
+        # Flag updates
+        self.FLAG_UPDATE_CONGESTION = True
+
         self.hrouting_alloc = hrouting_alloc
         self.vrouting_alloc = vrouting_alloc
 
@@ -1111,7 +1135,6 @@ class PlacementCost(object):
         self.t_routing(temp_gcell, weight)
         return
 
-
     def __macro_route_over_grid_cell(self, mod_x, mod_y, mod_w, mod_h):
         """
         private function for add module to grid cells
@@ -1215,29 +1238,38 @@ class PlacementCost(object):
 
     def get_vertical_routing_congestion(self):
         # TODO: detect if we need to run
-        self.get_routing()
+        if self.FLAG_UPDATE_CONGESTION:
+            self.get_routing()
+        
         return self.V_routing_cong
 
     def get_horizontal_routing_congestion(self):
         # TODO: detect if we need to run
-        self.get_routing()
+        if self.FLAG_UPDATE_CONGESTION:
+            self.get_routing()
+        
         return self.H_routing_cong
 
     def get_routing(self):
-        self.grid_width = float(self.width/self.grid_col)
-        self.grid_height = float(self.height/self.grid_row)
+        """
+            Route between modules
+        """
+        if self.FLAG_UPDATE_CONGESTION:
+            self.grid_width = float(self.width/self.grid_col)
+            self.grid_height = float(self.height/self.grid_row)
 
-        self.grid_v_routes = self.grid_width * self.vroutes_per_micron
-        self.grid_h_routes = self.grid_height * self.hroutes_per_micron
+            self.grid_v_routes = self.grid_width * self.vroutes_per_micron
+            self.grid_h_routes = self.grid_height * self.hroutes_per_micron
 
-        # reset grid
-        self.H_routing_cong = [0] * self.grid_row * self.grid_col
-        self.V_routing_cong = [0] * self.grid_row * self.grid_col
+            # reset grid
+            self.H_routing_cong = [0] * self.grid_row * self.grid_col
+            self.V_routing_cong = [0] * self.grid_row * self.grid_col
 
-        self.H_macro_routing_cong = [0] * self.grid_row * self.grid_col
-        self.V_macro_routing_cong = [0] * self.grid_row * self.grid_col
+            self.H_macro_routing_cong = [0] * self.grid_row * self.grid_col
+            self.V_macro_routing_cong = [0] * self.grid_row * self.grid_col
 
-        net_count = 0
+            self.FLAG_UPDATE_CONGESTION = False
+
         for mod in self.modules_w_pins:
             norm_fact = 1.0
             curr_type = mod.get_type()
@@ -1313,8 +1345,7 @@ class PlacementCost(object):
         # sum up routing congestion with macro congestion
         self.V_routing_cong = [sum(x) for x in zip(self.V_routing_cong, self.V_macro_routing_cong)]
         self.H_routing_cong = [sum(x) for x in zip(self.H_routing_cong, self.H_macro_routing_cong)]
-
-    
+ 
     def __smooth_routing_cong(self):
         temp_V_routing_cong = [0] * self.grid_col * self.grid_row
         temp_H_routing_cong = [0] * self.grid_col * self.grid_row
@@ -1401,9 +1432,14 @@ class PlacementCost(object):
         """
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
         #[MACRO][macro]
+
+        if self.FLAG_UPDATE_MACRO_ADJ:
+            # do some update
+            self.FLAG_UPDATE_MACRO_ADJ = False
+
         module_indices = self.hard_macro_indices + self.soft_macro_indices
-        macro_adj = [0] * (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
-        assert len(macro_adj) == (self.hard_macro_cnt + self.soft_macro_cnt) * (self.hard_macro_cnt + self.soft_macro_cnt)
+        macro_adj = [0] * (self.hard_macro_cnt + self.soft_macros_cnt) * (self.hard_macro_cnt + self.soft_macros_cnt)
+        assert len(macro_adj) == (self.hard_macro_cnt + self.soft_macros_cnt) * (self.hard_macro_cnt + self.soft_macros_cnt)
 
         for row_idx, module_idx in enumerate(sorted(module_indices)):
             # row index
@@ -1426,34 +1462,17 @@ class PlacementCost(object):
                 if h_module_name in curr_module.get_connection():
                     entry += curr_module.get_connection()[h_module_name]
 
-                macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + col_idx] = entry
-                macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macro_cnt) + row_idx] = entry
+                macro_adj[row_idx * (self.hard_macro_cnt + self.soft_macros_cnt) + col_idx] = entry
+                macro_adj[col_idx * (self.hard_macro_cnt + self.soft_macros_cnt) + row_idx] = entry
 
         return macro_adj
-
-    def is_node_fixed(self):
-        pass
-
-    def optimize_stdcells(self):
-        pass
-
-    def update_node_coords(self):
-        pass
-
-    def fix_node_coord(self):
-        pass
-
-    def update_port_sides(self):
-        pass
-
-    def snap_ports_to_edges(self):
-        pass
 
     def get_macro_and_clustered_port_adjacency(self):
         """
         Compute Adjacency Matrix (Unclustered PORTs)
-        if module is a PORT, assign nearest cell location even if OOB
+        if module is a PORT, assign it to nearest cell location even if OOB
         """
+
         #[MACRO][macro]
         module_indices = self.hard_macro_indices + self.soft_macro_indices
 
@@ -1547,6 +1566,24 @@ class PlacementCost(object):
                     macro_adj[col_idx * (len(module_indices) + len(clustered_ports)) + row_idx] += entry
                 
         return macro_adj, sorted(cell_location)
+
+    def is_node_fixed(self):
+        pass
+
+    def optimize_stdcells(self):
+        pass
+
+    def update_node_coords(self):
+        pass
+
+    def fix_node_coord(self):
+        pass
+
+    def update_port_sides(self):
+        pass
+
+    def snap_ports_to_edges(self):
+        pass
 
     def get_node_location(self, node_idx):
         pass
@@ -1661,19 +1698,6 @@ class PlacementCost(object):
 
         plt.show()
         plt.close('all')
-
-        # [TEST FLAG] Internal Util Function For Testing
-        def __random_swap_placement(self, final_plc, same_block=False):
-            """
-                Swapping HARD MACRO placement from final_plc file.
-                    - swapping between i_icache, tag sram
-                    - swapping between i_icache, data sram
-                    - swapping between i_nbdcache, tag sram
-                    - swapping between i_nbdcache, data sram
-            """
-            pass
-
-
 
     # Board Entity Definition
     class Port:
@@ -2072,13 +2096,13 @@ def main():
     print(plc.get_block_name())
     print("Area: ", plc.get_area())
     print("Wirelength: ", plc.get_wirelength())
-    print("# HARD_MACROs     :         %d"%(plc.get_hard_macro_count()))
-    print("# HARD_MACRO_PINs :         %d"%(plc.get_hard_macro_pin_count()))
-    print("# MACROs          :         %d"%(plc.get_hard_macro_count() + plc.get_soft_macro_count()))
-    print("# MACRO_PINs      :         %d"%(plc.get_hard_macro_pin_count() + plc.get_soft_macro_pin_count()))
-    print("# PORTs           :         %d"%(plc.get_port_count()))
-    print("# SOFT_MACROs     :         %d"%(plc.get_soft_macro_count()))
-    print("# SOFT_MACRO_PINs :         %d"%(plc.get_soft_macro_pin_count()))
+    print("# HARD_MACROs     :         %d"%(plc.get_hard_macros_count()))
+    print("# HARD_MACRO_PINs :         %d"%(plc.get_hard_macro_pins_count()))
+    print("# MACROs          :         %d"%(plc.get_hard_macros_count() + plc.get_soft_macros_count()))
+    print("# MACRO_PINs      :         %d"%(plc.get_hard_macro_pins_count() + plc.get_soft_macro_pins_count()))
+    print("# PORTs           :         %d"%(plc.get_ports_count()))
+    print("# SOFT_MACROs     :         %d"%(plc.get_soft_macros_count()))
+    print("# SOFT_MACRO_PINs :         %d"%(plc.get_soft_macro_pins_count()))
     print("# STDCELLs        :         0")
 
 if __name__ == '__main__':
