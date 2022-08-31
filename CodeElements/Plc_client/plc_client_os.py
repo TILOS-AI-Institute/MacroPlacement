@@ -23,6 +23,8 @@ Example:
 Todo:
     * Add Documentation
     * Clean up
+    * location information update not correctly after restore placement
+    * test if cell < 5, congestion cost computation
 
 """
 
@@ -429,7 +431,8 @@ class PlacementCost(object):
             elif all(it in line_item for it in ['MACROs'])\
                 and len(line_item) == 2:
                 _macros_cnt = int(line_item[1])
-            elif all(re.match(r'[0-9N\.\-]+', it) for it in line_item):
+            elif all(re.match(r'[0-9NEWS\.\-]+', it) for it in line_item)\
+                and len(line_item) == 5:
                 # [node_index] [x] [y] [orientation] [fixed]
                 _node_plc[int(line_item[0])] = line_item[1:]
         
@@ -473,6 +476,11 @@ class PlacementCost(object):
         if ifInital:
             self.init_plc = plc_pth
         
+        # recompute cost from new location
+        self.FLAG_UPDATE_CONGESTION = True
+        self.FLAG_UPDATE_DENSITY = True
+        self.FLAG_UPDATE_WIRELENGTH = True
+        
         # extracted information from .plc file
         info_dict = self.__read_plc(plc_pth)
 
@@ -499,7 +507,9 @@ class PlacementCost(object):
                 self.hard_macro_indices +\
                 self.soft_macro_indices) == list(info_dict['node_plc'].keys())
         except AssertionError:
-            print('[PLC IDICES MISMATCH ERROR]')
+            print('[PLC INDICES MISMATCH ERROR]', len(sorted(self.port_indices +\
+                self.hard_macro_indices +\
+                self.soft_macro_indices)), len(list(info_dict['node_plc'].keys())))
             exit(1)
         
         for mod_idx in info_dict['node_plc'].keys():

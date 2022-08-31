@@ -33,6 +33,18 @@ Example:
             --marh 5\
             --marv 5\
             --smooth 2
+        
+        $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane133/netlist.pb.txt\
+            --plc ./Plc_client/test/ariane133/initial.plc\
+            --width 1599\
+            --height 1600.06\
+            --col 24\
+            --row 21\
+            --rpmh 10\
+            --rpmv 10\
+            --marh 5\
+            --marv 5\
+            --smooth 2
 
 Todo:
     * Clean up code
@@ -208,7 +220,7 @@ class PlacementCostTest():
                                             ifValidate=True,
                                             ifReadComment=False)
             self.plc.set_canvas_boundary_check(False)
-            self.plc.restore_placement(self.PLC_PATH)
+            # self.plc.restore_placement(self.PLC_PATH)
         else:
             print("[PLC FILE MISSING] Using only netlist info")
 
@@ -228,10 +240,10 @@ class PlacementCostTest():
 
         # HPWL
         try:
-            # assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+            assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
             assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-3
         except Exception as e:
-            print("[WIRELENGTH ERROR] Discrepancies found when computing wirelength -- {}".format(str(e)))
+            print("[WIRELENGTH ERROR] Discrepancies found when computing wirelength -- {}, {}".format(str(self.plc.get_cost()), self.plc_os.get_cost()))
             exit(1)
 
         # Density
@@ -239,7 +251,7 @@ class PlacementCostTest():
             assert int(sum(self.plc_os.get_grid_cells_density())) == int(sum(self.plc.get_grid_cells_density()))
             assert int(self.plc_os.get_density_cost()) == int(self.plc.get_density_cost())
         except Exception as e:
-            print("[DENSITY ERROR] Discrepancies found when computing density -- {}".format(str(e)))
+            print("[DENSITY ERROR] Discrepancies found when computing density -- {}, {}".format(str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
             exit(1)
 
         # Congestion
