@@ -238,6 +238,13 @@ class PlacementCostTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
+        # TODO: Setting blockage has no effect on proxy cost computation
+        self.plc.create_blockage(0, 0, 400, 400, 1)
+        self.plc.create_blockage(0, 0, 200, 200, 1)
+        print(self.plc.get_blockages())
+        print(self.plc.make_soft_macros_square())
+        print(self.plc_os.get_soft_macros_count())
+
         # HPWL
         try:
             assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())

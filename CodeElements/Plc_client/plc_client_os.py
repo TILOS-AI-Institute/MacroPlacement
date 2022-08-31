@@ -85,6 +85,9 @@ class PlacementCost(object):
         # macro to pins look-up table: [MACRO_NAME] => [PIN_NAME]
         self.hard_macros_to_inpins = {}
         self.soft_macros_to_inpins = {}
+
+        # blockage
+        self.blockages = []
         # read netlist
         self.__read_protobuf()
 
@@ -929,6 +932,12 @@ class PlacementCost(object):
         """
         return sorted(self.hard_macro_indices + self.soft_macro_indices)
 
+    def set_project_name(self, project_name):
+        """
+        Set Project name
+        """
+        self.project_name = project_name
+
     def get_project_name(self) -> str:
         """
         Return Project name
@@ -1431,7 +1440,12 @@ class PlacementCost(object):
         """
         Return Vertical/Horizontal Macro Allocation
         """
-        return self.modules[node_idx].get_type()
+        try:
+            return self.modules_w_pins[node_idx].get_type()
+        except IndexError:
+            # NOTE: Google's API return NONE if out of range
+            print("[INDEX OUT OF RANGE ERROR] Can not process index at {}".format(node_idx))
+            return None
 
     def make_soft_macros_square(self):
         pass
@@ -1586,9 +1600,6 @@ class PlacementCost(object):
     def update_node_coords(self):
         pass
 
-    def fix_node_coord(self):
-        pass
-
     def update_port_sides(self):
         pass
 
@@ -1613,11 +1624,9 @@ class PlacementCost(object):
         """In case plc is loaded with fixed macros
         """
         pass
-
-    def fix_node_coord(self):
-        """Find all ports and fix their coordinates.
-        """
-        pass
+    
+    def fix_node_coord(self, node_idx):
+        self.modules_w_pins[node_idx].set_fix_flag(True)
 
     def unplace_all_nodes(self):
         pass
@@ -1645,6 +1654,9 @@ class PlacementCost(object):
 
     def get_blockages(self):
         pass
+
+    def create_blockage(self, minx, miny, maxx, maxy, blockage_rate):
+        self.blockages.append([minx, miny, maxx, maxy, blockage_rate])
 
     def get_ref_node_id(self, node_idx=-1):
         """ref_node_id is used for macro_pins. Refers to the macro it belongs to.
