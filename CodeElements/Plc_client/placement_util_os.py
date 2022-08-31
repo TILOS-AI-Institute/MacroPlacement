@@ -31,7 +31,7 @@ import numpy as np
 
 # Internal gfile dependencies
 
-
+# done
 def nodes_of_types(plc: plc_client.PlacementCost,
                    type_list: List[str]) -> Iterator[int]:
   """Yields the index of a node of certain types."""
@@ -76,7 +76,7 @@ def restore_macro_orientations(plc: plc_client.PlacementCost,
   for node_index, orientation in macro_orientations.items():
     plc.update_macro_orientation(node_index, orientation)
 
-
+# 
 def extract_attribute_from_comments(attribute: str,
                                     filenames: List[str]) -> Optional[str]:
   """Parses the files' comments section, tries to extract the attribute.
@@ -104,7 +104,7 @@ def extract_attribute_from_comments(attribute: str,
               break
   return None
 
-
+#done
 def get_blockages_from_comments(
     filenames: Union[str, List[str]]) -> Optional[List[List[float]]]:
   """Returns list of blockages if they exist in the file's comments section."""
@@ -130,7 +130,7 @@ def get_blockages_from_comments(
     if blockages:
       return blockages
 
-
+#done
 def extract_sizes_from_comments(
     filenames: List[str]) -> Optional[Tuple[float, float, int, int]]:
   """Parses the file's comments section, tries to extract canvas/grid sizes.
@@ -793,7 +793,7 @@ def create_placement_cost_using_common_arguments(
     for filename in [netlist_file, init_placement]:
       if filename is None:
         continue
-      blockages = get_blockages_from_comments(filename)
+      blockages = get_blockages_from_comments([filename])
       # Only read blockages from one file.
       if blockages:
         break
@@ -964,6 +964,8 @@ def main():
     netlist_file = os.path.join(test_netlist_dir,'netlist.pb.txt')
     init_placement = os.path.join(test_netlist_dir,'initial.plc')
     plc = create_placement_cost(netlist_file=netlist_file, init_placement=init_placement)
+    plc = create_placement_cost_using_common_arguments(netlist_file=netlist_file, init_placement=init_placement, 
+          grid_cols=10, grid_rows=10, congestion_smooth_range=2.0, overlap_threshold=0.004, use_incremental_cost=False)
     # plc.nodes_of_types()
 
 if __name__ == '__main__':

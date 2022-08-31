@@ -86,6 +86,8 @@ class PlacementCost(object):
         self.hard_macros_to_inpins = {}
         self.soft_macros_to_inpins = {}
 
+        # unknown
+        self.use_incremental_cost = False
         # blockage
         self.blockages = []
         # read netlist
@@ -1444,11 +1446,17 @@ class PlacementCost(object):
             return self.modules_w_pins[node_idx].get_type()
         except IndexError:
             # NOTE: Google's API return NONE if out of range
-            print("[INDEX OUT OF RANGE ERROR] Can not process index at {}".format(node_idx))
+            print("[INDEX OUT OF RANGE WARNING] Can not process index at {}".format(node_idx))
             return None
 
     def make_soft_macros_square(self):
         pass
+
+    def set_use_incremental_cost(self, use_incremental_cost):
+        self.use_incremental_cost = use_incremental_cost
+
+    def get_use_incremental_cost(self):
+        return self.use_incremental_cost
 
     def get_macro_adjacency(self) -> list:
         """
