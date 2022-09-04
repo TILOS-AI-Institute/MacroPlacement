@@ -1,4 +1,5 @@
 """Open-Sourced PlacementCost client class."""
+from ast import Assert
 import os, io
 from platform import node
 import re
@@ -238,7 +239,7 @@ class PlacementCost(object):
                         # [MACRO_NAME]/[PIN_NAME]
                         soft_macro_name = node_name.rsplit('/', 1)[0]
                         # soft macro pin
-                        soft_macro_pin = self.SoftMacroPin(name=node_name,
+                        soft_macro_pin = self.SoftMacroPin(name=node_name,ref_id=None,
                                                            x = attr_dict['x'][1],
                                                            y = attr_dict['y'][1],
                                                            macro_name = attr_dict['macro_name'][1])
@@ -290,7 +291,7 @@ class PlacementCost(object):
                         # [MACRO_NAME]/[PIN_NAME]
                         hard_macro_name = node_name.rsplit('/', 1)[0]
                         # hard macro pin
-                        hard_macro_pin = self.HardMacroPin(name=node_name,
+                        hard_macro_pin = self.HardMacroPin(name=node_name,ref_id=None,
                                                         x = attr_dict['x'][1],
                                                         y = attr_dict['y'][1],
                                                         x_offset = attr_dict['x_offset'][1],
@@ -562,18 +563,20 @@ class PlacementCost(object):
         for macro_idx in (self.hard_macro_indices + self.soft_macro_indices):
             macro = self.modules_w_pins[macro_idx]
             macro_name = macro.get_name()
-            macro_type = macro.get_type()
 
-            if macro_type == "MACRO":
+            if not self.is_node_soft_macro(macro_idx):
                 if macro_name in self.hard_macros_to_inpins.keys():
                     pin_names = self.hard_macros_to_inpins[macro_name]
                 else:
-                    return
-            elif macro_type == "macro":
+                    print("[ERROR UPDATE CONNECTION] MACRO not found")
+                    exit(1)
+            # use is_node_soft_macro()
+            elif self.is_node_soft_macro(macro_idx):
                 if macro_name in self.soft_macros_to_inpins.keys():
                     pin_names = self.soft_macros_to_inpins[macro_name]
                 else:
-                    return
+                    print("[ERROR UPDATE CONNECTION] MACRO not found")
+                    exit(1)
 
             for pin_name in pin_names:
                 pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
@@ -581,7 +584,7 @@ class PlacementCost(object):
 
                 if inputs:
                     for k in inputs.keys():
-                        if macro_type == "MACRO" or macro_type == "macro":
+                        if self.get_node_type(macro_idx) == "MACRO":
                             weight = pin.get_weight()
                             macro.add_connections(inputs[k], weight)
 
@@ -647,7 +650,7 @@ class PlacementCost(object):
                         # retrieve location
                         x_coord.append(sink.get_pos()[0])
                         y_coord.append(sink.get_pos()[1])
-            elif curr_type == "macro_pin" or curr_type == "MACRO_PIN":
+            elif curr_type == "MACRO_PIN":
                 # add source position
                 x_coord.append(mod.get_pos()[0])
                 y_coord.append(mod.get_pos()[1])
@@ -733,6 +736,9 @@ class PlacementCost(object):
     def get_congestion_cost(self):
         #return max(self.get_H_congestion_cost(), self.get_V_congestion_cost())
         # TODO need to test if cong is smaller than 5
+        if self.FLAG_UPDATE_CONGESTION:
+            self.get_routing()
+
         return self.abu(self.V_routing_cong + self.H_routing_cong, 0.05)
 
     def __get_grid_cell_location(self, x_pos, y_pos):
@@ -1292,7 +1298,6 @@ class PlacementCost(object):
             self.FLAG_UPDATE_CONGESTION = False
 
         for mod in self.modules_w_pins:
-            norm_fact = 1.0
             curr_type = mod.get_type()
             # bounding box data structure
             node_gcells = set()
@@ -1314,7 +1319,7 @@ class PlacementCost(object):
                         # retrieve grid location
                         node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
 
-            elif (curr_type == "macro_pin" or curr_type == "MACRO_PIN") and mod.get_sink():
+            elif curr_type == "MACRO_PIN" and mod.get_sink():
                 # add source position
                 node_gcells.add(self.__get_grid_cell_location(*(mod.get_pos())))
                 source_gcell = self.__get_grid_cell_location(*(mod.get_pos()))
@@ -1328,10 +1333,10 @@ class PlacementCost(object):
                         sink_idx = self.mod_name_to_indices[sink_name]
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
-                        # retrieve grid location
+                        # retrieve grid location                                                                                                                                                                                                                                                 
                         node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
             
-            elif curr_type == "MACRO":
+            elif curr_type == "MACRO" and self.is_node_hard_macro(self.mod_name_to_indices[mod.get_name()]):
                 module_h = mod.get_height()
                 module_w = mod.get_width()
                 module_x, module_y = mod.get_pos()
@@ -1412,10 +1417,24 @@ class PlacementCost(object):
         self.H_routing_cong = temp_H_routing_cong
 
     def is_node_soft_macro(self, node_idx) -> bool:
-        return self.get_node_type(node_idx) == "soft_macro"
+        """
+        Return None or return ref_id
+        """
+        try:
+            return node_idx in self.soft_macro_indices
+        except IndexError:
+            print("[ERROR INDEX OUT OF RANGE] Can not process index at {}".format(node_idx))
+            exit(0)
 
     def is_node_hard_macro(self, node_idx) -> bool:
-        return self.get_node_type(node_idx) == "hard_macro"
+        """
+        Return None or return ref_id
+        """
+        try:
+            return node_idx in self.hard_macro_indices
+        except IndexError:
+            print("[ERROR INDEX OUT OF RANGE] Can not process index at {}".format(node_idx))
+            exit(0)
 
     def get_node_name(self, node_idx: int) -> str:
         return self.indices_to_mod_name[node_idx]
@@ -1440,7 +1459,7 @@ class PlacementCost(object):
 
     def get_node_type(self, node_idx: int) -> str:
         """
-        Return Vertical/Horizontal Macro Allocation
+        Return node type
         """
         try:
             return self.modules_w_pins[node_idx].get_type()
@@ -1448,6 +1467,25 @@ class PlacementCost(object):
             # NOTE: Google's API return NONE if out of range
             print("[INDEX OUT OF RANGE WARNING] Can not process index at {}".format(node_idx))
             return None
+
+    
+    def get_node_width_height(self, node_idx: int):
+        """
+        Return node dimension
+        """
+        mod = None
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR NODE FIXED] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+                    +"'PORT' are considered to be fixable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR NODE FIXED] Could not find module by node index")
+            exit(1)
+
+        return mod.get_width(), mod.get_height()
 
     def make_soft_macros_square(self):
         pass
@@ -1599,14 +1637,62 @@ class PlacementCost(object):
                 
         return macro_adj, sorted(cell_location)
 
-    def is_node_fixed(self):
-        pass
+    def is_node_fixed(self, node_idx: int):
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR NODE FIXED] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+                    +"'PORT' are considered to be fixable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR NODE FIXED] Could not find module by node index")
+            exit(1)
+
+        return mod.get_fix_flag()
 
     def optimize_stdcells(self):
         pass
 
-    def update_node_coords(self):
-        pass
+    def update_node_coords(self, node_idx, x_pos, y_pos):
+        """
+        Update Node location if node is 'MACRO', 'macro', 'STDCELL', 'PORT'
+        """
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+                    +"'PORT' are considered to be placable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR NODE LOCATION] Could not find module by node index")
+            exit(1)
+        
+        mod.set_pos(x_pos, y_pos)
+
+    def update_macro_orientation(self, node_idx, orientation):
+        """ 
+        Update macro orientation if node is 'MACRO', 'macro'
+        """
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro']
+        except AssertionError:
+            print("[ERROR MACRO ORIENTATION] Found {}. Only 'MACRO', 'macro'".format(mod.get_type())
+                    +" are considered to be ORIENTED")
+            exit(1)
+        except Exception:
+            print("[ERROR MACRO ORIENTATION] Could not find module by node index")
+            exit(1)
+        
+        mod.set_orientation(orientation)
 
     def update_port_sides(self):
         pass
@@ -1615,31 +1701,110 @@ class PlacementCost(object):
         pass
 
     def get_node_location(self, node_idx):
-        pass
+        """ 
+        Return Node location if node is 'MACRO', 'macro', 'STDCELL', 'PORT'
+        """
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+                    +"'PORT' are considered to be placable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR NODE PLACED] Could not find module by node index")
+            exit(1)
+        
+        return mod.get_pos()
                        
     def get_grid_cell_of_node(self, node_idx):
         """ if grid_cell at grid crossing, break-tie to upper right
         """
-        return self.modules_w_pins(node_idx).get_location()
+        mod = None
+        
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro']
+        except AssertionError:
+            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'macro'".format(mod.get_type())
+                    +" can be called")
+            exit(1)
+        except Exception:
+            print("[ERROR NODE LOCATION] Could not find module by node index")
+            exit(1)
+        
+        row, col = self.__get_grid_cell_location(*mod.get_pos())
 
-    def update_macro_orientation(self, node_idx, orientation):
-        pass
+        return row * self.grid_col + col
 
-    def get_macro_orientation(self):
-        pass
+    def get_macro_orientation(self, node_idx):
+        mod = None
 
-    def unfix_node_coord(self):
-        """In case plc is loaded with fixed macros
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro']
+        except AssertionError:
+            print("[ERROR MACRO ORIENTATION] Found {}. Only 'MACRO', 'macro'".format(mod.get_type())
+                    +" are considered to be ORIENTED")
+            exit(1)
+        except Exception:
+            print("[ERROR MACRO ORIENTATION] Could not find module by node index")
+            exit(1)
+        
+        return mod.get_orientation()
+
+    def unfix_node_coord(self, node_idx):
         """
-        pass
+        Unfix a module
+        """
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR UNFIX NODE] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+                    +"'PORT' are considered to be fixable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR UNFIX NODE] Could not find module by node index")
+            exit(1)
+
+        self.modules_w_pins[node_idx].set_fix_flag(False)
     
     def fix_node_coord(self, node_idx):
+        """
+        Fix a module
+        """
+        mod = None
+        
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR FIX NODE] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+                    +"'PORT' are considered to be fixable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR FIX NODE] Could not find module by node index")
+            exit(1)
+
         self.modules_w_pins[node_idx].set_fix_flag(True)
 
     def unplace_all_nodes(self):
         pass
 
     def place_node(self, node_idx, grid_cell_idx):
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+        except AssertionError:
+            pass
+        except Exception:
+            pass
         pass
 
     def can_place_node(self, node_idx, grid_cell_idx):
@@ -1650,7 +1815,21 @@ class PlacementCost(object):
         pass
 
     def is_node_placed(self, node_idx):
-        pass
+        mod = None
+
+        try:
+            mod = self.modules_w_pins[node_idx]
+            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+        except AssertionError:
+            print("[ERROR NODE PLACED] Found {}. Only 'MACRO', 'STDCELL',".format(mod.get_type())
+                    +"'PORT' are considered to be placable nodes")
+            exit(1)
+        except Exception:
+            print("[ERROR NODE PLACED] Could not find module by node index")
+            exit(1)
+
+        mod = self.modules_w_pins[node_idx]
+        return mod.get_placed_flag()
 
     def disconnect_nets(self):
         pass
@@ -1661,7 +1840,7 @@ class PlacementCost(object):
         return self.netlist_file
 
     def get_blockages(self):
-        pass
+        return self.blockages
 
     def create_blockage(self, minx, miny, maxx, maxy, blockage_rate):
         self.blockages.append([minx, miny, maxx, maxy, blockage_rate])
@@ -1678,8 +1857,32 @@ class PlacementCost(object):
                 return self.mod_name_to_indices[pin.get_macro_name()]
         return -1
 
-    def save_placement(self):
-        pass
+    def save_placement(self, filename, info):
+        """
+            When writing out info line-by-line, add a "#" at front
+        """
+        with open(filename, 'w+') as f:
+            for line in info.split('\n'):
+                f.write("# " + line + '\n')
+
+            # if first, no \newline
+            HEADER = True
+
+            for mod_idx in sorted(self.hard_macro_indices + self.soft_macro_indices + self.port_indices):
+                # [node_index] [x] [y] [orientation] [fixed]
+                mod = self.modules_w_pins[mod_idx]
+
+                if HEADER:
+                    f.write("{} {:g} {:g} {} {}".format(mod_idx,
+                        *mod.get_pos(),
+                        mod.get_orientation() if mod.get_orientation() else "-",
+                        "1" if mod.get_fix_flag() else "0"))
+                    HEADER = False
+                else:
+                    f.write("\n{} {:g} {:g} {} {}".format(mod_idx,
+                            *mod.get_pos(),
+                            mod.get_orientation() if mod.get_orientation() else "-",
+                            "1" if mod.get_fix_flag() else "0"))
 
     def display_canvas( self,
                         annotate=True, 
@@ -1740,9 +1943,14 @@ class PlacementCost(object):
             self.connection = {} # [module_name] => edge degree
             self.fix_flag = True
             self.placement = 0 # needs to be updated
+            self.orientation = None
+            self.ifPlaced = True
 
         def get_name(self):
             return self.name
+        
+        def get_orientation(self):
+            return self.orientation
 
         def add_connection(self, module_name):
             # NOTE: assume PORT names does not contain slash
@@ -1813,6 +2021,12 @@ class PlacementCost(object):
         def get_fix_flag(self):
             return self.fix_flag
 
+        def set_placed_flag(self, ifPlaced):
+            self.ifPlaced = ifPlaced
+        
+        def get_placed_flag(self):
+            return self.ifPlaced
+
     class SoftMacro:
         def __init__(self, name, width, height, x = 0.0, y = 0.0):
             self.name = name
@@ -1860,7 +2074,7 @@ class PlacementCost(object):
             return self.x, self.y
 
         def get_type(self):
-            return "macro"
+            return "MACRO"
 
         def get_connection(self):
             return self.connection
@@ -1892,11 +2106,18 @@ class PlacementCost(object):
         def get_fix_flag(self):
             return self.fix_flag
 
+        def set_placed_flag(self, ifPlaced):
+            self.ifPlaced = ifPlaced
+        
+        def get_placed_flag(self):
+            return self.ifPlaced
+
     class SoftMacroPin:
-        def __init__(   self, name,
-                        x = 0.0, y = 0.0,
-                        macro_name = "", weight = 1.0):
+        def __init__(self, name, ref_id,
+                    x = 0.0, y = 0.0,
+                    macro_name = "", weight = 1.0):
             self.name = name
+            self.ref_id = ref_id
             self.x = float(x)
             self.y = float(y)
             self.x_offset = 0.0 # not used
@@ -1907,6 +2128,12 @@ class PlacementCost(object):
 
         def set_weight(self, weight):
             self.weight = weight
+
+        def set_ref_id(self, ref_id):
+            self.ref_id = ref_id
+
+        def get_ref_id(self):
+            return self.ref_id
 
         def get_weight(self):
             return self.weight
@@ -1956,7 +2183,7 @@ class PlacementCost(object):
             return self.weight
 
         def get_type(self):
-            return "macro_pin"
+            return "MACRO_PIN"
 
     class HardMacro:
         def __init__(self, name, width, height,
@@ -2037,13 +2264,20 @@ class PlacementCost(object):
         
         def get_fix_flag(self):
             return self.fix_flag
+        
+        def set_placed_flag(self, ifPlaced):
+            self.ifPlaced = ifPlaced
+        
+        def get_placed_flag(self):
+            return self.ifPlaced
 
     class HardMacroPin:
-        def __init__(self, name,
+        def __init__(self, name, ref_id,
                         x = 0.0, y = 0.0,
                         x_offset = 0.0, y_offset = 0.0,
                         macro_name = "", weight = 1.0):
             self.name = name
+            self.ref_id = ref_id
             self.x = float(x)
             self.y = float(y)
             self.x_offset = float(x_offset)
@@ -2052,6 +2286,12 @@ class PlacementCost(object):
             self.weight = weight
             self.sink = {}
             self.ifPlaced = True
+
+        def set_ref_id(self, ref_id):
+            self.ref_id = ref_id
+
+        def get_ref_id(self):
+            return self.ref_id
 
         def set_weight(self, weight):
             self.weight = weight
