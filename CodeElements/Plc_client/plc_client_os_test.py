@@ -8,6 +8,7 @@ from absl import app
 from Plc_client import plc_client_os as plc_client_os
 from Plc_client import placement_util_os as placement_util
 from Plc_client import observation_extractor_os as observation_extractor
+from Plc_client import environment_os as environment
 from Plc_client import observation_config
 
 try:
@@ -484,6 +485,7 @@ class PlacementCostTest():
         self.extractor = observation_extractor.ObservationExtractor(
             plc=plc, observation_config=self._observation_config)
         """
+        print("############################ TEST OBSERVATION EXTRACTOR ############################")
         try:
             assert self.PLC_PATH
         except AssertionError:
@@ -527,7 +529,32 @@ class PlacementCostTest():
         pass
 
     def test_environment(self):
-        pass
+        print("############################ TEST ENVIRONMENT ############################")
+        # Source: https://github.com/google-research/circuit_training/blob/d5e454e5bcd153a95d320f664af0d1b378aace7b/circuit_training/environment/environment_test.py#L39
+        def random_action(mask):
+            valid_actions, = np.nonzero(mask.flatten())
+            if len(valid_actions):  # pylint: disable=g-explicit-length-test
+                return np.random.choice(valid_actions)
+
+            # If there is no valid choice, then `[0]` is returned which results in an
+            # infeasable action ending the episode.
+            return 0
+
+        env = environment.CircuitEnv(
+            _plc=plc_client,
+            create_placement_cost_fn=placement_util.create_placement_cost, 
+            netlist_file=self.NETLIST_PATH, 
+            init_placement=self.PLC_PATH)
+        
+        env_os = environment.CircuitEnv(
+            _plc=plc_client_os,
+            create_placement_cost_fn=placement_util.create_placement_cost, 
+            netlist_file=self.NETLIST_PATH, 
+            init_placement=self.PLC_PATH)
+
+        print("                  ++++++++++++++++++++++++++++++")
+        print("                  +++ TEST ENVIRONMENT: PASS +++")
+        print("                  ++++++++++++++++++++++++++++++")
 
 def parse_flags(argv):
     parser = argparse_flags.ArgumentParser(description='An argparse + app.run example')
@@ -584,7 +611,8 @@ def main(args):
     PCT.test_proxy_cost()
     # PCT.test_placement_util()
     # PCT.test_miscellaneous()
-    PCT.test_observation_extractor()
+    # PCT.test_observation_extractor()
+    PCT.test_environment()
 
 if __name__ == '__main__':
     app.run(main, flags_parser=parse_flags)
