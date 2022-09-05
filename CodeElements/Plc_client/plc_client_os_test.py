@@ -1,7 +1,9 @@
 import numpy as np
+import pandas as pd
 import sys,os,traceback
 import argparse
 import math,re
+from random import randrange
 from absl import flags
 from absl.flags import argparse_flags
 from absl import app
@@ -293,22 +295,39 @@ class PlacementCostTest():
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                 macro_macro_x_spacing = 50,
                                                 macro_macro_y_spacing = 50)
-        print("****************** miscellaneous ******************")
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        
+        self.plc_util = placement_util.create_placement_cost(
+                                                    plc_client=plc_client, 
+                                                    netlist_file=self.NETLIST_PATH,
+                                                    init_placement=self.PLC_PATH
+                                                )
+
+
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        NODE_IDX = 22853
-        print("get_macro_indices", self.plc.get_macro_indices())
-        print("get_node_name", self.plc.get_node_name(NODE_IDX))
-        print("get_node_type", self.plc.get_node_type(NODE_IDX))
-        print("get_node_location", self.plc.get_node_location(NODE_IDX))
-        print("get_grid_cell_of_node", self.plc.get_grid_cell_of_node(NODE_IDX))
-        print("get_macro_orientation", self.plc.get_macro_orientation(NODE_IDX))
-        print("is_node_placed", self.plc.is_node_placed(NODE_IDX))
-        print("get_source_filename", self.plc.get_source_filename())
-        print("get_blockages", self.plc.get_blockages())
-        print("get_ref_node_id", self.plc.get_ref_node_id(NODE_IDX), self.plc.get_ref_node_id(NODE_IDX))
+        
+        self.plc_os.display_canvas()
+        print(np.flip(np.array(self.plc_util.get_node_mask(0)).reshape(35,33), axis=0))
+        
+        print(np.flip(np.array(self.plc.get_node_mask(0)).reshape(35,33), axis=0))
+        print("****************** miscellaneous ******************")
+        # self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        # self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        # self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        # self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        # NODE_IDX = 22853
+        # print("get_macro_indices", self.plc.get_macro_indices())
+        # print("get_node_name", self.plc.get_node_name(NODE_IDX))
+        # print("get_node_type", self.plc.get_node_type(NODE_IDX))
+        # print("get_node_location", self.plc.get_node_location(NODE_IDX))
+        # print("get_grid_cell_of_node", self.plc.get_grid_cell_of_node(NODE_IDX))
+        # print("get_macro_orientation", self.plc.get_macro_orientation(NODE_IDX))
+        # print("is_node_placed", self.plc.is_node_placed(NODE_IDX))
+        # print("get_source_filename", self.plc.get_source_filename())
+        # print("get_blockages", self.plc.get_blockages())
+        # print("get_ref_node_id", self.plc.get_ref_node_id(NODE_IDX), self.plc.get_ref_node_id(NODE_IDX))
         # print("get_node_mask\n", np.array(self.plc.get_node_mask(NODE_IDX)).reshape((4,4)))
         # print("can_place_node", self.plc.can_place_node(0, 1))
         print("***************************************************")
@@ -332,7 +351,6 @@ class PlacementCostTest():
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-
 
         temp_gl_h = np.array(self.plc.get_horizontal_routing_congestion())
         temp_os_h =  np.array(self.plc_os.get_horizontal_routing_congestion())
@@ -406,19 +424,21 @@ class PlacementCostTest():
                                                             plc_client=plc_client_os,
                                                             netlist_file=self.NETLIST_PATH,
                                                             init_placement=self.PLC_PATH
-                                                            )
-        # ********************** plc_client_os ********************** 
+                                                            ) 
+
         # node_xy_coordinates
-        # NODE_XY_DICT = {}
-        # for i in placement_util.nodes_of_types(self.plc_util_os, ['MACRO', 'STDCELL', 'PORT']):
-        #     NODE_XY_DICT[i] = (100, 100)
-        
-        # placement_util.restore_node_xy_coordinates(self.plc_util_os, NODE_XY_DICT)
+        NODE_XY_DICT = {}
+        for i in placement_util.nodes_of_types(self.plc_util_os, ['MACRO', 'STDCELL', 'PORT']):
+            NODE_XY_DICT[i] = (randrange(int(self.plc_util.get_canvas_width_height()[0])),
+                                randrange(int(self.plc_util.get_canvas_width_height()[1])))
 
         # macro_orientation
         MACRO_ORIENTATION = {}
         for i in placement_util.nodes_of_types(self.plc_util_os, ['MACRO']):
             MACRO_ORIENTATION[i] = "S"
+        
+        # ********************** plc_client_os ********************** 
+        # placement_util.restore_node_xy_coordinates(self.plc_util_os, NODE_XY_DICT)
 
         placement_util.restore_macro_orientations(self.plc_util_os, MACRO_ORIENTATION)
 
@@ -429,17 +449,7 @@ class PlacementCostTest():
         placement_util.save_placement(self.plc_util_os, "save_test_os.plc", 'this is a comment')
 
         # ********************** plc_client ********************** 
-        # # node_xy_coordinates
-        # NODE_XY_DICT = {}
-        # for i in placement_util.nodes_of_types(self.plc_util, ['MACRO', 'STDCELL', 'PORT']):
-        #     NODE_XY_DICT[i] = (100, 100)
-        
         # placement_util.restore_node_xy_coordinates(self.plc_util, NODE_XY_DICT)
-
-        # macro_orientation
-        MACRO_ORIENTATION = {}
-        for i in placement_util.nodes_of_types(self.plc_util, ['MACRO']):
-            MACRO_ORIENTATION[i] = "S"
 
         placement_util.restore_macro_orientations(self.plc_util, MACRO_ORIENTATION)
 
@@ -496,15 +506,15 @@ class PlacementCostTest():
         max_num_edges=28400, max_num_nodes=5000, max_grid_size=128)
         
         self.plc_util = placement_util.create_placement_cost(
-                                                        plc_client=plc_client, 
-                                                        netlist_file=self.NETLIST_PATH,
-                                                        init_placement=self.PLC_PATH
+                                                            plc_client=plc_client, 
+                                                            netlist_file=self.NETLIST_PATH,
+                                                            init_placement=self.PLC_PATH
                                                         )
         
         self.plc_util_os = placement_util.create_placement_cost(
-                                                            plc_client=plc_client_os,
-                                                            netlist_file=self.NETLIST_PATH,
-                                                            init_placement=self.PLC_PATH
+                                                                plc_client=plc_client_os,
+                                                                netlist_file=self.NETLIST_PATH,
+                                                                init_placement=self.PLC_PATH
                                                             )
 
         self.extractor = observation_extractor.ObservationExtractor(
@@ -545,12 +555,22 @@ class PlacementCostTest():
             create_placement_cost_fn=placement_util.create_placement_cost, 
             netlist_file=self.NETLIST_PATH, 
             init_placement=self.PLC_PATH)
+
+        self.plc_util = placement_util.create_placement_cost(
+                                                    plc_client=plc_client, 
+                                                    netlist_file=self.NETLIST_PATH,
+                                                    init_placement=self.PLC_PATH
+                                                )
         
-        env_os = environment.CircuitEnv(
-            _plc=plc_client_os,
-            create_placement_cost_fn=placement_util.create_placement_cost, 
-            netlist_file=self.NETLIST_PATH, 
-            init_placement=self.PLC_PATH)
+        
+
+        # print(np.array2string(env._current_mask.reshape(128, 128)), sep=']')
+        
+        # env_os = environment.CircuitEnv(
+        #     _plc=plc_client_os,
+        #     create_placement_cost_fn=placement_util.create_placement_cost, 
+        #     netlist_file=self.NETLIST_PATH, 
+        #     init_placement=self.PLC_PATH)
 
         print("                  ++++++++++++++++++++++++++++++")
         print("                  +++ TEST ENVIRONMENT: PASS +++")
@@ -609,7 +629,7 @@ def main(args):
     
     # PCT.test_metadata()
     PCT.test_proxy_cost()
-    # PCT.test_placement_util()
+    # PCT.test_placement_util(keep_save_file=True)
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     PCT.test_environment()

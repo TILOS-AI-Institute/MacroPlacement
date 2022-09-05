@@ -30,6 +30,7 @@ import gin
 import gym
 import numpy as np
 import tensorflow as tf
+from inspect import currentframe, getframeinfo
 # from tf_agents.environments import suite_gym
 # from tf_agents.environments import wrappers
 
@@ -123,6 +124,7 @@ class CircuitEnv(object):
 
   def __init__(
       self,
+      _plc_client = None,
       netlist_file: Text = '',
       init_placement: Text = '',
       _plc = None,
@@ -195,6 +197,8 @@ class CircuitEnv(object):
     self._observation_extractor = observation_extractor.ObservationExtractor(
         plc=self._plc)
 
+    # print("FLAG1")
+    print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(0)).reshape(35,33))
     if self._make_soft_macros_square:
       # It is better to make the shape of soft macros square before using
       # analytical std cell placers like FD.
@@ -208,8 +212,10 @@ class CircuitEnv(object):
         m for m in self._plc.get_macro_indices()
         if not self._plc.is_node_soft_macro(m)
     ]
+
     self._num_hard_macros = len(self._hard_macro_indices)
 
+    # sorted by size
     self._sorted_node_indices = placement_util.get_ordered_node_indices(
         mode='descending_size_macro_first', plc=self._plc)
 
@@ -235,6 +241,7 @@ class CircuitEnv(object):
     self._current_node = 0
     self._done = False
     self._current_mask = self._get_mask()
+    print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(0)).reshape(35,33))
     self._infeasible_state = False
 
     if unplace_all_nodes_in_init:
@@ -279,10 +286,12 @@ class CircuitEnv(object):
       List of 0s and 1s indicating if action is feasible or not.
     """
     if self._done:
+      # reset the board
       mask = np.zeros(self._observation_config.max_grid_size**2, dtype=np.int32)
     else:
       node_index = self._sorted_node_indices[self._current_node]
       mask = np.asarray(self._plc.get_node_mask(node_index), dtype=np.int32)
+      print("current node mask: \n", mask.reshape(35, 33))
       mask = np.reshape(mask, [self._grid_rows, self._grid_cols])
       pad = ((self._up_pad, self._low_pad), (self._right_pad, self._left_pad))
       mask = np.pad(mask, pad, mode='constant', constant_values=0)
