@@ -1695,6 +1695,9 @@ class PlacementCost(object):
         mod.set_orientation(orientation)
 
     def update_port_sides(self):
+        """
+        Define Port "Side" by its location on canvas
+        """
         pass
 
     def snap_ports_to_edges(self):

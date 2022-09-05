@@ -7,6 +7,8 @@ from absl.flags import argparse_flags
 from absl import app
 from Plc_client import plc_client_os as plc_client_os
 from Plc_client import placement_util_os as placement_util
+from Plc_client import observation_extractor_os as observation_extractor
+from Plc_client import observation_config
 
 try:
     from Plc_client import plc_client as plc_client
@@ -460,7 +462,70 @@ class PlacementCostTest():
                             raise AssertionError ("false")
         except AssertionError:
             print("[ERROR PLACEMENT UTIL] Saved PLC Discrepency found at line {}".format(str(idx)))
+
+        # if keep plc file for detailed comparison
+        if not keep_save_file:
+            os.remove('save_test_gl.plc')
+            os.remove('save_test_os.plc')
+
+    def test_observation_extractor(self):
+        """
+        plc = placement_util.create_placement_cost(
+            netlist_file=netlist_file, init_placement='')
+        plc.set_canvas_size(300, 200)
+        plc.set_placement_grid(9, 4)
+        plc.unplace_all_nodes()
+        # Manually adds I/O port locations, this step is not needed for real
+        # netlists.
+        plc.update_node_coords('P0', 0.5, 100)  # Left
+        plc.update_node_coords('P1', 150, 199.5)  # Top
+        plc.update_port_sides()
+        plc.snap_ports_to_edges()
+        self.extractor = observation_extractor.ObservationExtractor(
+            plc=plc, observation_config=self._observation_config)
+        """
+        try:
+            assert self.PLC_PATH
+        except AssertionError:
+            print("[ERROR OBSERVATION EXTRACTOR TEST] Facilitate required .plc file")
+
+        # Using the default edge/node
+        self._observation_config = observation_config.ObservationConfig(
+        max_num_edges=28400, max_num_nodes=5000, max_grid_size=128)
         
+        self.plc_util = placement_util.create_placement_cost(
+                                                        plc_client=plc_client, 
+                                                        netlist_file=self.NETLIST_PATH,
+                                                        init_placement=self.PLC_PATH
+                                                        )
+        
+        self.plc_util_os = placement_util.create_placement_cost(
+                                                            plc_client=plc_client_os,
+                                                            netlist_file=self.NETLIST_PATH,
+                                                            init_placement=self.PLC_PATH
+                                                            )
+
+        self.extractor = observation_extractor.ObservationExtractor(
+                        plc=self.plc_util, observation_config=self._observation_config
+        )
+
+        self.extractor_os = observation_extractor.ObservationExtractor(
+                        plc=self.plc_util_os, observation_config=self._observation_config
+        )
+
+        # Static features that are invariant across training steps
+        static_feature_gl = self.extractor._extract_static_features()
+        static_feature_os = self.extractor_os._extract_static_features()
+        for feature_gl, feature_os in zip(static_feature_gl, static_feature_os):
+            assert (static_feature_gl[feature_gl] == static_feature_os[feature_os]).all()
+
+        print("                  ++++++++++++++++++++++++++++++++++++++++")
+        print("                  +++ TEST OBSERVATION EXTRACTOR: PASS +++")
+        print("                  ++++++++++++++++++++++++++++++++++++++++")
+
+    def test_place_node(self):
+        pass
+
     def test_environment(self):
         pass
 
@@ -517,8 +582,9 @@ def main(args):
     
     # PCT.test_metadata()
     PCT.test_proxy_cost()
-    PCT.test_placement_util()
+    # PCT.test_placement_util()
     # PCT.test_miscellaneous()
+    PCT.test_observation_extractor()
 
 if __name__ == '__main__':
     app.run(main, flags_parser=parse_flags)
