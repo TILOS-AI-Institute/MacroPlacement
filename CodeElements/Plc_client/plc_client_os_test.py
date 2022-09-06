@@ -309,6 +309,7 @@ class PlacementCostTest():
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         
         self.plc_os.display_canvas()
+        self.unplace_node()
         print(np.flip(np.array(self.plc_util.get_node_mask(0)).reshape(35,33), axis=0))
         
         print(np.flip(np.array(self.plc.get_node_mask(0)).reshape(35,33), axis=0))
@@ -459,10 +460,6 @@ class PlacementCostTest():
         # write out new plc
         placement_util.save_placement(self.plc_util, "save_test_gl.plc", 'this is a comment')
 
-        print("                  +++++++++++++++++++++++++++++++++")
-        print("                  +++ TEST PLACEMENT UTIL: PASS +++")
-        print("                  +++++++++++++++++++++++++++++++++")
-
         # This is only for node information, line-by-line test
         try:
             with open('save_test_gl.plc') as f1, open('save_test_os.plc') as f2:
@@ -478,6 +475,10 @@ class PlacementCostTest():
         if not keep_save_file:
             os.remove('save_test_gl.plc')
             os.remove('save_test_os.plc')
+
+        print("                  +++++++++++++++++++++++++++++++++")
+        print("                  +++ TEST PLACEMENT UTIL: PASS +++")
+        print("                  +++++++++++++++++++++++++++++++++")
 
     def test_observation_extractor(self):
         """
@@ -536,7 +537,53 @@ class PlacementCostTest():
         print("                  ++++++++++++++++++++++++++++++++++++++++")
 
     def test_place_node(self):
-        pass
+        print("############################ TEST PLACE NODE ############################")
+        self.plc_util = placement_util.create_placement_cost(
+                                                        plc_client=plc_client, 
+                                                        netlist_file=self.NETLIST_PATH,
+                                                        init_placement=None
+                                                        )
+        
+        self.plc_util_os = placement_util.create_placement_cost(
+                                                            plc_client=plc_client_os,
+                                                            netlist_file=self.NETLIST_PATH,
+                                                            init_placement=None
+                                                            )
+        
+        self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
+
+        self.plc_util.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_util_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc_util.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
+            
+        self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        
+        ordered_node_gl = placement_util.get_ordered_node_indices(mode='descending_size_macro_first', plc=self.plc_util)
+        ordered_node_os = placement_util.get_ordered_node_indices(mode='descending_size_macro_first', plc=self.plc_util_os)
+
+        assert (np.array(ordered_node_gl) == np.array(ordered_node_os)).all()
+
+        # print(ordered_node_gl)
+
+        print(self.plc_util_os.indices_to_mod_name[13333])
+        self.plc_util_os.unplace_all_nodes()
+        self.plc_util_os.place_node(13333, 50)
+        print(np.flip(np.array(self.plc_util_os.get_node_mask(13332)).reshape(33,35), axis=0))
+        self.plc_util_os.display_canvas(annotate=False)
+        # self.plc_util_os.place_node(13332, 53)
+        
+        self.plc_util.unplace_all_nodes()
+        # print(np.flip(np.array(self.plc_util.get_node_mask(13333)).reshape(33,35), axis=0))
+        self.plc_util.place_node(13333, 50)
+        print(np.flip(np.array(self.plc_util.get_node_mask(13332)).reshape(33,35), axis=0))
+        # self.plc_util.place_node(13332, 53)
+        # print(np.flip(np.array(self.plc_util.get_node_mask(13331)).reshape(33,35), axis=0))
 
     def test_environment(self):
         print("############################ TEST ENVIRONMENT ############################")
@@ -628,11 +675,12 @@ def main(args):
                                 smooth=args.smooth)
     
     # PCT.test_metadata()
-    PCT.test_proxy_cost()
-    # PCT.test_placement_util(keep_save_file=True)
+    # PCT.test_proxy_cost()
+    # PCT.test_placement_util(keep_save_file=False)
+    PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
-    PCT.test_environment()
+    # PCT.test_environment()
 
 if __name__ == '__main__':
     app.run(main, flags_parser=parse_flags)

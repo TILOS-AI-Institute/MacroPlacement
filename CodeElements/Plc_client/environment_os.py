@@ -197,8 +197,7 @@ class CircuitEnv(object):
     self._observation_extractor = observation_extractor.ObservationExtractor(
         plc=self._plc)
 
-    # print("FLAG1")
-    print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(0)).reshape(35,33))
+    print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(13333)).reshape(35,33))
     if self._make_soft_macros_square:
       # It is better to make the shape of soft macros square before using
       # analytical std cell placers like FD.
@@ -219,7 +218,10 @@ class CircuitEnv(object):
     self._sorted_node_indices = placement_util.get_ordered_node_indices(
         mode='descending_size_macro_first', plc=self._plc)
 
+    print(len(self._sorted_node_indices))
     self._sorted_soft_macros = self._sorted_node_indices[self._num_hard_macros:]
+
+    print(len(self._sorted_soft_macros))
 
     # Generate a map from actual macro_index to its position in
     # self.macro_indices. Needed because node adjacency matrix is in the same
@@ -241,7 +243,8 @@ class CircuitEnv(object):
     self._current_node = 0
     self._done = False
     self._current_mask = self._get_mask()
-    print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(0)).reshape(35,33))
+
+    # print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(0)).reshape(35,33))
     self._infeasible_state = False
 
     if unplace_all_nodes_in_init:
@@ -291,7 +294,7 @@ class CircuitEnv(object):
     else:
       node_index = self._sorted_node_indices[self._current_node]
       mask = np.asarray(self._plc.get_node_mask(node_index), dtype=np.int32)
-      print("current node mask: \n", mask.reshape(35, 33))
+      # print("current node mask: \n", mask.reshape(35, 33))
       mask = np.reshape(mask, [self._grid_rows, self._grid_cols])
       pad = ((self._up_pad, self._low_pad), (self._right_pad, self._left_pad))
       mask = np.pad(mask, pad, mode='constant', constant_values=0)
