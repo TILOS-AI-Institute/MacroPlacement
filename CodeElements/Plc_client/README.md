@@ -9,7 +9,20 @@ curl 'https://raw.githubusercontent.com/google-research/circuit_training/main/ci
 sudo curl https://storage.googleapis.com/rl-infra-public/circuit-training/placement_cost/plc_wrapper_main \
   -o  /usr/local/bin/plc_wrapper_main
 # Run plc testbench
-python -m Plc_client.plc_client_os_test
+# python -m Plc_client.plc_client_os_test [-h] [--helpfull] --netlist NETLIST [--plc PLC] --width WIDTH --height HEIGHT --col COL --row ROW [--rpmh RPMH] [--rpmv RPMV] [--marh MARH] [--marv MARV] [--smooth SMOOTH]
+
+# Example
+python -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane/netlist.pb.txt\
+          --plc ./Plc_client/test/ariane/initial.plc\
+          --width 356.592\
+          --height 356.640\
+          --col 35\
+          --row 33\
+          --rpmh 10\
+          --rpmv 10\
+          --marh 5\
+          --marv 5\
+          --smooth 2
 ```
 
 ## HPWL Computation
@@ -27,15 +40,15 @@ $$
 HPWL(netlist) = \sum_{i}^{N_{netlist}} W_{i\_{source}} \cdot [max_{b\in i}(x_b) - min_{b\in i}(x_b) + max_{b\in i}(y_b) - min_{b\in i}(y_b)]
 $$
 
-## Density  Cost Computation
+## Density Cost Computation
 Density cost is computed from grid cells density.
 
 By default, any given input will have grid col/row set to 10/10 until user later defines in the .plc file.
 
-Grid cell density is represented as an 1D array where the length is set to be 
+Grid cell density is represented as an 1D array where the length is set to be the following:
 
 $$
-grid_\{col} \cdot grid_\{row}
+grid_{col} \cdot grid_{row}
 $$
 
 Each entry of this array represents the current occupied precentage within this cell.
