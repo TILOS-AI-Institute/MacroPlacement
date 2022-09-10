@@ -87,6 +87,9 @@ class PlacementCost(object):
         self.hard_macros_to_inpins = {}
         self.soft_macros_to_inpins = {}
 
+        # Placed macro
+        self.placed_macro = []
+
         # unknown
         self.use_incremental_cost = False
         # blockage
@@ -630,6 +633,13 @@ class PlacementCost(object):
             * PORT = its own position
             * MACRO PIN = ref position + offset position87654321
         """
+        try:
+            assert (self.modules_w_pins[pin_idx].get_type() == 'MACRO_PIN' or\
+                self.modules_w_pins[pin_idx].get_type() == 'PORT')
+        except Exception:
+            print("[ERROR PIN POSITION] Not a MACRO PIN")
+            exit(1)
+
         ref_node_idx = self.get_ref_node_id(pin_idx)
 
         if ref_node_idx == -1:
@@ -637,8 +647,9 @@ class PlacementCost(object):
                 return self.modules_w_pins[pin_idx].get_pos()
             else:
                 # cannot be 'MACRO'
-                exit(1) 
-        
+                exit(1)
+
+        # print("ref_node_idx", ref_node_idx)
         ref_node = self.modules_w_pins[ref_node_idx]
         ref_node_x, ref_node_y = ref_node.get_pos()
 
@@ -654,7 +665,7 @@ class PlacementCost(object):
         # NOTE: in pb.txt, netlist input count exceed certain threshold will be ommitted
         total_hpwl = 0.0
 
-        for mod in self.modules_w_pins:
+        for mod_idx, mod in enumerate(self.modules_w_pins):
             norm_fact = 1.0
             curr_type = mod.get_type()
             # bounding box data structure
@@ -664,8 +675,8 @@ class PlacementCost(object):
             # NOTE: connection only defined on PORT, soft/hard macro pins
             if curr_type == "PORT" and mod.get_sink():
                 # add source position
-                x_coord.append(mod.get_pos()[0])
-                y_coord.append(mod.get_pos()[1])
+                x_coord.append(self.__get_pin_position(mod_idx)[0])
+                y_coord.append(self.__get_pin_position(mod_idx)[1])
                 for sink_name in mod.get_sink():
                     for sink_pin in mod.get_sink()[sink_name]:
                         # retrieve indx in modules_w_pins
@@ -673,12 +684,12 @@ class PlacementCost(object):
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
                         # retrieve location
-                        x_coord.append(sink.get_pos()[0])
-                        y_coord.append(sink.get_pos()[1])
+                        x_coord.append(self.__get_pin_position(sink_idx)[0])
+                        y_coord.append(self.__get_pin_position(sink_idx)[1])
             elif curr_type == "MACRO_PIN":
                 # add source position
-                x_coord.append(mod.get_pos()[0])
-                y_coord.append(mod.get_pos()[1])
+                x_coord.append(self.__get_pin_position(mod_idx)[0])
+                y_coord.append(self.__get_pin_position(mod_idx)[1])
 
                 if mod.get_sink():
                     if mod.get_weight() != 0:
@@ -688,6 +699,7 @@ class PlacementCost(object):
                             # retrieve indx in modules_w_pins
                             input_idx = self.mod_name_to_indices[sink_name]
                             # retrieve location
+                            # print(self.__get_pin_position(input_idx))
                             x_coord.append(self.__get_pin_position(input_idx)[0])
                             y_coord.append(self.__get_pin_position(input_idx)[1])
 
@@ -823,14 +835,22 @@ class PlacementCost(object):
 
         pass
 
-    def __overlap_area(self, block_i, block_j):
+    def __overlap_area(self, block_i, block_j, return_pos=False):
         """
         private function for computing block overlapping
         """
-        x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
-        y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
+        x_min_max = min(block_i.x_max, block_j.x_max)
+        x_max_min = max(block_i.x_min, block_j.x_min)
+        y_min_max = min(block_i.y_max, block_j.y_max)
+        y_max_min = max(block_i.y_min, block_j.y_min)
+
+        x_diff = x_min_max - x_max_min
+        y_diff = y_min_max - y_max_min
         if x_diff >= 0 and y_diff >= 0:
-            return x_diff * y_diff
+            if return_pos:
+                return x_diff * y_diff, (x_min_max, y_min_max), (x_max_min, y_max_min)
+            else:
+                return x_diff * y_diff
         return 0
     
     def __overlap_dist(self, block_i, block_j):
@@ -1515,7 +1535,7 @@ class PlacementCost(object):
     def get_node_name(self, node_idx: int) -> str:
         return self.indices_to_mod_name[node_idx]
 
-    def get_node_mask(self, node_idx: int, node_name: str=None) -> list:
+    def _get_node_mask(self, node_idx: int, node_name: str=None) -> list:
         """
             Return Grid_col x Grid_row:
                 1 == placable
@@ -1526,7 +1546,6 @@ class PlacementCost(object):
             -   no overlapping other macro
             -   no OOB
         """
-        print(self.FLAG_UPDATE_NODE_MASK)
         if self.FLAG_UPDATE_NODE_MASK:
             self.__update_node_mask()
 
@@ -1550,7 +1569,66 @@ class PlacementCost(object):
                         temp_node_mask[i][j] = 1
         
         return temp_node_mask
-        
+    
+    def get_node_mask(self, node_idx: int, node_name: str=None) -> list:
+        """
+
+        """
+        mod = self.modules_w_pins[node_idx]
+        canvas_block = Block(x_max=self.width,
+                            y_max=self.height,
+                            x_min=0,
+                            y_min=0)
+
+        mod_w = mod.get_width()
+        mod_h = mod.get_height()
+
+        temp_node_mask = np.array([1] * (self.grid_col * self.grid_row))\
+            .reshape(self.grid_row, self.grid_col)
+
+        self.grid_width = float(self.width/self.grid_col)
+        self.grid_height = float(self.height/self.grid_row)
+
+        for i in range(self.grid_row):
+            for j in range(self.grid_col):
+                # try every location
+                # construct block based on current module
+                
+                temp_x = i * self.grid_width + (self.grid_width/2)
+                temp_y = j * self.grid_height + (self.grid_height/2)
+
+                mod_block = Block(
+                                    x_max=temp_x + (mod_w/2),
+                                    y_max=temp_y + (mod_h/2),
+                                    x_min=temp_x - (mod_w/2),
+                                    y_min=temp_y - (mod_h/2)
+                                )
+                
+                # check OOB
+                if self.__overlap_area(
+                    block_i=canvas_block, block_j=mod_block) != (mod_w*mod_h):
+                    temp_node_mask[i][j] = 0
+                else:
+                    for pmod_idx in self.placed_macro:
+                        pmod = self.modules_w_pins[pmod_idx]
+                        if not pmod.get_placed_flag():
+                            continue
+
+                        p_x, p_y = pmod.get_pos()
+                        p_w = pmod.get_width()
+                        p_h = pmod.get_height()
+                        pmod_block = Block(
+                                            x_max=p_x + (p_w/2) + 1,
+                                            y_max=p_y + (p_h/2) + 1,
+                                            x_min=p_x - (p_w/2) - 1,
+                                            y_min=p_y - (p_h/2) - 1
+                                            )
+                        # overlap with placed module
+                        if self.__overlap_area(block_i=pmod_block, block_j=mod_block) > 0:
+                             temp_node_mask[i][j] = 0
+            
+        return temp_node_mask
+
 
     def get_node_type(self, node_idx: int) -> str:
         """
@@ -1947,6 +2025,7 @@ class PlacementCost(object):
         # TODO: add check valid clause
         if not mod.get_fix_flag():
             mod.set_pos(*self.__get_grid_cell_position(grid_cell_idx))
+            self.placed_macro.append(self.mod_name_to_indices[mod.get_name()])
             mod.set_placed_flag(True)
 
             # update flag
