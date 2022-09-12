@@ -21,6 +21,7 @@
   - [genJobList.py](./genJobList.py): It create a run directory to run Flow-1 and Flow-2 for each design on all platforms and writes out the job file. You can use this job file to submit a GNU Parallel job. 
     - **Example**: python ./util/genJobList.py (ensure you are in the [Flows](../) directory.)
   - [plc_pb_to_placement_tcl.py](./plc_pb_to_placement_tcl.py): It writes out the *.plc file from the clustreed-protobuf netlist.
+  - [shuffle_macro.tcl](./shuffle_macro.tcl): It shuffle same type (having same reference name.) macros. First source this tcl file and then use shuffle_macros command to shuffle the macro location. This script randomly shuffle macros. If macro A moves to position of macro B then the orientation of macro A will be the initial orientation of macro B.
 - Shell Scripts:
   - [run_CodeFlow.sh](./run_CodeFlow.sh): This runs the [flow.py](./flow.py) in the run directory to generate clustred netlist.
     - **Example**: In the run directory just use *./run_CodeFlow.sh* command to generate the clustred netlist while using Flow-4. Make sure *PHY_SYNTH* is set to 1 or some greater value.
