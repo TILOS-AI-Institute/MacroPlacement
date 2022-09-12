@@ -586,8 +586,10 @@ class PlacementCostTest():
         NODE_TO_PLACE_IDX = 0
         CELL_TO_PLACE_IDX = 6
         print("MASK FOR PLACING FIRST NODE:")
+        self.plc_util_os.display_canvas(annotate=False)
         print(np.flip(np.array(self.plc_util_os.get_node_mask(NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW,self.GRID_COL), axis=0))
         print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW,self.GRID_COL), axis=0))
+        exit(0)
         self.plc_util_os.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
         self.plc_util.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
 
@@ -630,11 +632,15 @@ class PlacementCostTest():
 
         # print(np.array2string(env._current_mask.reshape(128, 128)), sep=']')
         
-        # env_os = environment.CircuitEnv(
-        #     _plc=plc_client_os,
-        #     create_placement_cost_fn=placement_util.create_placement_cost, 
-        #     netlist_file=self.NETLIST_PATH, 
-        #     init_placement=self.PLC_PATH)
+        env_os = environment.CircuitEnv(
+            _plc=plc_client_os,
+            create_placement_cost_fn=placement_util.create_placement_cost, 
+            netlist_file=self.NETLIST_PATH, 
+            init_placement=self.PLC_PATH)
+        # print(np.array(env_os._plc.get_node_mask(13333)).reshape(33,35))
+        # print(np.array(env._plc.get_node_mask(13333)).reshape(33,35))
+        assert (env_os._get_mask() == env._get_mask()).all()
+        print(env_os._get_obs().keys())
 
         print("                  ++++++++++++++++++++++++++++++")
         print("                  +++ TEST ENVIRONMENT: PASS +++")
@@ -692,12 +698,12 @@ def main(args):
                                 smooth=args.smooth)
     
     # PCT.test_metadata()
-    PCT.test_proxy_cost()
+    # PCT.test_proxy_cost()
     # PCT.test_placement_util(keep_save_file=False)
-    PCT.test_place_node()
+    # PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
-    # PCT.test_environment()
+    PCT.test_environment()
 
 if __name__ == '__main__':
     app.run(main, flags_parser=parse_flags)

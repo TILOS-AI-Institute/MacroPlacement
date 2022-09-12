@@ -23,13 +23,13 @@ node {
   attr {
     key: "x"
     value {
-      f: 399
+      f: 300
     }
   }
   attr {
     key: "y"
     value {
-      f: 399
+      f: 300
     }
   }
   attr {
@@ -44,7 +44,7 @@ node {
   attr {
     key: "height"
     value {
-      f: 50
+      f: 200
     }
   }
   attr {
@@ -74,7 +74,7 @@ node {
   attr {
     key: "width"
     value {
-      f: 50
+      f: 200
     }
   }
 }
@@ -96,31 +96,31 @@ node {
   attr {
     key: "x_offset"
     value {
-      f: -25
+      f: -75
     }
   }
   attr {
     key: "y_offset"
     value {
-      f: -25
+      f: -75
     }
   }
   attr {
     key: "x"
     value {
-      f: 374
+      f: 0
     }
   }
   attr {
     key: "y"
     value {
-      f: 374
+      f: 0
     }
   }
   attr {
     key: "weight"
     value {
-      f: 1000
+      f: 1
     }
   }
 }
@@ -141,31 +141,31 @@ node {
   attr {
     key: "x_offset"
     value {
-      f: -25
+      f: -75
     }
   }
   attr {
     key: "y_offset"
     value {
-      f: 25
+      f: 75
     }
   }
   attr {
     key: "x"
     value {
-      f: 374
+      f: 0
     }
   }
   attr {
     key: "y"
     value {
-      f: 424
+      f: 0
     }
   }
   attr {
     key: "weight"
     value {
-      f: 1000
+      f: 1
     }
   }
 }
@@ -186,25 +186,25 @@ node {
   attr {
     key: "x_offset"
     value {
-      f: 25
+      f: 75
     }
   }
   attr {
     key: "y_offset"
     value {
-      f: -25
+      f: -75
     }
   }
   attr {
     key: "x"
     value {
-      f: 75
+      f: 0
     }
   }
   attr {
     key: "y"
     value {
-      f: 25
+      f: 0
     }
   }
 }
@@ -225,25 +225,25 @@ node {
   attr {
     key: "x_offset"
     value {
-      f: 25
+      f: 75
     }
   }
   attr {
     key: "y_offset"
     value {
-      f: 25
+      f: 75
     }
   }
   attr {
     key: "x"
     value {
-      f: 75
+      f: 0
     }
   }
   attr {
     key: "y"
     value {
-      f: 75
+      f: 0
     }
   }
 }

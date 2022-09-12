@@ -1568,7 +1568,7 @@ class PlacementCost(object):
                     if (cell_region == 1).all():
                         temp_node_mask[i][j] = 1
         
-        return temp_node_mask
+        return temp_node_mask.flatten()
     
     def get_node_mask(self, node_idx: int, node_name: str=None) -> list:
         """
@@ -1589,13 +1589,17 @@ class PlacementCost(object):
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
 
+        # print(self.grid_col, self.grid_row)
+
+        # print(mod_w*mod_h)
+
         for i in range(self.grid_row):
             for j in range(self.grid_col):
                 # try every location
                 # construct block based on current module
                 
-                temp_x = i * self.grid_width + (self.grid_width/2)
-                temp_y = j * self.grid_height + (self.grid_height/2)
+                temp_x = j * self.grid_width + (self.grid_width/2)
+                temp_y = i * self.grid_height + (self.grid_height/2)
 
                 mod_block = Block(
                                     x_max=temp_x + (mod_w/2),
@@ -1603,10 +1607,11 @@ class PlacementCost(object):
                                     x_min=temp_x - (mod_w/2),
                                     y_min=temp_y - (mod_h/2)
                                 )
-                
                 # check OOB
-                if self.__overlap_area(
-                    block_i=canvas_block, block_j=mod_block) != (mod_w*mod_h):
+                if abs(self.__overlap_area(
+                    block_i=canvas_block, block_j=mod_block) - (mod_w*mod_h)) > 1e-8:
+                    # print(i, j, self.__overlap_area(
+                    # block_i=canvas_block, block_j=mod_block))
                     temp_node_mask[i][j] = 0
                 else:
                     for pmod_idx in self.placed_macro:
@@ -1627,7 +1632,7 @@ class PlacementCost(object):
                         if self.__overlap_area(block_i=pmod_block, block_j=mod_block) > 0:
                              temp_node_mask[i][j] = 0
             
-        return temp_node_mask
+        return temp_node_mask.flatten()
 
 
     def get_node_type(self, node_idx: int) -> str:
@@ -2056,6 +2061,7 @@ class PlacementCost(object):
 
         if not mod.get_fix_flag():
             mod.set_placed_flag(True)
+            self.placed_macro.remove(node_idx)
             # update flag
             self.FLAG_UPDATE_CONGESTION = True
             self.FLAG_UPDATE_DENSITY = True
@@ -2076,6 +2082,7 @@ class PlacementCost(object):
             if mod.get_placed_flag():
                 mod.set_placed_flag(False)
         
+        self.placed_macro = []
         # update flag
         self.FLAG_UPDATE_CONGESTION = True
         self.FLAG_UPDATE_DENSITY = True

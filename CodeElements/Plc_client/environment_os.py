@@ -197,7 +197,7 @@ class CircuitEnv(object):
     self._observation_extractor = observation_extractor.ObservationExtractor(
         plc=self._plc)
 
-    print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(13333)).reshape(35,33))
+    # print(getframeinfo(currentframe()).lineno, '\n', np.array(self._plc.get_node_mask(13333)).reshape(35,33))
     if self._make_soft_macros_square:
       # It is better to make the shape of soft macros square before using
       # analytical std cell placers like FD.
@@ -218,10 +218,10 @@ class CircuitEnv(object):
     self._sorted_node_indices = placement_util.get_ordered_node_indices(
         mode='descending_size_macro_first', plc=self._plc)
 
-    print(len(self._sorted_node_indices))
+    # print(len(self._sorted_node_indices))
     self._sorted_soft_macros = self._sorted_node_indices[self._num_hard_macros:]
 
-    print(len(self._sorted_soft_macros))
+    # print(len(self._sorted_soft_macros))
 
     # Generate a map from actual macro_index to its position in
     # self.macro_indices. Needed because node adjacency matrix is in the same
