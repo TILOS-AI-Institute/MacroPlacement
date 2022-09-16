@@ -1,8 +1,11 @@
 import numpy as np
 import pandas as pd
-import sys,os,traceback
+import sys
+import os
+import traceback
 import argparse
-import math,re
+import math
+import re
 from random import randrange
 from absl import flags
 from absl.flags import argparse_flags
@@ -72,6 +75,7 @@ Todo:
 
 """
 
+
 class PlacementCostTest():
 
     """ Canvas Setting Reference Table
@@ -100,11 +104,10 @@ class PlacementCostTest():
         - GRID_ROW = 5
     """
 
-
     def __init__(self, NETLIST_PATH, PLC_PATH=None,
-                width=0, height=0,
-                column=0, row=0, rpmv=10, rpmh=10,
-                marh=10, marv=10, smooth=1) -> None:
+                 width=0, height=0,
+                 column=0, row=0, rpmv=10, rpmh=10,
+                 marh=10, marv=10, smooth=1) -> None:
         self.NETLIST_PATH = NETLIST_PATH
         self.PLC_PATH = PLC_PATH
         self.CANVAS_WIDTH = width
@@ -125,8 +128,8 @@ class PlacementCostTest():
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
         # Open-sourced Implementation
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
-                                                macro_macro_x_spacing = 50,
-                                                macro_macro_y_spacing = 50)
+                                                  macro_macro_x_spacing=50,
+                                                  macro_macro_y_spacing=50)
 
         # NOTE: must set canvas before restoring placement, otherwise OOB error
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
@@ -138,9 +141,9 @@ class PlacementCostTest():
             print("[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
-                                            ifInital=True,
-                                            ifValidate=True,
-                                            ifReadComment=False)
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=False)
             self.plc.set_canvas_boundary_check(False)
             self.plc.restore_placement(self.PLC_PATH)
         else:
@@ -148,7 +151,7 @@ class PlacementCostTest():
 
         try:
             assert int(self.plc_os.get_area()) == int(self.plc.get_area())
-            
+
             self.plc.set_routes_per_micron(1.0, 2.0)
             self.plc_os.set_routes_per_micron(1.0, 2.0)
             assert self.plc.get_routes_per_micron() == self.plc_os.get_routes_per_micron()
@@ -159,87 +162,96 @@ class PlacementCostTest():
 
             self.plc.set_congestion_smooth_range(2.0)
             self.plc_os.set_congestion_smooth_range(2.0)
-            assert self.plc.get_congestion_smooth_range() == self.plc_os.get_congestion_smooth_range()
+            assert self.plc.get_congestion_smooth_range(
+            ) == self.plc_os.get_congestion_smooth_range()
 
             self.plc.set_macro_routing_allocation(3.0, 4.0)
             self.plc_os.set_macro_routing_allocation(3.0, 4.0)
-            assert self.plc.get_macro_routing_allocation() == self.plc_os.get_macro_routing_allocation()
+            assert self.plc.get_macro_routing_allocation(
+            ) == self.plc_os.get_macro_routing_allocation()
         except Exception as e:
             _, _, tb = sys.exc_info()
             traceback.print_tb(tb)
             tb_info = traceback.extract_tb(tb)
             _, line, _, text = tb_info[-1]
-            print('[METADATA ERROR] at line {} in statement {}'\
-                .format(line, text))
+            print('[METADATA ERROR] at line {} in statement {}'
+                  .format(line, text))
             exit(1)
-        
+
         # test get_macro_adjacency
         plc_macroadj = self.plc.get_macro_adjacency()
-        plc_macroadj = np.array(plc_macroadj).reshape(int(math.sqrt(len(plc_macroadj))),\
-             int(math.sqrt(len(plc_macroadj))))
+        plc_macroadj = np.array(plc_macroadj).reshape(int(math.sqrt(len(plc_macroadj))),
+                                                      int(math.sqrt(len(plc_macroadj))))
 
         plcos_macroadj = self.plc_os.get_macro_adjacency()
-        plcos_macroadj = np.array(plcos_macroadj).reshape(int(math.sqrt(len(plcos_macroadj))),\
-             int(math.sqrt(len(plcos_macroadj))))
+        plcos_macroadj = np.array(plcos_macroadj).reshape(int(math.sqrt(len(plcos_macroadj))),
+                                                          int(math.sqrt(len(plcos_macroadj))))
 
         try:
             assert(np.sum(np.nonzero(plc_macroadj - plcos_macroadj)) == 0)
         except Exception as e:
             print("[MACRO ADJ ERROR] Mismatched found -- {}".format(str(e)))
             exit(1)
-        
+
         # test get_macro_and_clustered_port_adjacency
         plc_clusteradj, plc_cell = self.plc.get_macro_and_clustered_port_adjacency()
-        plc_clusteradj = np.array(plc_clusteradj).reshape(int(math.sqrt(len(plc_clusteradj))),\
-             int(math.sqrt(len(plc_clusteradj))))
+        plc_clusteradj = np.array(plc_clusteradj).reshape(int(math.sqrt(len(plc_clusteradj))),
+                                                          int(math.sqrt(len(plc_clusteradj))))
 
         plcos_clusteradj, plcos_cell = self.plc_os.get_macro_and_clustered_port_adjacency()
-        plcos_clusteradj = np.array(plcos_clusteradj).reshape(int(math.sqrt(len(plcos_clusteradj))),\
-             int(math.sqrt(len(plcos_clusteradj))))
+        plcos_clusteradj = np.array(plcos_clusteradj).reshape(int(math.sqrt(len(plcos_clusteradj))),
+                                                              int(math.sqrt(len(plcos_clusteradj))))
 
         try:
             for plc_adj, plcos_adj in zip(plc_clusteradj, plcos_clusteradj):
                 assert(np.sum(np.nonzero(plc_adj - plcos_adj)) == 0)
         except Exception as e:
-            print("[MACRO AND CLUSTERED PORT ADJ ERROR] Mismatched found -- {}".format(str(e)))
+            print(
+                "[MACRO AND CLUSTERED PORT ADJ ERROR] Mismatched found -- {}".format(str(e)))
             exit(1)
-        
+
         print("                  +++++++++++++++++++++++++++")
         print("                  +++ TEST METADATA: PASS +++")
         print("                  +++++++++++++++++++++++++++")
-    
+
     def view_canvas(self):
         print("############################ VIEW CANVAS ############################")
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
-                                                macro_macro_x_spacing = 50,
-                                                macro_macro_y_spacing = 50)
-        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
-        self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+                                                  macro_macro_x_spacing=50,
+                                                  macro_macro_y_spacing=50)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        if self.PLC_PATH:
+            print("[PLC FILE FOUND] Loading info from .plc file")
+            self.plc_os.set_canvas_boundary_check(False)
+            self.plc_os.restore_placement(self.PLC_PATH,
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=True)
         # show canvas
-        self.plc_os.display_canvas()
+        self.plc_os.display_canvas(annotate=False, amplify=False)
 
     def test_proxy_cost(self):
         print("############################ TEST PROXY COST ############################")
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
-        
+
         # Open-sourced Implementation
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
-                                                macro_macro_x_spacing = 50,
-                                                macro_macro_y_spacing = 50)
+                                                  macro_macro_x_spacing=50,
+                                                  macro_macro_y_spacing=50)
 
         self.plc.get_overlap_threshold()
         print("overlap_threshold default", self.plc.get_overlap_threshold())
-        
+
         if self.PLC_PATH:
             print("[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
-                                            ifInital=True,
-                                            ifValidate=True,
-                                            ifReadComment=False)
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=False)
             self.plc.set_canvas_boundary_check(False)
             self.plc.restore_placement(self.PLC_PATH)
         else:
@@ -253,7 +265,7 @@ class PlacementCostTest():
 
         self.plc.set_congestion_smooth_range(self.SMOOTH)
         self.plc_os.set_congestion_smooth_range(self.SMOOTH)
-            
+
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
@@ -262,7 +274,7 @@ class PlacementCostTest():
         # TODO: [IGNORE] create_blockage must be defined BEFORE set_canvas_size and set_placement_grid in order to be considered on the canvas
         if False:
             self.plc.create_blockage(0.0, 100.0, 300.0, 300.0, 1.0)
-            self.plc.create_blockage(300,0,500,200,1)
+            self.plc.create_blockage(300, 0, 500, 200, 1)
             print(self.plc.get_blockages())
             print(self.plc.make_soft_macros_square())
             print(self.plc.set_use_incremental_cost(True))
@@ -270,18 +282,23 @@ class PlacementCostTest():
 
         # HPWL
         try:
-            assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+            assert int(self.plc_os.get_wirelength()) == int(
+                self.plc.get_wirelength())
             assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-3
         except Exception as e:
-            print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(str(self.plc.get_cost()), self.plc_os.get_cost()))
+            print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
+                str(self.plc.get_cost()), self.plc_os.get_cost()))
             exit(1)
 
         # Density
         try:
-            assert int(sum(self.plc_os.get_grid_cells_density())) == int(sum(self.plc.get_grid_cells_density()))
-            assert int(self.plc_os.get_density_cost()) == int(self.plc.get_density_cost())
+            assert int(sum(self.plc_os.get_grid_cells_density())) == int(
+                sum(self.plc.get_grid_cells_density()))
+            assert int(self.plc_os.get_density_cost()) == int(
+                self.plc.get_density_cost())
         except Exception as e:
-            print("[ERROR DENSITY] Discrepancies found when computing density -- GL {}, OS {}".format(str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
+            print("[ERROR DENSITY] Discrepancies found when computing density -- GL {}, OS {}".format(
+                str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
             exit(1)
 
         # Congestion
@@ -289,11 +306,12 @@ class PlacementCostTest():
             # NOTE: [IGNORE] grid-wise congestion not tested because miscellaneous implementation differences
             # assert abs(sum(self.plc_os.get_horizontal_routing_congestion()) - sum(self.plc.get_horizontal_routing_congestion())) < 1e-3
             # assert abs(sum(self.plc_os.get_vertical_routing_congestion()) - sum(self.plc.get_vertical_routing_congestion())) < 1e-3
-            assert abs(self.plc.get_congestion_cost() - self.plc_os.get_congestion_cost()) < 1e-3
+            assert abs(self.plc.get_congestion_cost() -
+                       self.plc_os.get_congestion_cost()) < 1e-3
         except Exception as e:
-            print("[ERROR CONGESTION] Discrepancies found when computing congestion -- GL {}, OS {}"\
-                .format(str(self.plc.get_congestion_cost()),\
-                        str(self.plc_os.get_congestion_cost())))
+            print("[ERROR CONGESTION] Discrepancies found when computing congestion -- GL {}, OS {}"
+                  .format(str(self.plc.get_congestion_cost()),
+                          str(self.plc_os.get_congestion_cost())))
             exit(1)
 
         print("                  +++++++++++++++++++++++++++++")
@@ -304,26 +322,25 @@ class PlacementCostTest():
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
-                                                macro_macro_x_spacing = 50,
-                                                macro_macro_y_spacing = 50)
+                                                  macro_macro_x_spacing=50,
+                                                  macro_macro_y_spacing=50)
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        
-        self.plc_util = placement_util.create_placement_cost(
-                                                    plc_client=plc_client, 
-                                                    netlist_file=self.NETLIST_PATH,
-                                                    init_placement=self.PLC_PATH
-                                                )
 
+        self.plc_util = placement_util.create_placement_cost(
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
 
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        
+
         self.plc_os.display_canvas()
         self.unplace_node()
-        print(np.flip(np.array(self.plc_util.get_node_mask(0)).reshape(35,33), axis=0))
-        
-        print(np.flip(np.array(self.plc.get_node_mask(0)).reshape(35,33), axis=0))
+        print(np.flip(np.array(self.plc_util.get_node_mask(0)).reshape(35, 33), axis=0))
+
+        print(np.flip(np.array(self.plc.get_node_mask(0)).reshape(35, 33), axis=0))
         print("****************** miscellaneous ******************")
         # self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         # self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
@@ -343,7 +360,7 @@ class PlacementCostTest():
         # print("get_node_mask\n", np.array(self.plc.get_node_mask(NODE_IDX)).reshape((4,4)))
         # print("can_place_node", self.plc.can_place_node(0, 1))
         print("***************************************************")
-    
+
     def test_proxy_congestion(self):
         # Google's API
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
@@ -365,7 +382,7 @@ class PlacementCostTest():
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
         temp_gl_h = np.array(self.plc.get_horizontal_routing_congestion())
-        temp_os_h =  np.array(self.plc_os.get_horizontal_routing_congestion())
+        temp_os_h = np.array(self.plc_os.get_horizontal_routing_congestion())
         print(temp_gl_h.reshape(self.GRID_COL, self.GRID_ROW))
         print(temp_os_h.reshape(self.GRID_COL, self.GRID_ROW))
 
@@ -374,7 +391,7 @@ class PlacementCostTest():
 
         temp_gl_v = np.array(self.plc.get_vertical_routing_congestion())
         temp_os_v = np.array(self.plc_os.get_vertical_routing_congestion())
-        
+
         print(temp_gl_v.reshape(self.GRID_COL, self.GRID_ROW))
         print(temp_os_v.reshape(self.GRID_COL, self.GRID_ROW))
 
@@ -388,31 +405,38 @@ class PlacementCostTest():
         else:
             print("MATCHED!!! **********************")
 
-        ###################################################################### EXTRACT ROUTING CONGESTION
+        # EXTRACT ROUTING CONGESTION
         self.plc.set_macro_routing_allocation(0, 0)
         self.plc_os.set_macro_routing_allocation(0, 0)
 
         temp_gl_h_rt = np.array(self.plc.get_horizontal_routing_congestion())
-        temp_os_h_rt =  np.array(self.plc_os.get_horizontal_routing_congestion())
+        temp_os_h_rt = np.array(
+            self.plc_os.get_horizontal_routing_congestion())
 
         temp_gl_v_rt = np.array(self.plc.get_vertical_routing_congestion())
         temp_os_v_rt = np.array(self.plc_os.get_vertical_routing_congestion())
 
-        temp_gl_h_mc = (temp_gl_h - temp_gl_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
-        temp_os_h_mc = (temp_os_h - temp_os_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        temp_gl_h_mc = (
+            temp_gl_h - temp_gl_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        temp_os_h_mc = (
+            temp_os_h - temp_os_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
 
-        temp_gl_v_mc = (temp_gl_v - temp_gl_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
-        temp_os_v_mc = (temp_os_v - temp_os_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        temp_gl_v_mc = (
+            temp_gl_v - temp_gl_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        temp_os_v_mc = (
+            temp_os_v - temp_os_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
 
         # print("GL H MACRO Congestion", (temp_gl_h_mc).reshape(self.GRID_COL, self.GRID_ROW))
         # print("OS H MACRO Congestion", (temp_os_h_mc).reshape(self.GRID_COL, self.GRID_ROW))
-        print("H MACRO Congestion DIFF", np.where(abs(temp_gl_h_mc - temp_os_h_mc) > 1e-5))
+        print("H MACRO Congestion DIFF", np.where(
+            abs(temp_gl_h_mc - temp_os_h_mc) > 1e-5))
 
         # print("GL V MACRO Congestion", (temp_gl_v_mc).reshape(self.GRID_COL, self.GRID_ROW))
         # print("OS V MACRO Congestion", (temp_os_v_mc).reshape(self.GRID_COL, self.GRID_ROW))
-        print("V MACRO Congestion DIFF", np.where(abs(temp_gl_v_mc - temp_os_v_mc) > 1e-5))
+        print("V MACRO Congestion DIFF", np.where(
+            abs(temp_gl_v_mc - temp_os_v_mc) > 1e-5))
 
-        ####################################################################### BY ENTRY
+        # BY ENTRY
         print("**************BY ENTRY DIFF")
         print(temp_gl_h_mc[0][6], temp_os_h_mc[0][6])
 
@@ -420,56 +444,61 @@ class PlacementCostTest():
         """
             * Read same input, perturb placement and orientation, write to new .plc
         """
-        print("############################ TEST PLACEMENT UTIL ############################")
+        print(
+            "############################ TEST PLACEMENT UTIL ############################")
         try:
             assert self.PLC_PATH
         except AssertionError:
             print("[ERROR PLACEMENT UTIL TEST] Facilitate required .plc file")
-        
+
         self.plc_util = placement_util.create_placement_cost(
-                                                        plc_client=plc_client, 
-                                                        netlist_file=self.NETLIST_PATH,
-                                                        init_placement=self.PLC_PATH
-                                                        )
-        
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
         self.plc_util_os = placement_util.create_placement_cost(
-                                                            plc_client=plc_client_os,
-                                                            netlist_file=self.NETLIST_PATH,
-                                                            init_placement=self.PLC_PATH
-                                                            ) 
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
 
         # node_xy_coordinates
         NODE_XY_DICT = {}
         for i in placement_util.nodes_of_types(self.plc_util_os, ['MACRO', 'STDCELL', 'PORT']):
             NODE_XY_DICT[i] = (randrange(int(self.plc_util.get_canvas_width_height()[0])),
-                                randrange(int(self.plc_util.get_canvas_width_height()[1])))
+                               randrange(int(self.plc_util.get_canvas_width_height()[1])))
 
         # macro_orientation
         MACRO_ORIENTATION = {}
         for i in placement_util.nodes_of_types(self.plc_util_os, ['MACRO']):
             MACRO_ORIENTATION[i] = "S"
-        
-        # ********************** plc_client_os ********************** 
+
+        # ********************** plc_client_os **********************
         # placement_util.restore_node_xy_coordinates(self.plc_util_os, NODE_XY_DICT)
 
-        placement_util.restore_macro_orientations(self.plc_util_os, MACRO_ORIENTATION)
+        placement_util.restore_macro_orientations(
+            self.plc_util_os, MACRO_ORIENTATION)
 
         # fix ports
         placement_util.fix_port_coordinates(self.plc_util_os)
 
         # write out new plc
-        placement_util.save_placement(self.plc_util_os, "save_test_os.plc", 'this is a comment')
+        placement_util.save_placement(
+            self.plc_util_os, "save_test_os.plc", 'this is a comment')
 
-        # ********************** plc_client ********************** 
+        # ********************** plc_client **********************
         # placement_util.restore_node_xy_coordinates(self.plc_util, NODE_XY_DICT)
 
-        placement_util.restore_macro_orientations(self.plc_util, MACRO_ORIENTATION)
+        placement_util.restore_macro_orientations(
+            self.plc_util, MACRO_ORIENTATION)
 
         # fix ports
         placement_util.fix_port_coordinates(self.plc_util)
 
         # write out new plc
-        placement_util.save_placement(self.plc_util, "save_test_gl.plc", 'this is a comment')
+        placement_util.save_placement(
+            self.plc_util, "save_test_gl.plc", 'this is a comment')
 
         # This is only for node information, line-by-line test
         try:
@@ -477,10 +506,12 @@ class PlacementCostTest():
                 for idx, (line1, line2) in enumerate(zip(f1, f2)):
                     if line1.strip() != line2.strip():
                         if not re.match(r"(# )\w+", line1.strip()):
-                            print("PLC MISMATCH (GL, OS)\n", line1.strip(), "\n", line2.strip())
-                            raise AssertionError ("false")
+                            print("PLC MISMATCH (GL, OS)\n",
+                                  line1.strip(), "\n", line2.strip())
+                            raise AssertionError("false")
         except AssertionError:
-            print("[ERROR PLACEMENT UTIL] Saved PLC Discrepency found at line {}".format(str(idx)))
+            print("[ERROR PLACEMENT UTIL] Saved PLC Discrepency found at line {}".format(
+                str(idx)))
 
         # if keep plc file for detailed comparison
         if not keep_save_file:
@@ -507,7 +538,9 @@ class PlacementCostTest():
         self.extractor = observation_extractor.ObservationExtractor(
             plc=plc, observation_config=self._observation_config)
         """
+        
         print("############################ TEST OBSERVATION EXTRACTOR ############################")
+
         try:
             assert self.PLC_PATH
         except AssertionError:
@@ -515,33 +548,50 @@ class PlacementCostTest():
 
         # Using the default edge/node
         self._observation_config = observation_config.ObservationConfig(
-        max_num_edges=28400, max_num_nodes=5000, max_grid_size=128)
-        
+            max_num_edges=28400, max_num_nodes=5000, max_grid_size=128)
+
         self.plc_util = placement_util.create_placement_cost(
-                                                            plc_client=plc_client, 
-                                                            netlist_file=self.NETLIST_PATH,
-                                                            init_placement=self.PLC_PATH
-                                                        )
-        
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        self.plc_util.unplace_all_nodes()
+
         self.plc_util_os = placement_util.create_placement_cost(
-                                                                plc_client=plc_client_os,
-                                                                netlist_file=self.NETLIST_PATH,
-                                                                init_placement=self.PLC_PATH
-                                                            )
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        self.plc_util_os.unplace_all_nodes()
+
+        if self.PLC_PATH:
+            print("[PLC FILE FOUND] Loading info from .plc file")
+            self.plc_os.set_canvas_boundary_check(False)
+            self.plc_os.restore_placement(self.PLC_PATH,
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=False)
+            self.plc.set_canvas_boundary_check(False)
+            self.plc.restore_placement(self.PLC_PATH)
+        else:
+            print("[PLC FILE MISSING] Using only netlist info")
 
         self.extractor = observation_extractor.ObservationExtractor(
-                        plc=self.plc_util, observation_config=self._observation_config
+            plc=self.plc_util, observation_config=self._observation_config
         )
 
         self.extractor_os = observation_extractor.ObservationExtractor(
-                        plc=self.plc_util_os, observation_config=self._observation_config
+            plc=self.plc_util_os, observation_config=self._observation_config
         )
 
         # Static features that are invariant across training steps
         static_feature_gl = self.extractor._extract_static_features()
         static_feature_os = self.extractor_os._extract_static_features()
         for feature_gl, feature_os in zip(static_feature_gl, static_feature_os):
-            assert (static_feature_gl[feature_gl] == static_feature_os[feature_os]).all()
+            assert (static_feature_gl[feature_gl] ==
+                    static_feature_os[feature_os]).all()
 
         print("                  ++++++++++++++++++++++++++++++++++++++++")
         print("                  +++ TEST OBSERVATION EXTRACTOR: PASS +++")
@@ -550,17 +600,17 @@ class PlacementCostTest():
     def test_place_node(self):
         print("############################ TEST PLACE NODE ############################")
         self.plc_util = placement_util.create_placement_cost(
-                                                        plc_client=plc_client, 
-                                                        netlist_file=self.NETLIST_PATH,
-                                                        init_placement=None
-                                                        )
-        
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=None
+        )
+
         self.plc_util_os = placement_util.create_placement_cost(
-                                                            plc_client=plc_client_os,
-                                                            netlist_file=self.NETLIST_PATH,
-                                                            init_placement=None
-                                                            )
-        
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=None
+        )
+
         self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
         self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
 
@@ -569,14 +619,16 @@ class PlacementCostTest():
 
         self.plc_util.set_congestion_smooth_range(self.SMOOTH)
         self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
-            
+
         self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        
-        ordered_node_gl = placement_util.get_ordered_node_indices(mode='descending_size_macro_first', plc=self.plc_util)
-        ordered_node_os = placement_util.get_ordered_node_indices(mode='descending_size_macro_first', plc=self.plc_util_os)
+
+        ordered_node_gl = placement_util.get_ordered_node_indices(
+            mode='descending_size_macro_first', plc=self.plc_util)
+        ordered_node_os = placement_util.get_ordered_node_indices(
+            mode='descending_size_macro_first', plc=self.plc_util_os)
 
         assert (np.array(ordered_node_gl) == np.array(ordered_node_os)).all()
 
@@ -587,9 +639,11 @@ class PlacementCostTest():
         CELL_TO_PLACE_IDX = 6
         print("MASK FOR PLACING FIRST NODE:")
         self.plc_util_os.display_canvas(annotate=False)
-        print(np.flip(np.array(self.plc_util_os.get_node_mask(NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW,self.GRID_COL), axis=0))
-        print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW,self.GRID_COL), axis=0))
-        exit(0)
+        print(np.flip(np.array(self.plc_util_os.get_node_mask(
+            NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW, self.GRID_COL), axis=0))
+        print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(
+            self.GRID_ROW, self.GRID_COL), axis=0))
+
         self.plc_util_os.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
         self.plc_util.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
 
@@ -597,8 +651,10 @@ class PlacementCostTest():
         NODE_TO_PLACE_IDX = 1
         CELL_TO_PLACE_IDX = 18
         print("MASK FOR PLACING SECOND NODE:")
-        print(np.flip(np.array(self.plc_util_os.get_node_mask(NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW,self.GRID_COL), axis=0))
-        print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW,self.GRID_COL), axis=0))
+        print(np.flip(np.array(self.plc_util_os.get_node_mask(
+            NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW, self.GRID_COL), axis=0))
+        print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(
+            self.GRID_ROW, self.GRID_COL), axis=0))
         self.plc_util_os.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
         self.plc_util.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
 
@@ -607,6 +663,7 @@ class PlacementCostTest():
     def test_environment(self):
         print("############################ TEST ENVIRONMENT ############################")
         # Source: https://github.com/google-research/circuit_training/blob/d5e454e5bcd153a95d320f664af0d1b378aace7b/circuit_training/environment/environment_test.py#L39
+
         def random_action(mask):
             valid_actions, = np.nonzero(mask.flatten())
             if len(valid_actions):  # pylint: disable=g-explicit-length-test
@@ -618,92 +675,106 @@ class PlacementCostTest():
 
         env = environment.CircuitEnv(
             _plc=plc_client,
-            create_placement_cost_fn=placement_util.create_placement_cost, 
-            netlist_file=self.NETLIST_PATH, 
+            create_placement_cost_fn=placement_util.create_placement_cost,
+            netlist_file=self.NETLIST_PATH,
             init_placement=self.PLC_PATH)
 
         self.plc_util = placement_util.create_placement_cost(
-                                                    plc_client=plc_client, 
-                                                    netlist_file=self.NETLIST_PATH,
-                                                    init_placement=self.PLC_PATH
-                                                )
-        
-        
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
 
         # print(np.array2string(env._current_mask.reshape(128, 128)), sep=']')
-        
+
         env_os = environment.CircuitEnv(
             _plc=plc_client_os,
-            create_placement_cost_fn=placement_util.create_placement_cost, 
-            netlist_file=self.NETLIST_PATH, 
+            create_placement_cost_fn=placement_util.create_placement_cost,
+            netlist_file=self.NETLIST_PATH,
             init_placement=self.PLC_PATH)
         # print(np.array(env_os._plc.get_node_mask(13333)).reshape(33,35))
         # print(np.array(env._plc.get_node_mask(13333)).reshape(33,35))
         assert (env_os._get_mask() == env._get_mask()).all()
-        print(env_os._get_obs().keys())
 
+        # TODO DISCREPENCY FOUND
+        obs_gl = env._get_obs()
+        obs_os = env_os._get_obs()
+
+        env_os.reset()
+        env.reset()
+
+        for feature_gl, feature_os in zip(obs_gl, obs_os):
+            if not (obs_gl[feature_gl] == obs_os[feature_os]).all():
+                print(feature_gl, feature_os)
+                print(np.where(obs_gl[feature_gl] != obs_os[feature_os]))
+        
         print("                  ++++++++++++++++++++++++++++++")
         print("                  +++ TEST ENVIRONMENT: PASS +++")
         print("                  ++++++++++++++++++++++++++++++")
 
+
 def parse_flags(argv):
-    parser = argparse_flags.ArgumentParser(description='An argparse + app.run example')
+    parser = argparse_flags.ArgumentParser(
+        description='An argparse + app.run example')
     parser.add_argument("--netlist", required=True,
-        help="Path to netlist in pb.txt")
+                        help="Path to netlist in pb.txt")
     parser.add_argument("--plc", required=False,
-        help="Path to plc in .plc")
+                        help="Path to plc in .plc")
     parser.add_argument("--width", type=float, required=True,
-        help="Canvas width")
+                        help="Canvas width")
     parser.add_argument("--height", type=float, required=True,
-        help="Canvas height")
+                        help="Canvas height")
     parser.add_argument("--col", type=int, required=True,
-        help="Grid column")
+                        help="Grid column")
     parser.add_argument("--row", type=int, required=True,
-        help="Grid row")
+                        help="Grid row")
     parser.add_argument("--rpmh", type=float, default=10, required=False,
-        help="Grid row")
+                        help="Grid row")
     parser.add_argument("--rpmv", type=float, default=10, required=False,
-        help="Grid row")
+                        help="Grid row")
     parser.add_argument("--marh", type=float, default=10, required=False,
-        help="Grid row")
+                        help="Grid row")
     parser.add_argument("--marv", type=float, default=10, required=False,
-        help="Grid row")
+                        help="Grid row")
     parser.add_argument("--smooth", type=float, default=1, required=False,
-        help="Grid row")
+                        help="Grid row")
     return parser.parse_args(argv[1:])
-    
+
+
 def main(args):
     if args.plc:
-        PCT = PlacementCostTest(NETLIST_PATH=args.netlist, 
-                                PLC_PATH=args.plc, 
-                                width=args.width, 
+        PCT = PlacementCostTest(NETLIST_PATH=args.netlist,
+                                PLC_PATH=args.plc,
+                                width=args.width,
                                 height=args.height,
-                                column=args.col, 
-                                row=args.row, 
+                                column=args.col,
+                                row=args.row,
                                 rpmv=args.rpmv,
                                 rpmh=args.rpmh,
                                 marh=args.marh,
                                 marv=args.marv,
                                 smooth=args.smooth)
     else:
-        PCT = PlacementCostTest(NETLIST_PATH=args.netlist, 
-                                width=args.width, 
+        PCT = PlacementCostTest(NETLIST_PATH=args.netlist,
+                                width=args.width,
                                 height=args.height,
-                                column=args.col, 
-                                row=args.row, 
+                                column=args.col,
+                                row=args.row,
                                 rpmv=args.rpmv,
                                 rpmh=args.rpmh,
                                 marh=args.marh,
                                 marv=args.marv,
                                 smooth=args.smooth)
-    
+
     # PCT.test_metadata()
-    # PCT.test_proxy_cost()
+    PCT.test_proxy_cost()
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
+    # PCT.view_canvas()
     PCT.test_environment()
+
 
 if __name__ == '__main__':
     app.run(main, flags_parser=parse_flags)
