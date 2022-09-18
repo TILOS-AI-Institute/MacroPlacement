@@ -1,3 +1,3 @@
-# Links to our document
-[OurProgress](./OurProgress/)  
-[ProxyCost]
+# Links to Our Documents
+[Our Progress](./OurProgress/)  
+[Proxy Cost]()
