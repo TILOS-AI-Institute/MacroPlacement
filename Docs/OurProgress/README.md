@@ -1,4 +1,13 @@
 # **Our Progress: A Chronology**
+## Table of Contents
+  - [Introduction](#introduction)
+  - [Our Progress](#our-progress) and Major Milestone
+    - [Ariane133 macro placement using Circuit Training](#circuit-training-baseline-result-on-our-ariane133-nangate4551)
+    - [Replication of proxy cost](#August25)
+    - [NVDLA macro placement using Circuit Training](#circuit-training-baseline-result-on-our-nvdla-nangate4568)
+  - [Pinned Questions](#pinned-to-bottom-question-list)
+
+## **Introduction**
 [MacroPlacement](../../) is an open, transparent effort to provide a public, baseline implementation of [Google Brain’s Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  In this repo,  we aim to achieve the following.  
 - We want to enable anyone to perform RL-based macro placement on their own design, starting from design RTL files.
 - We want to enable anyone to train their own RL models based on their own designs in any design enablements, starting from design RTL files.
@@ -9,6 +18,7 @@ In order to achieve the above goals,  our initial focus has been on the followin
 - **Generating correct inputs and setup for Circuit Training.** Since Circuit Training uses protocol buffer format to represent designs, we must translate standard LEF/DEF representation to the protocol buffer format. We must also determine how to correctly feed all necessary design information into the [Google Brain’s Circuit Training](https://github.com/google-research/circuit_training)  flow, e.g., halo width, canvas size, and constraints.  If we accomplish this, then we can run [Google Brain’s Circuit Training](https://github.com/google-research/circuit_training) to train our own RL models or perform RL-based macro placement for our own designs.
 - **Replicating important but missing parts of the [Google Nature paper](https://www.nature.com/articles/s41586-021-03544-w).** Several aspects of Circuit Training are not clearly documented in the Nature paper, nor in the code and scripts that are visible in Circuit Training. Over time, these have included hypergraph-to-graph conversion; gridding, grouping and clustering; force-directed placement; various hyperparameter settings; and more. As we keep moving forward, based on our experiments and continued Q&A and feedback from Google, we will summarize the miscorrelations between the Google Nature paper and [Google Brain’s Circuit Training](https://github.com/google-research/circuit_training), as well as corrective steps. In this way, the Circuit Training methodology and the results published in the Nature paper can be better understood by all.
 
+## **Our Progress**
 <a id="June6"></a>
 **June 6 - Aug 5:** We have developed and made publicly available the SP&R [flow](../../Flows/) using commercial tools Cadence Genus and Innovus, and open-source tools Yosys and OpenROAD, for [Ariane](../../Testcases/ariane136/) (two variants – one with [136 SRAMs](../../Testcases/ariane136/) and another with [133 SRAMs](../../Testcases/ariane133/)), [MemPool tile](../../Testcases/mempool/) and [NVDLA](../../Testcases/nvdla/) designs on [NanGate45](../../Enablements/NanGate45/), [ASAP7](../../Enablements/ASAP7/) and [SKY130HD](../../Enablements/SKY130HD/) open enablement. <span style="color:red">We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools</span>. This was an important milestone for the EDA research community. Please see Dr. David Junkin’s [presentation](https://open-source-eda-birds-of-a-feather.github.io/doc/slides/BOAF-Junkin-DAC-Presentation.pdf) at the recent DAC-2022 “Open-Source EDA and Benchmarking Summit” birds-of-a-feather [meeting](https://open-source-eda-birds-of-a-feather.github.io/).  
 
@@ -904,6 +914,7 @@ We currently use the physical synthesis tool **Cadence Genus iSpatial** to obtai
 <img width="300" src="./images/image18.png" alg="Ariane133_68_HierRTLMP2_Route">
 </p>
 
+<a id="August25"></a>
 **August 25:** <span style="color:blue">Replication of the congestion component of proxy cost</span>. Reverse-engineering from the plc client API is finally completed, as described [here](https://docs.google.com/document/d/1hM7UbmANkhoGB3-UfFBp8TRDvvVjpmio7cyyjK4a5bI/edit?usp=sharing). A review with Dr. Mustafa Yazgan was very helpful in confirming the case analysis and conventions identified during reverse-engineering.  Replication results are shown below.  With this, reproduction in open [source code](../../CodeElements/Plc_client/) of the Circuit Training proxy cost has been completed.  Note that the description [here](https://docs.google.com/document/d/1hM7UbmANkhoGB3-UfFBp8TRDvvVjpmio7cyyjK4a5bI/edit?usp=sharing) illustrates how the Nature paper, Circuit Training, and Google engineers’ versions can have minor discrepancies. (These minor discrepancies are not currently viewed as substantive, i.e., meaningfully affecting our ongoing assessment.) For example, to calculate the congestion component, the H- and V-routing congestion cost lists are concatenated, and the ABU5 (average of top 5% of the concatenated list) metric of this list is the congestion cost. By contrast, the Nature paper indicates use of an ABU10 metric. Recall: “*There is no substitute for source code*.”
 
 <table>
