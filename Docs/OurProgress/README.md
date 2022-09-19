@@ -1,11 +1,12 @@
 # **Our Progress: A Chronology**
 ## Table of Contents
   - [Introduction](#introduction)
-  - [Our Progress](#our-progress) and Major Milestone
+  - [Our progress](#our-progress) and major milestones
+    - [Publicly available commercial SP&R flow](#June6)
     - [Ariane133 macro placement using Circuit Training](#circuit-training-baseline-result-on-our-ariane133-nangate4551)
     - [Replication of proxy cost](#August25)
     - [NVDLA macro placement using Circuit Training](#circuit-training-baseline-result-on-our-nvdla-nangate4568)
-  - [Pinned Questions](#pinned-to-bottom-question-list)
+  - [Pinned questions](#pinned-to-bottom-question-list)
 
 ## **Introduction**
 [MacroPlacement](../../) is an open, transparent effort to provide a public, baseline implementation of [Google Brain’s Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  In this repo,  we aim to achieve the following.  
