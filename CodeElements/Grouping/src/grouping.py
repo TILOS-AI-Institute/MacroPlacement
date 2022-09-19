@@ -5,6 +5,15 @@ import shutil
 import sys
 from math import floor
 
+class Vertex:
+    def __init__(self, vertex_id, name, type, x, y):
+        self.vertex_id = vertex_id
+        self.name = name
+        self.type = type
+        self.x = x
+        self.y = y
+        self.group_id = -1
+
 ####################################################################################
 #### Extract hypergraph, instance, IO ports and outline from netlist
 ####################################################################################
@@ -31,69 +40,73 @@ def GenerateHypergraph(openroad_exe, setup_file, extract_hypergraph_file):
 
 
 ####################################################################################
-#### TraverseFanout in BFS manner
+#### TraverseFanout or TraverseFanin in DFS manner
 ####################################################################################
-def TraverseFanout(vertices_list, hyperedges_list, vertex_hash, seed_id, root_id, K_out):
-    # update the root vertex
-    vertex_hash[root_id] = [seed_id, 0]
+def TraverseFanout(vertices_list, hyperedges_list, vertices, root_vertex, K_out, level_id):
+    if (level_id >= K_out):
+        return
 
-    visited = []
-    wavefront = []
+    for hyperedge_id in vertices_list[root_vertex.vertex_id]:
+        hyperedge = hyperedges_list[hyperedge_id]
+        # Check if this hyperedge is driven by root_vertex
+        if (hyperedge[0] != root_vertex.vertex_id):
+            continue
 
-    wavefront.append(root_id)
+        for i in range(1, len(hyperedge)):
+            vertex = vertices[hyperedge[i]]
+            if (vertex.group_id != -1):
+                continue
 
-    while (len(wavefront) > 0):
-        vertex_id = wavefront.pop(0)
-        visited.append(vertex_id)
-        level_id = vertex_hash[vertex_id][1] + 1
-        if (level_id <= K_out):
-            for hyperedge_id in vertices_list[vertex_id]:
-                hyperedge = hyperedges_list[hyperedge_id]
-                # This hyperedge is driven by current edge
-                if (hyperedge[0] == vertex_id):
-                    for i in range(1, len(hyperedge)):
-                        if hyperedge[i] in visited:
-                            pass
-                        else:
-                            if (vertex_hash[hyperedge[i]][1] > level_id):
-                                vertex_hash[hyperedge[i]] = [seed_id, level_id]
-                                wavefront.append(hyperedge[i])
-                            elif (vertex_hash[hyperedge[i]][1] == level_id and vertex_hash[hyperedge[i]][1] > seed_id):
-                                vertex_hash[hyperedge[i]] = [seed_id, level_id]
-                                wavefront.append(hyperedge[i])
+            vertices[hyperedge[i]].group_id = root_vertex.group_id
+            TraverseFanout(vertices_list, hyperedges_list, vertices, vertices[hyperedge[i]], K_out, level_id + 1)
 
 
-####################################################################################
-#### TraverseFanin in BFS manner
-####################################################################################
-def TraverseFanin(vertices_list, hyperedges_list, vertex_hash, seed_id, root_id, K_in):
-    # update the root vertex
-    vertex_hash[root_id] = [seed_id, 0]
 
-    visited = []
-    wavefront = []
+def TraverseFanin(vertices_list, hyperedges_list, vertices, root_vertex, K_in, level_id):
+    if (level_id >= K_in):
+        return
 
-    wavefront.append(root_id)
+    for hyperedge_id in vertices_list[root_vertex.vertex_id]:
+        hyperedge = hyperedges_list[hyperedge_id]
+        # Check if this hyperedge is driven by root_vertex
+        if (hyperedge[0] == root_vertex.vertex_id):
+            continue
 
-    while (len(wavefront) > 0):
-        vertex_id = wavefront.pop(0)
-        visited.append(vertex_id)
-        level_id = vertex_hash[vertex_id][1] + 1
-        if (level_id <= K_in):
-            for hyperedge_id in vertices_list[vertex_id]:
-                hyperedge = hyperedges_list[hyperedge_id]
-                # This hyperedge is not driven by vertex_id
-                if (hyperedge[0] != vertex_id):
-                    driver_id = hyperedge[0]
-                    if driver_id in visited:
-                        pass
-                    else:
-                        if (vertex_hash[driver_id][1] > level_id):
-                            vertex_hash[driver_id] = [seed_id, level_id]
-                            wavefront.append(driver_id)
-                        elif (vertex_hash[driver_id][1] == level_id and vertex_hash[driver_id][1] > seed_id):
-                            vertex_hash[driver_id] = [seed_id, level_id]
-                            wavefront.append(driver_id)
+        # check the driver status
+        vertex = vertices[hyperedge[0]]
+        if (vertex.group_id != -1):
+            continue
+
+        vertices[hyperedge[0]].group_id = root_vertex.group_id
+        TraverseFanin(vertices_list, hyperedges_list, vertices, vertices[hyperedge[0]], K_in, level_id + 1)
+
+def GetValue(vertex, direction):
+    if (direction == "x"):
+        return vertex.x
+    elif (direction == "y"):
+        return vertex.y
+    else:
+        print("Error")
+        return 0.0
+
+def SortIOPorts(io_list, group_id, distance, direction = "y"):
+    if (len(io_list) == 0):
+        return group_id
+
+    i = 1
+    group_id += 1
+    if (direction == "x"):
+        io_list.sort(key = lambda vertex : vertex.x)
+    elif (direction == "y"):
+        io_list.sort(key = lambda vertex : vertex.y)
+    last_record = GetValue(io_list[0], direction)
+    for vertex in io_list:
+        if (GetValue(vertex, direction) - last_record > distance):
+            group_id += 1
+            last_record = GetValue(vertex, direction)
+        vertex.group_id = group_id
+        i = i + 1
+    return group_id
 
 
 def Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_threshold, src_dir):
@@ -105,11 +118,10 @@ def Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_thresho
     # Generate Hypergraph file
     rpt_dir = pwd + "/rtl_mp"
     hypergraph_file = rpt_dir + "/" + design + ".hgr"
-    io_name_file = hypergraph_file + ".io"
-    instance_name_file = hypergraph_file + ".instance"
+    instance_name_file = hypergraph_file + ".vertex"
     outline_file = hypergraph_file + ".outline"
     fix_file = pwd + "/" + design  + ".fix"
-    original_fix_file = pwd + "/" + design + ".fix.old"
+    new_hypergraph_file = pwd + "/" + design + ".hgr"
     GenerateHypergraph(openroad_exe, setup_file, extract_hypergraph_file)
 
     # read hypergraph
@@ -130,66 +142,63 @@ def Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_thresho
     for i in range(num_hyperedges):
         items = content[i+1].split()
         # ignore all the global nets
-        if (len(items) > global_net_threshold):
-            pass
+        if (len(items) > global_net_threshold or len(items) == 1):
+            continue
         hyperedge = [int(item) - 1 for item in items]
         hyperedges_list.append(hyperedge)
         for vertex in hyperedge:
             vertices_list[vertex].append(hyperedge_id)
         hyperedge_id += 1
 
-    # sort all the macros and IOs based on lexicographically smallest macro name
-    # get all the IOs and macros as seeds
-    seed_list = []
-    vertex_map = {  }
-    vertex_name_list = []
-
-    # read all the IOs
-    io_pos_map = {  }
-    with open(io_name_file) as f:
-        content = f.read().splitlines()
-    f.close()
-
-
-    vertex_id = 0
-    for line in content:
-        items = line.split()
-        io_name = items[0]
-        x = (float(items[1]) + float(items[3])) / 2.0
-        y = (float(items[2]) + float(items[4])) / 2.0
-        io_pos_map[io_name] = (x, y)
-        seed_list.append(io_name)
-        vertex_map[io_name] = vertex_id
-        vertex_name_list.append(io_name)
-        vertex_id += 1
-
-
-    # read all the instances (including macros)
+    # read vertices
+    vertices = []
     with open(instance_name_file) as f:
         content = f.read().splitlines()
     f.close()
 
-    for line in content:
-        items = line.split()
-        inst_name = items[0]
-        vertex_map[inst_name] = vertex_id
-        vertex_name_list.append(inst_name)
-        vertex_id += 1
-        if (int(items[1]) == 1):
-            seed_list.append(inst_name)
+    for i in range(len(content)):
+        items = content[i].split()
+        vertices.append(Vertex(i, items[0], items[1], float(items[2]), float(items[3])))
 
-    # sort the seed
-    seed_list.sort()
+    f = open(new_hypergraph_file, "w")
+    f.write(str(len(hyperedges_list)) + " " + str(len(vertices)) + "\n")
+    for hyperedge in hyperedges_list:
+        line = ""
+        for vertex in hyperedge:
+            line += str(vertex + 1) + " "
+        f.write(line + "\n")
+    f.close()
 
-    # grouping all the directly K_in fanins and K_out fanouts respect to
-    # ios and instances.
-    vertex_hash = [[len(seed_list), max(K_in, K_out) + 1] for i in range(len(vertex_map))]
-    for i in range(len(seed_list)):
-        TraverseFanout(vertices_list, hyperedges_list, vertex_hash, i, vertex_map[seed_list[i]], K_out)
-        TraverseFanin(vertices_list, hyperedges_list, vertex_hash, i,  vertex_map[seed_list[i]], K_in)
+    ###
+    fixed_groups = []
+    macros = {  }
+    group_id = -1
+    # Put each macro's pins into a seperate group
+    for vertex in vertices:
+        if (vertex.type == "macro_pin"):
+            name = vertex.name.split('/')
+            macro_name = ""
+            for i in range(len(name) - 1):
+                macro_name += name[i]
+            if macro_name not in macros:
+                group_id += 1
+                macros[macro_name] = group_id
+            vertex.group_id = macros[macro_name]
 
+    # Put IOs that are within close proximity of each other
+    # get the bounding box
+    die_lx = 1e9
+    die_ly = 1e9
+    die_ux = 0.0
+    die_uy = 0.0
+    for vertex in vertices:
+        x = vertex.x
+        y = vertex.y
+        die_lx = min(x, die_lx)
+        die_ux = max(x, die_ux)
+        die_ly = min(y, die_ly)
+        die_uy = max(y, die_uy)
 
-    # group IOs to bundled pins based on their position
     with open(outline_file) as f:
         content = f.read().splitlines()
     f.close()
@@ -200,89 +209,65 @@ def Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_thresho
     floorplan_ux = float(items[2])
     floorplan_uy = float(items[3])
 
+    canvas_width = floorplan_ux - floorplan_lx
+    canvas_height = floorplan_uy - floorplan_ly
+    canvas_height = 1600.06
+
     # get the vertical distance and horizontal distance
-    width = (floorplan_ux - floorplan_lx) / n_cols
-    height = (floorplan_uy - floorplan_ly) / n_rows
+    width = canvas_width / n_cols
+    height = canvas_height / n_rows
+    print("n_cols = ", n_cols)
+    print("n_rows = ", n_rows)
 
+    die_lx = round(die_lx, 3)
+    die_ly = round(die_ly, 3)
+    die_ux = round(die_ux, 3)
+    die_uy = round(die_uy, 3)
 
-    initial_group_map = {  }
-    grid_row_max = 100000000
-    for io_name, pos in io_pos_map.items():
-        hash_id = floor( pos[1] / height) * grid_row_max + floor( pos[0] / width)
-        if hash_id not in initial_group_map:
-            initial_group_map[hash_id] = [io_name]
+    print("die_lx = ", die_lx)
+    print("die_ly = ", die_ly)
+    print("die_ux = ", die_ux)
+    print("die_uy = ", die_uy)
+
+    # put ports into different sides : L, T, R, B
+    ports = { }
+    ports["L"] = []
+    ports["T"] = []
+    ports["R"] = []
+    ports["B"] = []
+    for vertex in vertices:
+        if (vertex.type == "port"):
+            vertex.x = round(vertex.x, 3)
+            vertex.y = round(vertex.y, 3)
+            if (vertex.x == die_lx):
+                ports["L"].append(vertex)
+            elif (vertex.x == die_ux):
+                ports["R"].append(vertex)
+            elif (vertex.y == die_ly):
+                ports["B"].append(vertex)
+            else:
+                ports["T"].append(vertex)
+
+    # sort all the pins
+    for key, value in ports.items():
+        if (key == "L" or key == "R"):
+            group_id = SortIOPorts(value, group_id, height, "y")
         else:
-            initial_group_map[hash_id].append(io_name)
+            group_id = SortIOPorts(value, group_id, width, "x")
 
-    # final group list
-    group_list = [  ]
-    for hash_id, ios in initial_group_map.items():
-        group_list.append(ios)
+    # update the vertices
+    for key, value in ports.items():
+        for vertex in value:
+            vertices[vertex.vertex_id].group_id = vertex.group_id
 
-    for seed in seed_list:
-        if seed not in io_pos_map:
-            group_list.append([seed])
-
-    group_id_map = {  }
-    for i in range(len(group_list)):
-        for vertex in group_list[i]:
-            group_id_map[vertex] = i
-
-
-    for i in range(len(vertex_hash)):
-        seed_id = vertex_hash[i][0]
-        if (seed_id < len(seed_list)):
-            vertex_name = vertex_name_list[i]
-            seed_name = seed_list[seed_id]
-            if vertex_name not in group_list[group_id_map[seed_name]]:
-                group_list[group_id_map[seed_name]].append(vertex_name)
-
-
-    f = open(original_fix_file, "w")
-    for group in group_list:
-        line = ""
-        for vertex in group:
-            line += vertex + ","
-        line = line[0:-1]
-        f.write(line + '\n')
-    f.close()
+    for vertex in vertices:
+        if (vertex.type == "port" or vertex.type == "macro_pin"):
+            TraverseFanout(vertices_list, hyperedges_list, vertices, vertex, K_out, 0)
+            TraverseFanin(vertices_list, hyperedges_list, vertices, vertex, K_in, 0)
 
     f = open(fix_file, "w")
-    for group in group_list:
-        line = ""
-        for vertex in group:
-            if vertex not in seed_list:
-                line += vertex + ","
-        if (len(line) > 0):
-            line = line[0:-1]
-        f.write(line + '\n')
+    for vertex in vertices:
+        f.write(str(vertex.group_id) + "\n")
     f.close()
 
-
-    shutil.rmtree(rpt_dir)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    #shutil.rmtree(rpt_dir)
