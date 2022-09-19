@@ -2,7 +2,7 @@
 deselectAll
 set top_module [dbget top.name]
 
-if {[dbget top.terms.pStatus -v -e fixed] == "" } {
+if {[dbget top.terms.pStatus -v -e fixed] != "" } {
     source ../../../../util/place_pin.tcl
 }
 

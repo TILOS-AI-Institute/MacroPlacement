@@ -53,14 +53,18 @@ proc extract_wire_length {} {
 }
 
 proc extract_report {stage} {
+    setAnalysisMode -reset
+    setAnalysisMode -analysisType onChipVariation -cppr both
+
     if { $stage == "preCTS" } {
        timeDesign -preCTS -prefix ${stage} 
     } elseif { $stage == "postCTS" } {
        timeDesign -postCTS -prefix ${stage} 
     } elseif { $stage == "postRoute" } {
-        setAnalysisMode -analysisType onChipVariatio -cppr both
-        timeDesign -postRoute -prefix ${stage}
-    }  
+       timeDesign -postRoute -prefix ${stage}
+    } elseif { $stage == "postRouetOpt" } {
+       timeDesign -postRoute -prefix ${stage}
+    }
     set rpt1 [extract_from_timing_rpt timingReports/${stage}.summary.gz]
     report_power > power_${stage}.rpt
     set rpt2 [extract_from_power_rpt power_${stage}.rpt]

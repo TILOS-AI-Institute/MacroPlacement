@@ -2,15 +2,15 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 source lib_setup.tcl
 source design_setup.tcl
+set handoff_dir  "./syn_handoff"
+
+set netlist ${handoff_dir}/${DESIGN}.v
+set sdc ${handoff_dir}/${DESIGN}.sdc 
 source mmmc_setup.tcl
 
 setMultiCpuUsage -localCpu 16
 set util 0.3
 
-set handoff_dir  "./syn_handoff"
-
-set netlist ${handoff_dir}/${DESIGN}.v
-set sdc ${handoff_dir}/${DESIGN}.sdc 
 
 set rptDir summaryReport/ 
 set encDir enc/
@@ -39,6 +39,8 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
+setAnalysisMode -reset
+setAnalysisMode -analysisType onChipVariation -cppr both
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
@@ -126,16 +128,21 @@ setNanoRouteMode -routeExpAdvancedTechnology true
 setNanoRouteMode -grouteExpWithTimingDriven false
 
 routeDesign
-#route_opt_design
 saveDesign ${encDir}/${DESIGN}_route.enc
+defOut -netlist -floorplan -routing ${DESIGN}_route.def
+
+set rpt_post_route [extract_report postRoute]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
+
+#route_opt_design
+optDesign -postRoute
+set rpt_post_route [extract_report postRouteOpt]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 
 ### Run DRC and LVS ###
 verify_connectivity -error 0 -geom_connect -no_antenna
 verify_drc -limit 0
 
-set rpt_post_route [extract_report postRoute]
-echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
-defOut -netlist -floorplan -routing ${DESIGN}_route.def
 
 summaryReport -noHtml -outfile summaryReport/post_route.sum
 saveDesign ${encDir}/${DESIGN}.enc
