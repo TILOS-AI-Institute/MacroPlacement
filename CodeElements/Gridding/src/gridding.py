@@ -5,6 +5,7 @@
 import os
 from math import floor
 from math import ceil
+import math
 import shutil
 import sys
 sys.path.append('./utils')
@@ -22,6 +23,13 @@ class Grid:
         self.placed_  = False  # if there is macro placed on the center of this grid
         self.macros_id_ = [] # the id of macros intersecting with this grid
         self.macro_area = 0.0
+        self.mask_density = 1.0
+    def IsAvailable(self):
+        density = self.macro_area / (self.width_ * self.height_)
+        if (density > self.mask_density):
+            return False
+        else:
+            return True
 
 # Check if there is an overlap with other placed macros
 def CheckOverlap(lx, ly, ux, uy, macro_box):
@@ -35,7 +43,6 @@ def CheckOverlap(lx, ly, ux, uy, macro_box):
             return True  # there is an overlap
     return False
 
-
 # Get overlap area
 def GetOverlapArea(box_a, box_b):
     box_a_lx, box_a_ly, box_a_ux, box_a_uy = box_a
@@ -47,15 +54,35 @@ def GetOverlapArea(box_a, box_b):
         height = min(box_a_uy, box_b_uy) - max(box_a_ly, box_b_ly)
         return width * height
 
+def GetWasteSpace(segment_list, gcell_size):
+    """
+    segments :  width_list or height_list of macros
+    gcell_size : gcell_width or gcell_height
+    """
+    tot_segment_size = sum(segment_list)
+    tot_index = 0.0
+    pre_extra_space = 0.0
+    for segment in segment_list:
+        index = math.ceil((segment - gcell_size) / (2 * gcell_size))
+        temp_segment = segment - gcell_size
+        temp_gcell_size = 2 * gcell_size
+        cur_span = (2 * index + 1) * gcell_size
+        extra_space = gcell_size - (cur_span - segment) / 2.0
+        index = 2 * index + 1
+        if (extra_space + pre_extra_space < gcell_size):
+            index -= 1
+        pre_extra_space = extra_space
+        tot_index += index
+    span = (tot_index + 1) * gcell_size
+    waste_space = (span - tot_segment_size) / span
+
+    return waste_space
+
 # Place macros one by one
 # n = num_cols
 def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
     ### All the macro must be placed on the center of one grid
     #Initialize the position of macros
-    ver_sum = 0.0
-    ver_span_sum = 0.0
-    hor_sum = 0.0
-    hor_span_sum = 0.0
     macro_bbox = []
     # Place macro one by one
     for key, value in macro_map.items():
@@ -64,7 +91,7 @@ def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
         macro_id = key
         placed_flag = False
         for grid in grid_list:
-            if (grid.placed_ == True):
+            if (grid.IsAvailable() == False):
                 continue # this grid has been occupied
             # if the macro is placed on this
             x = grid.x_
@@ -75,8 +102,9 @@ def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
             uy = ly + height
 
             # check if the macro is within the outline
-            if (ux > chip_width or uy > chip_height):
+            if (ux > chip_width or uy > chip_height or lx < 0.0 or ly < 0.0):
                 continue
+
             # check if there is an overlap with other macros
             if (CheckOverlap(lx, ly, ux, uy, macro_bbox) == True):
                 continue
@@ -98,22 +126,19 @@ def PlaceMacros(macro_map, grid_list, chip_width, chip_height, n):
             for i in range(min_row_id, max_row_id + 1):
                 for j in range(min_col_id, max_col_id + 1):
                     grid_id = i * n + j # n is the num_cols
+                    if (grid_id >= len(grid_list)):
+                        break
                     grid_list[grid_id].macros_id_.append(macro_id)
-                    grid_box = [i * grid_width, j * grid_height, (i + 1) * grid_width, (j + 1) * grid_height]
+                    grid_box = [j * grid_width, i * grid_height, (j + 1) * grid_width, (i + 1) * grid_height]
                     overlap_area = GetOverlapArea(grid_box, [lx, ly, ux, uy])
                     grid_list[grid_id].macro_area += overlap_area
-
-            ver_sum += height
-            ver_span_sum += (max_row_id + 1 - min_row_id) * grid_height
-            hor_sum += width
-            hor_span_sum += (max_col_id + 1 - min_col_id) * grid_width
             break # stop search remaining candidates
 
         # cannot find a valid position for the macro
         if (placed_flag == False):
-            return False, [0.0, 0.0, 0.0, 0.0]
+            return False
 
-    return  True, [ver_sum, ver_span_sum, hor_sum, hor_span_sum]
+    return True
 
 # Define the gridding function
 def Gridding(macro_width_list, macro_height_list,
@@ -140,6 +165,20 @@ def Gridding(macro_width_list, macro_height_list,
     if (len(macro_width_list) != len(macro_height_list)):
       print("[Error] The macro information is wrong!!!")
       exit()
+
+    print("macro_width_list : ", macro_width_list)
+    print("macro_height_list : ", macro_height_list)
+    print("chip_width : ", chip_width)
+    print("chip_height : ", chip_height)
+    print("min_n_rows : ", min_n_rows)
+    print("min_n_cols : ", min_n_cols)
+    print("max_n_rows : ", max_n_rows)
+    print("max_n_cols : ", max_n_cols)
+    print("min_num_grid_cells : ", min_num_grid_cells)
+    print("max_num_grid_cells : ", max_num_grid_cells)
+    print("max_aspect_ratio : ", max_aspect_ratio)
+    print("tolerance : ", tolerance)
+
 
     ### Sort all the macros based on area in a non-decreasing order
     macro_map = {  }
@@ -193,9 +232,8 @@ def Gridding(macro_width_list, macro_height_list,
                     grid_id = len(grid_list)
                     grid_list.append(Grid(grid_id, grid_width, grid_height, x, y))
 
-            value = [0.0, 0.0, 0.0, 0.0]
             ### Place macros one by one
-            result_flag, value = PlaceMacros(macro_map, grid_list, chip_width, chip_height, n)
+            result_flag = PlaceMacros(macro_map, grid_list, chip_width, chip_height, n)
             if (result_flag == False):
                 continue
             else:
@@ -203,10 +241,10 @@ def Gridding(macro_width_list, macro_height_list,
                 used_threshold = 1e-5
                 num_empty_grids = 0
                 for grid in grid_list:
-                    if (grid.macro_area / (grid_width * grid_height) < used_threshold):
+                    if ((grid.macro_area / (grid_width * grid_height)) < used_threshold):
                         num_empty_grids += 1
-                metric = 1.0 - value[0] / value[1]
-                metric += 1.0 - value[2] / value[3]
+                metric = 1.0 - GetWasteSpace(macro_width_list, grid_width)
+                metric += 1.0 - GetWasteSpace(macro_height_list, grid_height)
                 metric += num_empty_grids / len(grid_list)
                 choice_map[m][n] = metric
                 if (metric > best_metric):
@@ -217,16 +255,14 @@ def Gridding(macro_width_list, macro_height_list,
     n_opt = n_best
     num_grids_opt = m_opt * n_opt
 
-    print("m_best = ", m_best)
-    print("n_best = ", n_best)
-    print("tolerance = ", tolerance)
+    best_final_metric = best_metric / num_grids_opt
     for [m, m_map] in choice_map.items():
         for [n, metric] in m_map.items():
-            print("m = ", m , "  n = ", n, "  metric = ", metric)
-            if ((metric >= (1.0 - tolerance) * best_metric) and (m * n < num_grids_opt)):
+            final_metric = metric / (m * n)
+            if ((metric >= (1.0 - tolerance) * best_metric) and final_metric > best_final_metric):
                 m_opt = m
                 n_opt = n
-                num_grids_opt = m * n
+                best_final_metric = final_metric
 
     print("[INFO] Optimal configuration :  num_rows = ", m_opt, " num_cols = ", n_opt)
     return m_opt, n_opt
@@ -234,7 +270,7 @@ def Gridding(macro_width_list, macro_height_list,
 
 class GriddingLefDefInterface:
     def __init__(self, src_dir, design, setup_file = "setup.tcl", tolerance = 0.05,
-                 halo_width = 0.0, min_n_rows = 10, min_n_cols = 10, max_n_rows = 128,
+                 halo_width = 0.05, min_n_rows = 10, min_n_cols = 10, max_n_rows = 128,
                  max_n_cols = 128, max_rows_times_cols = 2500,  min_rows_times_cols = 500,
                  max_aspect_ratio = 1.5):
         self.src_dir = src_dir
@@ -315,16 +351,16 @@ class GriddingLefDefInterface:
         self.chip_width = float(items[2]) - float(items[0])
         self.chip_height = float(items[3]) - float(items[1])
 
-        file_name = os.getcwd() + "/rtl_mp/" + self.design + ".hgr.instance"
+        file_name = os.getcwd() + "/rtl_mp/" + self.design + ".hgr.vertex"
         with open(file_name) as f:
             content = f.read().splitlines()
         f.close()
 
         for line in content:
             items = line.split()
-            if (items[1] == "1"):
-                self.macro_width_list.append(float(items[4]) - float(items[2]) + 2 * self.halo_width)
-                self.macro_height_list.append(float(items[5]) - float(items[3]) + 2 * self.halo_width)
+            if (items[1] == "macro"):
+                self.macro_width_list.append(float(items[4]) + 2 * self.halo_width)
+                self.macro_height_list.append(float(items[5]) + 2 * self.halo_width)
             else:
                 self.num_std_cells += 1
 
