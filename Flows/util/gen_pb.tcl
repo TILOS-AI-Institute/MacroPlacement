@@ -22,8 +22,14 @@ proc print_header { fp } {
   puts $fp "# User: $user"
   puts $fp "# Date: $date"
   puts $fp "# Run area: $run_dir"
-  puts $fp "# current_design: $design"
+  puts $fp "# Block : $design"
   puts $fp "# FP bbox: $fp_box_ll $fp_box_ur"
+  ## Add dummy Column and Row info ##
+  puts $fp "# Columns : 10  Rows : 10"
+  ## Add blockage for core to die spacing ##
+  foreach box [dbShape -output rect [dbget top.fplan.box] XOR [dbget top.fplan.coreBox]] {
+      puts $fp "# Blockage : $box 1"
+  }
 }
 
 #### Print helper ####

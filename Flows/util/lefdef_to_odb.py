@@ -4,10 +4,17 @@ This script generates OpenDB database from LEF/DEF
 import odb
 import sys
 import os
+import re
 
 design = sys.argv[1]
 def_file = sys.argv[2]
 output_dir = sys.argv[3]
+
+work_dir = re.search(r'(/\S+/MacroPlacement)', os.getcwd()).group(1)
+sys.path.append(f'{work_dir}/Flows/util')
+
+from convert_odb2bookshelf import OdbToBookshelf
+
 
 lef_dir = '../../../../../Enablements/NanGate45/lef'
 lef_list = [f'{lef_dir}/NangateOpenCellLibrary.tech.lef',
@@ -46,3 +53,12 @@ if odb.db_diff(db, new_db):
     exit("ERROR: Difference found in exported and imported DB")
 
 print(f"Successfully generated ODB format from LEF/DEF for {design}")
+
+bs = OdbToBookshelf(
+    opendbpy=odb, 
+    opendb=db, 
+    cellPadding=0,
+    modeFormat="ISPD11",
+    layerCapacity='layeradjust_empty.tcl')
+
+bs.WriteBookshelf(f'{design}_pad0_ISPD11')
