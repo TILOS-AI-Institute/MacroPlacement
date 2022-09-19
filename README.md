@@ -1,13 +1,17 @@
 # **MacroPlacement**
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the synthesis-place-and-route flow using both proprietary and open-source tools.
-  
+
+## **Important links**
+ - In [our progress](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) documentation you can find latest updates.
+ - The [proxy cost](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/) documentation contains implementation details of wirelength, density and congestion cost that Circuit Trainig is using.
+
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
   - [Testcases](#testcases) contains open-source designs such as Ariane, MemPool and NVDLA.
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
   - [Flows](#flows) contains tool setups and runscripts for both proprietary and open-source SP&R tools such as Cadence Genus/Innovus and OpenROAD.
   - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
-  - [Baseline for Circuit Training](#baseline-for-circuit-training) provides a competitive baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
+  - [Baseline for Circuit Training](#baseline-for-circuit-training) provides a baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
   - [FAQ](#faq)
   - [Related Links](#related-links)
 
