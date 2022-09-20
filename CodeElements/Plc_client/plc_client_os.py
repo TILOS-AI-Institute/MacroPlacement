@@ -1413,12 +1413,13 @@ class PlacementCost(object):
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
                         # retrieve grid location
-                        node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
+                        node_gcells.add(self.__get_grid_cell_location(*(self.__get_pin_position(sink_idx))))
 
             elif curr_type == "MACRO_PIN" and mod.get_sink():
                 # add source position
-                node_gcells.add(self.__get_grid_cell_location(*(mod.get_pos())))
-                source_gcell = self.__get_grid_cell_location(*(mod.get_pos()))
+                mod_idx = self.mod_name_to_indices[mod.get_name()]
+                node_gcells.add(self.__get_grid_cell_location(*(self.__get_pin_position(mod_idx))))
+                source_gcell = self.__get_grid_cell_location(*(self.__get_pin_position(mod_idx)))
 
                 if mod.get_weight() > 1:
                     weight = mod.get_weight()
@@ -1430,7 +1431,7 @@ class PlacementCost(object):
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
                         # retrieve grid location                                                                                                                                                                                                                                                 
-                        node_gcells.add(self.__get_grid_cell_location(*(sink.get_pos())))
+                        node_gcells.add(self.__get_grid_cell_location(*(self.__get_pin_position(sink_idx))))
             
             elif curr_type == "MACRO" and self.is_node_hard_macro(self.mod_name_to_indices[mod.get_name()]):
                 module_h = mod.get_height()
