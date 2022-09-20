@@ -2,8 +2,8 @@
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the synthesis-place-and-route flow using both proprietary and open-source tools.
 
 ## **Our Latest Progress**
- - In [our progress](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) documentation you can find the latest updates.
- - The [proxy cost](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/) documentation contains implementation details of wirelength, density and congestion cost that [Circuit Trainig](https://github.com/google-research/circuit_training) is using.
+ - In [Our Progress: A Chronology](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) documentation you can find the latest updates.
+ - The [Proxy Cost](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/) documentation contains implementation details of wirelength, density and congestion cost that [Circuit Trainig](https://github.com/google-research/circuit_training) is using.
 
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
