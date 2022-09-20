@@ -3,9 +3,9 @@
   - [Introduction](#introduction)
   - [Our progress](#our-progress) and major milestones
     - [Publicly available commercial SP&R flow](#June6)
-    - [Ariane133 macro placement using Circuit Training](#circuit-training-baseline-result-on-our-ariane133-nangate4551)
+    - [Ariane133 macro placement using Circuit Training](#circuit-training-baseline-result-on-our-ariane133-nangate45_51)
     - [Replication of proxy cost](#August25)
-    - [NVDLA macro placement using Circuit Training](#circuit-training-baseline-result-on-our-nvdla-nangate4568)
+    - [NVDLA macro placement using Circuit Training](#circuit-training-baseline-result-on-our-nvdla-nangate45_68)
   - [Pinned questions](#pinned-to-bottom-question-list)
 
 ## **Introduction**
@@ -127,7 +127,7 @@ We currently use the physical synthesis tool **Cadence Genus iSpatial** to obtai
 <img width="400" src="./images/image11.png" alg="wlCost">
 </p>
 
-|netlist| is the total number of nets and it takes into account the weight factor defined on soft macro pins. Here is [our proxy wirelength](../../CodeElements/Plc_client/) compared with Google’s API:
+\|netlist\| is the total number of nets and it takes into account the weight factor defined on soft macro pins. Here is [our proxy wirelength](../../CodeElements/Plc_client/) compared with Google’s API:
 
 <table>
 <thead>
