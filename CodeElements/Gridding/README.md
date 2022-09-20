@@ -7,6 +7,12 @@ Gridding determines a dissection of the layout canvas into some number of rows (
 
 The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design.
 
+
+<img src="./Gridding Algorithm.png" width= "1600"/>
+
+
+
+
 The gridding process starts with the dimensions **H_canvas** and **W_canvas** of the layout canvas, as well as a list of hard **macro blocks**, where each block has a width and a height. Blocks are not rotatable. The area of a block is the product of its width and height. 
 
 Then, the gridding searches over combinations **(n_rows, n_cols)**, with constraints
