@@ -36,12 +36,12 @@ Macro packing is performed as follows \[Algorithm 1 Lines 11-22\]:
 - All macros are placed, one by one, into the (**n_rows**, **n_cols**) _gridcells_.
 If the current macro cannot be placed, then the _grid_ is infeasible and the next
 candidate _grid_ is considered.
-- A macro is placed at the \textbf{first} (according to row-major order) _gridcell_ where it can be legally placed.
+- A macro is placed at the **first** (according to row-major order) _gridcell_ where it can be legally placed.
 - Placement of a macro means placing that macro's center at the center of some _gridcell_.
 - The placement of a macro's center at the center of some _gridcell_ is legal if (1) no part of the macro is outside of the canvas, and (2) no overlap of the macro with any previously-placed macro is induced.
 ## Metric
 After macro packing, we can calculate the **empty_ratio** of current _grid_, i.e., 
-the number of empty _gridcells_ over the total number of _gridcells_ (**n_rows** \times **n_cols**).
+the number of empty _gridcells_ over the total number of _gridcells_ (**n_rows** * **n_cols**).
 A _gridcell_ is claimed as an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
 Next we calculate the **hor_waste** and **ver_waste** as described in following algorithm.
 <img src="./Calculate Waste Ratio.png" width= "1600"/>
@@ -49,11 +49,13 @@ Next we calculate the **hor_waste** and **ver_waste** as described in following 
 To calculate horizontal waste **hor_waste**, we calculate
 - **width_tot_macros** = the sum of widths of all macros in the design
 - **width_tot_used_gridcells** = the sum of widths of all used _gridcells_ if we pack the macros along the x-axis one by one.
+
 Then, **hor_waste** = 1.0 - **width_tot_macros** / **width_tot_used_gridcells**.
 
 To calculate vertical waste **ver_waste**, we calculate
 - **height_tot_macros** = the sum of heights of all macros in the design
 - **height_tot_used_gridcells** = the sum of heights of all used _gridcells_ if we pack the macros along the y-axis one by one.
+
 Then, **ver_waste** = 1.0 - **height_tot_macros** / **height_tot_used_gridcells**.
 
 After calculating **empty_ratio**, **ver_waste** and **ver_waste**, the **metric** is defined as
