@@ -7,7 +7,7 @@ In Circuit Training, *proxy cost* is the weighted sum of wirelength, density, an
  
 Where <b>W<sub>wirelength</sub></b>, <b>W<sub>density</sub></b> and <b>W<sub>congestion</sub></b> are the weights. From the [Circuit Training repo](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/environment/environment.py#L61-L65), we found that <b>W<sub>wirelength</sub> = 1</b>, <b>W<sub>density</sub> = 1</b>, and <b>W<sub>congestion</sub> = 0.5</b>. From communication with Google engineers, we learned that in their internal flow, they use <b>W<sub>wirelength</sub> = 1</b>, <b>W<sub>density</sub> = 0.5</b>, and <b>W<sub>congestion</sub> = 0.5</b>.
 
-CircuitTraining repo provides the plc_wrapper_main binary to compute these cost functions. There is no available detailed description, or open-source implementation, of these cost functions. With feedback and confirmations from Google engineers, we have implemented all three cost functions; the source code is available [here](../../CodeElements/Plc_client/plc_client_os.py). In the following section we provide a detailed description of the implementation of these cost functions.
+Circuit Training repo provides the plc_wrapper_main binary to compute these cost functions. There is no available detailed description, or open-source implementation, of these cost functions. With feedback and confirmations from Google engineers, we have implemented all three cost functions; the source code is available [here](../../CodeElements/Plc_client/plc_client_os.py). In the following section we provide a detailed description of the implementation of these cost functions.
 
 ## Table of Content
   - [Wirelength cost computation](#wirelength-cost-computation)
@@ -22,7 +22,7 @@ The wirelength cost function depends on the net (bounding box) half-perimeter wi
 2. For each <b>node</b> in net
    1. <b>x<sub>min</sub> = min(x<sub>min</sub>, node&rarr;x)</b>, <b>y<sub>min</sub> = min(y<sub>min</sub>, node&rarr;y)</b>
    2. <b>x<sub>max</sub> = max(x<sub>max</sub>, node&rarr;x)</b>, <b>y<sub>max</sub> = max(y<sub>max</sub>, node&rarr;y)</b>
-3. <b>net<sub>hpwl</sub> = (x<sub>max</sub> - x<sub>min</sub>) + (x<sub>max</sub> + x<sub>min</sub>)</b>
+3. <b>net<sub>hpwl</sub> = (x<sub>max</sub> - x<sub>min</sub>) + (y<sub>max</sub> - y<sub>min</sub>)</b>
   
 A protobuf netlist consists of different types of <b>node</b>s. Different possible types of <b>node</b>s are macro, standard cell, macro pin and port. A net consists of one source <b>node</b> and one or more sink <b>node</b>s. A net can have only standard cell, macro pin and port as its source or sink <b>node</b>s. In the following wirelength cost computation procedure, we use the term net weight, which is the weight of the source <b>node</b> of the net. This weight indicates the total number of connections between the source and each sink <b>node</b>.  
 
@@ -46,25 +46,25 @@ The gridcell density of grid (i, j) is the ratio of the summation of all the ove
 2. <b>k = floor(n <span>&times;</span> 0.1)</b>
 3. if <b>k == 0</b>
    1. <b>k = 1</b>
-4. <b>Cost_{density} =</b> (average density of top <b>k</b> densest gridcells) <b><span>&times;</span> 0.5</b>
+4. <b>Cost<sub>density<sub> =</b> (average density of top <b>k</b> densest gridcells) <b><span>&times;</span> 0.5</b>
 
-Notice that 0.5 is not the “weight” of this cost function, but simply another factor applied besides the weight factor from the cost function. Google engineers informed us “ the 0.5 is there to correct the [bloating of the std cell clusters](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/grouping/grouping.py#L370)”.
+Notice that **0.5** is not the “**weight**” of this cost function, but simply another factor applied besides the weight factor from the cost function. Google engineers informed us “ the 0.5 is there to correct the [bloating of the std cell clusters](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/grouping/grouping.py#L370)”.
 
 
 ## Congestion cost computation
 We divide the congestion cost computation into six sub-stages:
 1. [Compute horizontal and vertical congestion of each grid due to net routing.](#computation-of-grid-congestion-due-to-net-routing)
 2. [Apply smoothing only to grid congestion due to net routing.](#computation-for-smoothing)
-3. [Compute congestion of each grid due to macros. When a module overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0.](#computation-for-macro-congestion)
+3. [Compute congestion of each grid due to macros.](#computation-for-macro-congestion)
 4. **Grid horizontal congestion** = horizontal congestion due to macros + horizontal congestion due to net routing after smoothing. 
 5. **Grid vertical congestion** = vertical congestion due to macros + vertical congestion due to net routing after smoothing.
 6. [Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.](#computation-of-the-final-congestion-cost)
   
 ### Computation of grid congestion due to net routing
 We divide this problem into three sub-problems.
-1. Congestion due to two-pin nets.
-2. Congestion due to three-pin nets.
-3. Congestion due to multi-pin nets where the number of pins is greater than three.
+1. [Congestion due to two-pin nets.](#congestion-due-to-two-pin-nets)
+2. [Congestion due to three-pin nets.](#congestion-due-to-three-pin-nets)
+3. [Congestion due to multi-pin nets where the number of pins is greater than three.](#congestion-due-to-multi-pin-nets-where-the-number-of-pins-is-greater-than-three)
 
 A grid location <b>(i, j)</b> is the intersection of the <b>i<sup>th</sup></b> column with the <b>j<sup>th</sup></b> row.
 
@@ -78,7 +78,7 @@ Two-pin net routing depends on the source and sink node. Consider
 
 ##### **Procedure for congestion computation due to two-pin nets**
 1. <b>i<sub>min</sub> = min(i<sub>1</sub>, i<sub>2</sub>)</b>, <b>i<sub>max</sub> = max(i<sub>1</sub>, i<sub>2</sub>)</b>
-2. <b>w =</b> net weight
+2. <b>w = net<span>&rarr;</span>weight</b>
 3. Add horizontal congestion cost (considering weight <b>w</b>) due this net to grids from <b>(i<sub>min</sub>, j<sub>1</sub>)</b> to <b>(i<sub>max</sub>-1, j<sub>1</sub>)</b>.
 4. <b>j<sub>min</sub> = min(j<sub>1</sub>, j<sub>2</sub>)</b>, <b>j<sub>max</sub> = max(j<sub>1</sub>, j<sub>2</sub>)</b>
 5. Add vertical congestion cost (considering weight <b>w</b>) due to this net to grids from <b>(i<sub>2</sub>, j<sub>min</sub>)</b> to <b>(i<sub>2</sub>, j<sub>max</sub> - 1)</b>.
@@ -117,7 +117,7 @@ The inputs are three pin grid id and net weight. We consider pin grids are  <b>(
 1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
 2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub>-1, j<sub>2</sub>)</b>
 3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
-4. Add vertical congestion cost due to the net to grids from <b>(i3, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
+4. Add vertical congestion cost due to the net to grids from <b>(i<sub>3</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
 
 ##### **Congestion cost update using <b>T<sub>routing</sub></b>:**
 The inputs are three pin grid id and net weight. We consider pin grids as <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>(j<sub>1</sub> <= j<sub>2</sub> <= j<sub>3</sub> )</b> or <b>(j<sub>1</sub> >= j<sub>2</sub> >= j<sub>3</sub>)</b>.
@@ -180,10 +180,12 @@ Figure corresponding to point five.
 
 #### *Congestion due to multi-pin nets where the number of pins is greater than three*
 1. Consider the net is a n-pin net where <b>n > 3</b>. 
-2. We break this net into n-1 two pin nets where the source node is the common node.
+2. We break this net into **n-1** two pin nets where the source node is the common node.
 3. For each two pin nets we update congestion values.
 
 #### *Computation for Smoothing:*
+When a macro overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0.
+
 1. **Congestion smoothing = 0.0**
    1. Return the grid congestion that is due to net routing: no smoothing is applied.
 2. **Congestion smoothing > 0.0 = k** (k is an integer; both CT and our code appear to use the floor of any non-integer smoothing value)
@@ -201,7 +203,7 @@ Figure corresponding to point five.
 </p>
 
 #### *Computation for Macro Congestion:*
-- For each soft macro + hard MACRO:
+- For each hard MACRO:
    - For each gridcell it overlaps with:
       - For both horizontal and vertical macro routing congestion map:
          1. Find the dimension of overlap, multiply by macro routing allocation
