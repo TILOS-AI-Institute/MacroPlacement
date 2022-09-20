@@ -18,6 +18,8 @@ Then, the gridding searches over combinations (**n_rows**, **n_cols**), with con
 - **grid_w** / **grid_h** <= **max_aspect_ratio** 
 - **grid_h** / **grid_w** <= **max_aspect_ratio** 
 - The macros can be packed sequentially on the gridcells. There are **n_rows** * **n_cols** gridcells in the canvas. \[Algorithm 1 Lines 11-22\]
+
+
 where each gridcell has width of **grid_w** = **canvas_width** / **n_cols**
 and height of **grid_h** = **canvas_height** / **n_row**.
 The main idea is to search for a particular (**n_rows**, **n_cols**) combination
