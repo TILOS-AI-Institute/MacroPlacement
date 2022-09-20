@@ -19,8 +19,7 @@ The left part is the real netlist; The right part is the Netlist Protocol Buffer
 representation in Circuit Training. The solid arrow means the real signal net and the dashed
 arrow means the virtual nets between macro A and its macro pins.
 <img src="./macro_example.png" width= "1600"/>
-
-  As shown in above figure, the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in above figure, **D[0]**, **D[1]**, **D[2]**, **Q[0]**,
+As shown in above figure, the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in above figure, **D[0]**, **D[1]**, **D[2]**, **Q[0]**,
 **Q[1]**, **Q[2]** are grouped into **cluster_1**, but **cluster_1** does not include macro A.
 
 
