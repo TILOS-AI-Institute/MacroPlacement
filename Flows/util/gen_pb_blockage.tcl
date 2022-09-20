@@ -16,16 +16,20 @@ proc print_header { fp } {
   set user [exec whoami]
   set date [exec date]
   set run_dir [exec pwd]
-  set canvas_width [dbget top.fplan.coreBox_sizex]
-  set canvas_height [dbget top.fplan.coreBox_sizey]
+  set fp_box_ll [dbget top.fplan.box_ll]
+  set fp_box_ur [dbget top.fplan.box_ur]
 
   puts $fp "# User: $user"
   puts $fp "# Date: $date"
   puts $fp "# Run area: $run_dir"
   puts $fp "# Block : $design"
-  puts $fp "# FP bbox: {0.0 0.0} {$canvas_width $canvas_height}"
+  puts $fp "# FP bbox: $fp_box_ll $fp_box_ur"
   ## Add dummy Column and Row info ##
   puts $fp "# Columns : 10  Rows : 10"
+  ## Add blockage for core to die spacing ##
+  foreach box [dbShape -output rect [dbget top.fplan.box] XOR [dbget top.fplan.coreBox]] {
+      puts $fp "# Blockage : $box 1"
+  }
 }
 
 #### Print helper ####
@@ -92,7 +96,7 @@ proc print_net { net_ptr fp } {
 }
 
 #### Procedure to write Ports ####
-proc write_node_port { port_ptr fp {origin_x 0} {origin_y 0} } {
+proc write_node_port { port_ptr fp } {
   puts $fp "node {"
   
   set name [lindex [dbget ${port_ptr}.name] 0]
@@ -126,27 +130,19 @@ proc write_node_port { port_ptr fp {origin_x 0} {origin_y 0} } {
   set X1 [lindex [dbget ${port_ptr}.pinShapes.rect] 0 0]
   set X2 [lindex [dbget ${port_ptr}.pinShapes.rect] 0 2]
   set X [expr ($X1 + $X2)/2]
-  
-  if {$side == "top" || $side == "bottom"} {
-    set X [expr $X - $origin_x]
-  }
-  
   print_float $fp "x" $X
 
   ### Attribute: Y ###
   set Y1 [lindex [dbget ${port_ptr}.pinShapes.rect] 0 1]
   set Y2 [lindex [dbget ${port_ptr}.pinShapes.rect] 0 3]
   set Y [expr ($Y1 + $Y2)/2]
-  if {$side == "left" || $side == "right"} {
-    set Y [expr $Y - $origin_y]
-  }
   print_float $fp "y" $Y
   
   puts $fp "}"
 }
 
 #### Procedure to write Macros ####
-proc write_node_macro { macro_ptr fp {origin_x 0} {origin_y 0}} {
+proc write_node_macro { macro_ptr fp } {
   puts $fp "node {"
 
   set name [lindex [dbget ${macro_ptr}.name] 0]
@@ -170,13 +166,13 @@ proc write_node_macro { macro_ptr fp {origin_x 0} {origin_y 0}} {
   ### Attribute: X ###
   set X1 [lindex [dbget ${macro_ptr}.box] 0 0]
   set X2 [lindex [dbget ${macro_ptr}.box] 0 2]
-  set X [expr ($X1 + $X2)/2 - $origin_x]
+  set X [expr ($X1 + $X2)/2]
   print_float $fp "x" $X
 
   ### Attribute: Y ###
   set Y1 [lindex [dbget ${macro_ptr}.box] 0 1]
   set Y2 [lindex [dbget ${macro_ptr}.box] 0 3]
-  set Y [expr ($Y1 + $Y2)/2 - $origin_y]
+  set Y [expr ($Y1 + $Y2)/2]
   print_float $fp "y" $Y
   
   ### Attribute: Y ###
@@ -188,7 +184,7 @@ proc write_node_macro { macro_ptr fp {origin_x 0} {origin_y 0}} {
 }
 
 #### Procedure to Write Macro Pins ####
-proc write_node_macro_pin { macro_pin_ptr fp {origin_x 0} {origin_y 0}} {
+proc write_node_macro_pin { macro_pin_ptr fp } {
   puts $fp "node {"
 
   set name [lindex [dbget ${macro_pin_ptr}.name] 0]
@@ -207,8 +203,8 @@ proc write_node_macro_pin { macro_pin_ptr fp {origin_x 0} {origin_y 0}} {
   ### Attribute: type ###
   print_placeholder $fp "type" "macro_pin"
   
-  set X [expr [dbget ${macro_pin_ptr}.pt_x] - $origin_x]
-  set Y [expr [dbget ${macro_pin_ptr}.pt_y] - $origin_y]
+  set X [dbget ${macro_pin_ptr}.pt_x]
+  set Y [dbget ${macro_pin_ptr}.pt_y]
   set cell_height [dbget ${macro_pin_ptr}.cellTerm.cell.size_y]
   set cell_width [dbget ${macro_pin_ptr}.cellTerm.cell.size_x]
   set pin_x [dbget ${macro_pin_ptr}.cellTerm.pt_x]
@@ -232,7 +228,7 @@ proc write_node_macro_pin { macro_pin_ptr fp {origin_x 0} {origin_y 0}} {
 }
 
 #### Procedure to Write Std-cell ###
-proc write_node_stdcell { inst_ptr fp {origin_x 0} {origin_y 0}} {
+proc write_node_stdcell { inst_ptr fp } {
   puts $fp "node {"
 
   set name [lindex [dbget ${inst_ptr}.name] 0]
@@ -261,13 +257,13 @@ proc write_node_stdcell { inst_ptr fp {origin_x 0} {origin_y 0}} {
   ### Attribute: X ###
   set X1 [lindex [dbget ${inst_ptr}.box] 0 0]
   set X2 [lindex [dbget ${inst_ptr}.box] 0 2]
-  set X [expr ($X1 + $X2)/2 - $origin_x]
+  set X [expr ($X1 + $X2)/2]
   print_float $fp "x" $X
 
   ### Attribute: Y ###
   set Y1 [lindex [dbget ${inst_ptr}.box] 0 1]
   set Y2 [lindex [dbget ${inst_ptr}.box] 0 3]
-  set Y [expr ($Y1 + $Y2)/2 - $origin_y]
+  set Y [expr ($Y1 + $Y2)/2]
   print_float $fp "y" $Y
   
   puts $fp "}"
@@ -280,22 +276,20 @@ proc gen_pb_netlist { } {
   set fp [open $out_file w+]
 
   print_header $fp
-  set origin_x [dbget top.fplan.coreBox_llx]
-  set origin_y [dbget top.fplan.coreBox_lly]
 
   foreach port_ptr [dbget top.terms] {  
-    write_node_port $port_ptr $fp $origin_x $origin_y
+    write_node_port $port_ptr $fp
   }
 
   foreach macro_ptr [dbget top.insts.cell.subClass block -p2] {
-    write_node_macro $macro_ptr $fp $origin_x $origin_y
+    write_node_macro $macro_ptr $fp
     foreach macro_pin_ptr [dbget ${macro_ptr}.instTerms] {
-      write_node_macro_pin $macro_pin_ptr $fp $origin_x $origin_y
+      write_node_macro_pin $macro_pin_ptr $fp
     }
   }
 
   foreach inst_ptr [dbget top.insts.cell.subClass core -p2] {
-    write_node_stdcell $inst_ptr $fp $origin_x $origin_y
+    write_node_stdcell $inst_ptr $fp
   }
 
   close $fp
