@@ -211,16 +211,16 @@ while allowing soft macros (standard-cell clusters) to also find good locations.
 
 <!--## **Reproducible Example Solutions** -->
 
-## **Baseline for Circuit Training**
-We provide a competitive baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) by placing macros manually following similar rules as the RL agent. The example for Ariane133 implemented on NanGate45 is shown [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133). We generate the manual macro placement in two steps:  
-(1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (27 x 27 in our case); (2) we manually place macros on the center of grid cells.
+## **A Human Baseline for Circuit Training**
+We provide a human-generated baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) by placing macros manually following similar (grid-restricted location) rules as the RL agent. The example for Ariane133 implemented on NanGate45 is shown [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133). We generate the manual macro placement in two steps:  
+(1) we call the [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) scripts to generate grid cells (27 x 27 in our case); (2) we manually place macros on the centers of grid cells.
 
 
 
 ## **FAQ**
 **Why are you doing this?**
 - The challenges of data and benchmarking in EDA research have, in our view, been contributing factors in the controversy regarding the Nature work. The mission of the [TILOS AI Institute](https://tilos.ai/) includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We hope that our effort will become an existence proof for transparency, reproducibility, and democratization of research in EDA. [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
-- We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
+- We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), updated [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
 
 **What can others contribute?**
 - Our shopping list (updated August 2022) includes the following. Please join in!  
@@ -232,7 +232,7 @@ We provide a competitive baseline for [Google Brain's Circuit Training](https://
 
 **What is your timeline?**
 - We showed our [progress](https://open-source-eda-birds-of-a-feather.github.io/doc/slides/MacroPlacement-SpecPart-DAC-BOF-v5.pdf) at the Open-Source EDA and Benchmarking Summit birds-of-a-feather [meeting](https://open-source-eda-birds-of-a-feather.github.io/) on July 12 at DAC-2022.
-- We are now (late August 2022) studying benefits and limitations of the CT methodology itself, as noted in [this Doc](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit).
+- We are now (late August 2022) studying benefits and limitations of the CT methodology itself, following a thread of experimental questions as noted [here](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit?usp=sharing) and [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit).
 
 
 ## **Related Links**
