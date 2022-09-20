@@ -5,11 +5,23 @@ runtimes. Gridding enables hard macros to find locations consistent with high so
 
 Gridding determines a dissection of the layout canvas into some number of rows (**n_rows**) and some number of columns (**n_cols**) of _gridcells_.
 
-The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design.
-
-
+The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design.  
+The detailed algorithm is shown as following.
 <img src="./Gridding Algorithm.png" width= "1600"/>
 
+The gridding algorithm starts with the dimensions **canvas_width** and **canvas_height** of the layout canvas, as well as a list of **macros**, where each macro has a width and a height. 
+Macros are not rotatable. The area of a macro is the product of its width and height.
+Then, the gridding searches over combinations (**n_rows**, **n_cols**), with constraints
+- **min_n_rows** <= **n_rows** < **max_n_rows** 
+- **min_n_cols** <= **n_cols** < **max_n_cols** 
+- **min_num_gridcells** <= **n_rows** * **n_cols** <= **max_num_grid_cells**
+- **grid_w** / **grid_h** <= **max_aspect_ratio** 
+- **grid_h** / **grid_w** <= **max_aspect_ratio** 
+- The macros can be packed sequentially on the gridcells. There are **n_rows** * **n_cols** gridcells in the canvas. \[Algorithm 1 Lines 11-22\]
+where each gridcell has width of **grid_w** = **canvas_width** / **n_cols**
+and height of **grid_h** = **canvas_height** / **n_row**.
+The main idea is to search for a particular (**n_rows**, **n_cols**) combination
+that maximize the metric related to wasted space.
 
 
 
