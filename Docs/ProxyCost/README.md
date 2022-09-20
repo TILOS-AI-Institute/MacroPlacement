@@ -32,7 +32,7 @@ A protobuf netlist consists of different types of <b>node</b>s. Different possib
    1. Compute <b>net<sub>hpwl</sub></b> using the previous procedure
    2. <b>hpwl += net&rarr;weight <span>&times;</span> net<sub>hpwl</sub></b>
    3. <b>net<sub>count</sub> += net&rarr;weight</b>
-3. <b>Cost<sub>wirelength</sub> = </b> <b><mfrac>hpwl <p>net<sub>count</sub> <span>&times;</span> (canvas<sub>height</sub> + canvas<sub>width</sub>)</p><mfrac><b>
+3. <b>Cost<sub>wirelength</sub> = hpwl &#8260; [net<sub>count</sub> <span>&times;</span> (canvas<sub>height</sub> + canvas<sub>width</sub>)]</b>
 
 In the above procedure, <b>canvas<sub>height</sub></b> is the height of the canvas and <b>canvas<sub>width</sub></b> is the width of the canvas.
 
