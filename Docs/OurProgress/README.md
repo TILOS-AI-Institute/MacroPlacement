@@ -1855,6 +1855,13 @@ The following table and screenshots show the CT result.
 <img width="300" src="./images/image12.png" alg="NVDLA_68_CT_Route">
 </p>
 
+
+**September 19:**
+We updated the detailed algorithm for [gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) in Circuit Training.
+In constrast to the open-source [grid_size_selection.py](https://github.com/google-research/circuit_training/blob/main/circuit_training/grouping/grid_size_selection.py) in Circuit Training repo, which still calls the wrapper functions of plc client, our python scripts implement
+the gridding from sractch and are easy to understand. The results of our scripts match exactly that of Circuit Training.
+
+
 ## **Pinned (to bottom) question list:**
 
 **<span style="color:blue">[Question 1](#Question1).</span>** How does having an initial set of placement locations (from physical synthesis) affect the (relative) quality of the CT result?  
