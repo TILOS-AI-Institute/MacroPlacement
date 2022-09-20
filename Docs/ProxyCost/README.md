@@ -1,40 +1,40 @@
 # Proxy Cost Computation in Circuit Training
 In Circuit Training, *proxy cost* is the weighted sum of wirelength, density, and congestion costs. It is used to determine the overall quality of the macro placement solution. 
 
-$$
-Proxy Cost = W_{wirelength} \times Cost_{wirelength} + W_{density} \times Cost_{density} + W_{congestion} \times Cost_{congestion} 
-$$ 
-  
-Where $W_{wirelength}$, $W_{density}$ and $W_{congestion}$ are the weights. From the [Circuit Training repo](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/environment/environment.py#L61-L65), we found that $W_{wirelength} = 1$, $W_{density} = 1$, and $W_{congestion} = 0.5$. From communication with Google engineers, we learned that in their internal flow, they use $W_{wirelength} = 1$, $W_{density} = 0.5$, and $W_{congestion} = 0.5$.
+<p align="center">
+<b>Proxy Cost = W<sub>wirelength</sub> <span>&times;</span> Cost<sub>wirelength</sub> + W<sub>density</sub> <span>&times;</span> Cost<sub>density</sub> + W<sub>congestion</sub> <span>&times;</span> Cost<sub>congestion</sub></b>
+</p>
+ 
+Where <b>W<sub>wirelength</sub></b>, <b>W<sub>density</sub></b> and <b>W<sub>congestion</sub></b> are the weights. From the [Circuit Training repo](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/environment/environment.py#L61-L65), we found that <b>W<sub>wirelength</sub> = 1</b>, <b>W<sub>density</sub> = 1</b>, and <b>W<sub>congestion</sub> = 0.5</b>. From communication with Google engineers, we learned that in their internal flow, they use <b>W<sub>wirelength</sub> = 1</b>, <b>W<sub>density</sub> = 0.5</b>, and <b>W<sub>congestion</sub> = 0.5</b>.
 
 CircuitTraining repo provides the plc_wrapper_main binary to compute these cost functions. There is no available detailed description, or open-source implementation, of these cost functions. With feedback and confirmations from Google engineers, we have implemented all three cost functions; the source code is available [here](../../CodeElements/Plc_client/plc_client_os.py). In the following section we provide a detailed description of the implementation of these cost functions.
 
 ## Table of Content
-  - [Wirelength cost computation:](#wirelength-cost-computation)
-  - [Density cost computation:](#density-cost-computation)
-  - [Congestion cost computation:](#congestion-cost-computation)
+  - [Wirelength cost computation](#wirelength-cost-computation)
+  - [Density cost computation](#density-cost-computation)
+  - [Congestion cost computation](#congestion-cost-computation)
 
 ## Wirelength cost computation
 The wirelength cost function depends on the net (bounding box) half-perimeter wirelength (HPWL). So, first we describe steps to compute HPWL of a net – and then we compute the wirelength cost.  
 
 ##### **Procedure to compute net HPWL**
-1. Initialize $x_{min} = float_{max}$, $y_{min} = float_{max}$, $x_{max} = 0$, $y_{max} = 0$
-2. For each $node$ in net
-   1. $x_{min} = min(x_{min}, node \rarr x)$, $y_{min} = min(y_{min}, node \rarr y)$
-   2. $x_{max} = max(x_{max}, node \rarr x)$, $y_{max} = max(y_{max}, node \rarr y)$
-3. net_hpwl = $(x_{max} - x_{min}) + (x_{max} + x_{min})$
+1. Initialize <b>x<sub>min</sub> = float<sub>max</sub></b>, <b>y<sub>min</sub> = float<sub>max</sub></b>, <b>x<sub>max</sub> = 0</b>, <b>y<sub>max</sub> = 0</b>
+2. For each <b>node</b> in net
+   1. <b>x<sub>min</sub> = min(x<sub>min</sub>, node&rarr;x)</b>, <b>y<sub>min</sub> = min(y<sub>min</sub>, node&rarr;y)</b>
+   2. <b>x<sub>max</sub> = max(x<sub>max</sub>, node&rarr;x)</b>, <b>y<sub>max</sub> = max(y<sub>max</sub>, node&rarr;y)</b>
+3. <b>net<sub>hpwl</sub> = (x<sub>max</sub> - x<sub>min</sub>) + (x<sub>max</sub> + x<sub>min</sub>)</b>
   
-A protobuf netlist consists of different types of $node$s. Different possible types of $node$s are macro, standard cell, macro pin and port. A net consists of one source $node$ and one or more sink $node$s. A net can have only standard cell, macro pin and port as its source or sink $node$s. In the following wirelength cost computation procedure, we use the term net weight, which is the weight of the source $node$ of the net. This weight indicates the total number of connections between the source and each sink $node$.  
+A protobuf netlist consists of different types of <b>node</b>s. Different possible types of <b>node</b>s are macro, standard cell, macro pin and port. A net consists of one source <b>node</b> and one or more sink <b>node</b>s. A net can have only standard cell, macro pin and port as its source or sink <b>node</b>s. In the following wirelength cost computation procedure, we use the term net weight, which is the weight of the source <b>node</b> of the net. This weight indicates the total number of connections between the source and each sink <b>node</b>.  
 
 ##### **Procedure to compute wirelength cost**
-1. $hpwl = 0$, $net_{count} = 0$
-2. For each $net$
-   1. Compute $net_{hpwl}$ using the previous procedure
-   2. $hpwl += net \rarr weight \times net_{hpwl}$
-   3. $net_{count} += net \rarr weight$
-3. $Cost_{wirelength} = \frac{hpwl}{net_{count} \times (canvas_{height} + canvas_{width})}$
+1. <b>hpwl = 0</b>, <b>net<sub>count</sub> = 0</b>
+2. For each <b>net</b>
+   1. Compute <b>net<sub>hpwl</sub></b> using the previous procedure
+   2. <b>hpwl += net&rarr;weight <span>&times;</span> net<sub>hpwl</sub></b>
+   3. <b>net<sub>count</sub> += net&rarr;weight</b>
+3. <b>Cost<sub>wirelength</sub> = \frac{hpwl}{net<sub>count</sub> <span>&times;</span> (canvas<sub>height</sub> + canvas<sub>width</sub>)}</b>
 
-In the above procedure, $canvas_{height}$ is the height of the canvas and $canvas_{width}$ is the width of the canvas.
+In the above procedure, <b>canvas<sub>height</sub></b> is the height of the canvas and <b>canvas<sub>width</sub></b> is the width of the canvas.
 
 ## Density cost computation
 Density cost function depends on the gridcell density. So, first we describe the steps to compute gridcell density – and then we compute the density cost.
@@ -42,11 +42,11 @@ Density cost function depends on the gridcell density. So, first we describe the
 The gridcell density of grid (i, j) is the ratio of the summation of all the overlapped areas (the common area between the node and the grid) of standard cell and macro nodes with the grid (i, j) to the total gridcell area.
 
 ##### **Procedure to compute density cost**
-1. $n =$ number of rows $\times$ number of columns
-2. $k = floor(n \times 0.1)$
-3. if $k == 0$
-   1. $k = 1$
-4. $Cost_{density} =$ (average density of top $k$ densest gridcells) $\times 0.5$
+1. <b>n =</b> number of rows <b><span>&times;</span></b> number of columns
+2. <b>k = floor(n <span>&times;</span> 0.1)</b>
+3. if <b>k == 0</b>
+   1. <b>k = 1</b>
+4. <b>Cost_{density} =</b> (average density of top <b>k</b> densest gridcells) <b><span>&times;</span> 0.5</b>
 
 Notice that 0.5 is not the “weight” of this cost function, but simply another factor applied besides the weight factor from the cost function. Google engineers informed us “ the 0.5 is there to correct the [bloating of the std cell clusters](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/grouping/grouping.py#L370)”.
 
@@ -54,11 +54,11 @@ Notice that 0.5 is not the “weight” of this cost function, but simply anothe
 ## Congestion cost computation
 We divide the congestion cost computation into six sub-stages:
 1. [Compute horizontal and vertical congestion of each grid due to net routing.](#computation-of-grid-congestion-due-to-net-routing)
-2. Apply smoothing only to grid congestion due to net routing.
-3. Compute congestion of each grid due to macros. When a module overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0. 
+2. [Apply smoothing only to grid congestion due to net routing.](#computation-for-smoothing)
+3. [Compute congestion of each grid due to macros. When a module overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0.](#computation-for-macro-congestion)
 4. **Grid horizontal congestion** = horizontal congestion due to macros + horizontal congestion due to net routing after smoothing. 
 5. **Grid vertical congestion** = vertical congestion due to macros + vertical congestion due to net routing after smoothing.
-6. Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.
+6. [Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.](#computation-of-the-final-congestion-cost)
   
 ### Computation of grid congestion due to net routing
 We divide this problem into three sub-problems.
@@ -66,22 +66,22 @@ We divide this problem into three sub-problems.
 2. Congestion due to three-pin nets.
 3. Congestion due to multi-pin nets where the number of pins is greater than three.
 
-A grid location $(i, j)$ is the intersection of the $i^{th}$ column with the $j^{th}$ row.
+A grid location <b>(i, j)</b> is the intersection of the <b>i<sup>th</sup></b> column with the <b>j<sup>th</sup></b> row.
 
-For these three problems we consider that the horizontal routing cost due to a net-segment from $(i, j)$ grid to $(i+1, j)$ grid applies only to the grid $(i, j)$. Similarly the vertical routing cost due to a net-segment from $(i, j)$ grid to $(i, j+1)$ grid applies only to the grid $(i, j)$. Here the direction of the net does not matter. 
+For these three problems we consider that the horizontal routing cost due to a net-segment from <b>(i, j)</b> grid to <b>(i+1, j)</b> grid applies only to the grid <b>(i, j)</b>. Similarly the vertical routing cost due to a net-segment from <b>(i, j)</b> grid to <b>(i, j+1)</b> grid applies only to the grid <b>(i, j)</b>. Here the direction of the net does not matter. 
 
 Now we compute the congestion due to different nets:
 #### *Congestion due to two-pin nets*
 Two-pin net routing depends on the source and sink node. Consider 
-1. Source node is $(i_1, j_1)$
-2. Sink node is $(i_2, j_2)$
+1. Source node is <b>(i<sub>1</sub>, j<sub>1</sub>)</b>
+2. Sink node is <b>(i<sub>2</sub>, j<sub>2</sub>)</b>
 
 ##### **Procedure for congestion computation due to two-pin nets**
-1. $i_{min} = min(i_1, i_2)$, $i_{max} = max(i_1, i_2)$
-2. $w =$ net weight
-3. Add horizontal congestion cost (considering weight $w$) due this net to grids from $(i_{min}, j_1)$ to $(i_{max}-1, j_1)$.
-4. $j_{min} = min(j_1, j_2)$, $j_{max} = max(j_1, j_2)$
-5. Add vertical congestion cost (considering weight $w$) due to this net to grids from $(i_2, j_{min})$ to $(i_2, j_{max} - 1)$.
+1. <b>i<sub>min</sub> = min(i<sub>1</sub>, i<sub>2</sub>)</b>, <b>i<sub>max</sub> = max(i<sub>1</sub>, i<sub>2</sub>)</b>
+2. <b>w =</b> net weight
+3. Add horizontal congestion cost (considering weight <b>w</b>) due this net to grids from <b>(i<sub>min</sub>, j<sub>1</sub>)</b> to <b>(i<sub>max</sub>-1, j<sub>1</sub>)</b>.
+4. <b>j<sub>min</sub> = min(j<sub>1</sub>, j<sub>2</sub>)</b>, <b>j<sub>max</sub> = max(j<sub>1</sub>, j<sub>2</sub>)</b>
+5. Add vertical congestion cost (considering weight <b>w</b>) due to this net to grids from <b>(i<sub>2</sub>, j<sub>min</sub>)</b> to <b>(i<sub>2</sub>, j<sub>max</sub> - 1)</b>.
   
 In the following figure P2 is the source pin and P1 is the sink pin of the net. When the arrow crosses the top edge of the grid cell it contributes to the vertical congestion cost of the grid cell and when it crosses the right edge of the grid cell it contributes to the horizontal congestion cost of the grid cell.
   
@@ -104,44 +104,44 @@ In the following figure, P3 is the source and P1 and P2 are the sinks. We see th
 <img width="600" src="./images/image7.png" alg="ThreePin3">
 </p>
 
-Consider the three pin locations are $(i_1, j_1)$, $(i_2, j_2)$ and $(i_3, j_3)$.
+Consider the three pin locations are <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b>.
 We compute congestion due to three-pins using two functions:
-1. $L_{routing}$
-2. $T_{routing}$
+1. <b>L<sub>routing</sub></b>
+2. <b>T<sub>routing</sub></b>
 
 In the below function all congestion cost computation takes into account the weight.
 
 First we describe these two functions and then we describe how the congestion due to three pin nets are computed.
-##### **Congestion cost update using $L_{routing}$:**
-The inputs are three pin grid id and net weight. We consider pin grids are  $(i_1, j_1)$, $(i_2, j_2)$ and $(i_3, j_3)$ where $i_1 < i_2 < i_3$ and $(j_1 < j_2 < j_3)$ or $(j_1 > j_2 > j_3)$.
-1. Add horizontal congestion cost due to the net to grids from $(i_1, j_1)$ to $(i_2-1, j_1)$
-2. Add horizontal congestion cost due to the net to grids from $(i_2, j_2)$ to $(i_3-1, j_2)$
-3. Add vertical congestion cost due to the net to grids from $(i_2, min(j_1, j_2))$ to $(i_2, max(j_1, j_2) - 1)$.
-4. Add vertical congestion cost due to the net to grids from $(i3, min(j_2, j_3))$ to $(i_3, max(j_2, j_3) - 1)$.
+##### **Congestion cost update using <b>L<sub>routing</sub></b>:**
+The inputs are three pin grid id and net weight. We consider pin grids are  <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>i<sub>1</sub> < i<sub>2</sub> < i<sub>3</sub></b> and <b>(j<sub>1</sub> < j<sub>2</sub> < j<sub>3</sub>)</b> or <b>(j<sub>1</sub> > j<sub>2</sub> > j<sub>3</sub>)</b>.
+1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
+2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub>-1, j<sub>2</sub>)</b>
+3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
+4. Add vertical congestion cost due to the net to grids from <b>(i3, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
 
-##### **Congestion cost update using $T_{routing}$:**
-The inputs are three pin grid id and net weight. We consider pin grids as $(i_1, j_1)$, $(i_2, j_2)$ and $(i_3, j_3)$ where $(j_1 <= j_2 <= j_3 )$ or $(j_1 >= j_2 >= j_3)$.
-1. $i_{min} = min(i_1, i_2, i_3)$, $i_{max} = max(i_1, i_2, i_3)$
-2. Add horizontal congestion cost due to the net to grids from $(i_{min}, j_2)$ to $(i_{max} - 1, j_2)$.
-3. Add vertical congestion cost due to the net to the grid from $(i_1, min(j_1, j_2))$ to $(i_1, max(j_1, j_2) - 1)$.
-4. Add vertical congestion cost due to the net to the grid from $(i_3, min(j_2, j_3))$ to $(i_3, max(j_2, j_3) - 1)$.
+##### **Congestion cost update using <b>T<sub>routing</sub></b>:**
+The inputs are three pin grid id and net weight. We consider pin grids as <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>(j<sub>1</sub> <= j<sub>2</sub> <= j<sub>3</sub> )</b> or <b>(j<sub>1</sub> >= j<sub>2</sub> >= j<sub>3</sub>)</b>.
+1. <b>i<sub>min</sub> = min(i<sub>1</sub>, i<sub>2</sub>, i<sub>3</sub>)</b>, <b>i<sub>max</sub> = max(i<sub>1</sub>, i<sub>2</sub>, i<sub>3</sub>)</b>
+2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>min</sub>, j<sub>2</sub>)</b> to <b>(i<sub>max</sub> - 1, j<sub>2</sub>)</b>.
+3. Add vertical congestion cost due to the net to the grid from <b>(i<sub>1</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>1</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
+4. Add vertical congestion cost due to the net to the grid from <b>(i<sub>3</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
 
 ##### **Procedure congestion cost computation due to three-pin nets:**
 The inputs are three pin grid locations and the net weight.
-1. Sort the pin based on the column. After sorting pin locations are $(i_1, j_1)$, $(i_2, j_2)$ and $(i_3, j_3)$. As it is sorted based on column $i_1 <= i_2 <= i_3$.
-2. If $i_1 < i_2$ and $i_2 < i_3$ and $min(j_1, j_3) < j_2$ and $max(j_1, j_3) > j_2$:
-   1. Update congestion cost using $L_{routing}$.
+1. Sort the pin based on the column. After sorting pin locations are <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b>. As it is sorted based on column <b>i<sub>1</sub> <= i<sub>2</sub> <= i<sub>3</sub></b>.
+2. If <b>i<sub>1</sub> < i<sub>2</sub></b> and <b>i<sub>2</sub> < i<sub>3</sub></b> and <b>min(j<sub>1</sub>, j<sub>3</sub>) < j<sub>2</sub></b> and <b>max(j<sub>1</sub>, j<sub>3</sub>) > j<sub>2</sub></b>:
+   1. Update congestion cost using <b>L<sub>routing</sub></b>.
    2. Return.
-3. If $i_2 == i_3$ and $i_1 < i_2$ and $j_1 < min(j_2, j_3)$:
-   1. Add horizontal congestion cost due to the net to grids from $(i_1, j_1)$ to $(i_2-1, j_1)$
-   2. Add vertical congestion cost due to the net to grids from $(i_2, j_1)$ to $(i_2, max(j_2, j_3) -1)$
+3. If <b>i<sub>2</sub> == i<sub>3</sub></b> and <b>i<sub>1</sub> < i<sub>2</sub></b> and <b>j<sub>1</sub> < min(j<sub>2</sub>, j<sub>3</sub>)</b>:
+   1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
+   2. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>, max(j<sub>2</sub>, j<sub>3</sub>) -1)</b>
    3. Return.
-4. If $j_2 == j_3$:
-   1. Add horizontal congestion cost due to the net to grids from $(i_1, j_1)$ to $(i_2 -1, j_1)$
-   2. Add horizontal congestion cost due to the net to grids from $(i_2, j_2)$ to $(i_3 -1, j_2)$
-   3. Add vertical congestion cost due to the net to grids from $(i_2, min(j_2, j_3))$ to $(i_2, max(j_2, j_3) - 1)$.
+4. If <b>j<sub>2</sub> == j<sub>3</sub></b>:
+   1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub> -1, j<sub>1</sub>)</b>
+   2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub> -1, j<sub>2</sub>)</b>
+   3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
    4. Return
-5. Update congestion cost using $T_{routing}$.
+5. Update congestion cost using <b>T<sub>routing</sub></b>.
 
 
 The following four figures represent the four cases mentioned in the above procedure from point two to point five.
@@ -179,7 +179,7 @@ Figure corresponding to point five.
 </p>
 
 #### *Congestion due to multi-pin nets where the number of pins is greater than three*
-1. Consider the net is a n-pin net where $n > 3$. 
+1. Consider the net is a n-pin net where <b>n > 3</b>. 
 2. We break this net into n-1 two pin nets where the source node is the common node.
 3. For each two pin nets we update congestion values.
 
