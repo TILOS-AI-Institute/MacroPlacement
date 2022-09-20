@@ -20,17 +20,17 @@ representation in Circuit Training. The solid arrow means the real signal net an
 arrow means the virtual nets between macro A and its macro pins.
 <img src="./macro_example.png" width= "1600"/>
 
-As shown in above figure, the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in above figure, **D[0]**, **D[1]**, **D[2]**, **Q[0]**,
-**Q[1]**, **Q[2]** are grouped into $cluster\_1$, but $cluster\_1$ does not include macro A.
+  As shown in above figure, the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in above figure, **D[0]**, **D[1]**, **D[2]**, **Q[0]**,
+**Q[1]**, **Q[2]** are grouped into **cluster_1**, but **cluster_1** does not include macro A.
 
 
 - Group the IOs that are within close proximity of each other boundary by boundary, 
-following the order of **LEFT** &#8595 **TOP**  &#8595  **RIGHT** &#8595 **BOTTOM**. 
+following the order of **LEFT** &rarr **TOP**  &#8595  **RIGHT** &#8595 **BOTTOM**. 
 For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, 
 we sort the all the ports on the boundary based on their
 y (x) coordinates in a non-decreasing order. 
 Starting from the first IO port on the boundary, we group
-the IO ports within each $grid\_height$ ($grid\_width$) into an IO cluster. 
+the IO ports within each **grid_height** (**grid_width**) into an IO cluster. 
 For example, in following figure, 
 we have three IO clusters on **TOP** boundary and two IO clusters on **RIGHT** boundary. 
 <img src="./IO_Groups.png" width= "1600"/>
