@@ -117,6 +117,7 @@ macros, IO ports and standard cells) is less than or equal to *max_num_nodes*, w
 * While (flag == True):
    * Create adjacency matrix *adj_matrix* where *adj_matrix\[i\]\[j\]* represents the number of connections between cluster *c<sub>i</sub>* and cluster *c<sub>j</sub>*. For example, in the Figure 1, suppose *A*, *B*, *C*, *D* and *E* respectively belong to cluster *c<sub>1</sub>*, ..., *c<sub>5</sub>*, we have *adj_matrix\[1\]\[2\]* = 1, *adj_matrix\[1\]\[3\]* = 1, ...., *adj_matrix\[5\]\[3\]* = 1 and *adj_matrix\[5\]\[4\]* = 1. We want to emphasize that although there is no hyperedges related to macros in the hypergraph, *adj_matrix* considers the "virtual" connections between macros and macro pins. That is to say, if a macro and its macros pins belong to different clusters, for example, macro A in cluster *c<sub>1</sub>* and its macro pins in cluster *c<sub>2</sub>*, we have *adj_matrix\[1\]\[2\]* = 1 and *adj_matrix\[2\]\[1\]* = 1.
    * Calculate the weighted center for each cluster. (see the breakup section for details)
+   * flag = True
    * For each cluster *c*
       * If *c* is not a small cluster
          * Continue
