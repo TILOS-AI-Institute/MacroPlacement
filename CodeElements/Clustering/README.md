@@ -6,7 +6,6 @@ portions of Circuit Training.
 ## **I. Information provided by Google.**
 The Methods section of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w.epdf?sharing_token=tYaxh2mR5EozfsSL0WHZLdRgN0jAjWel9jnR3ZoTv0PW0K0NmVrRsFPaMa9Y5We9O4Hqf_liatg-lvhiVcYpHL_YQpqkurA31sxqtmA-E1yNUWVMMVSBxWSp7ZFFIWawYQYnEXoBE4esRDSWqubhDFWUPyI5wK_5B_YIO-D_kS8%3D) provides the following information.
 
-
 * “(1) We group millions of standard cells into a few thousand clusters using hMETIS, a partitioning technique based 
 on the minimum cut objective. Once all macros are placed, we use an FD method to place the standard cell clusters. 
 Doing so enables us to generate an approximate but fast standard cell placement that facilitates policy network optimization.”
@@ -20,9 +19,6 @@ We also provide the clustered netlist to each of the baseline methods with which
 To perform this clustering, we employed a standard open-source library, hMETIS, 
 which is based on multilevel hypergraph partitioning schemes with two important phases: 
 (1) coarsening phase, and 2) uncoarsening and refinement phase.”
-
-
-
 
 Therefore, at least one purpose of clustering is to enable fast placement of standard cells to 
 provide a signal to the RL policy. The Methods section subsequently explains how the clusters 
@@ -41,7 +37,6 @@ The [Circuit Training FAQ](https://github.com/google-research/circuit_training/b
 * **"How do we perform clustering of standard cells?**  In our Nature paper, we describe how to use hMETIS to cluster standard cells, 
 including all necessary settings. For detailed settings, please see Extended Data Table 3 from our [Nature article](https://www.nature.com/articles/s41586-021-03544-w.epdf?sharing_token=tYaxh2mR5EozfsSL0WHZLdRgN0jAjWel9jnR3ZoTv0PW0K0NmVrRsFPaMa9Y5We9O4Hqf_liatg-lvhiVcYpHL_YQpqkurA31sxqtmA-E1yNUWVMMVSBxWSp7ZFFIWawYQYnEXoBE4esRDSWqubhDFWUPyI5wK_5B_YIO-D_kS8%3D). 
 Internally, Google pays for a commercial license, but non-commercial entities are welcome to use a free open-source license."
-
 
 Finally, the Methods section of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w.epdf?sharing_token=tYaxh2mR5EozfsSL0WHZLdRgN0jAjWel9jnR3ZoTv0PW0K0NmVrRsFPaMa9Y5We9O4Hqf_liatg-lvhiVcYpHL_YQpqkurA31sxqtmA-E1yNUWVMMVSBxWSp7ZFFIWawYQYnEXoBE4esRDSWqubhDFWUPyI5wK_5B_YIO-D_kS8%3D) also explains the provenance of the netlist hypergraph:
 
@@ -64,15 +59,20 @@ Before going further, we provide a **concrete example** for (2).
 * Suppose that we have a design with 200,000 standard cells, 100 macros, and 1,000 ports. 
 
 * Furthermore, using terms defined in [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md), suppose 
-that each of the 100 macros induces a *group* of 300 standard cells, and that the ports collectively induce 20 *clumps*, 
-each of which induces a group of 50 standard cells.
+that each of the 100 macros induces a *cluster* of 300 standard cells, and that the ports collectively induce 20 *IO clusters*, 
+each of which induces a cluster of 50 standard cells.
 
-* Then, there will be 100 + 20 = 120 groups, each corresponding to an entry of the .fix file.
+* Then, there will be 100 + 20 = 120 clusters. Each element (macro pin, IO port or standard cell)
+in these clusters corresponds to an entry of the .fix file. The cluster id starts from 0 to 119.
 
 * The number of individual standard cells in the hypergraph that is actually partitioned by hMETIS is 200,000 - (100 * 300) - (20 * 50) = 169,000.
 
-* Note: To our understanding, applying hMETIS with *nparts* = 500 to this hypergraph, with 120 entries in the .fix file, 
-will partition 169,000 standard cells into 500 - 120 = 380 clusters.  All of the above understanding is in the process of being reconfirmed.
+* Suppose that each macro has 64 macro pins. The hypergraph that is actually partitioned by hMETIS has
+200,000 + 100 + 1000 + 100 * 64 = 207, 500 vertice.  Although there are both macro pins and macros in the hypergraph, all the nets related to macros are connected to macro pins and there is no hyperedges related to macros.
+And the hyperedges in the hypergraph cooresponds to the nets in the netlist.  Note that Circuit Training assumes that there is only one output pin for each standard cell, thus there is only one hyperedge {**A**, **B**, **C**, **D**, **E**} for the following case.  
+<img src="./net_model.png" width= "600"/>
+
+* *nparts* = 500 + 120 = 620 is used when applying hMETIS to this hypergraph.
 
 
 We call readers’ attention to the existence of significant aspects that are still pending clarification here.  
