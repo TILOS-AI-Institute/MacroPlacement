@@ -1861,6 +1861,9 @@ We updated the detailed algorithm for [gridding](https://github.com/TILOS-AI-Ins
 In constrast to the open-source [grid_size_selection.py](https://github.com/google-research/circuit_training/blob/main/circuit_training/grouping/grid_size_selection.py) in Circuit Training repo, which still calls the wrapper functions of plc client, our python scripts implement
 the gridding from sractch and are easy to understand. The results of our scripts match exactly that of Circuit Training.
 
+**September 21:**
+We updated the detailed algorithm for [grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Grouping) and [Clustering](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering). Here we explictly shows how the netlist information such as net model is used during grouping and clustering, while the open-source Circuit Training implementation still calls the wrapper function of plc client to get netlist information.
+
 
 ## **Pinned (to bottom) question list:**
 
