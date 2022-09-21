@@ -7,12 +7,17 @@
 # with this distribution for more information.
 # ===================================================================
 
+set clk_period 900
+if { [info exists ::env(CLK_PERIOD)] } {
+  set clk_period   $::env(CLK_PERIOD)
+}
+
 #set_max_area 0
 set_ideal_network [get_ports direct_reset_]
 set_ideal_network [get_ports dla_reset_rstn]
 set_ideal_network -no_propagate [get_nets nvdla_core_rstn]
 set_ideal_network [get_ports test_mode]
-create_clock [get_ports nvdla_core_clk]  -period 900.0  -waveform {0 450.0}
+create_clock [get_ports nvdla_core_clk]  -period $clk_period  -waveform {0 [expr $clk_period / 2.0]}
 set_clock_transition -max -rise 50 [get_clocks nvdla_core_clk]
 set_clock_transition -max -fall 50 [get_clocks nvdla_core_clk]
 set_clock_transition -min -rise 50 [get_clocks nvdla_core_clk]

@@ -1,0 +1,17 @@
+rm -rf output/ ETC/ outputs/
+
+# run ODB to Bookshelf
+#./openroad -python odb2bs.py
+./openroad -python lefdef_to_odb.py ariane ../../ariane_replace.def ./
+
+# prepare input dir structure for RePlAce
+mkdir -p ETC/
+ln -s $(readlink -f ./output/*) ./ETC/
+
+# run RePlAce. If you want to change density, please put -den 0.8 (80%), etc.
+./RePlAce-static -bmflag etc -bmname ariane_pad0_ISPD11 -pcofmax 1.03 |& tee replace_result.log
+
+# bring the results
+#ln -s outputs/ETC/ariane_pad0_ISPD11/experiment0/*.pl ./
+
+# you can run invs to load *.pl results from here

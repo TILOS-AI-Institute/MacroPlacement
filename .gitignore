@@ -1,6 +1,7 @@
 Flows/*/*/run/*/
 Flows/*/*/run-*
 Flows/job
+Flows/util/__pycache__
 CodeElements/*/*/__pycache__
 CodeElements/Plc_client/test/
 CodeElements/Plc_client/test/*/*

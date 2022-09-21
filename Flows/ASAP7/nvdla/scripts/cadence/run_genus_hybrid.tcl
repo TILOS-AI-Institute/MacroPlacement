@@ -92,6 +92,7 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     syn_generic -physical
 } else {
     syn_generic
+    write_hdl -generic > ${HANDOFF_PATH}/${DESIGN}_generic.v
 }
 time_info GENERIC
 

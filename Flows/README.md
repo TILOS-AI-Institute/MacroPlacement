@@ -15,6 +15,8 @@ The setup to run SP&R on the available test cases for the given enablements are 
   - [Ariane133](./SKY130HD/ariane133/)
   - [MemPool tile](./SKY130HD/mempool_tile/)
   - [NVDLA](./SKY130HD/nvdla/)
+- [Utility](./util/)
+  - Contains utility scripts for SP&R runs.
 
 Inside each directory are the following sub-directories that contain all of the files required to run the full SP&R flow.  
   - *constraints* directory contians the SDC constraint file for current design and enablement.

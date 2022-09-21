@@ -5,49 +5,71 @@ runtimes. Gridding enables hard macros to find locations consistent with high so
 
 Gridding determines a dissection of the layout canvas into some number of rows (**n_rows**) and some number of columns (**n_cols**) of _gridcells_.
 
-The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design.
+The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design. The detailed algorithm is shown as following.
+<img src="./Gridding Algorithm.png" width= "1600"/>
 
-The gridding process starts with the dimensions **H_canvas** and **W_canvas** of the layout canvas, as well as a list of hard **macro blocks**, where each block has a width and a height. Blocks are not rotatable. The area of a block is the product of its width and height. 
+The gridding algorithm starts with the dimensions **canvas_width** and **canvas_height** of the layout canvas, as well as a list of **macros**, where each macro has a width and a height. 
+Macros are not rotatable. The area of a macro is the product of its width and height.
+Then, the gridding searches over combinations (**n_rows**, **n_cols**), with constraints
+- **min_n_rows** <= **n_rows** < **max_n_rows** 
+- **min_n_cols** <= **n_cols** < **max_n_cols** 
+- **min_num_gridcells** <= **n_rows** * **n_cols** <= **max_num_grid_cells**
+- **grid_w** / **grid_h** <= **max_aspect_ratio** 
+- **grid_h** / **grid_w** <= **max_aspect_ratio** 
+- The macros can be packed sequentially on the gridcells. There are **n_rows** * **n_cols** gridcells in the canvas. \[Algorithm 1 Lines 11-22\]
 
-Then, the gridding searches over combinations **(n_rows, n_cols)**, with constraints
-- 10 <= **n_rows** , **n_cols** <= 100
-- **n_rows** * **n_cols** <= 3000   
 
-Note that **n_rows** * **n_cols** is the number of _gridcells_ in the canvas. Each _gridcell_ has width **W_canvas / n_cols** and height **H_canvas / n_rows**.
+where each gridcell has width of **grid_w** = **canvas_width** / **n_cols**
+and height of **grid_h** = **canvas_height** / **n_row**.
+The main idea is to search for a particular (**n_rows**, **n_cols**) combination
+that maximize the metric related to wasted space.
 
-The main idea is to search for a particular **(n_rows, n_cols)** combination that minimizes a metric called _loss_.
 
-To evaluate _loss_ for a given _grid_, all blocks are packed into the _grid_, and several terms that reflect wasted space are evaluated. 
-
+To evaluate metric for a given _grid_ (**n_rows**, **n_cols**), 
+all macros are packed into the _gridcells_, 
+and several terms (**empty_ratio**, **ver_waste** and **hor_waste**)
+that reflect wasted space are evaluated.
 ## Packing
+Macro packing is performed as follows \[Algorithm 1 Lines 11-22\]:
+- Macros are placed in order of non-increasing macro area.
+- All macros are placed, one by one, into the (**n_rows**, **n_cols**) _gridcells_.
+If the current macro cannot be placed, then the _grid_ is infeasible and the next
+candidate _grid_ is considered.
+- A macro is placed at the **first** (according to row-major order) _gridcell_ where it can be legally placed.
+- Placement of a macro means placing that macro's center at the center of some _gridcell_.
+- The placement of a macro's center at the center of some _gridcell_ is legal if (1) no part of the macro is outside of the canvas, and (2) no overlap of the macro with any previously-placed macro is induced.
+## Metric
+After macro packing, we can calculate the **empty_ratio** of current _grid_, i.e., 
+the number of empty _gridcells_ over the total number of _gridcells_ (**n_rows** * **n_cols**).
+A _gridcell_ is claimed as an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
+Next we calculate the **hor_waste** and **ver_waste** as described in following algorithm.
+<img src="./Calculate Waste Ratio.png" width= "1600"/>
 
-Packing is performed as follows.
-- All blocks are placed, one by one, into the **(n_rows, n_cols)** _grid_.  If the current block cannot be placed, then the _grid_ is infeasible and the next candidate _grid_ is considered.
-- Blocks are placed in order of decreasing (i.e., non-increasing) block **area**.
-- A block is placed at the **first** (according to row-major order) gridcell where it can be legally placed.
-- Placement of a block means placing that block's **center** at the **center** of some gridcell.
-- The placement of a block's center at the center of some gridcell is _legal_ if (1) no part of the block is outside of the canvas, and (2) no overlap of the block with any previously-placed block is induced. 
-- If two placed blocks intersect gridcells of the same row in the _grid_, and the x-spans of the blocks intersect, then the two blocks have _horizontal overlap_. (Note that this definition achieves simplicity at the cost of pessimism - but, the goal is to have a quick-and-dirty packing that feeds evaluation of _loss_.) Then, _vertical overlap_ is similarly defined.
+To calculate horizontal waste **hor_waste**, we calculate
+- **width_tot_macros** = the sum of widths of all macros in the design
+- **width_tot_used_gridcells** = the sum of widths of all used _gridcells_ if we pack the macros along the x-axis one by one.
 
-## Loss
+Then, **hor_waste** = 1.0 - **width_tot_macros** / **width_tot_used_gridcells**.
 
-_Loss_ is well-defined once all blocks have been legally packed (i.e., placed) into the grid, according to the above process, with no overlap.   
+To calculate vertical waste **ver_waste**, we calculate
+- **height_tot_macros** = the sum of heights of all macros in the design
+- **height_tot_used_gridcells** = the sum of heights of all used _gridcells_ if we pack the macros along the y-axis one by one.
 
-We search for the pair **(n_rows_opt, n_cols_opt)** that satisfies constraints above and minimizes total loss, which is defined as **loss_tot = loss_h + loss_v + loss_2d**. Currently, we are unclear on the definition of the **loss_2d** term and for now do not implement it. (However, we believe this term must somehow be based on the ratio between total "used gridcells" (i.e., having nonzero area of placed macro blocks) and "total gridcells" (i.e., **n_rows** * **n_cols**).)
+Then, **ver_waste** = 1.0 - **height_tot_macros** / **height_tot_used_gridcells**.
 
-To evaluate horizontal loss, **loss_h**, we calculate
-- **width_tot_blocks** = the sum of widths of all blocks in the design 
-- **width_tot__used_gridcells** = the sum of widths of all gridcells in the grid that have nonempty intersection with some placed block
-
-Then, **loss_h = 1 - (width_tot_blocks / width_tot_used_gridcells)**
-
-Vertical loss, **loss_v**, is similarly evaluated.
+After calculating **empty_ratio**, **ver_waste** and **ver_waste**, the **metric** is defined as
+**metric** = **empty_ratio** + 2.0 - **ver_waste** - **ver_waste**.
+The _grid_ with best **metric** is noted as **n_rows_opt** and **n_cols_opt**.
 
 ## Grid Simplification
-
-Once we have found **n_rows_opt** and **n_cols_opt** as described above, we seek a smaller grid that has similar _loss_ properties.
-Specifically, we find  values of **n_rows_actual** and **n_cols_actual** such that the above constraints are satisfied, **loss_h_actual + loss_v_actual** is within some _tolerance_ (e.g., 5% or 10%) of the optimal **loss_tot**, and **n_rows_actual * n_cols_actual** is minimized.  This is the grid that is used in Circuit Training.
+Once we have found **n_rows_opt** and **n_cols_opt** as described above, 
+we seek a smaller _grid_ that has similar metric properties. \[Algorithm 1 Lines 33-39\]  
+Specifically, we find values of **n_rows_actual** and **n_cols_actual** such that 
+its **metric** is within some tolerance (5\% in Circuit Training) of the optimal **metric**, 
+and **n_rows_actual** * **n_cols_actual** is minimized. 
+This is the grid that is used in Circuit Training.
 To our understanding, the foregoing procedure results in grids that are of similar sizes, e.g., with ~25 <= **n_rows_actual** , **n_cols_actual** <= ~40. 
+
 
 ## Thanks
 We thank Google engineers for May 19, 2022 discussions that explained the gridding method used in Circuit Training.

@@ -12,9 +12,14 @@ set_units -capacitance 1000fF
 # Set the current design
 current_design mempool_tile_wrap
 
+set clk_period 6000
+if { [info exists ::env(CLK_PERIOD)] } {
+  set clk_period   $::env(CLK_PERIOD)
+}
+
 set_case_analysis 0 [get_ports scan_enable_i]
-create_clock -name "clk_i" -period 6000.0 -waveform {0.0 3000.0} [get_ports clk_i]
-create_clock -name "vclk_i" -period 6000.0 -waveform {0.0 3000.0} 
+create_clock -name "clk_i" -period $clk_period -waveform {0.0 [expr $clk_period / 2.0]} [get_ports clk_i]
+create_clock -name "vclk_i" -period $clk_period -waveform {0.0 [expr $clk_period / 2.0]} 
 set_false_path -from [list \
   [get_ports {tile_id_i[1]}]  \
   [get_ports {tile_id_i[0]}] ]

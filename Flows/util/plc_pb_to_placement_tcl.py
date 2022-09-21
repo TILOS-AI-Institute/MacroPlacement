@@ -9,6 +9,8 @@ plc_file = sys.argv[1]
 pb_file = sys.argv[2]
 place_tcl = sys.argv[3]
 
+print(f'PLC:\t{plc_file}\nPB:\t{pb_file}\nTCL:\t{place_tcl}')
+
 orientMap = {
     "N" : "R0",
     "S" : "R180",
@@ -82,6 +84,7 @@ for line in lines:
             node_list[-1].y_offset = words[1]
 fp.close()
 
+
 fp = open(plc_file, "r")
 lines = fp.readlines()
 fp_out = open(place_tcl, "w")
@@ -91,8 +94,8 @@ for line in lines:
     if id_pattern.match(words[0]) and (len(words) == 5):
         idx = int(words[0])
         if node_list[idx].pb_type == '"MACRO"':
-            x = words[1]
-            y = words[2]
+            x = float(words[1]) - float(node_list[idx].width)/2.0
+            y = float(words[2]) - float(node_list[idx].height)/2.0
             orient = orientMap[words[3]]
             isFixed = words[4]
             macro_name = node_list[idx].name.replace('_[', '\[')
