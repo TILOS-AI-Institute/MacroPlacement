@@ -219,7 +219,7 @@ in these clusters corresponds to an entry of the .fix file. The cluster id start
 * Suppose that each macro has 64 macro pins. The hypergraph that is actually partitioned by hMETIS has
 200,000 + 100 + 1000 + 100 * 64 = 207, 500 vertices.  Although there are both macro pins and macros in the hypergraph, all the nets related to macros are connected to macro pins and there is no hyperedges related to macros. Each hyperedge in the hypergraph cooresponds to a net in the netlist. Note that Circuit Training assumes that there is only one output pin for each standard cell, thus there is only one hyperedge {**A**, **B**, **C**, **D**, **E**} for the following case.  
 <p align="center">
-<img src="./net_model.png" width= "600"/>
+<img src="./images/net_model.png" width= "600"/>
 </p>
 <p align="center">
  Figure 1.  Illustration of net model in Circuit Training.  
@@ -242,7 +242,7 @@ For each cluster *c*, the breakup process is as following:
 * The elements (macro pins, macros, ports and standard cells) in each region form a new cluster.
 The following figure shows an example: the left part shows the cluster *c<sub>1</sub>* before breakup process and the blue dot is the weighted center of *c<sub>1</sub>*; the right part shows the clusters after breakupup process.  The "center" cluster still has the cluster id of 1.
 <p align="center">
-<img src="./breakup.png" width= "1600"/>
+<img src="./images/breakup.png" width= "1600"/>
 </p>
 <p align="center">
  Figure 2.  Illustration of breaking up a cluster.  
