@@ -214,7 +214,7 @@ class PlacementCostTest():
         print("                  +++ TEST METADATA: PASS +++")
         print("                  +++++++++++++++++++++++++++")
 
-    def view_canvas(self):
+    def view_canvas(self, ifInital, ifReadComment):
         print("############################ VIEW CANVAS ############################")
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                   macro_macro_x_spacing=50,
@@ -226,9 +226,9 @@ class PlacementCostTest():
             print("[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
-                                          ifInital=True,
-                                          ifValidate=True,
-                                          ifReadComment=True)
+                                          ifInital=ifInital,
+                                          ifValidate=False,
+                                          ifReadComment=ifReadComment)
         # show canvas
         self.plc_os.display_canvas(annotate=False, amplify=False)
 
@@ -285,6 +285,8 @@ class PlacementCostTest():
             assert int(self.plc_os.get_wirelength()) == int(
                 self.plc.get_wirelength())
             assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-3
+            print("#[INFO WIRELENGTH] Matched irelength cost -- GL {}, OS {}".format(
+                str(self.plc.get_cost()), self.plc_os.get_cost()))
         except Exception as e:
             print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
@@ -296,6 +298,8 @@ class PlacementCostTest():
                 sum(self.plc.get_grid_cells_density()))
             assert int(self.plc_os.get_density_cost()) == int(
                 self.plc.get_density_cost())
+            print("#[INFO DENSITY] Matched density cost -- GL {}, OS {}".format(
+                str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
         except Exception as e:
             print("[ERROR DENSITY] Discrepancies found when computing density -- GL {}, OS {}".format(
                 str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
@@ -303,11 +307,12 @@ class PlacementCostTest():
 
         # Congestion
         try:
-            # NOTE: [IGNORE] grid-wise congestion not tested because miscellaneous implementation differences
-            # assert abs(sum(self.plc_os.get_horizontal_routing_congestion()) - sum(self.plc.get_horizontal_routing_congestion())) < 1e-3
-            # assert abs(sum(self.plc_os.get_vertical_routing_congestion()) - sum(self.plc.get_vertical_routing_congestion())) < 1e-3
+            # NOTE: [IGNORE] grid-wise congestion not tested because 
+            # miscellaneous implementation differences.
             assert abs(self.plc.get_congestion_cost() -
                        self.plc_os.get_congestion_cost()) < 1e-3
+            print("#[INFO CONGESTION] Matched congestion cost -- GL {}, OS {}".format(
+                str(self.plc.get_congestion_cost()), self.plc_os.get_congestion_cost()))
         except Exception as e:
             print("[ERROR CONGESTION] Discrepancies found when computing congestion -- GL {}, OS {}"
                   .format(str(self.plc.get_congestion_cost()),
@@ -367,19 +372,31 @@ class PlacementCostTest():
         self.plc_os = plc_client_os.PlacementCost(self.NETLIST_PATH)
 
         # set rpm
-        self.plc.set_routes_per_micron(10, 10)
-        self.plc_os.set_routes_per_micron(10, 10)
+        self.plc.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
 
-        self.plc.set_macro_routing_allocation(10, 10)
-        self.plc_os.set_macro_routing_allocation(10, 10)
+        self.plc.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
 
-        self.plc.set_congestion_smooth_range(0.0)
-        self.plc_os.set_congestion_smooth_range(0.0)
+        self.plc.set_congestion_smooth_range(2.0)
+        self.plc_os.set_congestion_smooth_range(2.0)
 
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        if self.PLC_PATH:
+            print("[PLC FILE FOUND] Loading info from .plc file")
+            self.plc_os.set_canvas_boundary_check(False)
+            self.plc_os.restore_placement(self.PLC_PATH,
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=False)
+            self.plc.set_canvas_boundary_check(False)
+            self.plc.restore_placement(self.PLC_PATH)
+        else:
+            print("[PLC FILE MISSING] Using only netlist info")
 
         temp_gl_h = np.array(self.plc.get_horizontal_routing_congestion())
         temp_os_h = np.array(self.plc_os.get_horizontal_routing_congestion())
@@ -416,29 +433,37 @@ class PlacementCostTest():
         temp_gl_v_rt = np.array(self.plc.get_vertical_routing_congestion())
         temp_os_v_rt = np.array(self.plc_os.get_vertical_routing_congestion())
 
-        temp_gl_h_mc = (
-            temp_gl_h - temp_gl_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
-        temp_os_h_mc = (
-            temp_os_h - temp_os_h_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        # H Macro congesiton = H Total congestion - H Routing congestion
+        temp_gl_h_mc = (temp_gl_h - temp_gl_h_rt)
+        temp_os_h_mc = (temp_os_h - temp_os_h_rt)
 
-        temp_gl_v_mc = (
-            temp_gl_v - temp_gl_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
-        temp_os_v_mc = (
-            temp_os_v - temp_os_v_rt).reshape(self.GRID_COL, self.GRID_ROW)
+        # V Macro congesiton = V Total congestion - V Routing congestion
+        temp_gl_v_mc = (temp_gl_v - temp_gl_v_rt)
+        temp_os_v_mc = (temp_os_v - temp_os_v_rt)
 
         # print("GL H MACRO Congestion", (temp_gl_h_mc).reshape(self.GRID_COL, self.GRID_ROW))
         # print("OS H MACRO Congestion", (temp_os_h_mc).reshape(self.GRID_COL, self.GRID_ROW))
         print("H MACRO Congestion DIFF", np.where(
             abs(temp_gl_h_mc - temp_os_h_mc) > 1e-5))
-
         # print("GL V MACRO Congestion", (temp_gl_v_mc).reshape(self.GRID_COL, self.GRID_ROW))
         # print("OS V MACRO Congestion", (temp_os_v_mc).reshape(self.GRID_COL, self.GRID_ROW))
         print("V MACRO Congestion DIFF", np.where(
             abs(temp_gl_v_mc - temp_os_v_mc) > 1e-5))
 
+        print("H Routing Congestion DIFF", np.where(
+            abs(temp_gl_h_rt - temp_os_h_rt) > 1e-5))
+        print("V Routing Congestion DIFF", np.where(
+            abs(temp_gl_v_rt - temp_os_v_rt) > 1e-5))
+
+        # self.plc_os.display_canvas()
         # BY ENTRY
         print("**************BY ENTRY DIFF")
-        print(temp_gl_h_mc[0][6], temp_os_h_mc[0][6])
+        CELL_IDX = 0
+        r = (CELL_IDX // 35)
+        c = int(CELL_IDX % 35)
+        print(r,c)
+        print(temp_gl_h_rt[CELL_IDX], temp_os_h_rt[CELL_IDX])
+        print(temp_gl_v_rt[CELL_IDX], temp_os_v_rt[CELL_IDX])
 
     def test_placement_util(self, keep_save_file=False):
         """
@@ -773,7 +798,8 @@ def main(args):
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     # PCT.view_canvas()
-    PCT.test_environment()
+    # PCT.test_proxy_congestion()
+    # PCT.test_environment()
 
 
 if __name__ == '__main__':
