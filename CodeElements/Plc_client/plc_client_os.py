@@ -49,7 +49,7 @@ class PlacementCost(object):
         self.FLAG_UPDATE_CONGESTION = True
         self.FLAG_UPDATE_MACRO_ADJ = True
         self.FLAG_UPDATE_MACRO_AND_CLUSTERED_PORT_ADJ = True
-        self.FLAG_UPDATE_NODE_MASK = False
+        self.FLAG_UPDATE_NODE_MASK = True
 
         # Check netlist existance
         assert os.path.isfile(self.netlist_file)
@@ -352,6 +352,9 @@ class PlacementCost(object):
         # mapping connection degree to each macros
         self.__update_connection()
 
+        # all hard macros are placed on canvas initially
+        self.__update_init_placed_node()
+
     def __read_plc(self, plc_pth: str):
         """
         Plc file Parser
@@ -593,6 +596,13 @@ class PlacementCost(object):
                         if self.get_node_type(macro_idx) == "MACRO":
                             weight = pin.get_weight()
                             macro.add_connections(inputs[k], weight)
+    
+    def __update_init_placed_node(self):
+        """
+        Place all hard macros on node mask initially
+        """
+        for macro_idx in (self.hard_macro_indices  + self.soft_macro_indices):
+            self.placed_macro.append(macro_idx)
 
     def get_cost(self) -> float:
         """
@@ -986,7 +996,7 @@ class PlacementCost(object):
         # Flag updates
         self.FLAG_UPDATE_CONGESTION = True
         self.FLAG_UPDATE_DENSITY = True
-        # self.FLAG_UPDATE_NODE_MASK = True
+        self.FLAG_UPDATE_NODE_MASK = True
         self.__reset_node_mask()
         self.FLAG_UPDATE_MACRO_AND_CLUSTERED_PORT_ADJ = True
 
@@ -1011,7 +1021,7 @@ class PlacementCost(object):
         # Flag updates
         self.FLAG_UPDATE_CONGESTION = True
         self.FLAG_UPDATE_DENSITY = True
-        # self.FLAG_UPDATE_NODE_MASK = True
+        self.FLAG_UPDATE_NODE_MASK = True
         self.__reset_node_mask()
         self.FLAG_UPDATE_MACRO_AND_CLUSTERED_PORT_ADJ = True
 
@@ -1821,9 +1831,9 @@ class PlacementCost(object):
 
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
-            print("[ERROR NODE FIXED] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+            print("[ERROR NODE FIXED] Found {}. Only 'MACRO', 'STDCELL'".format(mod.get_type())
                     +"'PORT' are considered to be fixable nodes")
             exit(1)
         except Exception:
@@ -1837,13 +1847,13 @@ class PlacementCost(object):
 
     def update_node_coords(self, node_idx, x_pos, y_pos):
         """
-        Update Node location if node is 'MACRO', 'macro', 'STDCELL', 'PORT'
+        Update Node location if node is 'MACRO', 'STDCELL', 'PORT'
         """
         mod = None
 
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
             print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
                     +"'PORT' are considered to be placable nodes")
@@ -1856,15 +1866,15 @@ class PlacementCost(object):
 
     def update_macro_orientation(self, node_idx, orientation):
         """ 
-        Update macro orientation if node is 'MACRO', 'macro'
+        Update macro orientation if node is 'MACRO'
         """
         mod = None
 
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro']
+            assert mod.get_type() in ['MACRO']
         except AssertionError:
-            print("[ERROR MACRO ORIENTATION] Found {}. Only 'MACRO', 'macro'".format(mod.get_type())
+            print("[ERROR MACRO ORIENTATION] Found {}. Only 'MACRO'".format(mod.get_type())
                     +" are considered to be ORIENTED")
             exit(1)
         except Exception:
@@ -1884,15 +1894,15 @@ class PlacementCost(object):
 
     def get_node_location(self, node_idx):
         """ 
-        Return Node location if node is 'MACRO', 'macro', 'STDCELL', 'PORT'
+        Return Node location if node is 'MACRO', 'STDCELL', 'PORT'
         """
         mod = None
 
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
-            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'STDCELL'".format(mod.get_type())
                     +"'PORT' are considered to be placable nodes")
             exit(1)
         except Exception:
@@ -1908,9 +1918,9 @@ class PlacementCost(object):
         
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro']
+            assert mod.get_type() in ['MACRO']
         except AssertionError:
-            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO', 'macro'".format(mod.get_type())
+            print("[ERROR NODE LOCATION] Found {}. Only 'MACRO'".format(mod.get_type())
                     +" can be called")
             exit(1)
         except Exception:
@@ -1926,9 +1936,9 @@ class PlacementCost(object):
 
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro']
+            assert mod.get_type() in ['MACRO']
         except AssertionError:
-            print("[ERROR MACRO ORIENTATION] Found {}. Only 'MACRO', 'macro'".format(mod.get_type())
+            print("[ERROR MACRO ORIENTATION] Found {}. Only 'MACRO'".format(mod.get_type())
                     +" are considered to be ORIENTED")
             exit(1)
         except Exception:
@@ -1945,9 +1955,9 @@ class PlacementCost(object):
 
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
-            print("[ERROR UNFIX NODE] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
+            print("[ERROR UNFIX NODE] Found {}. Only 'MACRO', 'STDCELL'".format(mod.get_type())
                     +"'PORT' are considered to be fixable nodes")
             exit(1)
         except Exception:
@@ -1964,7 +1974,7 @@ class PlacementCost(object):
         
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
             print("[ERROR FIX NODE] Found {}. Only 'MACRO', 'STDCELL'"\
                 .format(mod.get_type())
@@ -1979,10 +1989,23 @@ class PlacementCost(object):
     def __update_node_mask(self):
         """
         TODO: should we reload the placed node?
+        NOTE: NOT USED
         """
+        return
+
         self.node_mask = np.array([1] * (self.grid_col * self.grid_row)).\
                         reshape(self.grid_row, self.grid_col)
         self.FLAG_UPDATE_NODE_MASK = False
+
+        for pmod_idx in self.placed_macro:
+            pmod = self.modules_w_pins[pmod_idx]
+            if not pmod.get_placed_flag():
+                continue
+            
+            p_x, p_y = pmod.get_pos()
+            prow, pcol = self.__get_grid_cell_location(p_x, p_y)
+            c_idx = prow * self.grid_col + pcol
+            self.__place_node_mask(c_idx, pmod.get_width(), pmod.get_height())
     
     def __reset_node_mask(self):
         """
