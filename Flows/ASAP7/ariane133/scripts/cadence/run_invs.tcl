@@ -1,6 +1,5 @@
 # This script was written and developed by ABKGroup students at UCSD. However, the underlying commands and reports are copyrighted by Cadence. 
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
-setLibraryUnit -time 1.0ps
 source lib_setup.tcl
 source design_setup.tcl
 
@@ -40,6 +39,8 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
+setAnalysisMode -reset
+setAnalysisMode -analysisType onChipVariation -cppr both
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
@@ -150,6 +151,11 @@ set rpt_post_route [extract_report postRoute]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 
 defOut -netlist -floorplan -routing ${DESIGN}_route.def
+
+#route_opt_design
+optDesign -postRoute
+set rpt_post_route [extract_report postRouteOpt]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 
 summaryReport -noHtml -outfile summaryReport/post_route.sum
 saveDesign ${encDir}/${DESIGN}.enc
