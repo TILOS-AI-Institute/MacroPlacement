@@ -1,31 +1,21 @@
 # Placement file for Circuit Training
-# Source input file(s) : ./output_ariane_NanGate45/22cols_30rows/g500_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt
-# This file : ./output_ariane_NanGate45/22cols_30rows/g500_ub5_nruns10_c5_r3_v3_rc1/initial.plc
-# Original initial placement : 
-# Date : 2022-08-26 08:27:04
-# Columns : 22  Rows : 30
-# Width : 1357.360  Height : 1356.880
-# Area (stdcell+macros) : 1448306.937872215
-# Wirelength : 3264054.817
-# Wirelength cost : 0.0540
-# Congestion cost : 0.8487
-# Density cost : 0.6405
-# Fake net cost : 0.0000
-# 90% Congestion metric: (0.01363636363636364, 0.0006827604141139862)
-# Project : unset_project
-# Block : unset_block
-# Routes per micron, hor : 11.285  ver : 12.605
-# Routes used by macros, hor : 7.143  ver : 8.339
-# Smoothing factor : 0
-# Use incremental cost : False
-# 
-# To view this file (most options are default):
-# viewer_binary    --netlist_file ./output_ariane_NanGate45/22cols_30rows/g500_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt    --canvas_width 1357.36 --canvas_height 1356.88    --grid_cols 22 --grid_rows=30    --init_placement ./output_ariane_NanGate45/22cols_30rows/g500_ub5_nruns10_c5_r3_v3_rc1/initial.plc    --project unset_project    --block_name unset_block    --congestion_smooth_range 0    --overlap_threshold 0    --noboundary_check
-# or you can simply run:
-# viewer_binary    --init_placement ./output_ariane_NanGate45/22cols_30rows/g500_ub5_nruns10_c5_r3_v3_rc1/initial.plc
-# 
-# 
-# 
+# Source input file(s) : environment/test_data/ariane/ariane.txt
+# This file : environment/test_data/ariane/init.plc
+# Date : 2022-03-13 09:30:00
+# Columns : 50  Rows : 50
+# Width : 1599.99  Height : 1598.8
+# Area : 1244102.4819999968
+# Wirelength : 0.0
+# Wirelength cost : 0.0
+# Congestion cost : 0.0
+# Block : ariane
+# Routes per micron, hor : 70.33  ver : 74.51
+# Routes used by macros, hor : 51.79  ver : 51.79
+# Smoothing factor : 2
+# Overlap threshold : 0.004
+#
+#
+#
 # Counts of node types:
 # HARD_MACROs     :       133
 # HARD_MACRO_PINs :      7847

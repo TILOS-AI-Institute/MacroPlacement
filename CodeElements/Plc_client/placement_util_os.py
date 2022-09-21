@@ -44,7 +44,7 @@ def nodes_of_types(plc: plc_client.PlacementCost,
       yield i
     i += 1
 
-
+# done
 def get_node_xy_coordinates(
     plc: plc_client.PlacementCost) -> Dict[int, Tuple[float, float]]:
   """Returns all node x,y coordinates (canvas) in a dict."""
@@ -54,7 +54,7 @@ def get_node_xy_coordinates(
       node_coords[node_index] = plc.get_node_location(node_index)
   return node_coords
 
-
+# done
 def get_macro_orientations(plc: plc_client.PlacementCost) -> Dict[int, int]:
   """Returns all macros' orientations in a dict."""
   macro_orientations = dict()
@@ -62,7 +62,7 @@ def get_macro_orientations(plc: plc_client.PlacementCost) -> Dict[int, int]:
     macro_orientations[node_index] = plc.get_macro_orientation(node_index)
   return macro_orientations
 
-
+# done
 def restore_node_xy_coordinates(
     plc: plc_client.PlacementCost,
     node_coords: Dict[int, Tuple[float, float]]) -> None:
@@ -70,13 +70,13 @@ def restore_node_xy_coordinates(
     if not plc.is_node_fixed(node_index):
       plc.update_node_coords(node_index, coords[0], coords[1])
 
-
+# done
 def restore_macro_orientations(plc: plc_client.PlacementCost,
                                macro_orientations: Dict[int, int]) -> None:
   for node_index, orientation in macro_orientations.items():
     plc.update_macro_orientation(node_index, orientation)
 
-# 
+# done
 def extract_attribute_from_comments(attribute: str,
                                     filenames: List[str]) -> Optional[str]:
   """Parses the files' comments section, tries to extract the attribute.
@@ -104,7 +104,7 @@ def extract_attribute_from_comments(attribute: str,
               break
   return None
 
-#done
+# done
 def get_blockages_from_comments(
     filenames: Union[str, List[str]]) -> Optional[List[List[float]]]:
   """Returns list of blockages if they exist in the file's comments section."""
@@ -171,7 +171,7 @@ def extract_sizes_from_comments(
     if canvas_width and canvas_height and grid_cols and grid_rows:
       return canvas_width, canvas_height, grid_cols, grid_rows
 
-
+# done
 def fix_port_coordinates(plc: plc_client.PlacementCost) -> None:
   """Find all ports and fix their coordinates.
 
@@ -182,12 +182,13 @@ def fix_port_coordinates(plc: plc_client.PlacementCost) -> None:
     # print("node to fix:", node)
     plc.fix_node_coord(node)
 
-
+# done
 # The routing capacities are calculated based on the public information about
 # 7nm technology (https://en.wikichip.org/wiki/7_nm_lithography_process)
 # with an arbitary, yet reasonable, assumption of 18% of the tracks for
 # the power grids.
 def create_placement_cost(
+    plc_client: None,
     netlist_file: str,
     init_placement: Optional[str] = None,
     overlap_threshold: float = 4e-3,
@@ -300,20 +301,21 @@ def get_node_type_counts(plc: plc_client.PlacementCost) -> Dict[str, int]:
         counts['HARD_MACRO'] += 1
     if node_type == 'MACRO_PIN':
       ref_id = plc.get_ref_node_id(node_index)
+      # print("ref_id: ", ref_id)
       if plc.is_node_soft_macro(ref_id):
         counts['SOFT_MACRO_PIN'] += 1
       else:
         counts['HARD_MACRO_PIN'] += 1
   return counts
 
-
+# done
 def make_blockage_text(plc: plc_client.PlacementCost) -> str:
   ret = ''
   for blockage in plc.get_blockages():
     ret += 'Blockage : {}\n'.format(' '.join([str(b) for b in blockage]))
   return ret
 
-
+# done
 def save_placement(plc: plc_client.PlacementCost,
                    filename: str,
                    user_comments: str = '') -> None:
@@ -372,9 +374,12 @@ def save_placement(plc: plc_client.PlacementCost,
   if user_comments:
     info += '\nUser comments:\n' + user_comments + '\n'
   info += '\nnode_index x y orientation fixed'
+
+  # print(info)
   return plc.save_placement(filename, info)
 
 
+# TODO: plc.optimize_stdcells
 def fd_placement_schedule(plc: plc_client.PlacementCost,
                           num_steps: Tuple[int, ...] = (100, 100, 100),
                           io_factor: float = 1.0,
@@ -415,7 +420,7 @@ def fd_placement_schedule(plc: plc_client.PlacementCost,
                         log_scale_conns, use_sizes, io_factor, num_steps,
                         max_move_distance, attract_factor, repel_factor)
 
-
+# not tested
 def get_ordered_node_indices(mode: str,
                              plc: plc_client.PlacementCost,
                              exclude_fixed_nodes: bool = True) -> List[int]:
@@ -456,7 +461,7 @@ def get_ordered_node_indices(mode: str,
     ordered_indices = [m for m in ordered_indices if not plc.is_node_fixed(m)]
   return ordered_indices
 
-
+# done
 def extract_parameters_from_comments(
     filename: str) -> Tuple[float, float, int, int]:
   """Parses the file's comments section, tries to extract canvas/grid sizes.
@@ -476,6 +481,7 @@ def extract_parameters_from_comments(
         fp_re = re.search(
             r'FP bbox: \{([\d\.]+) ([\d\.]+)\} \{([\d\.]+) ([\d\.]+)\}', line)
         if fp_re:
+          # NOTE: first two argument contains origin coord but not used
           canvas_width = float(fp_re.group(3))
           canvas_height = float(fp_re.group(4))
           continue
@@ -494,7 +500,7 @@ def extract_parameters_from_comments(
         break
   return canvas_width, canvas_height, grid_cols, grid_rows
 
-
+# done
 def get_routing_resources() -> Dict[str, float]:
   """Currently we only use default parameter settings.
 
@@ -512,6 +518,7 @@ def get_routing_resources() -> Dict[str, float]:
   }
 
 
+# done
 def nodes_of_types(plc: plc_client.PlacementCost, type_list: List[str]):
   """Yields the index of a node of certain types."""
   i = 0
@@ -523,7 +530,7 @@ def nodes_of_types(plc: plc_client.PlacementCost, type_list: List[str]):
       yield i
     i += 1
 
-
+# done
 def num_nodes_of_type(plc, node_type):
   """Returns number of node of a particular type."""
   count = 0
@@ -532,6 +539,7 @@ def num_nodes_of_type(plc, node_type):
   return count
 
 
+# not tested
 def extract_blockages_from_tcl(filename: str,
                                block_name: str,
                                canvas_width: float,
@@ -606,7 +614,7 @@ def extract_blockages_from_tcl(filename: str,
       index += 1
   return blockages
 
-
+# done
 def get_ascii_picture(vect: List[Any],
                       cols: int,
                       rows: int,
@@ -636,7 +644,7 @@ def get_ascii_picture(vect: List[Any],
   ret_str += '   -' + '-' * 2 * cols + '\n'
   return ret_str
 
-
+# done
 def get_hard_macro_density_map(plc: plc_client.PlacementCost) -> List[float]:
   """Returns the placement density map for hard macros only."""
   # Unplaces all standard cells and soft macros, so that grid cell density
@@ -660,7 +668,7 @@ def get_hard_macro_density_map(plc: plc_client.PlacementCost) -> List[float]:
   plc.set_canvas_boundary_check(check_boundary)
   return hard_macro_density
 
-
+# done
 def save_placement_with_info(plc: plc_client.PlacementCost,
                              filename: str,
                              user_comments: str = '') -> None:
@@ -755,8 +763,9 @@ def save_placement_with_info(plc: plc_client.PlacementCost,
   info += '\nnode_index x y orientation fixed'
   return plc.save_placement(filename, info)
 
-
+# done
 def create_placement_cost_using_common_arguments(
+    plc_client:None,
     netlist_file: str,
     init_placement: Optional[str] = None,
     canvas_width: Optional[float] = None,
@@ -847,7 +856,7 @@ def create_placement_cost_using_common_arguments(
 
   return plc
 
-
+# done, but need verify
 def get_node_locations(plc: plc_client.PlacementCost) -> Dict[int, int]:
   """Returns all node grid locations (macros and stdcells) in a dict."""
   node_locations = dict()
@@ -866,7 +875,7 @@ def get_node_ordering_by_size(plc: plc_client.PlacementCost) -> List[int]:
     node_areas[i] = w * h
   return sorted(node_areas, key=node_areas.get, reverse=True)
 
-
+# not tested
 def grid_locations_near(plc: plc_client.PlacementCost,
                         start_grid_index: int) -> Iterator[int]:
   """Yields node indices closest to the start_grid_index."""
@@ -894,7 +903,7 @@ def grid_locations_near(plc: plc_client.PlacementCost,
           continue
         yield int(new_col + new_row * cols)
 
-
+# not tested
 def place_near(plc: plc_client.PlacementCost, node_index: int,
                location: int) -> bool:
   """Places a node (legally) closest to the given location.
@@ -913,7 +922,7 @@ def place_near(plc: plc_client.PlacementCost, node_index: int,
       return True
   return False
 
-
+# not tested
 def disconnect_high_fanout_nets(plc: plc_client.PlacementCost,
                                 max_allowed_fanouts: int = 500) -> None:
   high_fanout_nets = []
@@ -925,7 +934,7 @@ def disconnect_high_fanout_nets(plc: plc_client.PlacementCost,
       high_fanout_nets.append(i)
   plc.disconnect_nets(high_fanout_nets)
 
-
+# not tested
 def legalize_placement(plc: plc_client.PlacementCost) -> bool:
 	"""Places the nodes to legal positions snapping to grid cells."""
 	# Unplace all except i/o's.
@@ -963,10 +972,44 @@ def main():
     test_netlist_dir = './Plc_client/test/'+'ariane'
     netlist_file = os.path.join(test_netlist_dir,'netlist.pb.txt')
     init_placement = os.path.join(test_netlist_dir,'initial.plc')
-    plc = create_placement_cost(netlist_file=netlist_file, init_placement=init_placement)
-    plc = create_placement_cost_using_common_arguments(netlist_file=netlist_file, init_placement=init_placement, 
-          grid_cols=10, grid_rows=10, congestion_smooth_range=2.0, overlap_threshold=0.004, use_incremental_cost=False)
+    plc = create_placement_cost(plc_client=plc_client, netlist_file=netlist_file, init_placement=init_placement)
+    # plc = create_placement_cost_using_common_arguments(netlist_file=netlist_file, init_placement=init_placement, 
+    #       grid_cols=10, grid_rows=10, congestion_smooth_range=2.0, overlap_threshold=0.004, use_incremental_cost=False)
+    print(make_blockage_text(plc))
+    # save_placement(plc, "save_test", 'this is a comment')
     # plc.nodes_of_types()
 
+    # node_xy_coordinates
+    NODE_XY_DICT = {}
+    for i in nodes_of_types(plc, ['MACRO', 'macro', 'STDCELL', 'PORT']):
+      NODE_XY_DICT[i] = (100, 100)
+    
+    restore_node_xy_coordinates(plc, NODE_XY_DICT)
+    # print(get_node_xy_coordinates(plc))
+
+    # macro_orientation
+    MACRO_ORIENTATION = {}
+    for i in nodes_of_types(plc, ['MACRO', 'macro']):
+      MACRO_ORIENTATION[i] = "S"
+    
+    restore_macro_orientations(plc, MACRO_ORIENTATION)
+    # print(get_macro_orientations(plc))
+
+    fix_port_coordinates(plc)
+
+    # write out new plc
+    save_placement(plc, "save_test", 'this is a comment')
+
+    # needs more testing
+    print(get_node_locations(plc))
+
+    # num_nodes_of_type
+    print("num_nodes_of_type 'MACRO':", num_nodes_of_type(plc, "MACRO"))
+
+    # get_hard_macro_density_map
+    print("get_hard_macro_density_map: \n", get_hard_macro_density_map(plc))
+    print("get_hard_macro_density_map in ASCII: \n", get_ascii_picture(get_hard_macro_density_map(plc), *plc.get_grid_num_columns_rows()))
+
+    print()
 if __name__ == '__main__':
 	main()

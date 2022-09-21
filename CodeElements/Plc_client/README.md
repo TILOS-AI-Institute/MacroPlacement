@@ -85,5 +85,11 @@ $$
 
 Notice a smoothing range can be set for congestion. This is only applied to congestion due to net routing which by counting adjacent cells and adding the averaged congestion to these adjacent cells. More details are provided in the document above.
 
+## Placement Util
+**Disclaimer: We DO NOT own the content of placement_util_os.py. All rights belong to Google Authors. This is a modified version of placement_util.py and we are including in the repo for the sake of testing. Original Code can be viewed [here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/placement_util.py)**.
+
+## Observation Extractor
+**Disclaimer: We DO NOT own the content of observation_extractor_os.py. All rights belong to Google Authors. This is a modified version of observation_extractor.py and we are including in the repo for the sake of testing. Original Code can be viewed [here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/observation_extractor.py)**.
+
 
 

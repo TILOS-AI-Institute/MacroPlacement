@@ -184,7 +184,6 @@ Figure corresponding to point five.
 3. For each two pin nets we update congestion values.
 
 #### *Computation for Smoothing:*
-When a macro overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0.
 
 1. **Congestion smoothing = 0.0**
    1. Return the grid congestion that is due to net routing: no smoothing is applied.
@@ -203,6 +202,8 @@ When a macro overlaps with multiple gridcells, if any part of the module partial
 </p>
 
 #### *Computation for Macro Congestion:*
+When a macro overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0.
+
 - For each hard MACRO:
    - For each gridcell it overlaps with:
       - For both horizontal and vertical macro routing congestion map:
