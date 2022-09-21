@@ -64,7 +64,10 @@ proc extract_report {stage} {
        timeDesign -postRoute -prefix ${stage}
     } elseif { $stage == "postRouetOpt" } {
        timeDesign -postRoute -prefix ${stage}
+    } elseif { $stage == "postSynth" } {
+       timeDesign -prePlace -prefix ${stage}
     }
+
     set rpt1 [extract_from_timing_rpt timingReports/${stage}.summary.gz]
     report_power > power_${stage}.rpt
     set rpt2 [extract_from_power_rpt power_${stage}.rpt]
