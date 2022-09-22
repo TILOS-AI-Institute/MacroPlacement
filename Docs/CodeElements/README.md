@@ -49,7 +49,7 @@ The main idea is to search for a particular (*n_rows*, *n_cols*) combination
 that maximize the metric related to wasted space.
 
 
-To evaluate metric for a given _grid_ (*n_rows*, *n_cols*), 
+To evaluate *metric* for a given _grid_ (*n_rows*, *n_cols*), 
 all macros are packed into the _gridcells_, 
 and several terms (*empty_ratio*, *ver_waste* and *hor_waste*)
 that reflect wasted space are evaluated.
@@ -89,7 +89,7 @@ The _grid_ with best *metric* is noted as *n_rows_opt* and *n_cols_opt*.
 
 #### **Grid Simplification**
 Once we have found *n_rows_opt* and *n_cols_opt* as described above, 
-we seek a smaller _grid_ that has similar metric properties. \[Algorithm 1 Lines 33-39\]  
+we seek a smaller _grid_ that has similar *metric* properties. \[Algorithm 1 Lines 33-39\]  
 Specifically, we find values of *n_rows_actual* and *n_cols_actual* such that 
 its *metric* is within some tolerance (5\% in Circuit Training) of the optimal *metric*, 
 and *n_rows_actual * n_cols_actual* is minimized. 
@@ -111,32 +111,35 @@ which connect to the same macro or the same clump of IO (noted as IO cluster), b
 #### **The Grouping Process**
 The grouping consists of three steps:
 - Group the macro pins of the same macro into a cluster.
-In Circuit Training, the netlist consists of four building elements: 
-standard cells, IO ports, macro pins and macros.
+In Circuit Training, the netlist consists of four types of elements: 
+standard cells, IO ports, macro pins, and macros.
 The following figure shows an example of netlist representation in Circuit Training.
-The left part is the real netlist; The right part is the Netlist Protocol Buffer 
-representation in Circuit Training. The solid arrow means the real signal net and the dashed
-arrow means the virtual nets between macro A and its macro pins.
-We can see that the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in this figure, **D\[0\]**, **D\[1\]**, **D\[2\]**, **Q\[0\]**,
+The left part is the real netlist; the right part is the Netlist Protocol Buffer 
+representation in Circuit Training. The solid arrows indicate the real signal net and the dashed
+arrows indicate the virtual nets between macro A and its macro pins.
+We can see that the macro pins and the related macro are both basic elements in the netlist, whereas there are no pins of standard cells.  Thus, it is necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in this figure, **D\[0\]**, **D\[1\]**, **D\[2\]**, **Q\[0\]**,
 **Q\[1\]**, **Q\[2\]** are grouped into **cluster_1**, but **cluster_1** does not include macro A.
 <p align="center">
 <img src="./images/macro_example.png" width= "1600"/>
 </p>
+<p align="center">
+ Figure 1.  Illustration of the netlist representation in Circuit Training.  
+</p>
 
-- Group the IOs that are within close proximity of each other boundary by boundary, 
-following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span>  **RIGHT** <span>&rarr;</span> **BOTTOM**. For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, we sort the all the ports on the boundary based on their y (x) coordinates in a non-decreasing order. Starting from the first IO port on the boundary, we group the IO ports within each *grid_height* (*grid_width*) into an IO cluster. For example, in following figure, we have three IO clusters on **TOP** boundary and two IO clusters on **RIGHT** boundary. The *grid_width* and *grid_height* are calculated based on the *n_cols* and *n_rows*:
+- Group the IOs that are within close proximity of each other, boundary by boundary, 
+following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span>  **RIGHT** <span>&rarr;</span> **BOTTOM**. For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, we sort the all the ports on the boundary based on their y (x) coordinates in a non-decreasing order. Starting from the first IO port on the boundary, we group the IO ports within each *grid_height* (*grid_width*) into an IO cluster. For example, in following figure, we have three IO clusters on the **TOP** boundary and two IO clusters on the **RIGHT** boundary. The *grid_width* and *grid_height* are calculated based on the *n_cols* and *n_rows*:
   - *grid_width = canvas_width / n_cols*
   - *grid_height = canvas_height / n_rows*
 <p align="center">
 <img src="./images/IO_Groups.png" width= "1600"/>
 </p>
 
-- Group the close-related standard cells,
+- Group the closely-related standard cells,
 which connect to the same macro or the same IO cluster.
-Suppose that we have a design with 100 clusters of macro pins (i.e., 100 macros) and 10 clusters of IOs.
-Before we grouping the close-related standard cells to these clusters of macro pins or IOs,
-we assign each cluster with a cluster id from 0 to 119.
-Then for each cluster, we traverse the netlist and assign the same cluster id to the "immediate fanins" and "immediate fanouts" of its element (macro pin or IO).
+Suppose that we have a design with 100 clusters of macro pins (i.e., 100 macros) and 20 clusters of IOs.
+Before grouping the closely-related standard cells to these clusters of macro pins or IOs,
+we assign each cluster a cluster id from 0 to 119.
+Then, for each cluster, we traverse the netlist and assign the same cluster id to the "immediate fanins" and "immediate fanouts" of its element (macro pin or IO).
 Note that "immediate fanin" is equivalent to "transitive fanins up to level K_in = 1", and that "immediate fanouts" is equivalent to "transitive fanouts up to level K_out = 1".
 It is our understanding that both K_in and K_out are always set to a default value of 1 
 in Circuit Training. However, other values might be applied. 
@@ -153,7 +156,7 @@ Each group is recorded in the “.fix file” that is part of the input to the h
 #### **How Grouping Scripts Are used**
 We provide [(an example)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/test.py) about the usage of our grouping scripts.
 Basically our grouping scripts take follows as inputs: (i) [(setup_file)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/setup.tcl)
-including enablement information (lefs/libs), synthesized gate-level netlist (*.v),  def file with placed IOs (*.def); (ii) n_rows and n_cols determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore such net when we search "transitive" fanins and fanouts. After
+including enablement information (lefs/libs), synthesized gate-level netlist (*.v),  def file with placed IOs (*.def); (ii) n_rows and n_cols determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore such this net when we search "transitive" fanins and fanouts. After
 running grouping scripts,  you will get the **.fix** file.  
 
 
@@ -209,7 +212,7 @@ More specifically, hMETIS is **always** invoked with *npart* more than 500, with
 The hyperparameters given in Extended Data Table 3 of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w.epdf?sharing_token=tYaxh2mR5EozfsSL0WHZLdRgN0jAjWel9jnR3ZoTv0PW0K0NmVrRsFPaMa9Y5We9O4Hqf_liatg-lvhiVcYpHL_YQpqkurA31sxqtmA-E1yNUWVMMVSBxWSp7ZFFIWawYQYnEXoBE4esRDSWqubhDFWUPyI5wK_5B_YIO-D_kS8%3D) are used. 
 (Additionally, Circuit Training explicitly sets reconst=1 and dbglvl=0.)
 
-* (2) The hypergraph that is fed to hMETIS consists of macros, macro pins, IO ports and standard cells.
+* (2) The hypergraph that is fed to hMETIS consists of macros, macro pins, IO ports, and standard cells.
 The "fixed" file generated by [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md) process, is also fed as  .fix input file to hMETIS.
 
 
@@ -232,12 +235,12 @@ in these clusters corresponds to an entry of the .fix file. The cluster id start
 * The number of individual standard cells in the hypergraph that is actually partitioned by hMETIS is 200,000 - (100 * 300) - (20 * 50) = 169,000.
 
 * Suppose that each macro has 64 macro pins. The hypergraph that is actually partitioned by hMETIS has
-200,000 + 100 + 1000 + 100 * 64 = 207, 500 vertices.  Although there are both macro pins and macros in the hypergraph, all the nets related to macros are connected to macro pins and there is no hyperedges related to macros. Each hyperedge in the hypergraph cooresponds to a net in the netlist. Note that Circuit Training assumes that there is only one output pin for each standard cell, thus there is only one hyperedge {**A**, **B**, **C**, **D**, **E**} for the following case.  
+200,000 + 100 + 1000 + 100 * 64 = 207,500 vertices.  Although there are both macro pins and macros in the hypergraph, all the nets related to macros are connected to macro pins and there are no hyperedges incident to macros. Each hyperedge in the hypergraph corresponds to a net in the netlist. Note that Circuit Training assumes that there is only one output pin for each standard cell, thus there is only one hyperedge {**A**, **B**, **C**, **D**, **E**} for the following case.  
 <p align="center">
 <img src="./images/net_model.png" width= "600"/>
 </p>
 <p align="center">
- Figure 1.  Illustration of net model in Circuit Training.  
+ Figure 1.  Illustration of net model used in Circuit Training.  
 </p>
                                      
 
@@ -246,41 +249,41 @@ in these clusters corresponds to an entry of the .fix file. The cluster id start
 
 #### **Break up clusters that span a distance larger than *breakup_threshold***
 After partitioning the hypergraph, we can have *nparts* clusters.
-Then Circuit Training break up clusters that span a distance larger than *breakup_threshold*.
+Then Circuit Training breaks up clusters that span a distance larger than *breakup_threshold*.
 Here *breakup_threshold = sqrt(canvas_width * canvas_height / 16)*.
-For each cluster *c*, the breakup process is as following:
+For each cluster *c*, the breakup process is as follows:
 * *cluster_lx, cluster_ly, cluster_ux, cluster_uy = c.GetBoundingBox()*
 *  if ((*cluster_ux - cluster_lx) <= breakup_threshold*) && (*cluster_uy - cluster_ly) <= breakup_threshold*))
     * Return
-* *cluster_x, cluster_y = c.GetWeightedCenter()*.  Here the weighted center of cluster *c* is the average location of all the standard cells in the cluster, weighted according to their area. 
+* *cluster_x, cluster_y = c.GetWeightedCenter()*.  Here the weighted center of cluster *c* is the average location of all the *standard cells* in the cluster, weighted according to their area. 
 * use (*cluster_x*, *cluster_y*) as the origin and *breakup_threshold* as the step, to divide the bounding box of *c* into different regions.
 * the elements (macro pins, macros, ports and standard cells) in each region form a new cluster.
-The following figure shows an example: the left part shows the cluster *c<sub>1</sub>* before breakup process and the blue dot is the weighted center of *c<sub>1</sub>*; the right part shows the clusters after breakupup process.  The "center" cluster still has the cluster id of 1.
+The following figure shows an example: the left part shows the cluster *c<sub>1</sub>* before the breakup process, and the blue dot is the weighted center of *c<sub>1</sub>*; the right part shows the clusters after the breakup process.  The "center" cluster still has the cluster id of 1.
 <p align="center">
 <img src="./images/breakup.png" width= "1600"/>
 </p>
 <p align="center">
  Figure 2.  Illustration of breaking up a cluster.  
 </p>
-Note that the netlist is generated by physical-aware synthesis, we know the (x, y) coordinate for each instance. 
+Note that since the netlist is generated by physical-aware synthesis, we know the (x, y) coordinate for each instance. 
 
 
 #### **Recursively merge small adjacent clusters**
 After breaking up clusters which span large distance,  there may be some small clusters with only tens of standard cells.
 In this step, Circuit Training recursively merges small clusters to the most adjacent cluster if they are within a certain 
-distance *closeness* (*breakup_threshold* / 2.0),  thus reducing number of clusters.  A cluster is claimed as a small cluster 
+distance *closeness* (*breakup_threshold* / 2.0),  thus reducing number of clusters.  A cluster is defined to be a small cluster 
 if the number of elements (macro pins, 
 macros, IO ports and standard cells) is less than or equal to *max_num_nodes*, where *max_num_nodes* = *number_of_vertices* // *number_of_clusters_after_breakup* // 4.  The merging process is as following:
 * flag = False
 * while (flag == False):
-   * create adjacency matrix *adj_matrix* where *adj_matrix\[i\]\[j\]* represents the number of connections between cluster *c<sub>i</sub>* and cluster *c<sub>j</sub>*. For example, in the Figure 1, suppose *A*, *B*, *C*, *D* and *E* respectively belong to cluster *c<sub>1</sub>*, ..., *c<sub>5</sub>*, we have *adj_matrix\[1\]\[2\]* = 1, *adj_matrix\[1\]\[3\]* = 1, ...., *adj_matrix\[5\]\[3\]* = 1 and *adj_matrix\[5\]\[4\]* = 1. We want to emphasize that although there is no hyperedges related to macros in the hypergraph, *adj_matrix* considers the "virtual" connections between macros and macro pins. That is to say, if a macro and its macros pins belong to different clusters, for example, macro A in cluster *c<sub>1</sub>* and its macro pins in cluster *c<sub>2</sub>*, we have *adj_matrix\[1\]\[2\]* = 1 and *adj_matrix\[2\]\[1\]* = 1.
-   * calculate the weighted center for each cluster. (see the breakup section for details)
+   * create adjacency matrix *adj_matrix* where *adj_matrix\[i\]\[j\]* represents the number of connections between cluster *c<sub>i</sub>* and cluster *c<sub>j</sub>*. For example, in the Figure 1, suppose *A*, *B*, *C*, *D* and *E* respectively belong to cluster *c<sub>1</sub>*, ..., *c<sub>5</sub>*, we have *adj_matrix\[1\]\[2\]* = 1, *adj_matrix\[1\]\[3\]* = 1, ...., *adj_matrix\[5\]\[3\]* = 1 and *adj_matrix\[5\]\[4\]* = 1. We want to emphasize that although there are  no hyperedges incident to macros in the hypergraph, *adj_matrix* considers the "virtual" connections between macros and macro pins. That is to say, if a macro and its macros pins belong to different clusters, for example, macro A in cluster *c<sub>1</sub>* and its macro pins in cluster *c<sub>2</sub>*, we have *adj_matrix\[1\]\[2\]* = 1 and *adj_matrix\[2\]\[1\]* = 1.
+   * calculate the weighted center for each cluster. (See "Break Up Clusters" above for details.)
    * flag = True
    * for each cluster *c*
       * if *c* is not a small cluster
          * Continue
-      * find all the clusters *close_clusters* which is close to *c*, i.e., the Manhattan distance between their weighted centers and the weighted center of *c* is less than or equal to *closeness*
-      * if there is no clusters close to *c*
+      * find all the clusters *close_clusters* which are close to *c*, i.e., the Manhattan distance between their weighted centers and the weighted center of *c* is less than or equal to *closeness*
+      * if there is no cluster close to *c*
          * Continue
       * find the most adjacent cluster *adj_cluster* of *c* in *close_clusters*, i.e., maximize *adj_matrix\[c\]\[adj_cluster\]*
       * merge *c* to *adj_cluster*
@@ -299,7 +302,7 @@ we are still in the process of documenting and implementing such aspects as the 
 All methodologies that span synthesis and placement (of which we are aware) must make a fundamental decision with respect to the netlist that is produced by logic synthesis, as that netlist is passed on to placement: (A) delete buffers and inverters to avoid biasing the ensuing placement (spatial embedding) with the synthesis tool’s fanout clustering, or (B) leave these buffers and inverters in the netlist to maintain netlist area and electrical rules (load, fanout) sensibility.  We do not yet know Google’s choice in this regard. Our experimental runscripts will therefore support both (A) and (B).
 
 
-* **[June 13]** ***Update to Pending clarification #3:*** We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub. The new scripts refer to (x,y) coordinates of nodes in the netlist, which leads to further pending clarifications (noted [here](https://github.com/google-research/circuit_training/issues/25)). The solution space for how the input to hypergraph clustering is obtained has expanded. A first level of options is whether **(A) a non-physical synthesis tool** (e.g., Genus, DesignCompiler or Yosys), or **(B) a physical synthesis tool** (e.g., Genus iSpatial or DesignCompiler Topological (Yosys cannot perform physical synthesis)), is used to obtain the netlist from starting RTL and constraints. In the regime of (B), to our understanding the commercial physical synthesis tools are invoked with a starting .def that includes macro placement. Thus, we plan to also enable a second level of sub-options for determining this macro placement: **(B.1)** use the auto-macro placement result from the physical synthesis tool, and **(B.2)** use a human PD expert (or, [OpenROAD RTL-MP](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2)) macro placement. 
+* **[June 13]** ***Update to Pending clarification #3:*** We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub. The new scripts refer to (x,y) coordinates of nodes in the netlist, which leads to further pending clarifications (noted [here](https://github.com/google-research/circuit_training/issues/25)). The solution space for how the input to hypergraph clustering is obtained has expanded. A first level of options is whether **(A) a non-physical synthesis tool** (e.g., Genus, DesignCompiler or Yosys), or **(B) a physical synthesis tool** (e.g., Genus iSpatial or DesignCompiler Topological (Yosys cannot perform physical synthesis)), is used to obtain the netlist from starting RTL and constraints. In the regime of (B), to our understanding the commercial physical synthesis tools are invoked with a starting .def that includes macro placement. Thus, we plan to also enable a second level of sub-options for determining this macro placement: **(B.1)** use the auto-macro placement result from the physical synthesis tool, and **(B.2)** use a human PD expert (or, [OpenROAD RTL-MP](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2)) macro placement. Some initial progress toward these clarifications has been posted as [Our Progress](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress).
 
 
 #### **Our Implementation of Hypergraph Clustering.**
@@ -317,7 +320,7 @@ Input file: [setup.tcl](https://github.com/TILOS-AI-Institute/MacroPlacement/blo
 
 Output_files: [clusters.lef](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Clustering/test/results/OpenROAD/clusters.lef) and [clustered_netlist.def](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Clustering/test/results/OpenROAD/clustered_netlist.def) for OpenROAD flows; [cluster.tcl](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Clustering/test/results/Cadence/ariane_cluster_500.tcl) for Cadence flows; [ariane.pb.txt](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Clustering/test/results/Protocol_buffer_format/ariane.pb.txt) for clustered netlist in protocol buffer format.
 
-Note that the [example](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering/test) that we provide is the ariane design implemented in NanGate45.  The netlist and corresponding def file with placed instances are generated by [Genus iSpatial](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133) flow. Here the macro placement is automatically done by the Genus and Innovus tools,
+Note that the [example](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering/test) that we provide is the Ariane133 design implemented in NanGate45.  The netlist and corresponding def file with placed instances are generated by [Genus iSpatial](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133) flow. Here, the macro placement is automatically done by the Genus and Innovus tools,
 i.e., according to Flow **(B.1)** above.
 
  
