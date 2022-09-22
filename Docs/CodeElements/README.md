@@ -1,93 +1,114 @@
-# Gridding
+# Code Elements in Circuit Training
 
+The code elements below are the most crucial undocumented portions of Circuit Training. 
+We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, 
+that have explained aspects of several of the following code elements used in Circuit Training. 
+All errors of understanding and implementation are the authors'. 
+We will rectify such errors as soon as possible after being made aware of them.
+- [Gridding](./CodeElements/Gridding/) determines a dissection of the layout canvas into some number of rows (*n_rows*) and some number of columns (*n_cols*) of _gridcells_. In Circuit Training, the purpose of gridding is to control the size of the macro placement solution space, 
+thus allowing RL to train within reasonable runtimes. Gridding enables hard macros to find locations consistent with high solution quality, while allowing soft macros (standard-cell clusters) to also find good locations. 
+- [Grouping](./CodeElements/Grouping/) is to ensure that closely-related standard-cell logic, 
+which connect to the same macro or the same clump of IO (noted as IO cluster), belong to the same standard-cell clusters.
+- [Hypergraph clustering](./CodeElements/Clustering/) clusters millions of standard cells into a few thousand clusters.  In Circuit Training, the purpose of clustering is to enable an approximate but fast standard cell placement that facilitates policy network optimization.
+
+We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub.
+However, these [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) scripts still rely on the wrapper functions of plc client, which is a black box for the community.  In this doc, we document the implementation details of gridding, grouping and clustering. We implement all the code elements from scratch using python scripts, and our results match exactly that of Circuit Training.
+
+
+
+## Table of Content
+  - [Gridding](#gridding)
+  - [Grouping](#grouping)
+  - [Hypergraph Clustering (soft macro definition)](#hypergraph-clustering-soft-macro-definition)
+
+
+## **Gridding**
 In Circuit Training, the purpose of gridding is to control the size of the macro placement solution space, thus allowing RL to train within reasonable
 runtimes. Gridding enables hard macros to find locations consistent with high solution quality, while allowing soft macros (standard-cell clusters) to also find good locations.
 
-Gridding determines a dissection of the layout canvas into some number of rows (**n_rows**) and some number of columns (**n_cols**) of _gridcells_.
+Gridding determines a dissection of the layout canvas into some number of rows (*n_rows*) and some number of columns (*n_cols*) of _gridcells_.
 
-The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design. The detailed algorithm is shown as following.
+The choice of *n_rows* and *n_cols* is made **once** for each design.  Once the dimensions *(n_rows, n_cols)* have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design. The detailed algorithm is shown as following.
+<p align="center">
 <img src="./images/Gridding Algorithm.png" width= "1600"/>
+</p>
 
-The gridding algorithm starts with the dimensions **canvas_width** and **canvas_height** of the layout canvas, as well as a list of **macros**, where each macro has a width and a height. 
+The gridding algorithm starts with the dimensions *canvas_width* and *canvas_height* of the layout canvas, as well as a list of *macros*, where each macro has a width and a height. 
 Macros are not rotatable. The area of a macro is the product of its width and height.
-Then, the gridding searches over combinations (**n_rows**, **n_cols**), with constraints
-- **min_n_rows** <= **n_rows** < **max_n_rows** 
-- **min_n_cols** <= **n_cols** < **max_n_cols** 
-- **min_num_gridcells** <= **n_rows** * **n_cols** <= **max_num_grid_cells**
-- **grid_w** / **grid_h** <= **max_aspect_ratio** 
-- **grid_h** / **grid_w** <= **max_aspect_ratio** 
-- The macros can be packed sequentially on the gridcells. There are **n_rows** * **n_cols** gridcells in the canvas. \[Algorithm 1 Lines 11-22\]
+Then, the gridding searches over combinations (*n_rows*, *n_cols*), with constraints
+- *min_n_rows <= n_rows < max_n_rows* 
+- *min_n_cols <= n_cols < max_n_cols* 
+- *min_num_gridcells <= n_rows * n_cols <= max_num_grid_cells*
+- *grid_w / grid_h <= max_aspect_ratio* 
+- *grid_h / grid_w <= max_aspect_ratio* 
+- The macros can be packed sequentially on the gridcells. There are *n_rows * n_cols* gridcells in the canvas. \[Algorithm 1 Lines 11-22\]
 
-
-where each gridcell has width of **grid_w** = **canvas_width** / **n_cols**
-and height of **grid_h** = **canvas_height** / **n_row**.
-The main idea is to search for a particular (**n_rows**, **n_cols**) combination
+where each gridcell has width of *grid_w = canvas_width / n_cols*
+and height of *grid_h = canvas_height / n_row*.
+The main idea is to search for a particular (*n_rows*, *n_cols*) combination
 that maximize the metric related to wasted space.
 
 
-To evaluate metric for a given _grid_ (**n_rows**, **n_cols**), 
+To evaluate metric for a given _grid_ (*n_rows*, *n_cols*), 
 all macros are packed into the _gridcells_, 
-and several terms (**empty_ratio**, **ver_waste** and **hor_waste**)
+and several terms (*empty_ratio*, *ver_waste* and *hor_waste*)
 that reflect wasted space are evaluated.
-## Packing
+#### **Packing**
 Macro packing is performed as follows \[Algorithm 1 Lines 11-22\]:
 - Macros are placed in order of non-increasing macro area.
-- All macros are placed, one by one, into the (**n_rows**, **n_cols**) _gridcells_.
+- All macros are placed, one by one, into the (*n_rows*, *n_cols*) _gridcells_.
 If the current macro cannot be placed, then the _grid_ is infeasible and the next
 candidate _grid_ is considered.
 - A macro is placed at the **first** (according to row-major order) _gridcell_ where it can be legally placed.
 - Placement of a macro means placing that macro's center at the center of some _gridcell_.
 - The placement of a macro's center at the center of some _gridcell_ is legal if (1) no part of the macro is outside of the canvas, and (2) no overlap of the macro with any previously-placed macro is induced.
-## Metric
-After macro packing, we can calculate the **empty_ratio** of current _grid_, i.e., 
-the number of empty _gridcells_ over the total number of _gridcells_ (**n_rows** * **n_cols**).
+#### **Metric**
+After macro packing, we can calculate the *empty_ratio* of current _grid_, i.e., 
+the number of empty _gridcells_ over the total number of _gridcells_ (*n_rows * n_cols*).
 A _gridcell_ is claimed as an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
-Next we calculate the **hor_waste** and **ver_waste** as described in following algorithm.
+Next we calculate the *hor_waste* and *ver_waste* as described in following algorithm.
+<p align="center">
 <img src="./images/Calculate Waste Ratio.png" width= "1600"/>
+</p>
 
-To calculate horizontal waste **hor_waste**, we calculate
-- **width_tot_macros** = the sum of widths of all macros in the design
-- **width_tot_used_gridcells** = the sum of widths of all used _gridcells_ if we pack the macros along the x-axis one by one.
+To calculate horizontal waste *hor_waste*, we calculate
+- *width_tot_macros* = the sum of widths of all macros in the design
+- *width_tot_used_gridcells* = the sum of widths of all used _gridcells_ if we pack the macros along the x-axis one by one.
 
-Then, **hor_waste** = 1.0 - **width_tot_macros** / **width_tot_used_gridcells**.
+Then, *hor_waste = 1.0 - width_tot_macros / width_tot_used_gridcells*.
 
-To calculate vertical waste **ver_waste**, we calculate
-- **height_tot_macros** = the sum of heights of all macros in the design
-- **height_tot_used_gridcells** = the sum of heights of all used _gridcells_ if we pack the macros along the y-axis one by one.
+To calculate vertical waste *ver_waste*, we calculate
+- *height_tot_macros* = the sum of heights of all macros in the design
+- *height_tot_used_gridcells* = the sum of heights of all used _gridcells_ if we pack the macros along the y-axis one by one.
 
-Then, **ver_waste** = 1.0 - **height_tot_macros** / **height_tot_used_gridcells**.
+Then, *ver_waste = 1.0 - height_tot_macros / height_tot_used_gridcells*.
 
-After calculating **empty_ratio**, **ver_waste** and **ver_waste**, the **metric** is defined as
-**metric** = **empty_ratio** + 2.0 - **ver_waste** - **ver_waste**.
-The _grid_ with best **metric** is noted as **n_rows_opt** and **n_cols_opt**.
+After calculating *empty_ratio*, *hor_waste* and *ver_waste*, the *metric* is defined as
+*metric = empty_ratio + 2.0 - hor_waste - ver_waste*.
+The _grid_ with best *metric* is noted as *n_rows_opt* and *n_cols_opt*.
 
-## Grid Simplification
-Once we have found **n_rows_opt** and **n_cols_opt** as described above, 
+#### **Grid Simplification**
+Once we have found *n_rows_opt* and *n_cols_opt* as described above, 
 we seek a smaller _grid_ that has similar metric properties. \[Algorithm 1 Lines 33-39\]  
-Specifically, we find values of **n_rows_actual** and **n_cols_actual** such that 
-its **metric** is within some tolerance (5\% in Circuit Training) of the optimal **metric**, 
-and **n_rows_actual** * **n_cols_actual** is minimized. 
-This is the grid that is used in Circuit Training.
-To our understanding, the foregoing procedure results in grids that are of similar sizes, e.g., with ~25 <= **n_rows_actual** , **n_cols_actual** <= ~40. 
+Specifically, we find values of *n_rows_actual* and *n_cols_actual* such that 
+its *metric* is within some tolerance (5\% in Circuit Training) of the optimal *metric*, 
+and *n_rows_actual * n_cols_actual* is minimized. 
+This is the _grid_ that is used in Circuit Training.
+To our understanding, the foregoing procedure results in grids that are of similar sizes, e.g., with ~25 <= *n_rows_actual* , *n_cols_actual* <= ~40. 
 
 
-## Thanks
-We thank Google engineers for May 19, 2022 discussions that explained the gridding method used in Circuit Training.
-All errors of understanding and implementation are the authors'. We will rectify such errors as soon as possible after being made aware of them.
 
-
-# **Grouping**
+## **Grouping**
 Grouping is an important preprocessing step of clustering.
 The grouping step in Circuit Training requires as inputs:
 the post-synthesis gate-level netlist (standard cells and hard macros),
 placed IOs (ports, or terminals), typically at the borders of the chip canvas,
-the grid of **n_rows** rows and **n_cols** columns of _gridcells_, which defines the gridded layout canvas.
+the grid of *n_rows* rows and *n_cols* columns of _gridcells_, which defines the gridded layout canvas.
 The purpose of grouping, to our understanding, is to ensure that closely-related standard-cell logic, 
 which connect to the same macro or the same clump of IO (noted as IO cluster), belong to the same standard-cell clusters.
 
 
-
-## **The Grouping Process**
+#### **The Grouping Process**
 The grouping consists of three steps:
 - Group the macro pins of the same macro into a cluster.
 In Circuit Training, the netlist consists of four building elements: 
@@ -98,18 +119,17 @@ representation in Circuit Training. The solid arrow means the real signal net an
 arrow means the virtual nets between macro A and its macro pins.
 We can see that the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in this figure, **D\[0\]**, **D\[1\]**, **D\[2\]**, **Q\[0\]**,
 **Q\[1\]**, **Q\[2\]** are grouped into **cluster_1**, but **cluster_1** does not include macro A.
+<p align="center">
 <img src="./images/macro_example.png" width= "1600"/>
-
+</p>
 
 - Group the IOs that are within close proximity of each other boundary by boundary, 
-following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span>  **RIGHT** <span>&rarr;</span> **BOTTOM**. For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, we sort the all the ports on the boundary based on their y (x) coordinates in a non-decreasing order. Starting from the first IO port on the boundary, we group the IO ports within each **grid_height** (**grid_width**) into an IO cluster. For example, in following figure, we have three IO clusters on **TOP** boundary and two IO clusters on **RIGHT** boundary. The **grid_width** and **grid_height** are calculated based on the **n_cols** and **n_rows**:
-  - **grid_width** = **canvas_width** / **n_cols**
-  - **grid_height** = **canvas_height** / **n_rows**
-
+following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span>  **RIGHT** <span>&rarr;</span> **BOTTOM**. For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, we sort the all the ports on the boundary based on their y (x) coordinates in a non-decreasing order. Starting from the first IO port on the boundary, we group the IO ports within each *grid_height* (*grid_width*) into an IO cluster. For example, in following figure, we have three IO clusters on **TOP** boundary and two IO clusters on **RIGHT** boundary. The *grid_width* and *grid_height* are calculated based on the *n_cols* and *n_rows*:
+  - *grid_width = canvas_width / n_cols*
+  - *grid_height = canvas_height / n_rows*
+<p align="center">
 <img src="./images/IO_Groups.png" width= "1600"/>
-
-
-
+</p>
 
 - Group the close-related standard cells,
 which connect to the same macro or the same IO cluster.
@@ -127,26 +147,21 @@ Note that a macro does not belong to any cluster, thus is not fixed
 when we call the hMETIS hypergraph partitioner.
 
  
-## **How Groups Are Used**
+#### **How Groups Are Used**
 Each group is recorded in the “.fix file” that is part of the input to the hMETIS hypergraph partitioner when the gate-level netlist is clustered into soft macros.
 
-## **How Grouping Scripts Are used**
+#### **How Grouping Scripts Are used**
 We provide [(an example)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/test.py) about the usage of our grouping scripts.
 Basically our grouping scripts take follows as inputs: (i) [(setup_file)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/setup.tcl)
 including enablement information (lefs/libs), synthesized gate-level netlist (*.v),  def file with placed IOs (*.def); (ii) n_rows and n_cols determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore such net when we search "transitive" fanins and fanouts. After
 running grouping scripts,  you will get the **.fix** file.  
 
-# Thanks
-We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, that explained the grouping method used in Circuit Training. All errors of understanding and implementation are the authors'. We will rectify such errors as soon as possible after being made aware of them.
 
-
-
-# **Hypergraph clustering (soft macro definition)**
+## **Hypergraph clustering (soft macro definition)**
 **Hypergraph clustering** is, in our view, one of the most crucial undocumented 
 portions of Circuit Training. 
 
-
-## **I. Information provided by Google.**
+#### **Information provided by Google.**
 The Methods section of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w.epdf?sharing_token=tYaxh2mR5EozfsSL0WHZLdRgN0jAjWel9jnR3ZoTv0PW0K0NmVrRsFPaMa9Y5We9O4Hqf_liatg-lvhiVcYpHL_YQpqkurA31sxqtmA-E1yNUWVMMVSBxWSp7ZFFIWawYQYnEXoBE4esRDSWqubhDFWUPyI5wK_5B_YIO-D_kS8%3D) provides the following information.
 
 * “(1) We group millions of standard cells into a few thousand clusters using hMETIS, a partitioning technique based 
@@ -187,7 +202,7 @@ Finally, the Methods section of the [Nature paper](https://www.nature.com/articl
 
 
 
-## **II. What *exactly* is the Hypergraph, and how is it partitioned?**
+#### **What *exactly* is the Hypergraph, and how is it partitioned?**
 From the above information sources, the description of the [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md) process, and information provided by Google engineers, we are fairly certain of the following.
 * (1) Clustering uses the hMETIS partitioner, which is run in “multiway” mode. 
 More specifically, hMETIS is **always** invoked with *npart* more than 500, with unit vertex weights. 
@@ -229,17 +244,17 @@ in these clusters corresponds to an entry of the .fix file. The cluster id start
 * *nparts* = 500 + 120 = 620 is used when applying hMETIS to this hypergraph.
 
 
-## **III. Break up clusters that span a distance larger than *breakup_threshold***
+#### **Break up clusters that span a distance larger than *breakup_threshold***
 After partitioning the hypergraph, we can have *nparts* clusters.
 Then Circuit Training break up clusters that span a distance larger than *breakup_threshold*.
 Here *breakup_threshold = sqrt(canvas_width * canvas_height / 16)*.
 For each cluster *c*, the breakup process is as following:
 * *cluster_lx, cluster_ly, cluster_ux, cluster_uy = c.GetBoundingBox()*
-*  If ((*cluster_ux - cluster_lx) <= breakup_threshold*) && (*cluster_uy - cluster_ly) <= breakup_threshold*))
+*  if ((*cluster_ux - cluster_lx) <= breakup_threshold*) && (*cluster_uy - cluster_ly) <= breakup_threshold*))
     * Return
 * *cluster_x, cluster_y = c.GetWeightedCenter()*.  Here the weighted center of cluster *c* is the average location of all the standard cells in the cluster, weighted according to their area. 
-* Use (*cluster_x*, *cluster_y*) as the origin and *breakup_threshold* as the step, to divide the bounding box of *c* into different regions.
-* The elements (macro pins, macros, ports and standard cells) in each region form a new cluster.
+* use (*cluster_x*, *cluster_y*) as the origin and *breakup_threshold* as the step, to divide the bounding box of *c* into different regions.
+* the elements (macro pins, macros, ports and standard cells) in each region form a new cluster.
 The following figure shows an example: the left part shows the cluster *c<sub>1</sub>* before breakup process and the blue dot is the weighted center of *c<sub>1</sub>*; the right part shows the clusters after breakupup process.  The "center" cluster still has the cluster id of 1.
 <p align="center">
 <img src="./images/breakup.png" width= "1600"/>
@@ -250,31 +265,31 @@ The following figure shows an example: the left part shows the cluster *c<sub>1<
 Note that the netlist is generated by physical-aware synthesis, we know the (x, y) coordinate for each instance. 
 
 
-## **IV. Recursively merge small adjacent clusters**
+#### **Recursively merge small adjacent clusters**
 After breaking up clusters which span large distance,  there may be some small clusters with only tens of standard cells.
 In this step, Circuit Training recursively merges small clusters to the most adjacent cluster if they are within a certain 
 distance *closeness* (*breakup_threshold* / 2.0),  thus reducing number of clusters.  A cluster is claimed as a small cluster 
 if the number of elements (macro pins, 
 macros, IO ports and standard cells) is less than or equal to *max_num_nodes*, where *max_num_nodes* = *number_of_vertices* // *number_of_clusters_after_breakup* // 4.  The merging process is as following:
 * flag = False
-* While (flag == False):
-   * Create adjacency matrix *adj_matrix* where *adj_matrix\[i\]\[j\]* represents the number of connections between cluster *c<sub>i</sub>* and cluster *c<sub>j</sub>*. For example, in the Figure 1, suppose *A*, *B*, *C*, *D* and *E* respectively belong to cluster *c<sub>1</sub>*, ..., *c<sub>5</sub>*, we have *adj_matrix\[1\]\[2\]* = 1, *adj_matrix\[1\]\[3\]* = 1, ...., *adj_matrix\[5\]\[3\]* = 1 and *adj_matrix\[5\]\[4\]* = 1. We want to emphasize that although there is no hyperedges related to macros in the hypergraph, *adj_matrix* considers the "virtual" connections between macros and macro pins. That is to say, if a macro and its macros pins belong to different clusters, for example, macro A in cluster *c<sub>1</sub>* and its macro pins in cluster *c<sub>2</sub>*, we have *adj_matrix\[1\]\[2\]* = 1 and *adj_matrix\[2\]\[1\]* = 1.
-   * Calculate the weighted center for each cluster. (see the breakup section for details)
+* while (flag == False):
+   * create adjacency matrix *adj_matrix* where *adj_matrix\[i\]\[j\]* represents the number of connections between cluster *c<sub>i</sub>* and cluster *c<sub>j</sub>*. For example, in the Figure 1, suppose *A*, *B*, *C*, *D* and *E* respectively belong to cluster *c<sub>1</sub>*, ..., *c<sub>5</sub>*, we have *adj_matrix\[1\]\[2\]* = 1, *adj_matrix\[1\]\[3\]* = 1, ...., *adj_matrix\[5\]\[3\]* = 1 and *adj_matrix\[5\]\[4\]* = 1. We want to emphasize that although there is no hyperedges related to macros in the hypergraph, *adj_matrix* considers the "virtual" connections between macros and macro pins. That is to say, if a macro and its macros pins belong to different clusters, for example, macro A in cluster *c<sub>1</sub>* and its macro pins in cluster *c<sub>2</sub>*, we have *adj_matrix\[1\]\[2\]* = 1 and *adj_matrix\[2\]\[1\]* = 1.
+   * calculate the weighted center for each cluster. (see the breakup section for details)
    * flag = True
-   * For each cluster *c*
-      * If *c* is not a small cluster
+   * for each cluster *c*
+      * if *c* is not a small cluster
          * Continue
-      * Find all the clusters *close_clusters* which is close to *c*, i.e., the Manhattan distance between their weighted centers and the weighted center of *c* is less than or equal to *closeness*
-      * If there is no clusters close to *c*
+      * find all the clusters *close_clusters* which is close to *c*, i.e., the Manhattan distance between their weighted centers and the weighted center of *c* is less than or equal to *closeness*
+      * if there is no clusters close to *c*
          * Continue
-      * Find the most adjacent cluster *adj_cluster* of *c* in *close_clusters*, i.e., maximize *adj_matrix\[c\]\[adj_cluster\]*
-      * Merge *c* to *adj_cluster*
-      * If *adj_cluster* is a small cluster
+      * find the most adjacent cluster *adj_cluster* of *c* in *close_clusters*, i.e., maximize *adj_matrix\[c\]\[adj_cluster\]*
+      * merge *c* to *adj_cluster*
+      * if *adj_cluster* is a small cluster
          * flag = False
 
 
 
-## **V. Pending Clarifications**
+#### **Pending Clarifications**
 We call readers’ attention to the existence of significant aspects that are still pending clarification here.  
 While [Gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Gridding/README.md) and 
 [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md) are hopefully well-understood, 
@@ -287,7 +302,7 @@ All methodologies that span synthesis and placement (of which we are aware) must
 * **[June 13]** ***Update to Pending clarification #3:*** We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub. The new scripts refer to (x,y) coordinates of nodes in the netlist, which leads to further pending clarifications (noted [here](https://github.com/google-research/circuit_training/issues/25)). The solution space for how the input to hypergraph clustering is obtained has expanded. A first level of options is whether **(A) a non-physical synthesis tool** (e.g., Genus, DesignCompiler or Yosys), or **(B) a physical synthesis tool** (e.g., Genus iSpatial or DesignCompiler Topological (Yosys cannot perform physical synthesis)), is used to obtain the netlist from starting RTL and constraints. In the regime of (B), to our understanding the commercial physical synthesis tools are invoked with a starting .def that includes macro placement. Thus, we plan to also enable a second level of sub-options for determining this macro placement: **(B.1)** use the auto-macro placement result from the physical synthesis tool, and **(B.2)** use a human PD expert (or, [OpenROAD RTL-MP](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2)) macro placement. 
 
 
-## **VI. Our Implementation of Hypergraph Clustering.**
+#### **Our Implementation of Hypergraph Clustering.**
 Our implementation of hypergraph clustering takes the synthesized netlist and a .def file with placed IO ports as input, 
 then generates the clustered netlist (in lef/def format) using hMETIS (1998 binary). 
 In default mode, our implementation will also run RePlAce in GUI mode automatically to place the clustered netlist. 
