@@ -1677,7 +1677,24 @@ class PlacementCost(object):
         return mod.get_width(), mod.get_height()
 
     def make_soft_macros_square(self):
-        pass
+        """
+        update soft macro width/height base on its square area
+        """
+        
+
+    
+    def update_soft_macros_position(self, coord_dict):
+        """
+        For sync-up with Google's plc_client after FD placer
+        """
+        for mod_idx in coord_dict.keys():
+            self.modules_w_pins[mod_idx].set_pos(coord_dict[mod_idx])
+    
+    def set_soft_macro_position(self, node_idx, x_pos, y_pos):
+        """
+        used for updating soft macro position
+        """
+        self.modules_w_pins[node_idx].set_pos(x_pos, y_pos)
 
     def set_use_incremental_cost(self, use_incremental_cost):
         self.use_incremental_cost = use_incremental_cost

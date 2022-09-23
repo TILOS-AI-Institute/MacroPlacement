@@ -271,6 +271,11 @@ class PlacementCostTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
+        # SUBJECT TO DELETE
+        self.plc.make_soft_macros_square()
+        print(self.plc.get_wirelength())
+        print(self.plc_os.get_wirelength())
+
         # TODO: [IGNORE] create_blockage must be defined BEFORE set_canvas_size and set_placement_grid in order to be considered on the canvas
         if False:
             self.plc.create_blockage(0.0, 100.0, 300.0, 300.0, 1.0)
@@ -792,10 +797,10 @@ def main(args):
                                 smooth=args.smooth)
 
     # PCT.test_metadata()
-    PCT.test_proxy_cost()
+    # PCT.test_proxy_cost()
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
-    # PCT.test_miscellaneous()
+    PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     # PCT.view_canvas()
     # PCT.test_proxy_congestion()
