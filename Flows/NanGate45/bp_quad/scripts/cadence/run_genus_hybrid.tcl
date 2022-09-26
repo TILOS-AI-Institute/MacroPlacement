@@ -44,6 +44,7 @@ set target_library $list_lib
 set_db hdl_flatten_complex_port true
 set_db hdl_record_naming_style  %s_%s
 set_db auto_ungroup none
+set_db hdl_error_on_blackbox true
 
 
 if {![info exist ::env(PHY_SYNTH)] || $::env(PHY_SYNTH) == 0} {

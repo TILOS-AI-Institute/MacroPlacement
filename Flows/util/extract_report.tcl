@@ -62,7 +62,7 @@ proc extract_report {stage} {
        timeDesign -postCTS -prefix ${stage} 
     } elseif { $stage == "postRoute" } {
        timeDesign -postRoute -prefix ${stage}
-    } elseif { $stage == "postRouetOpt" } {
+    } elseif { $stage == "postRouteOpt" } {
        timeDesign -postRoute -prefix ${stage}
     } elseif { $stage == "postSynth" } {
        timeDesign -prePlace -prefix ${stage}

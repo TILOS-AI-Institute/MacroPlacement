@@ -9,7 +9,14 @@ plc_file = sys.argv[1]
 pb_file = sys.argv[2]
 place_tcl = sys.argv[3]
 
-print(f'PLC:\t{plc_file}\nPB:\t{pb_file}\nTCL:\t{place_tcl}')
+origin_x = 0
+origin_y = 0
+print(f"Length of Argument: {len(sys.argv)}")
+if len(sys.argv) == 6:
+    origin_x = float(sys.argv[4])
+    origin_y = float(sys.argv[5])
+
+print(f'PLC:\t{plc_file}\nPB:\t{pb_file}\nTCL:\t{place_tcl}\nOrigin X:{origin_x} Y:{origin_y}')
 
 orientMap = {
     "N" : "R0",
@@ -94,8 +101,8 @@ for line in lines:
     if id_pattern.match(words[0]) and (len(words) == 5):
         idx = int(words[0])
         if node_list[idx].pb_type == '"MACRO"':
-            x = float(words[1]) - float(node_list[idx].width)/2.0
-            y = float(words[2]) - float(node_list[idx].height)/2.0
+            x = float(words[1]) - float(node_list[idx].width)/2.0 + origin_x
+            y = float(words[2]) - float(node_list[idx].height)/2.0 + origin_y
             orient = orientMap[words[3]]
             isFixed = words[4]
             macro_name = node_list[idx].name.replace('_[', '\[')
