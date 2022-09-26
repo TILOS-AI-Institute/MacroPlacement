@@ -4,6 +4,7 @@
 ## **Our Latest Progress**
  - [Our Progress: A Chronology](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) provides latest updates and is periodically synched to [this Google Doc](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit).
  - Our [Proxy Cost](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/) documentation gives implementation details to enable reproduction of the wirelength, density and congestion costs used by [Circuit Training](https://github.com/google-research/circuit_training).
+ - Our [Code Elements](https://tilos-ai-institute.github.io/MacroPlacement/Docs/CodeElements/) documentation gives implementation details to enable reproduction of the gridding, grouping and clustering used by [Circuit Training](https://github.com/google-research/circuit_training).
 
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
