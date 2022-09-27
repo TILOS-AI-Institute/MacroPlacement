@@ -6,7 +6,7 @@ runtimes. Gridding enables hard macros to find locations consistent with high so
 Gridding determines a dissection of the layout canvas into some number of rows (**n_rows**) and some number of columns (**n_cols**) of _gridcells_.
 
 The choice of **n_rows** and **n_cols** is made **once** for each design.  Once the dimensions **(n_rows, n_cols)** have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design. The detailed algorithm is shown as following.
-<img src="./Gridding Algorithm.png" width= "1600"/>
+<img src="./images/Gridding Algorithm.png" width= "1600"/>
 
 The gridding algorithm starts with the dimensions **canvas_width** and **canvas_height** of the layout canvas, as well as a list of **macros**, where each macro has a width and a height. 
 Macros are not rotatable. The area of a macro is the product of its width and height.
@@ -43,7 +43,7 @@ After macro packing, we can calculate the **empty_ratio** of current _grid_, i.e
 the number of empty _gridcells_ over the total number of _gridcells_ (**n_rows** * **n_cols**).
 A _gridcell_ is claimed as an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
 Next we calculate the **hor_waste** and **ver_waste** as described in following algorithm.
-<img src="./Calculate Waste Ratio.png" width= "1600"/>
+<img src="./images/Calculate Waste Ratio.png" width= "1600"/>
 
 To calculate horizontal waste **hor_waste**, we calculate
 - **width_tot_macros** = the sum of widths of all macros in the design

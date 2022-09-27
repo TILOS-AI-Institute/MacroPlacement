@@ -109,10 +109,8 @@ def SortIOPorts(io_list, group_id, distance, direction = "y"):
     return group_id
 
 
-def Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_threshold, src_dir):
+def Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_threshold, src_dir, openroad_exe):
     pwd = os.getcwd()
-    # Specify the location of hmetis exe and openroad exe
-    openroad_exe = src_dir + "/utils/openroad"
     extract_hypergraph_file  = src_dir + "/utils/extract_hypergraph.tcl"
 
     # Generate Hypergraph file
