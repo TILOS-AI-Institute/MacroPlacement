@@ -13,5 +13,7 @@ if __name__ == '__main__':
     setup_file = "setup.tcl"
     tolerance = 0.05
     halo_width = 0.05
-    GriddingLefDefInterface(src_dir, design, setup_file, tolerance, halo_width)
+    openroad_exe = "./openroad"  # You need to specify the openroad exe
+
+    GriddingLefDefInterface(src_dir, design, setup_file, tolerance, halo_width, openroad_exe)
 

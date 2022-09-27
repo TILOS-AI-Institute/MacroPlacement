@@ -20,7 +20,7 @@ representation in Circuit Training. The solid arrow means the real signal net an
 arrow means the virtual nets between macro A and its macro pins.
 We can see that the macro pins and the related macro are both basic elements in the netlist, whereas there is no pins of standard cells.  Thus, it's necessary to group the macros pins of the same macro into a cluster, because the macro pins of the same macro will always stay together during macro placement. Note that only the macro pins are grouped and the macro itself is not grouped. For example, in this figure, **D\[0\]**, **D\[1\]**, **D\[2\]**, **Q\[0\]**,
 **Q\[1\]**, **Q\[2\]** are grouped into **cluster_1**, but **cluster_1** does not include macro A.
-<img src="./macro_example.png" width= "1600"/>
+<img src="./images/macro_example.png" width= "1600"/>
 
 
 - Group the IOs that are within close proximity of each other boundary by boundary, 
@@ -28,7 +28,7 @@ following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span> 
   - **grid_width** = **canvas_width** / **n_cols**
   - **grid_height** = **canvas_height** / **n_rows**
 
-<img src="./IO_Groups.png" width= "1600"/>
+<img src="./images/IO_Groups.png" width= "1600"/>
 
 
 
