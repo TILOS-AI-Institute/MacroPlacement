@@ -68,6 +68,12 @@ if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     refine_macro_place
 }
 
+### Write postSynth report ###
+echo "Physical Design Stage, Core Area (um^2), Standard Cell Area (um^2), Macro Area (um^2), Total Power (mW), Wirelength(um), WS(ns), TNS(ns), Congestion(H), Congestion(V)" > ${DESIGN}_DETAILS.rpt
+source ../../../../util/extract_report.tcl
+set rpt_post_synth [extract_report postSynth]
+echo "$rpt_post_synth" >> ${DESIGN}_DETAILS.rpt
+
 ### Write out the def files ###
 source ../../../../util/write_required_def.tcl
 
@@ -85,8 +91,6 @@ setDesignMode -bottomRoutingLayer 2
 place_opt_design -out_dir $rptDir -prefix place
 saveDesign $encDir/${DESIGN}_placed.enc
 
-echo "Physical Design Stage, Core Area (um^2), Standard Cell Area (um^2), Macro Area (um^2), Total Power (mW), Wirelength(um), WS(ns), TNS(ns), Congestion(H), Congestion(V)" > ${DESIGN}_DETAILS.rpt
-source ../../../../util/extract_report.tcl
 set rpt_pre_cts [extract_report preCTS]
 echo "$rpt_pre_cts" >> ${DESIGN}_DETAILS.rpt
 
@@ -134,14 +138,14 @@ defOut -netlist -floorplan -routing ${DESIGN}_route.def
 set rpt_post_route [extract_report postRoute]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
+
 #route_opt_design
 optDesign -postRoute
 set rpt_post_route [extract_report postRouteOpt]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
-
-### Run DRC and LVS ###
-verify_connectivity -error 0 -geom_connect -no_antenna
-verify_drc -limit 0
 
 
 summaryReport -noHtml -outfile summaryReport/post_route.sum

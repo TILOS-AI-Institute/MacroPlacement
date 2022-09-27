@@ -139,6 +139,7 @@ write_reports -directory ${REPORTS_PATH} -tag final
 
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
     write_design -innovus -base_name ${HANDOFF_PATH}/${DESIGN}
+    exec cp ${HANDOFF_PATH}/${DESIGN}.CON.sdc ${HANDOFF_PATH}/${DESIGN}.sdc
 } else {
     write_sdc >${HANDOFF_PATH}/${DESIGN}.sdc
     write_hdl > ${HANDOFF_PATH}/${DESIGN}.v

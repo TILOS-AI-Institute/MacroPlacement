@@ -113,11 +113,11 @@ while { $i < $lcount } {
         } elseif { $ism == 1 } {
             setAddStripeMode -extend_to_closest_target none 
             setAddStripeMode -inside_cell_only true
-            foreach mcell [dbget [dbget top.insts.cell.subClass block -p2 ].cell.name -u] {
+            foreach mcell [dbget [dbget top.insts.cell.subClass block -p2 ].cell.name -u -e] {
                 addStripe -layer $lname -direction $dir -nets $nets -width $wdth -spacing $spc \
                     -start_offset $sofst -set_to_set_distance $ptch -master $mcell
             }
-            foreach inst [dbget [dbget top.insts.cell.subClass block -p2 ].name ] {
+            foreach inst [dbget [dbget top.insts.cell.subClass block -p2 ].name -e ] {
                 createRouteBlk -inst $inst -cover -layer $prevLayer -name mcro_blk
             }
         } elseif { $isam == 1 } {
