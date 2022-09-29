@@ -58,6 +58,8 @@ if {[info exist ::env(pb_netlist)] &&
                                "macro_place.tcl" $origin_x $origin_y 
 }
 
+source macro_place.tcl
+
 if { [info exist ::env(run_refine_macro_place)] && $::env(run_refine_macro_place) == 1 } {
     dbset [dbget top.insts.cell.subClass block -p2 ].pStatus placed
     refine_macro_place
