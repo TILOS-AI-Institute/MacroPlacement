@@ -58,6 +58,8 @@ keys = set()
 for line in lines:
     words = line.split()
     if words[0] == 'node':
+        if len(node_list) > 0 and node_list[-1].name == '"__metadata__"':
+            node_list.pop(-1)
         node_list.append(pb_object(node_id))
         node_id += 1
     elif words[0] == 'name:':
