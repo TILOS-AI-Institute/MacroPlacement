@@ -45,7 +45,7 @@ Example:
             --smooth 2
         
         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane_68_1.3/netlist.pb.txt\
-            --plc ./Plc_client/test/ariane_68_1.3//initial.plc\
+            --plc ./Plc_client/test/ariane_68_1.3/legalized.plc\
             --width 1347.100\
             --height 1346.800\
             --col 23\
@@ -312,7 +312,7 @@ class PlacementCostTest():
 
         # Congestion
         try:
-            # NOTE: [IGNORE] grid-wise congestion not tested because 
+            # NOTE: [IGNORE] grid-wise congestion not tested because
             # miscellaneous implementation differences.
             assert abs(self.plc.get_congestion_cost() -
                        self.plc_os.get_congestion_cost()) < 1e-3
@@ -466,7 +466,7 @@ class PlacementCostTest():
         CELL_IDX = 0
         r = (CELL_IDX // 35)
         c = int(CELL_IDX % 35)
-        print(r,c)
+        print(r, c)
         print(temp_gl_h_rt[CELL_IDX], temp_os_h_rt[CELL_IDX])
         print(temp_gl_v_rt[CELL_IDX], temp_os_v_rt[CELL_IDX])
 
@@ -568,13 +568,14 @@ class PlacementCostTest():
         self.extractor = observation_extractor.ObservationExtractor(
             plc=plc, observation_config=self._observation_config)
         """
-        
+
         print("############################ TEST OBSERVATION EXTRACTOR ############################")
 
         try:
             assert self.PLC_PATH
         except AssertionError:
             print("[ERROR OBSERVATION EXTRACTOR TEST] Facilitate required .plc file")
+            exit(0)
 
         # Using the default edge/node
         self._observation_config = observation_config.ObservationConfig(
@@ -586,23 +587,19 @@ class PlacementCostTest():
             init_placement=self.PLC_PATH
         )
 
-        self.plc_util.unplace_all_nodes()
-
         self.plc_util_os = placement_util.create_placement_cost(
             plc_client=plc_client_os,
             netlist_file=self.NETLIST_PATH,
             init_placement=self.PLC_PATH
         )
 
-        self.plc_util_os.unplace_all_nodes()
-
         if self.PLC_PATH:
             print("[PLC FILE FOUND] Loading info from .plc file")
             self.plc_util_os.set_canvas_boundary_check(False)
             self.plc_util_os.restore_placement(self.PLC_PATH,
-                                          ifInital=True,
-                                          ifValidate=True,
-                                          ifReadComment=False)
+                                               ifInital=True,
+                                               ifValidate=True,
+                                               ifReadComment=False)
             self.plc_util.set_canvas_boundary_check(False)
             self.plc_util.restore_placement(self.PLC_PATH)
         else:
@@ -615,7 +612,8 @@ class PlacementCostTest():
         self.extractor_os = observation_extractor.ObservationExtractor(
             plc=self.plc_util_os, observation_config=self._observation_config
         )
-
+        self.plc_util_os.unplace_all_nodes()
+        self.plc_util.unplace_all_nodes()
         # Static features that are invariant across training steps
         static_feature_gl = self.extractor._extract_static_features()
         static_feature_os = self.extractor_os._extract_static_features()
@@ -624,7 +622,11 @@ class PlacementCostTest():
                 assert (static_feature_gl[feature_gl] ==
                         static_feature_os[feature_os]).all()
             except AssertionError:
-                print("[ERROR OBSERVATION EXTRACTOR TEST] Failing on "+str(feature_gl))
+                print(
+                    "[ERROR OBSERVATION EXTRACTOR TEST] Failing on "+str(feature_gl))
+                print(static_feature_gl[feature_gl])
+                print(static_feature_os[feature_os])
+                exit(0)
 
         print("                  ++++++++++++++++++++++++++++++++++++++++")
         print("                  +++ TEST OBSERVATION EXTRACTOR: PASS +++")
@@ -668,12 +670,21 @@ class PlacementCostTest():
         # Initialize Placement
         self.plc_util_os.unplace_all_nodes()
         self.plc_util.unplace_all_nodes()
-        NODE_TO_PLACE_IDX = 0
+
+        self.plc_util_os.get_macro_indices()
+        self._hard_macro_indices = [
+            m for m in self.plc_util_os.get_macro_indices()
+            if not self.plc_util_os.is_node_soft_macro(m)
+        ]
+
+        NODE_TO_PLACE_IDX = self._hard_macro_indices[0]
         CELL_TO_PLACE_IDX = 6
         print("MASK FOR PLACING FIRST NODE:")
         self.plc_util_os.display_canvas(annotate=False)
+        print("OS NODE MASK:")
         print(np.flip(np.array(self.plc_util_os.get_node_mask(
             NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW, self.GRID_COL), axis=0))
+        print("GL NODE MASK:")
         print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(
             self.GRID_ROW, self.GRID_COL), axis=0))
 
@@ -681,11 +692,13 @@ class PlacementCostTest():
         self.plc_util.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
 
         # place node NODE_TO_PLACE_IDX @ position CELL_TO_PLACE_IDX
-        NODE_TO_PLACE_IDX = 1
+        NODE_TO_PLACE_IDX = self._hard_macro_indices[1]
         CELL_TO_PLACE_IDX = 18
         print("MASK FOR PLACING SECOND NODE:")
+        print("OS NODE MASK:")
         print(np.flip(np.array(self.plc_util_os.get_node_mask(
             NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW, self.GRID_COL), axis=0))
+        print("GL NODE MASK:")
         print(np.flip(np.array(self.plc_util.get_node_mask(NODE_TO_PLACE_IDX)).reshape(
             self.GRID_ROW, self.GRID_COL), axis=0))
         self.plc_util_os.place_node(NODE_TO_PLACE_IDX, CELL_TO_PLACE_IDX)
@@ -695,41 +708,44 @@ class PlacementCostTest():
 
     def test_environment(self):
         print("############################ TEST ENVIRONMENT ############################")
-        # Source: https://github.com/google-research/circuit_training/blob/d5e454e5bcd153a95d320f664af0d1b378aace7b/circuit_training/environment/environment_test.py#L39
-
-        def random_action(mask):
-            valid_actions, = np.nonzero(mask.flatten())
-            if len(valid_actions):  # pylint: disable=g-explicit-length-test
-                return np.random.choice(valid_actions)
-
-            # If there is no valid choice, then `[0]` is returned which results in an
-            # infeasable action ending the episode.
-            return 0
-
         env = environment.CircuitEnv(
             _plc=plc_client,
             create_placement_cost_fn=placement_util.create_placement_cost,
             netlist_file=self.NETLIST_PATH,
-            init_placement=self.PLC_PATH)
-
-        self.plc_util = placement_util.create_placement_cost(
-            plc_client=plc_client,
-            netlist_file=self.NETLIST_PATH,
-            init_placement=self.PLC_PATH
-        )
-
-        # print(np.array2string(env._current_mask.reshape(128, 128)), sep=']')
+            init_placement=self.PLC_PATH,
+            unplace_all_nodes_in_init=False)
 
         env_os = environment.CircuitEnv(
             _plc=plc_client_os,
             create_placement_cost_fn=placement_util.create_placement_cost,
             netlist_file=self.NETLIST_PATH,
-            init_placement=self.PLC_PATH)
-        # print(np.array(env_os._plc.get_node_mask(13333)).reshape(33,35))
-        # print(np.array(env._plc.get_node_mask(13333)).reshape(33,35))
-        assert (env_os._get_mask() == env._get_mask()).all()
+            init_placement=self.PLC_PATH,
+            unplace_all_nodes_in_init=False)
 
-        # TODO DISCREPENCY FOUND
+        # Init Mask
+        try:
+            assert (env_os._get_mask() == env._get_mask()).all()
+        except AssertionError:
+            print("[ERROR ENVIRONMENT TEST] Init Mask failed")
+            print("GL INIT MASK:")
+            node_idx = env._sorted_node_indices[0]
+            print(np.flip(np.array(env._plc.get_node_mask(node_idx)).reshape(
+                env._plc.get_grid_num_columns_rows()), axis=0))
+            print("OS INIT MASK:")
+            print(np.flip(np.array(env_os._plc.get_node_mask(node_idx)).reshape(
+                env_os._plc.get_grid_num_columns_rows()), axis=0))
+
+            for idx in env._plc.get_macro_indices():
+                if (env._plc.get_node_location(idx) != env_os._plc.get_node_location(idx)):
+                    print("something wrong")
+                if abs(env._plc.get_node_width_height(idx)[0] - env_os._plc.get_node_width_height(idx)[0]) >= 1e-3:
+                    print(idx, env._plc.get_node_width_height(idx), env_os._plc.get_node_width_height(idx))
+
+                if abs(env._plc.get_node_width_height(idx)[1] - env_os._plc.get_node_width_height(idx)[1]) >= 1e-3:
+                    print(idx, env._plc.get_node_width_height(idx), env_os._plc.get_node_width_height(idx))
+
+            env_os._plc.display_canvas(annotate=False)
+
         obs_gl = env._get_obs()
         obs_os = env_os._get_obs()
 
@@ -737,10 +753,12 @@ class PlacementCostTest():
         env.reset()
 
         for feature_gl, feature_os in zip(obs_gl, obs_os):
-            if not (obs_gl[feature_gl] == obs_os[feature_os]).all():
-                print(feature_gl, feature_os)
+            try:
+                assert (obs_gl[feature_gl] == obs_os[feature_os]).all()
+            except AssertionError:
+                print("[ERROR ENVIRONMENT TEST] Failing on "+str(feature_gl))
                 print(np.where(obs_gl[feature_gl] != obs_os[feature_os]))
-        
+
         print("                  ++++++++++++++++++++++++++++++")
         print("                  +++ TEST ENVIRONMENT: PASS +++")
         print("                  ++++++++++++++++++++++++++++++")
@@ -804,7 +822,7 @@ def main(args):
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
-    PCT.test_observation_extractor()
+    # PCT.test_observation_extractor()
     # PCT.view_canvas()
     # PCT.test_proxy_congestion()
     PCT.test_environment()

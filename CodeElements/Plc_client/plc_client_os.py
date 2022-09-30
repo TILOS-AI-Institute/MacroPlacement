@@ -169,7 +169,7 @@ class PlacementCost(object):
                     if line_item[0] == 'name':
                         node_name = line_item[1]
                         if node_name == "__metadata__":
-                            print("skipping __metadata__")
+                            pass
                         else:
                             # print(node_name)
                             node_cnt += 1
@@ -1611,13 +1611,17 @@ class PlacementCost(object):
 
         """
         mod = self.modules_w_pins[node_idx]
+
         canvas_block = Block(x_max=self.width,
                             y_max=self.height,
                             x_min=0,
                             y_min=0)
-
-        mod_w = mod.get_width()
-        mod_h = mod.get_height()
+        if mod.get_type() == "PORT" or mod.get_type() == "MACRO_PIN":
+            mod_w = 1e-3
+            mod_h = 1e-3
+        else:
+            mod_w = mod.get_width()
+            mod_h = mod.get_height()
 
         temp_node_mask = np.array([1] * (self.grid_col * self.grid_row))\
             .reshape(self.grid_row, self.grid_col)
@@ -1659,10 +1663,10 @@ class PlacementCost(object):
                         p_w = pmod.get_width()
                         p_h = pmod.get_height()
                         pmod_block = Block(
-                                            x_max=p_x + (p_w/2) + 1,
-                                            y_max=p_y + (p_h/2) + 1,
-                                            x_min=p_x - (p_w/2) - 1,
-                                            y_min=p_y - (p_h/2) - 1
+                                            x_max=p_x + (p_w/2),
+                                            y_max=p_y + (p_h/2),
+                                            x_min=p_x - (p_w/2),
+                                            y_min=p_y - (p_h/2)
                                             )
                         # overlap with placed module
                         if self.__overlap_area(block_i=pmod_block, block_j=mod_block) > 0:
@@ -1690,7 +1694,7 @@ class PlacementCost(object):
         mod = None
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
             print("[ERROR NODE FIXED] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
                     +"'PORT' are considered to be fixable nodes")
@@ -1702,7 +1706,14 @@ class PlacementCost(object):
         return mod.get_width(), mod.get_height()
 
     def make_soft_macros_square(self):
-        pass
+        """
+        make soft macros as squares
+        """
+        for mod_idx in self.soft_macro_indices:
+            mod = self.modules_w_pins[mod_idx]
+            mod_area = mod.get_width() * mod.get_height()
+            mod.set_width(math.sqrt(mod_area))
+            mod.set_height(math.sqrt(mod_area))
 
     def update_soft_macros_position(self, coord_dict):
         """
@@ -2444,6 +2455,12 @@ class PlacementCost(object):
 
         def get_width(self):
             return self.width
+        
+        def set_height(self, height):
+            self.height = height
+
+        def set_width(self, width):
+            self.width = width
         
         def set_location(self, grid_cell_idx):
             self.location = grid_cell_idx
