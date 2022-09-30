@@ -46,14 +46,14 @@ Example:
         
         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane_68_1.3/netlist.pb.txt\
             --plc ./Plc_client/test/ariane_68_1.3//initial.plc\
-            --width 1599\
-            --height 1600.06\
-            --col 24\
-            --row 21\
-            --rpmh 10\
-            --rpmv 10\
-            --marh 5\
-            --marv 5\
+            --width 1347.100\
+            --height 1346.800\
+            --col 23\
+            --row 28\
+            --rpmh 11.285\
+            --rpmv 12.605\
+            --marh 7.143\
+            --marv 8.339\
             --smooth 2
         
         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/0P2M0m/netlist.pb.txt\
@@ -598,13 +598,13 @@ class PlacementCostTest():
 
         if self.PLC_PATH:
             print("[PLC FILE FOUND] Loading info from .plc file")
-            self.plc_os.set_canvas_boundary_check(False)
-            self.plc_os.restore_placement(self.PLC_PATH,
+            self.plc_util_os.set_canvas_boundary_check(False)
+            self.plc_util_os.restore_placement(self.PLC_PATH,
                                           ifInital=True,
                                           ifValidate=True,
                                           ifReadComment=False)
-            self.plc.set_canvas_boundary_check(False)
-            self.plc.restore_placement(self.PLC_PATH)
+            self.plc_util.set_canvas_boundary_check(False)
+            self.plc_util.restore_placement(self.PLC_PATH)
         else:
             print("[PLC FILE MISSING] Using only netlist info")
 
@@ -620,8 +620,11 @@ class PlacementCostTest():
         static_feature_gl = self.extractor._extract_static_features()
         static_feature_os = self.extractor_os._extract_static_features()
         for feature_gl, feature_os in zip(static_feature_gl, static_feature_os):
-            assert (static_feature_gl[feature_gl] ==
-                    static_feature_os[feature_os]).all()
+            try:
+                assert (static_feature_gl[feature_gl] ==
+                        static_feature_os[feature_os]).all()
+            except AssertionError:
+                print("[ERROR OBSERVATION EXTRACTOR TEST] Failing on "+str(feature_gl))
 
         print("                  ++++++++++++++++++++++++++++++++++++++++")
         print("                  +++ TEST OBSERVATION EXTRACTOR: PASS +++")
@@ -801,7 +804,7 @@ def main(args):
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
-    # PCT.test_observation_extractor()
+    PCT.test_observation_extractor()
     # PCT.view_canvas()
     # PCT.test_proxy_congestion()
     PCT.test_environment()
