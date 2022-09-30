@@ -159,7 +159,6 @@ class PlacementCost(object):
 
                 # node found
                 if line_item[0] == 'node':
-                    node_cnt += 1
                     node_name = ''
                     input_list = []
 
@@ -169,8 +168,14 @@ class PlacementCost(object):
                     # retrieve node name
                     if line_item[0] == 'name':
                         node_name = line_item[1]
+                        if node_name == "__metadata__":
+                            print("skipping __metadata__")
+                        else:
+                            # print(node_name)
+                            node_cnt += 1
                     else:
                         node_name = 'N/A name'
+                        
 
                     # advance ptr
                     line = fp.readline()
@@ -198,23 +203,42 @@ class PlacementCost(object):
                         line_item = re.findall(r'\w+', line)
                         key = line_item[1]
 
-                        # advance, expect value
-                        line = fp.readline()
-                        line_item = re.findall(r'\w+', line)
+                        if key == "macro_name":
+                             # advance, expect value
+                            line = fp.readline()
+                            line_item = re.findall(r'\w+', line)
 
-                        # advance, expect value item
-                        line = fp.readline()
-                        line_item = re.findall(r'\-*\w+\.*\/{0,1}\w*[\w+\/{0,1}\w*]*', line)
+                            # advance, expect value item
+                            line = fp.readline()
+                            line_item = re.findall(r'\w+[^\:\n\\{\}\s"]*', line)
 
-                        attr_dict[key] = line_item
+                            attr_dict[key] = line_item
 
-                        line = fp.readline()
-                        line = fp.readline()
-                        line = fp.readline()
+                            line = fp.readline()
+                            line = fp.readline()
+                            line = fp.readline()
 
-                        line_item = re.findall(r'\w+', line)
+                            line_item = re.findall(r'\w+', line)
+                        else:
+                            # advance, expect value
+                            line = fp.readline()
+                            line_item = re.findall(r'\w+', line)
 
-                    if attr_dict['type'][1] == 'macro':
+                            # advance, expect value item
+                            line = fp.readline()
+                            line_item = re.findall(r'\-*\w+\.*\/{0,1}\w*[\w+\/{0,1}\w*]*', line)
+
+                            attr_dict[key] = line_item
+
+                            line = fp.readline()
+                            line = fp.readline()
+                            line = fp.readline()
+
+                            line_item = re.findall(r'\w+', line)
+
+                    if node_name == "__metadata__":
+                        logging.info('[NETLIST PARSER INFO] skipping invalid net input')
+                    elif attr_dict['type'][1] == 'macro':
                         # soft macro
                         # check if all required information is obtained
                         try:
@@ -301,6 +325,7 @@ class PlacementCost(object):
                                                         x_offset = attr_dict['x_offset'][1],
                                                         y_offset = attr_dict['y_offset'][1],
                                                         macro_name = attr_dict['macro_name'][1])
+                        
                         if 'weight' in attr_dict.keys():
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
@@ -1677,19 +1702,15 @@ class PlacementCost(object):
         return mod.get_width(), mod.get_height()
 
     def make_soft_macros_square(self):
-        """
-        update soft macro width/height base on its square area
-        """
-        
+        pass
 
-    
     def update_soft_macros_position(self, coord_dict):
         """
         For sync-up with Google's plc_client after FD placer
         """
         for mod_idx in coord_dict.keys():
             self.modules_w_pins[mod_idx].set_pos(coord_dict[mod_idx])
-    
+
     def set_soft_macro_position(self, node_idx, x_pos, y_pos):
         """
         used for updating soft macro position
@@ -2688,7 +2709,7 @@ class PlacementCost(object):
 
 def main():
     test_netlist_dir = './Plc_client/test/'+\
-        'ariane133'
+        'ariane_68_1.3'
     netlist_file = os.path.join(test_netlist_dir,
                                 'netlist.pb.txt')
     plc = PlacementCost(netlist_file)

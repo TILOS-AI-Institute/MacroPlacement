@@ -44,8 +44,8 @@ Example:
             --marv 51.790\
             --smooth 2
         
-        $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane133/netlist.pb.txt\
-            --plc ./Plc_client/test/ariane133/initial.plc\
+        $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane_68_1.3/netlist.pb.txt\
+            --plc ./Plc_client/test/ariane_68_1.3//initial.plc\
             --width 1599\
             --height 1600.06\
             --col 24\
@@ -347,7 +347,7 @@ class PlacementCostTest():
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
         self.plc_os.display_canvas()
-        self.unplace_node()
+        self.plc_os.unplace_all_nodes()
         print(np.flip(np.array(self.plc_util.get_node_mask(0)).reshape(35, 33), axis=0))
 
         print(np.flip(np.array(self.plc.get_node_mask(0)).reshape(35, 33), axis=0))
@@ -800,11 +800,11 @@ def main(args):
     # PCT.test_proxy_cost()
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
-    PCT.test_miscellaneous()
+    # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     # PCT.view_canvas()
     # PCT.test_proxy_congestion()
-    # PCT.test_environment()
+    PCT.test_environment()
 
 
 if __name__ == '__main__':
