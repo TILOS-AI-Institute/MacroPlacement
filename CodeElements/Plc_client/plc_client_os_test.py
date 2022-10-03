@@ -1,3 +1,4 @@
+from ast import Assert
 import numpy as np
 import pandas as pd
 import sys
@@ -138,7 +139,7 @@ class PlacementCostTest():
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
         if self.PLC_PATH:
-            print("[PLC FILE FOUND] Loading info from .plc file")
+            print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
                                           ifInital=True,
@@ -147,7 +148,7 @@ class PlacementCostTest():
             self.plc.set_canvas_boundary_check(False)
             self.plc.restore_placement(self.PLC_PATH)
         else:
-            print("[PLC FILE MISSING] Using only netlist info")
+            print("#[PLC FILE MISSING] Using only netlist info")
 
         try:
             assert int(self.plc_os.get_area()) == int(self.plc.get_area())
@@ -223,7 +224,7 @@ class PlacementCostTest():
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
         if self.PLC_PATH:
-            print("[PLC FILE FOUND] Loading info from .plc file")
+            print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
                                           ifInital=ifInital,
@@ -246,7 +247,7 @@ class PlacementCostTest():
         print("overlap_threshold default", self.plc.get_overlap_threshold())
 
         if self.PLC_PATH:
-            print("[PLC FILE FOUND] Loading info from .plc file")
+            print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
                                           ifInital=True,
@@ -255,7 +256,7 @@ class PlacementCostTest():
             self.plc.set_canvas_boundary_check(False)
             self.plc.restore_placement(self.PLC_PATH)
         else:
-            print("[PLC FILE MISSING] Using only netlist info")
+            print("#[PLC FILE MISSING] Using only netlist info")
 
         self.plc.set_routes_per_micron(self.RPMH, self.RPMV)
         self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
@@ -271,12 +272,11 @@ class PlacementCostTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        # SUBJECT TO DELETE
-        self.plc.make_soft_macros_square()
-        print(self.plc.get_wirelength())
-        print(self.plc_os.get_wirelength())
+        # self.plc.make_soft_macros_square()
+        # self.plc_os.make_soft_macros_square()
 
-        # TODO: [IGNORE] create_blockage must be defined BEFORE set_canvas_size and set_placement_grid in order to be considered on the canvas
+        # [IGNORE] create_blockage must be defined BEFORE set_canvas_size 
+        # and set_placement_grid in order to be considered on the canvas
         if False:
             self.plc.create_blockage(0.0, 100.0, 300.0, 300.0, 1.0)
             self.plc.create_blockage(300, 0, 500, 200, 1)
@@ -287,15 +287,26 @@ class PlacementCostTest():
 
         # HPWL
         try:
-            assert int(self.plc_os.get_wirelength()) == int(
-                self.plc.get_wirelength())
+            assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
             assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-3
             print("#[INFO WIRELENGTH] Matched irelength cost -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
         except Exception as e:
             print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
-            exit(1)
+            
+            soft_macro_indices = [
+                m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
+            ]
+            for mod_idx in soft_macro_indices:
+                self.plc_os.unplace_node(mod_idx)
+                self.plc.unplace_node(mod_idx)
+
+            print("GL WIRELENGTH: ", self.plc.get_wirelength())
+            print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
+
+            # exit(1)
+            # self.plc_os.display_canvas(annotate=False)
 
         # Density
         try:
@@ -392,7 +403,7 @@ class PlacementCostTest():
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
         if self.PLC_PATH:
-            print("[PLC FILE FOUND] Loading info from .plc file")
+            print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
             self.plc_os.restore_placement(self.PLC_PATH,
                                           ifInital=True,
@@ -401,7 +412,7 @@ class PlacementCostTest():
             self.plc.set_canvas_boundary_check(False)
             self.plc.restore_placement(self.PLC_PATH)
         else:
-            print("[PLC FILE MISSING] Using only netlist info")
+            print("#[PLC FILE MISSING] Using only netlist info")
 
         temp_gl_h = np.array(self.plc.get_horizontal_routing_congestion())
         temp_os_h = np.array(self.plc_os.get_horizontal_routing_congestion())
@@ -480,6 +491,7 @@ class PlacementCostTest():
             assert self.PLC_PATH
         except AssertionError:
             print("[ERROR PLACEMENT UTIL TEST] Facilitate required .plc file")
+            exit(1)
 
         self.plc_util = placement_util.create_placement_cost(
             plc_client=plc_client,
@@ -542,6 +554,7 @@ class PlacementCostTest():
         except AssertionError:
             print("[ERROR PLACEMENT UTIL] Saved PLC Discrepency found at line {}".format(
                 str(idx)))
+            exit(1)
 
         # if keep plc file for detailed comparison
         if not keep_save_file:
@@ -575,7 +588,7 @@ class PlacementCostTest():
             assert self.PLC_PATH
         except AssertionError:
             print("[ERROR OBSERVATION EXTRACTOR TEST] Facilitate required .plc file")
-            exit(0)
+            exit(1)
 
         # Using the default edge/node
         self._observation_config = observation_config.ObservationConfig(
@@ -594,7 +607,7 @@ class PlacementCostTest():
         )
 
         if self.PLC_PATH:
-            print("[PLC FILE FOUND] Loading info from .plc file")
+            print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_util_os.set_canvas_boundary_check(False)
             self.plc_util_os.restore_placement(self.PLC_PATH,
                                                ifInital=True,
@@ -603,7 +616,7 @@ class PlacementCostTest():
             self.plc_util.set_canvas_boundary_check(False)
             self.plc_util.restore_placement(self.PLC_PATH)
         else:
-            print("[PLC FILE MISSING] Using only netlist info")
+            print("#[PLC FILE MISSING] Using only netlist info")
 
         self.extractor = observation_extractor.ObservationExtractor(
             plc=self.plc_util, observation_config=self._observation_config
@@ -612,21 +625,27 @@ class PlacementCostTest():
         self.extractor_os = observation_extractor.ObservationExtractor(
             plc=self.plc_util_os, observation_config=self._observation_config
         )
+        # Unplacing all the nodes b/c by default everything is placed on board at initialization
         self.plc_util_os.unplace_all_nodes()
         self.plc_util.unplace_all_nodes()
+
         # Static features that are invariant across training steps
         static_feature_gl = self.extractor._extract_static_features()
         static_feature_os = self.extractor_os._extract_static_features()
+
+        #
         for feature_gl, feature_os in zip(static_feature_gl, static_feature_os):
             try:
                 assert (static_feature_gl[feature_gl] ==
                         static_feature_os[feature_os]).all()
             except AssertionError:
                 print(
-                    "[ERROR OBSERVATION EXTRACTOR TEST] Failing on "+str(feature_gl))
+                    "[ERROR OBSERVATION EXTRACTOR TEST] Observation Feature Mismatch on "+str(feature_gl))
+                print("GL FEATURE:")
                 print(static_feature_gl[feature_gl])
+                print("OS FEATURE:")
                 print(static_feature_os[feature_os])
-                exit(0)
+                exit(1)
 
         print("                  ++++++++++++++++++++++++++++++++++++++++")
         print("                  +++ TEST OBSERVATION EXTRACTOR: PASS +++")
@@ -660,12 +679,16 @@ class PlacementCostTest():
         self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
+        # MACRO placement order
         ordered_node_gl = placement_util.get_ordered_node_indices(
             mode='descending_size_macro_first', plc=self.plc_util)
         ordered_node_os = placement_util.get_ordered_node_indices(
             mode='descending_size_macro_first', plc=self.plc_util_os)
 
-        assert (np.array(ordered_node_gl) == np.array(ordered_node_os)).all()
+        try:
+            assert (np.array(ordered_node_gl) == np.array(ordered_node_os)).all()
+        except:
+            print("[ERROR PLACE NODE] Node Ordering not matching!")
 
         # Initialize Placement
         self.plc_util_os.unplace_all_nodes()
@@ -678,8 +701,9 @@ class PlacementCostTest():
         ]
 
         NODE_TO_PLACE_IDX = self._hard_macro_indices[0]
+        # make sure this is within grid cell range
         CELL_TO_PLACE_IDX = 6
-        print("MASK FOR PLACING FIRST NODE:")
+        print("[INFO PLACE NODE] MASK FOR PLACING FIRST NODE:")
         self.plc_util_os.display_canvas(annotate=False)
         print("OS NODE MASK:")
         print(np.flip(np.array(self.plc_util_os.get_node_mask(
@@ -693,8 +717,9 @@ class PlacementCostTest():
 
         # place node NODE_TO_PLACE_IDX @ position CELL_TO_PLACE_IDX
         NODE_TO_PLACE_IDX = self._hard_macro_indices[1]
+        # make sure this is within grid cell range
         CELL_TO_PLACE_IDX = 18
-        print("MASK FOR PLACING SECOND NODE:")
+        print("[INFO PLACE NODE] MASK FOR PLACING SECOND NODE:")
         print("OS NODE MASK:")
         print(np.flip(np.array(self.plc_util_os.get_node_mask(
             NODE_TO_PLACE_IDX)).reshape(self.GRID_ROW, self.GRID_COL), axis=0))
@@ -735,22 +760,33 @@ class PlacementCostTest():
             print(np.flip(np.array(env_os._plc.get_node_mask(node_idx)).reshape(
                 env_os._plc.get_grid_num_columns_rows()), axis=0))
 
+            # check if node information is matching
             for idx in env._plc.get_macro_indices():
-                if (env._plc.get_node_location(idx) != env_os._plc.get_node_location(idx)):
-                    print("something wrong")
-                if abs(env._plc.get_node_width_height(idx)[0] - env_os._plc.get_node_width_height(idx)[0]) >= 1e-3:
+                try:
+                    assert (env._plc.get_node_location(idx) != env_os._plc.get_node_location(idx))
+                except AssertionError:
+                    print("[ERROR ENVIRONMENT TEST] Node location not matching!")
+                    print(idx, env._plc.get_node_location(idx), env_os._plc.get_node_location(idx))
+                    exit(1)
+                
+                try:
+                    assert abs(env._plc.get_node_width_height(idx)[0] - env_os._plc.get_node_width_height(idx)[0]) >= 1e-3 and \
+                            abs(env._plc.get_node_width_height(idx)[1] - env_os._plc.get_node_width_height(idx)[1]) >= 1e-3
+                except AssertionError:
+                    print("[ERROR ENVIRONMENT TEST] Node dimension not matching!")
                     print(idx, env._plc.get_node_width_height(idx), env_os._plc.get_node_width_height(idx))
-
-                if abs(env._plc.get_node_width_height(idx)[1] - env_os._plc.get_node_width_height(idx)[1]) >= 1e-3:
-                    print(idx, env._plc.get_node_width_height(idx), env_os._plc.get_node_width_height(idx))
+                    exit(1)
 
             env_os._plc.display_canvas(annotate=False)
 
+            exit(1)
+
+        # check observation state
         obs_gl = env._get_obs()
         obs_os = env_os._get_obs()
 
-        env_os.reset()
-        env.reset()
+        # env_os.reset()
+        # env.reset()
 
         for feature_gl, feature_os in zip(obs_gl, obs_os):
             try:
@@ -758,6 +794,7 @@ class PlacementCostTest():
             except AssertionError:
                 print("[ERROR ENVIRONMENT TEST] Failing on "+str(feature_gl))
                 print(np.where(obs_gl[feature_gl] != obs_os[feature_os]))
+                exit(1)
 
         print("                  ++++++++++++++++++++++++++++++")
         print("                  +++ TEST ENVIRONMENT: PASS +++")
@@ -817,15 +854,18 @@ def main(args):
                                 marv=args.marv,
                                 smooth=args.smooth)
 
+    """
+    Uncomment any available tests
+    """
     # PCT.test_metadata()
-    # PCT.test_proxy_cost()
+    PCT.test_proxy_cost()
+    # PCT.test_proxy_congestion()
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     # PCT.view_canvas()
-    # PCT.test_proxy_congestion()
-    PCT.test_environment()
+    # PCT.test_environment()
 
 
 if __name__ == '__main__':
