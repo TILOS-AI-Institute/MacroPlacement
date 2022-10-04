@@ -58,7 +58,6 @@ Example:
             --smooth 2
         
         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/0P2M0m/netlist.pb.txt\
-            --plc ./Plc_client/test/0P2M0m/initial.plc\
             --width 500\
             --height 500\
             --col 5\
@@ -272,8 +271,8 @@ class PlacementCostTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        # self.plc.make_soft_macros_square()
-        # self.plc_os.make_soft_macros_square()
+        self.plc.make_soft_macros_square()
+        self.plc_os.make_soft_macros_square()
 
         # [IGNORE] create_blockage must be defined BEFORE set_canvas_size 
         # and set_placement_grid in order to be considered on the canvas
@@ -285,28 +284,20 @@ class PlacementCostTest():
             print(self.plc.set_use_incremental_cost(True))
             print(self.plc_os.get_soft_macros_count())
 
+        # self.plc_os.display_canvas(annotate=False)
+        
         # HPWL
         try:
             assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
-            assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-3
-            print("#[INFO WIRELENGTH] Matched irelength cost -- GL {}, OS {}".format(
+            assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-2
+            print("#[INFO WIRELENGTH] Matched Wirelength cost -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
         except Exception as e:
             print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
-            
-            soft_macro_indices = [
-                m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
-            ]
-            for mod_idx in soft_macro_indices:
-                self.plc_os.unplace_node(mod_idx)
-                self.plc.unplace_node(mod_idx)
-
             print("GL WIRELENGTH: ", self.plc.get_wirelength())
             print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
-
-            # exit(1)
-            # self.plc_os.display_canvas(annotate=False)
+            exit(1)
 
         # Density
         try:
@@ -326,7 +317,7 @@ class PlacementCostTest():
             # NOTE: [IGNORE] grid-wise congestion not tested because
             # miscellaneous implementation differences.
             assert abs(self.plc.get_congestion_cost() -
-                       self.plc_os.get_congestion_cost()) < 1e-3
+                       self.plc_os.get_congestion_cost()) <= 1e-2
             print("#[INFO CONGESTION] Matched congestion cost -- GL {}, OS {}".format(
                 str(self.plc.get_congestion_cost()), self.plc_os.get_congestion_cost()))
         except Exception as e:
@@ -340,6 +331,7 @@ class PlacementCostTest():
         print("                  +++++++++++++++++++++++++++++")
 
     def test_miscellaneous(self):
+        print("****************** miscellaneous ******************")
         # Google's Binary Executable
         self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
@@ -362,7 +354,6 @@ class PlacementCostTest():
         print(np.flip(np.array(self.plc_util.get_node_mask(0)).reshape(35, 33), axis=0))
 
         print(np.flip(np.array(self.plc.get_node_mask(0)).reshape(35, 33), axis=0))
-        print("****************** miscellaneous ******************")
         # self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         # self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         # self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
@@ -381,6 +372,127 @@ class PlacementCostTest():
         # print("get_node_mask\n", np.array(self.plc.get_node_mask(NODE_IDX)).reshape((4,4)))
         # print("can_place_node", self.plc.can_place_node(0, 1))
         print("***************************************************")
+
+    def test_proxy_hpwl(self):
+        print("############################ TEST PROXY WIRELENGTH ############################")
+        # Google's Binary Executable
+        self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
+
+        # Open-sourced Implementation
+        self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
+                                                  macro_macro_x_spacing=50,
+                                                  macro_macro_y_spacing=50)
+
+        self.plc.get_overlap_threshold()
+        print("overlap_threshold default", self.plc.get_overlap_threshold())
+
+        if self.PLC_PATH:
+            print("#[PLC FILE FOUND] Loading info from .plc file")
+            self.plc_os.set_canvas_boundary_check(False)
+            self.plc_os.restore_placement(self.PLC_PATH,
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=False)
+            self.plc.set_canvas_boundary_check(False)
+            self.plc.restore_placement(self.PLC_PATH)
+        else:
+            print("#[PLC FILE MISSING] Using only netlist info")
+
+        self.plc.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
+
+        self.plc.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_os.set_congestion_smooth_range(self.SMOOTH)
+
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        # HPWL
+        try:
+            assert int(self.plc_os.get_wirelength()) == int(self.plc.get_wirelength())
+            assert abs(self.plc.get_cost() - self.plc_os.get_cost()) <= 1e-2
+            print("#[INFO WIRELENGTH] Matched Wirelength cost -- GL {}, OS {}".format(
+                str(self.plc.get_cost()), self.plc_os.get_cost()))
+        except Exception as e:
+            print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
+                str(self.plc.get_cost()), self.plc_os.get_cost()))
+            
+            # if remove all soft macros
+            # soft_macro_indices = [
+            #     m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
+            # ]
+            # for mod_idx in soft_macro_indices:
+            #     self.plc_os.unplace_node(mod_idx)
+            #     self.plc.unplace_node(mod_idx)
+
+            print("GL WIRELENGTH: ", self.plc.get_wirelength())
+            print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
+
+
+    def test_proxy_density(self):
+        print("############################ TEST PROXY DENSITY ############################")
+        # Google's Binary Executable
+        self.plc = plc_client.PlacementCost(self.NETLIST_PATH)
+
+        # Open-sourced Implementation
+        self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
+                                                  macro_macro_x_spacing=50,
+                                                  macro_macro_y_spacing=50)
+
+        self.plc.get_overlap_threshold()
+        print("overlap_threshold default", self.plc.get_overlap_threshold())
+
+        if self.PLC_PATH:
+            print("#[PLC FILE FOUND] Loading info from .plc file")
+            self.plc_os.set_canvas_boundary_check(False)
+            self.plc_os.restore_placement(self.PLC_PATH,
+                                          ifInital=True,
+                                          ifValidate=True,
+                                          ifReadComment=False)
+            self.plc.set_canvas_boundary_check(False)
+            self.plc.restore_placement(self.PLC_PATH)
+        else:
+            print("#[PLC FILE MISSING] Using only netlist info")
+
+        self.plc.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
+
+        self.plc.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_os.set_congestion_smooth_range(self.SMOOTH)
+
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        # self.plc.make_soft_macros_square()
+        # self.plc_os.make_soft_macros_square()
+        # Density
+        try:
+            assert int(sum(self.plc_os.get_grid_cells_density())) == int(
+                sum(self.plc.get_grid_cells_density()))
+            assert int(self.plc_os.get_density_cost()) == int(
+                self.plc.get_density_cost())
+            print("#[INFO DENSITY] Matched density cost -- GL {}, OS {}".format(
+                str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
+        except Exception as e:
+            print("[ERROR DENSITY] Discrepancies found when computing density -- GL {}, OS {}".format(
+                str(self.plc.get_density_cost()), self.plc_os.get_density_cost()))
+        gl_density = self.plc.get_grid_cells_density()
+        os_density = self.plc_os.get_grid_cells_density()
+        for cell_idx, (gl_dens, os_des) in enumerate(zip(gl_density, os_density)):
+            print("PASS {}".format(str(cell_idx)) if abs(gl_dens - os_des) <= 1e-3 else "FAILED", gl_dens, os_des)
+            if cell_idx == 0:
+                break
+        self.plc_os.display_canvas(annotate=True, amplify=True)
 
     def test_proxy_congestion(self):
         # Google's API
@@ -859,6 +971,7 @@ def main(args):
     """
     # PCT.test_metadata()
     PCT.test_proxy_cost()
+    # PCT.test_proxy_density()
     # PCT.test_proxy_congestion()
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()

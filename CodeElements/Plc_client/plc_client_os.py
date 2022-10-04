@@ -611,19 +611,21 @@ class PlacementCost(object):
             macro = self.modules_w_pins[macro_idx]
             macro_name = macro.get_name()
 
+            # Hard macro
             if not self.is_node_soft_macro(macro_idx):
                 if macro_name in self.hard_macros_to_inpins.keys():
                     pin_names = self.hard_macros_to_inpins[macro_name]
                 else:
-                    print("[ERROR UPDATE CONNECTION] MACRO not found")
-                    exit(1)
-            # use is_node_soft_macro()
+                    print("[ERROR UPDATE CONNECTION] MACRO pins not found")
+                    continue
+
+            # Soft macro
             elif self.is_node_soft_macro(macro_idx):
                 if macro_name in self.soft_macros_to_inpins.keys():
                     pin_names = self.soft_macros_to_inpins[macro_name]
                 else:
-                    print("[ERROR UPDATE CONNECTION] MACRO not found")
-                    exit(1)
+                    print("[ERROR UPDATE CONNECTION] macro pins not found")
+                    continue
 
             for pin_name in pin_names:
                 pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
@@ -697,11 +699,14 @@ class PlacementCost(object):
             if self.modules_w_pins[pin_idx].get_type() == 'PORT':
                 return self.modules_w_pins[pin_idx].get_pos()
             else:
+                print("[ERROR PIN POSITION] Parent Node Not Found.")
                 exit(1)
 
+        # Parent node
         ref_node = self.modules_w_pins[ref_node_idx]
         ref_node_x, ref_node_y = ref_node.get_pos()
 
+        # Retrieve current pin node position
         pin_node = self.modules_w_pins[pin_idx]
         pin_node_x_offset, pin_node_y_offset = pin_node.get_offset()
 
@@ -724,8 +729,9 @@ class PlacementCost(object):
             # NOTE: connection only defined on PORT, soft/hard macro pins
             if curr_type == "PORT" and mod.get_sink():
                 # add source position
-                x_coord.append(self.__get_pin_position(mod_idx)[0])
-                y_coord.append(self.__get_pin_position(mod_idx)[1])
+                x_coord.append(mod.get_pos()[0])
+                y_coord.append(mod.get_pos()[1])
+                # get sink 
                 for sink_name in mod.get_sink():
                     for sink_pin in mod.get_sink()[sink_name]:
                         # retrieve indx in modules_w_pins
@@ -881,16 +887,6 @@ class PlacementCost(object):
         self.node_mask[ row - ver_pad:row + ver_pad + 1, 
                         col - hor_pad:col + hor_pad + 1] = 0
 
-    def __unplace_node_mask(self, grid_cell_idx:int):
-        """
-        private function: for updating node mask after unplacing a node
-        """
-        row = grid_cell_idx // self.grid_col
-        col = grid_cell_idx % self.grid_col
-        assert row * self.grid_col + col == grid_cell_idx
-
-        pass
-
     def __overlap_area(self, block_i, block_j, return_pos=False):
         """
         private function: for computing block overlapping
@@ -972,6 +968,8 @@ class PlacementCost(object):
 
                 self.grid_occupied[self.grid_col * r_i + c_i] += \
                     self.__overlap_area(grid_cell_block, module_block)
+                
+                
 
     def get_grid_cells_density(self):
         """
@@ -988,6 +986,11 @@ class PlacementCost(object):
         for module_idx in (self.soft_macro_indices + self.hard_macro_indices):
             # extract module information
             module = self.modules_w_pins[module_idx]
+
+            # skipping unplaced module
+            if not module.get_placed_flag():
+                continue
+
             module_h = module.get_height()
             module_w = module.get_width()
             module_x, module_y = module.get_pos()
@@ -1714,8 +1717,10 @@ class PlacementCost(object):
 
     def make_soft_macros_square(self):
         """
+        [IGNORE] THIS DOES NOT AFFECT DENSITY. SHOULD WE IMPLEMENT THIS AT ALL?
         make soft macros as squares
         """
+        return
         for mod_idx in self.soft_macro_indices:
             mod = self.modules_w_pins[mod_idx]
             mod_area = mod.get_width() * mod.get_height()
@@ -2200,7 +2205,8 @@ class PlacementCost(object):
         pass
 
     def get_source_filename(self):
-        """return netlist path
+        """
+        return netlist path
         """
         return self.netlist_file
 
@@ -2211,20 +2217,18 @@ class PlacementCost(object):
         self.blockages.append([minx, miny, maxx, maxy, blockage_rate])
 
     def get_ref_node_id(self, node_idx=-1):
-        """ref_node_id is used for macro_pins. Refers to the macro it belongs to.
+        """
+        ref_node_id is used for macro_pins. Refers to the macro it belongs to.
         """
         if node_idx != -1:
-            if node_idx in self.soft_macro_pin_indices:
-                pin = self.modules_w_pins[node_idx]
-                return self.mod_name_to_indices[pin.get_macro_name()]
-            elif node_idx in self.hard_macro_pin_indices:
+            if node_idx in self.soft_macro_pin_indices or node_idx in self.hard_macro_pin_indices:
                 pin = self.modules_w_pins[node_idx]
                 return self.mod_name_to_indices[pin.get_macro_name()]
         return -1
 
     def save_placement(self, filename, info=""):
         """
-            When writing out info line-by-line, add a "#" at front
+        When writing out info line-by-line, add a "#" at front
         """
         with open(filename, 'w+') as f:
             for line in info.split('\n'):
@@ -2252,6 +2256,9 @@ class PlacementCost(object):
     def display_canvas( self,
                         annotate=True, 
                         amplify=False):
+        """
+        Non-google function, For quick canvas view
+        """
         #define Matplotlib figure and axis
         fig, ax = plt.subplots(figsize=(8,8), dpi=50)
 
