@@ -25,6 +25,18 @@ python -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane/netli
           --smooth 2
 ```
 
+You may uncomment any available tests and even run your own test dataset. We do not handle all corner cases since during RL placement, they are unlikely to occur. Our aim here is to reproduce Google's code as much as possible and be able to plug into Circuit Training Flow.
+
+## How to run our code in Circuit Training?
+Once you have downloaded Google's Circuit Training code, replace the environment.py with environment_ct.py (**you do need to change the name of the file**). Then, copy `plc_client_os.py` under the same directory (**you should not replace it with `plc_client.py` and should not change the name of the file**).
+
+Since Force Directed Placer for the soft macros is not implemented yet, our code is essentially running Google's `plc_client.py` in parallel with our `plc_client_os.py` but extracting input from our code only except for soft macro positions. The memory usage will double and the runtime tends to be longer. However, with this "more open sourced" version of Circuit Training, we do see comparable training quality as using Google's API.
+
+If you wish to find any discrepancies between these outputs, toggle `DEBUG` to `True` at the beginning of `environment_ct.py`. This will save all discrepancies into the corresponding folders.
+
+## Implementation Details
+For complete information on how the proxy cost is computed in our code, please refer to [Proxy Cost Documentation](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/).  Below is a quick overview of the formulation.
+
 ## HPWL Computation
 Given a net $i$, its wirelength can be computed as the following:
 
@@ -85,11 +97,8 @@ $$
 
 Notice a smoothing range can be set for congestion. This is only applied to congestion due to net routing which by counting adjacent cells and adding the averaged congestion to these adjacent cells. More details are provided in the document above.
 
-## Placement Util
-**Disclaimer: We DO NOT own the content of placement_util_os.py. All rights belong to Google Authors. This is a modified version of placement_util.py and we are including in the repo for the sake of testing. Original Code can be viewed [here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/placement_util.py)**.
-
-## Observation Extractor
-**Disclaimer: We DO NOT own the content of observation_extractor_os.py. All rights belong to Google Authors. This is a modified version of observation_extractor.py and we are including in the repo for the sake of testing. Original Code can be viewed [here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/observation_extractor.py)**.
+## DISCLAIMER
+**We DO NOT own the original content of placement_util_os.py,  observation_extractor_os.py, environment_os.py, environment_ct.py, coordinate_descent_placer.py. All rights belong to Google Authors. These are modified version of the original code and we are including in the repo for the sake of testing. Original Code can be viewed [here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/placement_util.py)**.
 
 
 
