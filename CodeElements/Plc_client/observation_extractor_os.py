@@ -179,7 +179,7 @@ class ObservationExtractor(object):
           sparse_adj_weight.append(weight)
           edge_counts[i] += 1
           edge_counts[j] += 1
-    
+
     features['sparse_adj_i'] = np.asarray(sparse_adj_i).astype(np.int32)
     features['sparse_adj_j'] = np.asarray(sparse_adj_j).astype(np.int32)
     features['sparse_adj_weight'] = np.asarray(sparse_adj_weight).astype(
@@ -203,15 +203,12 @@ class ObservationExtractor(object):
   def _get_clustered_port_locations(
       self, grid_cell_index: int) -> Tuple[float, float]:
     """Returns clustered port locations.
-
     This function returns an approximation location of the ports in a grid
     cell. Depending on the cell location in the canvas, the approximation
     differs.
-
     Args:
       grid_cell_index: The index of the grid cell where the cluster port is
         located.
-
     Returns:
       A tuple of float: Approximate x, y location of the port cluster in the
       grid cell in the same unit as canvas width and height (micron).

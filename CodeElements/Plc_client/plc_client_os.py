@@ -74,15 +74,18 @@ class PlacementCost(object):
         # All modules look-up table
         self.modules = []
         self.modules_w_pins = []
+
         # modules to index look-up table
         self.indices_to_mod_name = {}
         self.mod_name_to_indices = {}
+
         # indices storage
         self.port_indices = []
         self.hard_macro_indices = []
         self.hard_macro_pin_indices = []
         self.soft_macro_indices = []
         self.soft_macro_pin_indices = []
+
         # macro to pins look-up table: [MACRO_NAME] => [PIN_NAME]
         self.hard_macros_to_inpins = {}
         self.soft_macros_to_inpins = {}
@@ -90,7 +93,7 @@ class PlacementCost(object):
         # Placed macro
         self.placed_macro = []
 
-        # unknown
+        # not used
         self.use_incremental_cost = False
         # blockage
         self.blockages = []
@@ -100,11 +103,12 @@ class PlacementCost(object):
         # default canvas width/height based on cell area
         self.width = math.sqrt(self.get_area()/0.6)
         self.height = math.sqrt(self.get_area()/0.6)
+
         # default gridding
         self.grid_col = 10
         self.grid_row = 10
+
         # initialize congestion map
-        # TODO recompute after new gridding
         self.V_routing_cong = [0] * (self.grid_col * self.grid_row)
         self.H_routing_cong = [0] * (self.grid_col * self.grid_row)
         self.V_macro_routing_cong = [0] * (self.grid_col * self.grid_row)
@@ -112,6 +116,7 @@ class PlacementCost(object):
         # initial grid mask, flatten before output
         self.node_mask = np.array([1] * (self.grid_col * self.grid_row))\
             .reshape(self.grid_row, self.grid_col)
+        
         # store module/component count
         self.ports_cnt = len(self.port_indices)
         self.hard_macro_cnt = len(self.hard_macro_indices)
@@ -119,6 +124,7 @@ class PlacementCost(object):
         self.soft_macros_cnt = len(self.soft_macro_indices)
         self.soft_macro_pins_cnt = len(self.soft_macro_pin_indices)
         self.module_cnt = self.hard_macro_cnt + self.soft_macros_cnt + self.ports_cnt
+
         # assert module and pin count are correct
         assert (len(self.modules)) == self.module_cnt
         assert (len(self.modules_w_pins) - \
@@ -136,7 +142,7 @@ class PlacementCost(object):
 
     def __read_protobuf(self):
         """
-        Protobuf Netlist Parser
+        private function: Protobuf Netlist Parser
         """
         with open(self.netlist_file) as fp:
             line = fp.readline()
@@ -159,7 +165,6 @@ class PlacementCost(object):
 
                 # node found
                 if line_item[0] == 'node':
-                    node_cnt += 1
                     node_name = ''
                     input_list = []
 
@@ -169,8 +174,14 @@ class PlacementCost(object):
                     # retrieve node name
                     if line_item[0] == 'name':
                         node_name = line_item[1]
+                        # skip metadata header
+                        if node_name == "__metadata__":
+                            pass
+                        else:
+                            node_cnt += 1
                     else:
                         node_name = 'N/A name'
+                        
 
                     # advance ptr
                     line = fp.readline()
@@ -198,34 +209,54 @@ class PlacementCost(object):
                         line_item = re.findall(r'\w+', line)
                         key = line_item[1]
 
-                        # advance, expect value
-                        line = fp.readline()
-                        line_item = re.findall(r'\w+', line)
+                        if key == "macro_name":
+                             # advance, expect value
+                            line = fp.readline()
+                            line_item = re.findall(r'\w+', line)
 
-                        # advance, expect value item
-                        line = fp.readline()
-                        line_item = re.findall(r'\-*\w+\.*\/{0,1}\w*[\w+\/{0,1}\w*]*', line)
+                            # advance, expect value item
+                            line = fp.readline()
+                            line_item = re.findall(r'\w+[^\:\n\\{\}\s"]*', line)
 
-                        attr_dict[key] = line_item
+                            attr_dict[key] = line_item
 
-                        line = fp.readline()
-                        line = fp.readline()
-                        line = fp.readline()
+                            line = fp.readline()
+                            line = fp.readline()
+                            line = fp.readline()
 
-                        line_item = re.findall(r'\w+', line)
+                            line_item = re.findall(r'\w+', line)
+                        else:
+                            # advance, expect value
+                            line = fp.readline()
+                            line_item = re.findall(r'\w+', line)
 
-                    if attr_dict['type'][1] == 'macro':
+                            # advance, expect value item
+                            line = fp.readline()
+                            line_item = re.findall(r'\-*\w+\.*\/{0,1}\w*[\w+\/{0,1}\w*]*', line)
+
+                            attr_dict[key] = line_item
+
+                            line = fp.readline()
+                            line = fp.readline()
+                            line = fp.readline()
+
+                            line_item = re.findall(r'\w+', line)
+
+                    if node_name == "__metadata__":
+                        # skipping metadata header
+                        logging.info('[INFO NETLIST PARSER] skipping invalid net input')
+                    elif attr_dict['type'][1] == 'macro':
                         # soft macro
                         # check if all required information is obtained
                         try:
                             assert 'x' in attr_dict.keys()
                         except AssertionError:
-                            logging.warning('[NETLIST PARSER ERROR] x is not defined')
+                            logging.warning('[ERROR NETLIST PARSER] x is not defined')
 
                         try:
                             assert 'y' in attr_dict.keys()
                         except AssertionError:
-                            logging.warning('[NETLIST PARSER ERROR] y is not defined')
+                            logging.warning('[ERROR NETLIST PARSER] y is not defined')
 
                         soft_macro = self.SoftMacro(name=node_name, width=attr_dict['width'][1],
                                                     height = attr_dict['height'][1],
@@ -248,15 +279,17 @@ class PlacementCost(object):
                                                            y = attr_dict['y'][1],
                                                            macro_name = attr_dict['macro_name'][1])
 
+                        if 'weight' in attr_dict.keys():
+                            soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
+                        
+                        # if pin has net info
                         if input_list:
+                            # net count should be factored by net weight
                             if 'weight' in attr_dict.keys():
                                 self.net_cnt += 1 * float(attr_dict['weight'][1])
                             else:
                                 self.net_cnt += 1
                             soft_macro_pin.add_sinks(input_list)
-                        
-                        if 'weight' in attr_dict.keys():
-                            soft_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
                         self.modules_w_pins.append(soft_macro_pin)
                         # mapping node_name ==> node idx
@@ -301,10 +334,14 @@ class PlacementCost(object):
                                                         x_offset = attr_dict['x_offset'][1],
                                                         y_offset = attr_dict['y_offset'][1],
                                                         macro_name = attr_dict['macro_name'][1])
+                        
+                        # if net weight is defined, set weight
                         if 'weight' in attr_dict.keys():
                             hard_macro_pin.set_weight(float(attr_dict['weight'][1]))
 
+                        # if pin has net info
                         if input_list:
+                            # net count should be factored by net weight
                             if 'weight' in attr_dict.keys():
                                 self.net_cnt += 1 * float(attr_dict['weight'][1])
                             else:
@@ -334,6 +371,7 @@ class PlacementCost(object):
                                         y = attr_dict['y'][1],
                                         side = attr_dict['side'][1])
 
+                        # if pin has net info
                         if input_list:
                             self.net_cnt += 1
                             port.add_sinks(input_list)
@@ -512,7 +550,7 @@ class PlacementCost(object):
                 traceback.print_tb(tb)
                 tb_info = traceback.extract_tb(tb)
                 _, line, _, text = tb_info[-1]
-                print('[NETLIST/PLC MISMATCH ERROR] at line {} in statement {}'\
+                print('[ERROR NETLIST/PLC MISMATCH] at line {} in statement {}'\
                     .format(line, text))
                 exit(1)
         
@@ -522,7 +560,7 @@ class PlacementCost(object):
                 self.hard_macro_indices +\
                 self.soft_macro_indices) == list(info_dict['node_plc'].keys())
         except AssertionError:
-            print('[PLC INDICES MISMATCH ERROR]', len(sorted(self.port_indices +\
+            print('[ERROR PLC INDICES MISMATCH]', len(sorted(self.port_indices +\
                 self.hard_macro_indices +\
                 self.soft_macro_indices)), len(list(info_dict['node_plc'].keys())))
             exit(1)
@@ -535,7 +573,7 @@ class PlacementCost(object):
                 mod_orient = info_dict['node_plc'][mod_idx][2]
                 mod_ifFixed = int(info_dict['node_plc'][mod_idx][3])
             except Exception as e:
-                print('[PLC PARSER ERROR] %s' % str(e))
+                print('[ERROR PLC PARSER] %s' % str(e))
 
             #TODO ValueError: Error in calling RestorePlacement with ('./Plc_client/test/ariane/initial.plc',): Can't place macro i_ariane/i_frontend/i_icache/sram_block_3__tag_sram/mem/mem_inst_mem_256x45_256x16_0x0 at (341.75, 8.8835). Exceeds the boundaries of the placement area..
 
@@ -573,19 +611,21 @@ class PlacementCost(object):
             macro = self.modules_w_pins[macro_idx]
             macro_name = macro.get_name()
 
+            # Hard macro
             if not self.is_node_soft_macro(macro_idx):
                 if macro_name in self.hard_macros_to_inpins.keys():
                     pin_names = self.hard_macros_to_inpins[macro_name]
                 else:
-                    print("[ERROR UPDATE CONNECTION] MACRO not found")
-                    exit(1)
-            # use is_node_soft_macro()
+                    print("[ERROR UPDATE CONNECTION] MACRO pins not found")
+                    continue
+
+            # Soft macro
             elif self.is_node_soft_macro(macro_idx):
                 if macro_name in self.soft_macros_to_inpins.keys():
                     pin_names = self.soft_macros_to_inpins[macro_name]
                 else:
-                    print("[ERROR UPDATE CONNECTION] MACRO not found")
-                    exit(1)
+                    print("[ERROR UPDATE CONNECTION] macro pins not found")
+                    continue
 
             for pin_name in pin_names:
                 pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
@@ -640,8 +680,10 @@ class PlacementCost(object):
 
     def __get_pin_position(self, pin_idx):
         """
+        private function for getting pin location
             * PORT = its own position
-            * MACRO PIN = ref position + offset position87654321
+            * HARD MACRO PIN = ref position + offset position
+            * SOFT MACRO PIN = ref position
         """
         try:
             assert (self.modules_w_pins[pin_idx].get_type() == 'MACRO_PIN' or\
@@ -650,19 +692,21 @@ class PlacementCost(object):
             print("[ERROR PIN POSITION] Not a MACRO PIN")
             exit(1)
 
+        # Retrieve node that this pin instantiated on
         ref_node_idx = self.get_ref_node_id(pin_idx)
 
         if ref_node_idx == -1:
             if self.modules_w_pins[pin_idx].get_type() == 'PORT':
                 return self.modules_w_pins[pin_idx].get_pos()
             else:
-                # cannot be 'MACRO'
+                print("[ERROR PIN POSITION] Parent Node Not Found.")
                 exit(1)
 
-        # print("ref_node_idx", ref_node_idx)
+        # Parent node
         ref_node = self.modules_w_pins[ref_node_idx]
         ref_node_x, ref_node_y = ref_node.get_pos()
 
+        # Retrieve current pin node position
         pin_node = self.modules_w_pins[pin_idx]
         pin_node_x_offset, pin_node_y_offset = pin_node.get_offset()
 
@@ -685,18 +729,26 @@ class PlacementCost(object):
             # NOTE: connection only defined on PORT, soft/hard macro pins
             if curr_type == "PORT" and mod.get_sink():
                 # add source position
-                x_coord.append(self.__get_pin_position(mod_idx)[0])
-                y_coord.append(self.__get_pin_position(mod_idx)[1])
+                x_coord.append(mod.get_pos()[0])
+                y_coord.append(mod.get_pos()[1])
+                # get sink 
                 for sink_name in mod.get_sink():
                     for sink_pin in mod.get_sink()[sink_name]:
                         # retrieve indx in modules_w_pins
                         sink_idx = self.mod_name_to_indices[sink_pin]
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
+                        # only consider placed sink
+                        ref_sink = self.modules_w_pins[self.get_ref_node_id(sink_idx)]
+                        if not ref_sink.get_placed_flag():
+                            continue
                         # retrieve location
                         x_coord.append(self.__get_pin_position(sink_idx)[0])
                         y_coord.append(self.__get_pin_position(sink_idx)[1])
             elif curr_type == "MACRO_PIN":
+                ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
+                if not ref_mod.get_placed_flag():
+                    continue
                 # add source position
                 x_coord.append(self.__get_pin_position(mod_idx)[0])
                 y_coord.append(self.__get_pin_position(mod_idx)[1])
@@ -709,7 +761,6 @@ class PlacementCost(object):
                             # retrieve indx in modules_w_pins
                             input_idx = self.mod_name_to_indices[sink_name]
                             # retrieve location
-                            # print(self.__get_pin_position(input_idx))
                             x_coord.append(self.__get_pin_position(input_idx)[0])
                             y_coord.append(self.__get_pin_position(input_idx)[1])
 
@@ -779,8 +830,9 @@ class PlacementCost(object):
         return float(sum_cong / cong_cnt)
     
     def get_congestion_cost(self):
-        #return max(self.get_H_congestion_cost(), self.get_V_congestion_cost())
-        # TODO need to test if cong is smaller than 5
+        """
+        Return congestion cost based on routing and macro placement
+        """
         if self.FLAG_UPDATE_CONGESTION:
             self.get_routing()
 
@@ -788,7 +840,7 @@ class PlacementCost(object):
 
     def __get_grid_cell_location(self, x_pos, y_pos):
         """
-        private function for getting grid cell row/col ranging from 0...N
+        private function: for getting grid cell row/col ranging from 0...N
         """
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
@@ -798,7 +850,7 @@ class PlacementCost(object):
 
     def __get_grid_location_position(self, col:int, row:int):
         """
-        private function for getting x y coord from grid cell row/col
+        private function: for getting x y coord from grid cell row/col
         """
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
@@ -809,7 +861,7 @@ class PlacementCost(object):
     
     def __get_grid_cell_position(self, grid_cell_idx:int):
         """
-        private function for getting x y coord from grid cell row/col
+        private function: for getting x y coord from grid cell row/col
         """
         row = grid_cell_idx // self.grid_col
         col = grid_cell_idx % self.grid_col
@@ -823,7 +875,7 @@ class PlacementCost(object):
                             mod_height:float
                         ):
         """
-        private function for updating node mask after a placement
+        private function: for updating node mask after a placement
         """
         row = grid_cell_idx // self.grid_col
         col = grid_cell_idx % self.grid_col
@@ -835,19 +887,9 @@ class PlacementCost(object):
         self.node_mask[ row - ver_pad:row + ver_pad + 1, 
                         col - hor_pad:col + hor_pad + 1] = 0
 
-    def __unplace_node_mask(self, grid_cell_idx:int):
-        """
-        private function for updating node mask after unplacing a node
-        """
-        row = grid_cell_idx // self.grid_col
-        col = grid_cell_idx % self.grid_col
-        assert row * self.grid_col + col == grid_cell_idx
-
-        pass
-
     def __overlap_area(self, block_i, block_j, return_pos=False):
         """
-        private function for computing block overlapping
+        private function: for computing block overlapping
         """
         x_min_max = min(block_i.x_max, block_j.x_max)
         x_max_min = max(block_i.x_min, block_j.x_min)
@@ -865,7 +907,7 @@ class PlacementCost(object):
     
     def __overlap_dist(self, block_i, block_j):
         """
-        private function for computing block overlapping
+        private function: for computing block overlapping
         """
         x_diff = min(block_i.x_max, block_j.x_max) - max(block_i.x_min, block_j.x_min)
         y_diff = min(block_i.y_max, block_j.y_max) - max(block_i.y_min, block_j.y_min)
@@ -875,7 +917,7 @@ class PlacementCost(object):
 
     def __add_module_to_grid_cells(self, mod_x, mod_y, mod_w, mod_h):
         """
-        private function for add module to grid cells
+        private function: for add module to grid cells
         """
         # Two corners
         ur = (mod_x + (mod_w/2), mod_y + (mod_h/2))
@@ -926,6 +968,8 @@ class PlacementCost(object):
 
                 self.grid_occupied[self.grid_col * r_i + c_i] += \
                     self.__overlap_area(grid_cell_block, module_block)
+                
+                
 
     def get_grid_cells_density(self):
         """
@@ -942,6 +986,11 @@ class PlacementCost(object):
         for module_idx in (self.soft_macro_indices + self.hard_macro_indices):
             # extract module information
             module = self.modules_w_pins[module_idx]
+
+            # skipping unplaced module
+            if not module.get_placed_flag():
+                continue
+
             module_h = module.get_height()
             module_w = module.get_width()
             module_x, module_y = module.get_pos()
@@ -1145,6 +1194,9 @@ class PlacementCost(object):
         return self.hrouting_alloc, self.vrouting_alloc
 
     def __two_pin_net_routing(self, source_gcell, node_gcells, weight):
+        """
+        private function: Routing between 2-pin nets
+        """
         temp_gcell = list(node_gcells)
         if temp_gcell[0] == source_gcell:
             sink_gcell = temp_gcell[1]
@@ -1171,7 +1223,10 @@ class PlacementCost(object):
             col = sink_gcell[1]
             self.V_routing_cong[row * self.grid_col + col] += weight
 
-    def l_routing(self, node_gcells, weight):
+    def __l_routing(self, node_gcells, weight):
+        """
+        private function: L_shape routing in 3-pin nets
+        """
         node_gcells.sort(key = lambda x: (x[1], x[0]))
         y1, x1 = node_gcells[0]
         y2, x2 = node_gcells[1]
@@ -1195,11 +1250,13 @@ class PlacementCost(object):
         for row in range(min(y2, y3), max(y2, y3)):
             col = x3
             self.V_routing_cong[row * self.grid_col + col] += weight
-        return
 
-    def t_routing(self, node_gcells, weight):
+
+    def __t_routing(self, node_gcells, weight):
+        """
+        private function: T_shape routing in 3-pin nets
+        """
         node_gcells.sort()
-        #print(node_gcells)
         y1, x1 = node_gcells[0]
         y2, x2 = node_gcells[1]
         y3, x3 = node_gcells[2]
@@ -1220,9 +1277,11 @@ class PlacementCost(object):
         for row in range(min(y2, y3), max(y2, y3)):
             col = x3
             self.V_routing_cong[row * self.grid_col + col] += weight
-        pass
 
     def __three_pin_net_routing(self, node_gcells, weight):
+        """
+        private_function: Routing Scheme for 3-pin nets
+        """
         temp_gcell = list(node_gcells)
         ## Sorted based on X
         temp_gcell.sort(key = lambda x: (x[1], x[0]))
@@ -1231,12 +1290,8 @@ class PlacementCost(object):
         y3, x3 = temp_gcell[2]
 
         if x1 < x2 and x2 < x3 and min(y1, y3) < y2 and max(y1, y3) > y2:
-            # print('sk1')
-            self.l_routing(temp_gcell, weight)
-            return
-        
-        if x2 == x3 and x1 < x2 and y1 < min(y2, y3):
-            # print('sk2')
+            self.__l_routing(temp_gcell, weight)
+        elif x2 == x3 and x1 < x2 and y1 < min(y2, y3):
             for col_idx in range(x1,x2,1):
                 row = y1
                 col = col_idx
@@ -1246,10 +1301,7 @@ class PlacementCost(object):
                 col = x2
                 row = row_idx
                 self.V_routing_cong[row * self.grid_col + col] += weight
-            return
-
-        if y2 == y3:
-            # print('sk3')
+        elif y2 == y3:
             for col in range(x1, x2):
                 row = y1
                 self.H_routing_cong[row * self.grid_col + col] += weight
@@ -1261,12 +1313,8 @@ class PlacementCost(object):
             for row in range(min(y2, y1), max(y2, y1)):
                 col = x2
                 self.V_routing_cong[row * self.grid_col + col] += weight
-            return
-        
-        
-        # print('sk4')
-        self.t_routing(temp_gcell, weight)
-        return
+        else: 
+            self.__t_routing(temp_gcell, weight)
 
     def __macro_route_over_grid_cell(self, mod_x, mod_y, mod_w, mod_h):
         """
@@ -1363,6 +1411,9 @@ class PlacementCost(object):
                     self.H_macro_routing_cong[r_i * self.grid_col + c_i] -= y_dist * self.hrouting_alloc
 
     def __split_net(self, source_gcell, node_gcells):
+        """
+        private function: Split >3 pin net into multiple two-pin nets
+        """
         splitted_netlist = []
         for node_gcell in node_gcells:
             if node_gcell != source_gcell:
@@ -1370,14 +1421,18 @@ class PlacementCost(object):
         return splitted_netlist
 
     def get_vertical_routing_congestion(self):
-        # TODO: detect if we need to run
+        """
+        Return Vertical Routing Congestion
+        """
         if self.FLAG_UPDATE_CONGESTION:
             self.get_routing()
         
         return self.V_routing_cong
 
     def get_horizontal_routing_congestion(self):
-        # TODO: detect if we need to run
+        """
+        Return Horizontal Routing Congestion
+        """
         if self.FLAG_UPDATE_CONGESTION:
             self.get_routing()
         
@@ -1385,7 +1440,7 @@ class PlacementCost(object):
 
     def get_routing(self):
         """
-            Route between modules
+        H/V Routing Before Computing Routing Congestions
         """
         if self.FLAG_UPDATE_CONGESTION:
             self.grid_width = float(self.width/self.grid_col)
@@ -1458,8 +1513,6 @@ class PlacementCost(object):
                 for curr_net in self.__split_net(source_gcell=source_gcell, node_gcells=node_gcells):
                     self.__two_pin_net_routing(source_gcell=source_gcell, node_gcells=curr_net, weight=weight)
 
-        # print("V_routing_cong", self.V_routing_cong)
-        # print("H_routing_cong", self.H_routing_cong)
         # normalize routing congestion
         for idx, v_gcell in enumerate(self.V_routing_cong):
             self.V_routing_cong[idx] = float(v_gcell / self.grid_v_routes)
@@ -1480,6 +1533,9 @@ class PlacementCost(object):
         self.H_routing_cong = [sum(x) for x in zip(self.H_routing_cong, self.H_macro_routing_cong)]
  
     def __smooth_routing_cong(self):
+        """
+        Smoothing V/H Routing congestion
+        """
         temp_V_routing_cong = [0] * self.grid_col * self.grid_row
         temp_H_routing_cong = [0] * self.grid_col * self.grid_row
 
@@ -1525,74 +1581,63 @@ class PlacementCost(object):
 
     def is_node_soft_macro(self, node_idx) -> bool:
         """
-        Return None or return ref_id
+        Return if node is a soft macro
         """
         try:
             return node_idx in self.soft_macro_indices
         except IndexError:
             print("[ERROR INDEX OUT OF RANGE] Can not process index at {}".format(node_idx))
-            exit(0)
+            exit(1)
 
     def is_node_hard_macro(self, node_idx) -> bool:
         """
-        Return None or return ref_id
+        Return if node is a hard macro
         """
         try:
             return node_idx in self.hard_macro_indices
         except IndexError:
             print("[ERROR INDEX OUT OF RANGE] Can not process index at {}".format(node_idx))
-            exit(0)
+            exit(1)
 
     def get_node_name(self, node_idx: int) -> str:
-        return self.indices_to_mod_name[node_idx]
-
-    def _get_node_mask(self, node_idx: int, node_name: str=None) -> list:
         """
-            Return Grid_col x Grid_row:
-                1 == placable
-                0 == unplacable
-
-            Placement Constraint:
-            -   center @ grid cell
-            -   no overlapping other macro
-            -   no OOB
+        Return node name based on given node index
         """
-        if self.FLAG_UPDATE_NODE_MASK:
-            self.__update_node_mask()
-
-        module = self.modules_w_pins[node_idx]
-
-        temp_node_mask = np.array([0] * (self.grid_col * self.grid_row))\
-            .reshape(self.grid_row, self.grid_col)
-
-        if module.get_placed_flag():
-            pass
-        else:
-            hor_pad, ver_pad = self.__node_pad_cell(mod_width=module.get_width(),
-                                                    mod_height=module.get_height())
-
-            # row, along y-axis, height
-            for i in range(ver_pad, self.grid_row - ver_pad):
-                for j in range(hor_pad, self.grid_col - hor_pad):
-                    cell_region = self.node_mask[i - ver_pad : i + ver_pad + 1, 
-                                                 j - hor_pad : j + hor_pad + 1]
-                    if (cell_region == 1).all():
-                        temp_node_mask[i][j] = 1
-        
-        return temp_node_mask.flatten()
+        try:
+            return self.indices_to_mod_name[node_idx]
+        except Exception:
+            print("[ERROR NODE INDEX] Node not found!")
+            exit(1)
+    
+    def get_node_index(self, node_name: str) -> int:
+        """
+        Return node index based on given node name
+        """
+        try:
+            return self.mod_name_to_indices[node_name]
+        except Exception:
+            print("[ERROR NODE NAME] Node not found!")
+            exit(1)
     
     def get_node_mask(self, node_idx: int, node_name: str=None) -> list:
         """
-
+        Return node mask based on given node
+        All legal positions must satisfy:
+            - No Out-of-Bound
+            - No Overlapping with previously placed MACROs
         """
         mod = self.modules_w_pins[node_idx]
+
         canvas_block = Block(x_max=self.width,
                             y_max=self.height,
                             x_min=0,
                             y_min=0)
-
-        mod_w = mod.get_width()
-        mod_h = mod.get_height()
+        if mod.get_type() == "PORT" or mod.get_type() == "MACRO_PIN":
+            mod_w = 1e-3
+            mod_h = 1e-3
+        else:
+            mod_w = mod.get_width()
+            mod_h = mod.get_height()
 
         temp_node_mask = np.array([1] * (self.grid_col * self.grid_row))\
             .reshape(self.grid_row, self.grid_col)
@@ -1600,15 +1645,10 @@ class PlacementCost(object):
         self.grid_width = float(self.width/self.grid_col)
         self.grid_height = float(self.height/self.grid_row)
 
-        # print(self.grid_col, self.grid_row)
-
-        # print(mod_w*mod_h)
-
         for i in range(self.grid_row):
             for j in range(self.grid_col):
                 # try every location
-                # construct block based on current module
-                
+                # construct block based on current module dimenstion
                 temp_x = j * self.grid_width + (self.grid_width/2)
                 temp_y = i * self.grid_height + (self.grid_height/2)
 
@@ -1621,10 +1661,9 @@ class PlacementCost(object):
                 # check OOB
                 if abs(self.__overlap_area(
                     block_i=canvas_block, block_j=mod_block) - (mod_w*mod_h)) > 1e-8:
-                    # print(i, j, self.__overlap_area(
-                    # block_i=canvas_block, block_j=mod_block))
                     temp_node_mask[i][j] = 0
                 else:
+                    # check overlapping
                     for pmod_idx in self.placed_macro:
                         pmod = self.modules_w_pins[pmod_idx]
                         if not pmod.get_placed_flag():
@@ -1634,12 +1673,12 @@ class PlacementCost(object):
                         p_w = pmod.get_width()
                         p_h = pmod.get_height()
                         pmod_block = Block(
-                                            x_max=p_x + (p_w/2) + 1,
-                                            y_max=p_y + (p_h/2) + 1,
-                                            x_min=p_x - (p_w/2) - 1,
-                                            y_min=p_y - (p_h/2) - 1
+                                            x_max=p_x + (p_w/2),
+                                            y_max=p_y + (p_h/2),
+                                            x_min=p_x - (p_w/2),
+                                            y_min=p_y - (p_h/2)
                                             )
-                        # overlap with placed module
+                        # if overlap with placed module
                         if self.__overlap_area(block_i=pmod_block, block_j=mod_block) > 0:
                              temp_node_mask[i][j] = 0
             
@@ -1654,7 +1693,7 @@ class PlacementCost(object):
             return self.modules_w_pins[node_idx].get_type()
         except IndexError:
             # NOTE: Google's API return NONE if out of range
-            print("[INDEX OUT OF RANGE WARNING] Can not process index at {}".format(node_idx))
+            print("[WARNING INDEX OUT OF RANGE] Can not process index at {}".format(node_idx))
             return None
 
     
@@ -1665,7 +1704,7 @@ class PlacementCost(object):
         mod = None
         try:
             mod = self.modules_w_pins[node_idx]
-            assert mod.get_type() in ['MACRO', 'macro', 'STDCELL', 'PORT']
+            assert mod.get_type() in ['MACRO', 'STDCELL', 'PORT']
         except AssertionError:
             print("[ERROR NODE FIXED] Found {}. Only 'MACRO', 'macro', 'STDCELL'".format(mod.get_type())
                     +"'PORT' are considered to be fixable nodes")
@@ -1677,12 +1716,40 @@ class PlacementCost(object):
         return mod.get_width(), mod.get_height()
 
     def make_soft_macros_square(self):
-        pass
+        """
+        [IGNORE] THIS DOES NOT AFFECT DENSITY. SHOULD WE IMPLEMENT THIS AT ALL?
+        make soft macros as squares
+        """
+        return
+        for mod_idx in self.soft_macro_indices:
+            mod = self.modules_w_pins[mod_idx]
+            mod_area = mod.get_width() * mod.get_height()
+            mod.set_width(math.sqrt(mod_area))
+            mod.set_height(math.sqrt(mod_area))
+
+    def update_soft_macros_position(self, coord_dict):
+        """
+        For sync-up with Google's plc_client after FD placer
+        """
+        for mod_idx in coord_dict.keys():
+            self.modules_w_pins[mod_idx].set_pos(coord_dict[mod_idx])
+
+    def set_soft_macro_position(self, node_idx, x_pos, y_pos):
+        """
+        used for updating soft macro position
+        """
+        self.modules_w_pins[node_idx].set_pos(x_pos, y_pos)
 
     def set_use_incremental_cost(self, use_incremental_cost):
+        """
+        NOT IMPLEMENTED
+        """
         self.use_incremental_cost = use_incremental_cost
 
     def get_use_incremental_cost(self):
+        """
+        NOT IMPLEMENTED
+        """
         return self.use_incremental_cost
 
     def get_macro_adjacency(self) -> list:
@@ -1791,8 +1858,6 @@ class PlacementCost(object):
         
         # instantiate clustered ports
         for row_idx, cluster_cell in enumerate(sorted(clustered_ports, key=lambda tup: tup[1])):
-            # print("cluster_cell", cluster_cell)
-            # print("port cnt", len(clustered_ports[cluster_cell]))
             # add cell location
             cell_location[row_idx] = cluster_cell[0] * self.grid_col + cluster_cell[1]
 
@@ -1803,7 +1868,6 @@ class PlacementCost(object):
             for curr_port in clustered_ports[cluster_cell]:
                 # get module name
                 curr_port_name = curr_port.get_name()
-                # print("curr_port_name", curr_port_name, curr_port.get_pos())
                 # assuming ports only connects to macros
                 for col_idx, h_module_idx in enumerate(module_indices):
                     # col index
@@ -1812,8 +1876,6 @@ class PlacementCost(object):
                     h_module = self.modules_w_pins[h_module_idx]
                     # get connected module name
                     h_module_name = h_module.get_name()
-
-                    # print("other connections", h_module.get_connection(), curr_port_name)
                 
                     if curr_port_name in h_module.get_connection():
                         entry += h_module.get_connection()[curr_port_name]
@@ -2084,13 +2146,21 @@ class PlacementCost(object):
             exit(1)
 
         if not mod.get_fix_flag():
-            mod.set_placed_flag(True)
-            self.placed_macro.remove(node_idx)
-            # update flag
-            self.FLAG_UPDATE_CONGESTION = True
-            self.FLAG_UPDATE_DENSITY = True
-            # self.FLAG_UPDATE_NODE_MASK = True # placeholder
-            self.FLAG_UPDATE_WIRELENGTH = True
+            if node_idx in self.hard_macro_indices:
+                mod.set_placed_flag(False)
+                self.placed_macro.remove(node_idx)
+                # update flag
+                self.FLAG_UPDATE_CONGESTION = True
+                self.FLAG_UPDATE_DENSITY = True
+                # self.FLAG_UPDATE_NODE_MASK = True # placeholder
+                self.FLAG_UPDATE_WIRELENGTH = True
+            elif node_idx in self.soft_macro_indices:
+                mod.set_placed_flag(False)
+                # update flag
+                self.FLAG_UPDATE_CONGESTION = True
+                self.FLAG_UPDATE_DENSITY = True
+                # self.FLAG_UPDATE_NODE_MASK = True # placeholder
+                self.FLAG_UPDATE_WIRELENGTH = True
         else:
             print("[WARNING UNPLACE NODE] Trying to unplace a fixed node")
 
@@ -2135,7 +2205,8 @@ class PlacementCost(object):
         pass
 
     def get_source_filename(self):
-        """return netlist path
+        """
+        return netlist path
         """
         return self.netlist_file
 
@@ -2146,20 +2217,18 @@ class PlacementCost(object):
         self.blockages.append([minx, miny, maxx, maxy, blockage_rate])
 
     def get_ref_node_id(self, node_idx=-1):
-        """ref_node_id is used for macro_pins. Refers to the macro it belongs to.
+        """
+        ref_node_id is used for macro_pins. Refers to the macro it belongs to.
         """
         if node_idx != -1:
-            if node_idx in self.soft_macro_pin_indices:
-                pin = self.modules_w_pins[node_idx]
-                return self.mod_name_to_indices[pin.get_macro_name()]
-            elif node_idx in self.hard_macro_pin_indices:
+            if node_idx in self.soft_macro_pin_indices or node_idx in self.hard_macro_pin_indices:
                 pin = self.modules_w_pins[node_idx]
                 return self.mod_name_to_indices[pin.get_macro_name()]
         return -1
 
-    def save_placement(self, filename, info):
+    def save_placement(self, filename, info=""):
         """
-            When writing out info line-by-line, add a "#" at front
+        When writing out info line-by-line, add a "#" at front
         """
         with open(filename, 'w+') as f:
             for line in info.split('\n'):
@@ -2187,6 +2256,9 @@ class PlacementCost(object):
     def display_canvas( self,
                         annotate=True, 
                         amplify=False):
+        """
+        Non-google function, For quick canvas view
+        """
         #define Matplotlib figure and axis
         fig, ax = plt.subplots(figsize=(8,8), dpi=50)
 
@@ -2406,6 +2478,12 @@ class PlacementCost(object):
 
         def get_width(self):
             return self.width
+        
+        def set_height(self, height):
+            self.height = height
+
+        def set_width(self, width):
+            self.width = width
         
         def set_location(self, grid_cell_idx):
             self.location = grid_cell_idx
@@ -2671,7 +2749,7 @@ class PlacementCost(object):
 
 def main():
     test_netlist_dir = './Plc_client/test/'+\
-        'ariane133'
+        'ariane_68_1.3'
     netlist_file = os.path.join(test_netlist_dir,
                                 'netlist.pb.txt')
     plc = PlacementCost(netlist_file)

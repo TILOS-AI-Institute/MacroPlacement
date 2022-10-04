@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """A collection of non-prod utility functions for placement.
-
 All the dependencies in this files should be non-prod.
 """
 
@@ -80,11 +79,9 @@ def restore_macro_orientations(plc: plc_client.PlacementCost,
 def extract_attribute_from_comments(attribute: str,
                                     filenames: List[str]) -> Optional[str]:
   """Parses the files' comments section, tries to extract the attribute.
-
   Args:
     attribute: attribute to look for (case sensetive).
     filenames: List of protobuf file or a plc file.
-
   Returns:
     Attribute name string, or None if not found.
   """
@@ -134,10 +131,8 @@ def get_blockages_from_comments(
 def extract_sizes_from_comments(
     filenames: List[str]) -> Optional[Tuple[float, float, int, int]]:
   """Parses the file's comments section, tries to extract canvas/grid sizes.
-
   Args:
     filenames: A list of netlist (.pb.txt) or placement (.plc) files.
-
   Returns:
     Tuple of canvas_width, canvas_height, grid_cols, grid_rows
   """
@@ -174,7 +169,6 @@ def extract_sizes_from_comments(
 # done
 def fix_port_coordinates(plc: plc_client.PlacementCost) -> None:
   """Find all ports and fix their coordinates.
-
   Args:
     plc: the placement cost object.
   """
@@ -204,7 +198,6 @@ def create_placement_cost(
     macro_vertical_routing_allocation: float = 51.79,
 ) -> plc_client.PlacementCost:
     """Creates a placement_cost object.
-
     Args:
         netlist_file: Path to the netlist proto text file.
         init_placement: Path to the inital placement .plc file.
@@ -218,7 +211,6 @@ def create_placement_cost(
         vertical_routes_per_micron: Vertical route capacity per micros.
         macro_horizontal_routing_allocation: Macro horizontal routing allocation.
         macro_vertical_routing_allocation: Macro vertical routing allocation.
-
     Returns:
         A PlacementCost object.
     """
@@ -272,10 +264,8 @@ def create_placement_cost(
 
 def get_node_type_counts(plc: plc_client.PlacementCost) -> Dict[str, int]:
   """Returns number of each type of nodes in the netlist.
-
   Args:
     plc: the placement cost object.
-
   Returns:
     Number of each type of node in a dict.
   """
@@ -391,7 +381,6 @@ def fd_placement_schedule(plc: plc_client.PlacementCost,
                           use_current_loc: bool = False,
                           move_macros: bool = False) -> None:
   """A placement schedule that uses force directed method.
-
   Args:
     plc: The plc object.
     num_steps: Number of steps of the force-directed algorithm during each call.
@@ -425,12 +414,10 @@ def get_ordered_node_indices(mode: str,
                              plc: plc_client.PlacementCost,
                              exclude_fixed_nodes: bool = True) -> List[int]:
   """Returns an ordering of node indices according to the specified mode.
-
   Args:
     mode: node ordering mode
     plc: placement cost object
     exclude_fixed_nodes: Whether fixed nodes should be excluded.
-
   Returns:
     Node indices sorted according to the mode.
   """
@@ -465,10 +452,8 @@ def get_ordered_node_indices(mode: str,
 def extract_parameters_from_comments(
     filename: str) -> Tuple[float, float, int, int]:
   """Parses the file's comments section, tries to extract canvas/grid sizes.
-
   Args:
     filename: protobuf file or a plc file.
-
   Returns:
     Tuple of canvas_width, canvas_height, grid_cols, grid_rows
   """
@@ -503,9 +488,7 @@ def extract_parameters_from_comments(
 # done
 def get_routing_resources() -> Dict[str, float]:
   """Currently we only use default parameter settings.
-
   In the future, for specific project, the resources may need to be tuned.
-
   Returns:
     Routing resources.
   """
@@ -703,7 +686,6 @@ def save_placement_with_info(plc: plc_client.PlacementCost,
     Routes used by macros, hor : {hor_macro_alloc:.3f}  ver : {ver_macro_alloc:.3f}
     Smoothing factor : {smooth}
     Use incremental cost : {incr_cost}
-
     To view this file (most options are default):
     viewer_binary\
     --netlist_file {src_filename}\
@@ -907,12 +889,10 @@ def grid_locations_near(plc: plc_client.PlacementCost,
 def place_near(plc: plc_client.PlacementCost, node_index: int,
                location: int) -> bool:
   """Places a node (legally) closest to the given location.
-
   Args:
     plc: placement_cost object.
     node_index: index of a node.
     location: target grid cell location. (row * num_cols + num_cols)
-
   Returns:
     True on success, False if this node was not placed on any grid legally.
   """
@@ -983,7 +963,7 @@ def main():
     NODE_XY_DICT = {}
     for i in nodes_of_types(plc, ['MACRO', 'macro', 'STDCELL', 'PORT']):
       NODE_XY_DICT[i] = (100, 100)
-    
+
     restore_node_xy_coordinates(plc, NODE_XY_DICT)
     # print(get_node_xy_coordinates(plc))
 
@@ -991,7 +971,7 @@ def main():
     MACRO_ORIENTATION = {}
     for i in nodes_of_types(plc, ['MACRO', 'macro']):
       MACRO_ORIENTATION[i] = "S"
-    
+
     restore_macro_orientations(plc, MACRO_ORIENTATION)
     # print(get_macro_orientations(plc))
 
