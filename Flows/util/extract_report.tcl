@@ -43,8 +43,8 @@ proc extract_from_power_rpt {power_rpt} {
 }
 
 proc extract_cell_area {} {
-    set macro_area [expr  [join [dbget [dbget top.insts.cell.name *ram* -p2 ].area ] +]]
-    set std_cell_area [expr  [join [dbget [dbget top.insts.cell.name *ram* -v -p2 ].area ] +]]
+    set macro_area [expr  [join [dbget [dbget top.insts.cell.subClass block -p2 ].area ] +]]
+    set std_cell_area [expr  [join [dbget [dbget top.insts.cell.subClass block -v -p2 ].area ] +]]
     return [list $macro_area $std_cell_area]
 }
 
