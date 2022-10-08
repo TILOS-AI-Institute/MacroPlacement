@@ -214,7 +214,7 @@ class PlacementCostTest():
         print("                  +++ TEST METADATA: PASS +++")
         print("                  +++++++++++++++++++++++++++")
 
-    def view_canvas(self, ifInital, ifReadComment):
+    def view_canvas(self, ifInital=False, ifReadComment=False):
         print("############################ VIEW CANVAS ############################")
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                   macro_macro_x_spacing=50,
@@ -229,8 +229,15 @@ class PlacementCostTest():
                                           ifInital=ifInital,
                                           ifValidate=False,
                                           ifReadComment=ifReadComment)
+        
+        self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_os.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         # show canvas
         self.plc_os.display_canvas(annotate=False, amplify=False)
+        
 
     def test_proxy_cost(self):
         print("############################ TEST PROXY COST ############################")
@@ -297,7 +304,7 @@ class PlacementCostTest():
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
             print("GL WIRELENGTH: ", self.plc.get_wirelength())
             print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
-            exit(1)
+            # exit(1)
 
         # Density
         try:
@@ -970,14 +977,15 @@ def main(args):
     Uncomment any available tests
     """
     # PCT.test_metadata()
-    PCT.test_proxy_cost()
+    # PCT.test_proxy_cost()
+    PCT.test_proxy_hpwl()
     # PCT.test_proxy_density()
     # PCT.test_proxy_congestion()
     # PCT.test_placement_util(keep_save_file=False)
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
-    # PCT.view_canvas()
+    PCT.view_canvas()
     # PCT.test_environment()
 
 

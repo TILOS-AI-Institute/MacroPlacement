@@ -245,6 +245,7 @@ class PlacementCost(object):
                     if node_name == "__metadata__":
                         # skipping metadata header
                         logging.info('[INFO NETLIST PARSER] skipping invalid net input')
+                        
                     elif attr_dict['type'][1] == 'macro':
                         # soft macro
                         # check if all required information is obtained
