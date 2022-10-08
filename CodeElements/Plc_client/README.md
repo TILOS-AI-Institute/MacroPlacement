@@ -32,7 +32,7 @@ Once you have downloaded Google's Circuit Training code, replace the environment
 
 Since Force Directed Placer for the soft macros is not implemented yet, our code is essentially running Google's `plc_client.py` in parallel with our `plc_client_os.py` but extracting input from our code only except for soft macro positions. The memory usage will double and the runtime tends to be longer. However, with this "more open sourced" version of Circuit Training, we do see comparable training quality as using Google's API.
 
-If you wish to find any discrepancies between these outputs, toggle `DEBUG` to `True` at the beginning of `environment_ct.py`. This will save all discrepancies into the corresponding folders.
+If you wish to find any discrepancies between these outputs, toggle `DEBUG` to `True` [here](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/e634766f6aa53510c3fe8062896a6020f7ff18d1/CodeElements/Plc_client/environment_ct.py#L42) at the beginning of `environment_ct.py`. This will save all discrepancies into the corresponding folders.
 
 ## Implementation Details
 For complete information on how the proxy cost is computed in our code, please refer to [Proxy Cost Documentation](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/).  Below is a quick overview of the formulation.
