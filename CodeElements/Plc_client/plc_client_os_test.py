@@ -430,12 +430,15 @@ class PlacementCostTest():
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
             
             # if remove all soft macros
-            # soft_macro_indices = [
-            #     m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
-            # ]
-            # for mod_idx in soft_macro_indices:
-            #     self.plc_os.unplace_node(mod_idx)
-            #     self.plc.unplace_node(mod_idx)
+            soft_macro_indices = [
+                m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
+            ]
+            for mod_idx in soft_macro_indices:
+                self.plc_os.unplace_node(mod_idx)
+                self.plc.unplace_node(mod_idx)
+
+            print("GL WIRELENGTH: ", self.plc.get_wirelength())
+            print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
 
             print("GL WIRELENGTH: ", self.plc.get_wirelength())
             print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
@@ -985,7 +988,7 @@ def main(args):
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
-    PCT.view_canvas()
+    # PCT.view_canvas()
     # PCT.test_environment()
 
 

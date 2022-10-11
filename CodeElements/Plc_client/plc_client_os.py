@@ -573,6 +573,7 @@ class PlacementCost(object):
                 mod_y = float(info_dict['node_plc'][mod_idx][1])
                 mod_orient = info_dict['node_plc'][mod_idx][2]
                 mod_ifFixed = int(info_dict['node_plc'][mod_idx][3])
+                
             except Exception as e:
                 print('[ERROR PLC PARSER] %s' % str(e))
 
@@ -710,7 +711,7 @@ class PlacementCost(object):
         # Retrieve current pin node position
         pin_node = self.modules_w_pins[pin_idx]
         pin_node_x_offset, pin_node_y_offset = pin_node.get_offset()
-
+        # Google's Plc client DOES NOT compute (node_position + pin_offset) when reading input
         return (ref_node_x + pin_node_x_offset, ref_node_y + pin_node_y_offset)
 
     def get_wirelength(self) -> float:
@@ -727,6 +728,9 @@ class PlacementCost(object):
             x_coord = []
             y_coord = []
 
+            # default value of weight
+            weight_fact = 1.0
+
             # NOTE: connection only defined on PORT, soft/hard macro pins
             if curr_type == "PORT" and mod.get_sink():
                 # add source position
@@ -741,38 +745,46 @@ class PlacementCost(object):
                         sink = self.modules_w_pins[sink_idx]
                         # only consider placed sink
                         ref_sink = self.modules_w_pins[self.get_ref_node_id(sink_idx)]
+                        # if not placed, skip this edge
                         if not ref_sink.get_placed_flag():
-                            continue
-                        # retrieve location
-                        x_coord.append(self.__get_pin_position(sink_idx)[0])
-                        y_coord.append(self.__get_pin_position(sink_idx)[1])
+                            x_coord.append(0)
+                            y_coord.append(0)
+                        else:# retrieve location
+                            x_coord.append(self.__get_pin_position(sink_idx)[0])
+                            y_coord.append(self.__get_pin_position(sink_idx)[1])
+
             elif curr_type == "MACRO_PIN":
                 ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
+                # if not placed, skip this edge
                 if not ref_mod.get_placed_flag():
                     continue
+                # get pin weight
+                weight_fact = mod.get_weight()
                 # add source position
                 x_coord.append(self.__get_pin_position(mod_idx)[0])
                 y_coord.append(self.__get_pin_position(mod_idx)[1])
 
                 if mod.get_sink():
-                    if mod.get_weight() != 0:
-                        norm_fact = mod.get_weight()
                     for input_list in mod.get_sink().values():
                         for sink_name in input_list:
                             # retrieve indx in modules_w_pins
                             input_idx = self.mod_name_to_indices[sink_name]
-                            # retrieve location
-                            x_coord.append(self.__get_pin_position(input_idx)[0])
-                            y_coord.append(self.__get_pin_position(input_idx)[1])
+
+                            sink_ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
+                            # if not placed, skip this edge
+                            if not sink_ref_mod.get_placed_flag():
+                                x_coord.append(0)
+                                y_coord.append(0)
+                            else:
+                                # retrieve location
+                                x_coord.append(self.__get_pin_position(input_idx)[0])
+                                y_coord.append(self.__get_pin_position(input_idx)[1])
 
             if x_coord:
-                if norm_fact != 1.0:
-                    total_hpwl += norm_fact * \
-                        (abs(max(x_coord) - min(x_coord)) + \
-                            abs(max(y_coord) - min(y_coord)))
-                else:
-                    total_hpwl += (abs(max(x_coord) - min(x_coord))\
-                         + abs(max(y_coord) - min(y_coord)))
+                total_hpwl += weight_fact * \
+                    (abs(max(x_coord) - min(x_coord)) + \
+                        abs(max(y_coord) - min(y_coord)))
+    
         return total_hpwl
 
     def abu(self, xx, n = 0.1):
@@ -2734,19 +2746,6 @@ class PlacementCost(object):
 
         def get_type(self):
             return "MACRO_PIN"
-
-    # TODO finish this
-    # class StandardCell:
-    #     def __init__(   self, name,
-    #                     x = 0.0, y = 0.0, weight = 1.0):
-    #         self.name = name
-    #         self.x = float(x)
-    #         self.y = float(y)
-    #         self.x_offset = 0.0 # not used
-    #         self.y_offset = 0.0 # not used
-    #         self.macro_name = macro_name
-    #         self.weight = weight
-    #         self.sink = {}
 
 def main():
     test_netlist_dir = './Plc_client/test/'+\
