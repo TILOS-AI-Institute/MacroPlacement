@@ -21,21 +21,27 @@ proc get_orient { tmp_orient } {
   return $orient
 }
 
-proc place_macro_from_pl {file_path} {
+proc place_macro_from_pl {file_path {place_std 0}} {
   set dbu 100
   set fp [open $file_path r]
   while { [gets $fp line] >= 0} {
-    if {[llength $line] == 7} {
+    if {[llength $line] >= 6 && [llength $line] <= 7} {
       set inst_name [lindex $line 0]
-      puts "$inst_name"
-      set pt_x [expr [lindex $line 1]/$dbu]
-      set pt_y [expr [lindex $line 2]/$dbu]
-      set tmp_orient [expr [lindex $line 5]]
-      set orient [get_orient $tmp_orient]
+      #puts "$inst_name"
       if {[dbget top.insts.name $inst_name -e] == ""} {
-        puts "\[ERROR\] $inst_name does not exists."
+        #puts "\[ERROR\] $inst_name does not exists."
       } else {
-        placeInstance $inst_name $pt_x $pt_y $orient -fixed
+        set pt_x [expr [lindex $line 1]/$dbu]
+        set pt_y [expr [lindex $line 2]/$dbu]
+        set tmp_orient [expr [lindex $line 5]]
+        set orient [get_orient $tmp_orient]
+        if {[dbget [dbget top.insts.name $inst_name -p ].cell.subClass block -e] != "" } {
+          puts "Placing $inst_name"
+          placeInstance $inst_name $pt_x $pt_y $orient -placed
+        }
+        if { $place_std == 1 && [dbget [dbget top.insts.name $inst_name -p ].cell.subClass core -e] != "" } { 
+          placeInstance $inst_name $pt_x $pt_y
+        }
       }
     }
   }

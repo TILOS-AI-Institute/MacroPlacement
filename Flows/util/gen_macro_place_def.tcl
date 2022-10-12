@@ -56,9 +56,12 @@ if {[info exist ::env(pb_netlist)] &&
         exec /home/sakundu/.conda/envs/py-tf/bin/python3.8 \
             ../../../../util/plc_pb_to_placement_tcl.py $::env(plc_file) $::env(pb_netlist) \
                                "macro_place.tcl" $origin_x $origin_y 
+        source macro_place.tcl
+} elseif { [info exist ::env(pl_file)] && [file exist $::env(pl_file)] } {
+        source ../../../../util/place_from_pl.tcl
+        place_macro_from_pl $::env(pl_file)
 }
 
-source macro_place.tcl
 
 if { [info exist ::env(run_refine_macro_place)] && $::env(run_refine_macro_place) == 1 } {
     dbset [dbget top.insts.cell.subClass block -p2 ].pStatus placed
