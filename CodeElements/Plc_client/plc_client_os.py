@@ -388,7 +388,8 @@ class PlacementCost(object):
                         # store current node indx
                         self.port_indices.append(node_cnt-1)
 
-        # mapping connection degree to each macros
+        # 1. mapping connection degree to each macros
+        # 2. update offset based on Hard macro orientation
         self.__update_connection()
 
         # all hard macros are placed on canvas initially
@@ -440,6 +441,9 @@ class PlacementCost(object):
                 # Width and Height should be defined on the same one-line
                 _width = float(line_item[1])
                 _height = float(line_item[3])
+            elif all(it in line_item for it in ['Area', 'stdcell', 'macros']):
+                # Total core area of modules
+                _area = float(line_item[3])
             elif "Area" in line_item:
                 # Total core area of modules
                 _area = float(line_item[1])
@@ -559,7 +563,7 @@ class PlacementCost(object):
         try:
             assert sorted(self.port_indices +\
                 self.hard_macro_indices +\
-                self.soft_macro_indices) == list(info_dict['node_plc'].keys())
+                self.soft_macro_indices) == sorted(list(info_dict['node_plc'].keys()))
         except AssertionError:
             print('[ERROR PLC INDICES MISMATCH]', len(sorted(self.port_indices +\
                 self.hard_macro_indices +\
@@ -620,6 +624,10 @@ class PlacementCost(object):
                 else:
                     print("[ERROR UPDATE CONNECTION] MACRO pins not found")
                     continue
+
+                # also update pin offset based on macro orientation
+                orientation = macro.get_orientation()
+                self.update_macro_orientation(macro_idx, orientation)
 
             # Soft macro
             elif self.is_node_soft_macro(macro_idx):
@@ -713,6 +721,7 @@ class PlacementCost(object):
         pin_node_x_offset, pin_node_y_offset = pin_node.get_offset()
         # Google's Plc client DOES NOT compute (node_position + pin_offset) when reading input
         return (ref_node_x + pin_node_x_offset, ref_node_y + pin_node_y_offset)
+        # return pin_node.get_pos()
 
     def get_wirelength(self) -> float:
         """
@@ -744,20 +753,20 @@ class PlacementCost(object):
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
                         # only consider placed sink
-                        ref_sink = self.modules_w_pins[self.get_ref_node_id(sink_idx)]
+                        # ref_sink = self.modules_w_pins[self.get_ref_node_id(sink_idx)]
                         # if not placed, skip this edge
-                        if not ref_sink.get_placed_flag():
-                            x_coord.append(0)
-                            y_coord.append(0)
-                        else:# retrieve location
-                            x_coord.append(self.__get_pin_position(sink_idx)[0])
-                            y_coord.append(self.__get_pin_position(sink_idx)[1])
+                        # if not ref_sink.get_placed_flag():
+                        #     x_coord.append(0)
+                        #     y_coord.append(0)
+                        # else:# retrieve location
+                        x_coord.append(self.__get_pin_position(sink_idx)[0])
+                        y_coord.append(self.__get_pin_position(sink_idx)[1])
 
             elif curr_type == "MACRO_PIN":
                 ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
-                # if not placed, skip this edge
-                if not ref_mod.get_placed_flag():
-                    continue
+                # # if not placed, skip this edge
+                # if not ref_mod.get_placed_flag():
+                #     continue
                 # get pin weight
                 weight_fact = mod.get_weight()
                 # add source position
@@ -770,15 +779,15 @@ class PlacementCost(object):
                             # retrieve indx in modules_w_pins
                             input_idx = self.mod_name_to_indices[sink_name]
 
-                            sink_ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
+                            # sink_ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
                             # if not placed, skip this edge
-                            if not sink_ref_mod.get_placed_flag():
-                                x_coord.append(0)
-                                y_coord.append(0)
-                            else:
-                                # retrieve location
-                                x_coord.append(self.__get_pin_position(input_idx)[0])
-                                y_coord.append(self.__get_pin_position(input_idx)[1])
+                            # if not sink_ref_mod.get_placed_flag():
+                            #     x_coord.append(0)
+                            #     y_coord.append(0)
+                            # else:
+                            # retrieve location
+                            x_coord.append(self.__get_pin_position(input_idx)[0])
+                            y_coord.append(self.__get_pin_position(input_idx)[1])
 
             if x_coord:
                 total_hpwl += weight_fact * \
@@ -1001,8 +1010,8 @@ class PlacementCost(object):
             module = self.modules_w_pins[module_idx]
 
             # skipping unplaced module
-            if not module.get_placed_flag():
-                continue
+            # if not module.get_placed_flag():
+            #     continue
 
             module_h = module.get_height()
             module_w = module.get_width()
@@ -1958,6 +1967,47 @@ class PlacementCost(object):
         
         mod.set_orientation(orientation)
 
+        macro = self.modules_w_pins[node_idx]
+        macro_name = macro.get_name()
+        hard_macro_pins = self.hard_macros_to_inpins[macro_name]
+        
+        orientation = macro.get_orientation()
+
+        # update all pin offset
+        for pin_name in hard_macro_pins:
+            pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
+
+            x_offset, y_offset = pin.get_offset()
+            x_offset_org = x_offset
+            if orientation == "N":
+                pass
+            elif orientation == "FN":
+                x_offset = -x_offset
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "S":
+                x_offset = -x_offset
+                y_offset = -y_offset
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "FS":
+                y_offset = -y_offset
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "E":
+                x_offset = y_offset
+                y_offset = -x_offset_org
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "FE":
+                x_offset = -y_offset
+                y_offset = -x_offset_org
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "W":
+                x_offset = -y_offset
+                y_offset = x_offset_org
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "FW":
+                x_offset = y_offset
+                y_offset = x_offset_org
+                pin.set_offset(x_offset, y_offset)
+
     def update_port_sides(self):
         """
         Define Port "Side" by its location on canvas
@@ -2712,6 +2762,10 @@ class PlacementCost(object):
 
         def get_offset(self):
             return self.x_offset, self.y_offset
+        
+        def set_offset(self, x_offset, y_offset):
+            self.x_offset = x_offset
+            self.y_offset = y_offset
 
         def get_name(self):
             return self.name
