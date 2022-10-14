@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
 ## Set to 1 to run refine_macro_place ##
-setenv run_refine_macro_place 1
+setenv run_refine_macro_place 0
 
 setenv SYN_HANDOFF $argv[1]
 

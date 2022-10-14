@@ -1,0 +1,2 @@
+# Netlist preparation of BlackParrot quad core
+BlackParrot is a RISC-V multicore design. We use the verilog netlist of BlackParrot quad core design from the [OpenROAD GitHub](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/designs/src/black_parrot) repo. We will provide details setup to prepare netlist from the [BlackParrot GitHub](https://github.com/black-parrot/black-parrot) repo.

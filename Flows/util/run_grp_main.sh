@@ -11,7 +11,7 @@ if [ $PHY_SYNTH -eq 1 ]; then
     export HMETIS_DIR="/home/zf4_projects/DREAMPlace/sakundu/GB/CT/hmetis-1.5-linux"
     export PLC_WRAPPER_MAIN="/home/zf4_projects/DREAMPlace/sakundu/GB/CT/plc_wrapper_main"
     #export CT_PATH="${PROJ_DIR}/../../../GB/CT/circuit_training"
-    #export CT_PATH="/home/zf4_projects/DREAMPlace/sakundu/ABK_MP/CT/09092022/circuit_training"
-    export CT_PATH="/home/zf4_projects/macro_placer/google_brain/TILOS_repo/grouping/circuit_training"
+    export CT_PATH="/home/zf4_projects/DREAMPlace/sakundu/ABK_MP/CT/09092022/circuit_training"
+    #export CT_PATH="/home/zf4_projects/macro_placer/google_brain/TILOS_repo/grouping/circuit_training"
     bash -i ../../../../util/run_grp.sh 2>&1 | tee log/grouping.log
 fi

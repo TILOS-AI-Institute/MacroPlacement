@@ -67,7 +67,7 @@ We provide flop count, macro type and macro count for all the testcases in the t
     <td class="tg-0lax">(256x64-bit SRAM) x 128</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><a href="./Testcases/bp_quad">Black Parror</a></td>
+    <td class="tg-0lax"><a href="./Testcases/bp_quad">BlackParror</a></td>
     <td class="tg-0lax">214441</td>
     <td class="tg-0lax">(512x64-bit SRAM) x 128 + (64x62-bit SRAM) x 32 + (32x32-bit SRAM) x 32 + (64x124-bit SRAM) x 16 + (128x16-bit SRAM) x 8 + (256x48-bit SRAM) x 4</td>
   </tr>
@@ -208,16 +208,16 @@ In the following table, we provide the status details of each testcase on each o
   </tr>
   <tr>
     <td class="tg-0lax">black parrot</td>
-    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/bp_quad">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/bp_quad">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
   </tr>
