@@ -8,6 +8,8 @@ setenv SYN_HANDOFF $argv[1]
 if ($#argv == 3) then
     setenv pb_netlist $argv[2]
     setenv plc_file $argv[3]
+else if ($#argv == 2) then
+    setenv pl_file $argv[2]
 else
     echo "Required clustered netlist and plc file to generate macro placed defs"
 endif

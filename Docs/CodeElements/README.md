@@ -5,11 +5,11 @@ We thank Google engineers for Q&A in a shared document, as well as live discussi
 that have explained aspects of several of the following code elements used in Circuit Training. 
 All errors of understanding and implementation are the authors'. 
 We will rectify such errors as soon as possible after being made aware of them.
-- [Gridding](./CodeElements/Gridding/) determines a dissection of the layout canvas into some number of rows (*n_rows*) and some number of columns (*n_cols*) of _gridcells_. In Circuit Training, the purpose of gridding is to control the size of the macro placement solution space, 
+- [Gridding](../../CodeElements/Gridding/) determines a dissection of the layout canvas into some number of rows (*n_rows*) and some number of columns (*n_cols*) of _gridcells_. In Circuit Training, the purpose of gridding is to control the size of the macro placement solution space, 
 thus allowing RL to train within reasonable runtimes. Gridding enables hard macros to find locations consistent with high solution quality, while allowing soft macros (standard-cell clusters) to also find good locations. 
-- [Grouping](./CodeElements/Grouping/) is to ensure that closely-related standard-cell logic, 
+- [Grouping](../../CodeElements/Grouping/) is to ensure that closely-related standard-cell logic, 
 which connect to the same macro or the same clump of IO (noted as IO cluster), belong to the same standard-cell clusters.
-- [Hypergraph clustering](./CodeElements/Clustering/) clusters millions of standard cells into a few thousand clusters.  In Circuit Training, the purpose of clustering is to enable an approximate but fast standard cell placement that facilitates policy network optimization.
+- [Hypergraph clustering](../../CodeElements/Clustering/) clusters millions of standard cells into a few thousand clusters.  In Circuit Training, the purpose of clustering is to enable an approximate but fast standard cell placement that facilitates policy network optimization.
 
 We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub.
 However, these [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) scripts still rely on the wrapper functions of plc client, which is a black box for the community.  In this doc, we document the implementation details of gridding, grouping and clustering. We implement all the code elements from scratch using python scripts, and our results match exactly that of Circuit Training.

@@ -129,6 +129,8 @@ proc write_node_port { port_ptr fp {origin_x 0} {origin_y 0} } {
   
   if {$side == "top" || $side == "bottom"} {
     set X [expr $X - $origin_x]
+  } elseif { $side == "right" } {
+    set X [expr $X - 2*$origin_x]
   }
   
   print_float $fp "x" $X
@@ -139,7 +141,10 @@ proc write_node_port { port_ptr fp {origin_x 0} {origin_y 0} } {
   set Y [expr ($Y1 + $Y2)/2]
   if {$side == "left" || $side == "right"} {
     set Y [expr $Y - $origin_y]
+  } elseif { $side == "top" } {
+    set Y [expr $Y - 2*$origin_y]
   }
+
   print_float $fp "y" $Y
   
   puts $fp "}"
