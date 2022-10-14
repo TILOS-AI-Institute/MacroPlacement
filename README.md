@@ -26,6 +26,8 @@ The list of available [testcases](./Testcases) is as follows.
   - [RTL files for Mempool group design](./Testcases/mempool/)
 - NVDLA (RTL)
   - [RTL files for NVDLA Partition *c*](./Testcases/nvdla/)
+- BlackParrot (RTL)
+  - [RTL files for BlackParrot](./Testcases/bp_quad)
   
 In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. We outline the steps to instantiate the memories for Ariane 136 [here](./Testcases/ariane136/) and we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's memory macros count [here](./Testcases/ariane133/). 
   
@@ -55,9 +57,19 @@ We provide flop count, macro type and macro count for all the testcases in the t
     <td class="tg-0lax">(256x32-bit SRAM) x 16 + (64x64-bit SRAM) x 4</td>
   </tr>
   <tr>
+    <td class="tg-0lax"><a href="./Testcases/mempool">MemPool Group</a></td>
+    <td class="tg-0lax">360724</td>
+    <td class="tg-0lax">(256x32-bit SRAM) x 256 + (64x64-bit SRAM) x 64 + (128x256-bit SRAM) x 2 + (128x32-bit SRAM) x 2</td>
+  </tr>
+  <tr>
     <td class="tg-0lax"><a href="./Testcases/nvdla">NVDLA</a></td>
     <td class="tg-0lax">45295</td>
     <td class="tg-0lax">(256x64-bit SRAM) x 128</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"><a href="./Testcases/bp_quad">Black Parror</a></td>
+    <td class="tg-0lax">214441</td>
+    <td class="tg-0lax">(512x64-bit SRAM) x 128 + (64x62-bit SRAM) x 32 + (32x32-bit SRAM) x 32 + (64x124-bit SRAM) x 16 + (128x16-bit SRAM) x 8 + (256x48-bit SRAM) x 4</td>
   </tr>
 </tbody>
 </table>
@@ -165,7 +177,37 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
+    <td class="tg-0lax">MemPool Group</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+  </tr>
+  <tr>
     <td class="tg-0lax">NVDLA</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">black parrot</td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
