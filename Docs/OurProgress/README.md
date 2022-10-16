@@ -527,11 +527,12 @@ We currently use the physical synthesis tool **Cadence Genus iSpatial** to obtai
 **August 20:** <span style="color:blue">Matching the area utilization</span>. We revisited the area utilization of Our Ariane133 and realized that it (51%) is lower than that of Google’s Ariane (68%). So that this would not devalue our study, we created a second variant,  “**Our Ariane133-NanGate45_68**”, which matches the area utilization of Google’s Ariane. Results are as given below.
   
 ### **Circuit Training Baseline Result on “Our Ariane133-NanGate45**<span style="color:red">**_68**</span>**".**
+  
 <a id="Ariane133_68_CT"></a>  
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_4ns_CT">Macro Placement generated Using CT (Ariane 68% Utilization)</p></th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_4ns_CT"></a>Macro Placement generated Using CT (Ariane 68% Utilization)</p></th>
   </tr>
 </thead>
 <tbody>
