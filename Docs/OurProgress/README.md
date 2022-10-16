@@ -4028,8 +4028,8 @@ In the following table we report the Kendall rank correlation coefficient for pr
 </tbody>
 </table>
 
-- Kendall rank correlation coefficient indicates poor correlation between proxy cost and postPlaceOpt metrics. Similarly, we see a poor correlation between proxy cost and postRouteOpt metrics.
-  - We see the proxy costs for RUN3 and RUN7 are 0.8861 and 0.8675 respectively, which is much higher than the best proxy cost 0.8285 (corresponding to RUN15), but the total power and TNS for RUN3 and RUN7 is better than RUN15.
+- Kendall rank correlation coefficients indicate poor correlation between proxy cost and postPlaceOpt metrics. Similarly, we see a poor correlation between proxy cost and postRouteOpt metrics.
+  - We see the proxy costs of RUN3 and RUN7 are 0.8861 and 0.8675 respectively, which is much higher than the best proxy cost of 0.8285 (corresponding to RUN15), but the total power and TNS for RUN3 and RUN7 are better than RUN15.
 
 
 <a id="MemPoolGroup_NG45_68"></a>
