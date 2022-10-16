@@ -2059,7 +2059,7 @@ The following table and screenshots show the CT result.
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.5ns_CT"></a>Ariane133-68-NG45 CT result for TCP:1.5ns [Corresponding CMP result <a href="#Ariane133_NG45_1.5ns_CMP">link</a>]</th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.5ns_CT"></a>Ariane133-68-NG45 CT result for TCP:1.5ns [Corresponding CMP result <a href="#Ariane133_NG45_1.5ns_CMP">link</a>]</p></th>
   </tr>
 </thead>
 <tbody>
@@ -2134,7 +2134,7 @@ The following table and screenshots show the CT result.
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.3ns_CT"></a>Ariane133-68-NG45 CT result for TCP:1.3ns [Corresponding CMP result <a href="#Ariane133_NG45_1.3ns_CMP">link</a>]</th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.3ns_CT"></a>Ariane133-68-NG45 CT result for TCP:1.3ns [Corresponding CMP result <a href="#Ariane133_NG45_1.3ns_CMP">link</a>]</p></th>
   </tr>
 </thead>
 <tbody>
