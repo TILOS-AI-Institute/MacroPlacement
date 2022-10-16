@@ -531,7 +531,7 @@ We currently use the physical synthesis tool **Cadence Genus iSpatial** to obtai
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_4ns_CT">Macro Placement generated Using CT (Ariane 68% Utilization)</p></th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_4ns_CT"></a>Macro Placement generated Using CT (Ariane 68% Utilization)</p></th>
   </tr>
 </thead>
 <tbody>
