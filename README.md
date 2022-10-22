@@ -11,7 +11,7 @@
   - [Testcases](#testcases) contains open-source designs such as Ariane, MemPool and NVDLA.
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
   - [Flows](#flows) contains tool setups and runscripts for both proprietary and open-source SP&R tools such as Cadence Genus/Innovus and OpenROAD.
-  - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
+  - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding as well as Format translators required by Circuit Training flow.
   - [Baseline for Circuit Training](#baseline-for-circuit-training) provides a baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
   - [FAQ](#faq)
   - [Related Links](#related-links)
@@ -57,7 +57,7 @@ We provide flop count, macro type and macro count for all the testcases in the t
     <td class="tg-0lax">(256x32-bit SRAM) x 16 + (64x64-bit SRAM) x 4</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><a href="./Testcases/mempool">MemPool Group</a></td>
+    <td class="tg-0lax"><a href="./Testcases/mempool">MemPool group</a></td>
     <td class="tg-0lax">360724</td>
     <td class="tg-0lax">(256x32-bit SRAM) x 256 + (64x64-bit SRAM) x 64 + (128x256-bit SRAM) x 2 + (128x32-bit SRAM) x 2</td>
   </tr>
@@ -67,7 +67,7 @@ We provide flop count, macro type and macro count for all the testcases in the t
     <td class="tg-0lax">(256x64-bit SRAM) x 128</td>
   </tr>
   <tr>
-    <td class="tg-0lax"><a href="./Testcases/bp_quad">BlackParror</a></td>
+    <td class="tg-0lax"><a href="./Testcases/bp_quad">BlackParrot</a></td>
     <td class="tg-0lax">214441</td>
     <td class="tg-0lax">(512x64-bit SRAM) x 128 + (64x62-bit SRAM) x 32 + (32x32-bit SRAM) x 32 + (64x124-bit SRAM) x 16 + (128x16-bit SRAM) x 8 + (256x48-bit SRAM) x 4</td>
   </tr>
@@ -177,7 +177,7 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
   </tr>
   <tr>
-    <td class="tg-0lax">MemPool Group</td>
+    <td class="tg-0lax">MemPool group</td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
     <td class="tg-0lax">N/A</td>
