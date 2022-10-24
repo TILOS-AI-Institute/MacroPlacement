@@ -1,0 +1,53 @@
+low_latency_interco:
+  incdirs:
+    - rtl/low_latency_interco
+  files:
+    - rtl/low_latency_interco/FanInPrimitive_Req.sv
+    - rtl/low_latency_interco/ArbitrationTree.sv
+    - rtl/low_latency_interco/MUX2_REQ.sv
+    - rtl/low_latency_interco/AddressDecoder_Resp.sv
+    - rtl/low_latency_interco/TestAndSet.sv
+    - rtl/low_latency_interco/RequestBlock2CH.sv
+    - rtl/low_latency_interco/RequestBlock1CH.sv
+    - rtl/low_latency_interco/FanInPrimitive_Resp.sv
+    - rtl/low_latency_interco/ResponseTree.sv
+    - rtl/low_latency_interco/ResponseBlock.sv
+    - rtl/low_latency_interco/AddressDecoder_Req.sv
+    - rtl/low_latency_interco/XBAR_TCDM.sv
+    - rtl/low_latency_interco/XBAR_TCDM_WRAPPER.sv
+    - rtl/low_latency_interco/TCDM_PIPE_REQ.sv
+    - rtl/low_latency_interco/TCDM_PIPE_RESP.sv
+    - rtl/low_latency_interco/grant_mask.sv
+    - rtl/low_latency_interco/priority_Flag_Req.sv
+peripheral_interco:
+  incdirs: [
+    rtl/peripheral_interco,
+    ../../rtl/includes,
+  ]
+  files: [
+    rtl/peripheral_interco/AddressDecoder_PE_Req.sv,
+    rtl/peripheral_interco/AddressDecoder_Resp_PE.sv,
+    rtl/peripheral_interco/ArbitrationTree_PE.sv,
+    rtl/peripheral_interco/FanInPrimitive_Req_PE.sv,
+    rtl/peripheral_interco/RR_Flag_Req_PE.sv,
+    rtl/peripheral_interco/MUX2_REQ_PE.sv,
+    rtl/peripheral_interco/FanInPrimitive_PE_Resp.sv,
+    rtl/peripheral_interco/RequestBlock1CH_PE.sv,
+    rtl/peripheral_interco/RequestBlock2CH_PE.sv,
+    rtl/peripheral_interco/ResponseBlock_PE.sv,
+    rtl/peripheral_interco/ResponseTree_PE.sv,
+    rtl/peripheral_interco/XBAR_PE.sv,
+  ]
+tcdm_interconnect:
+  incdirs: [
+    rtl/low_latency_interco
+  ]
+  files: [
+    rtl/tcdm_interconnect/tcdm_interconnect_pkg.sv,
+    rtl/tcdm_interconnect/addr_dec_resp_mux.sv,
+    rtl/tcdm_interconnect/amo_shim.sv,
+    rtl/tcdm_interconnect/xbar.sv,
+    rtl/tcdm_interconnect/clos_net.sv,
+    rtl/tcdm_interconnect/bfly_net.sv,
+    rtl/tcdm_interconnect/tcdm_interconnect.sv,
+  ]
