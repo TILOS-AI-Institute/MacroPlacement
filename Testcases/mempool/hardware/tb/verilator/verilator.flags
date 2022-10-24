@@ -1,0 +1,47 @@
+// Copyright 2021 ETH Zurich and University of Bologna.
+// Licensed under the Apache License, Version 2.0, see LICENSE for details.
+// SPDX-License-Identifier: Apache-2.0
+
+// Verilator flags that are independent of the configuration
+
+// Warnings
+-Wall
+-Wno-BLKANDNBLK
+-Wno-CASEINCOMPLETE
+-Wno-CMPCONST
+-Wno-WIDTH
+-Wno-WIDTHCONCAT
+-Wno-UNSIGNED
+-Wno-UNUSED
+-Wno-UNOPTFLAT
+// Continue despite warnings
+// -Wno-fatal
+
+// C++ mode and flags
+--cc
+-O3
+-CFLAGS "-std=c++11 -Wall -g -O3"
+-LDFLAGS "-pthread -lutil -lelf"
+
+// Specifies the maximum number of loop iterations that may be unrolled.
+// This is necessary for the SRAM model where we have blocking assignments in
+// for loops, which only works if we unroll them.
+--unroll-count 256
+
+// Build the executable
+--exe
+
+// Control the size of the executable
+--output-split 5000
+
+// Evaluate the performance gain
+// --threads 4
+
+// Gain more insights on the signals that Verilator failed to optimize
+// --report-unoptflat
+
+// Build the model hierarchical. For MinPool, a non-hierarchical model might be faster
+--hierarchical
+
+// Flush streams after each $display. The timing impact is usually nonmeasurable
+--autoflush
