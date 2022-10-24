@@ -530,7 +530,7 @@ class BookShelf2ProBufFormat:
                     for sink in sink_list:
                         inst_name = sink[0]
                         if (self.insts[inst_name].GetType() == "MACRO"):
-                            pin_name = "Pinput_" + str(len(self.insts[inst_name].GetInputPins()))
+                            pin_name = inst_name + "/Pinput_" + str(len(self.insts[inst_name].GetInputPins()))
                             self.insts[inst_name].AddInputPin(MacroPin(pin_name, inst_name, sink[1], sink[2], "MACRO"))
                             sink_name_list.append(pin_name)
                         else:
@@ -539,7 +539,7 @@ class BookShelf2ProBufFormat:
                     driver_name = driver[0]
                     if (self.insts[driver_name].GetType() == "MACRO"):
                         pin_id = len(self.insts[driver_name].GetOutputPins())
-                        pin_name = "Poutput_" + str(pin_id)
+                        pin_name = inst_name + "/Poutput_" + str(pin_id)
                         macro_pin = MacroPin(pin_name, driver_name, driver[1], driver[2], "MACRO")
                         macro_pin.AddSinks(sink_name_list)
                         self.insts[driver_name].AddOutputPin(macro_pin)
