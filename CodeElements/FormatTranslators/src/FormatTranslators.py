@@ -20,6 +20,7 @@ def print_placeholder(key, value):
     return line
 
 def print_float(key, value):
+    value = round(value, 6)
     line = "  attr {\n"
     line += f'    key: "{key}"\n'
     line += '    value {\n'
@@ -66,7 +67,7 @@ class Port:
             else:
                 name += char
         self.str += '  name: "' + name + '"\n'
-        
+
         for sink in self.sinks:
             sink_new = ''
             for char in sink:
@@ -76,7 +77,7 @@ class Port:
                     sink_new += char
             sink = sink_new
             self.str += '  input: "' + sink + '"\n'
-        
+
         self.str += print_placeholder('type', 'PORT')
         self.str += print_placeholder('side', self.side)
         self.str += print_float('x', self.x)
@@ -135,7 +136,7 @@ class StandardCell:
                     sink_new += char
             sink = sink_new
             self.str += '  input: "' + sink + '"\n'
-        
+
         self.str += print_placeholder('type', 'STDCELL')
         self.str += print_float('height', self.height)
         self.str += print_float('width', self.width)
@@ -264,7 +265,7 @@ class MacroPin:
                     sink_new += char
             sink = sink_new
             self.str += '  input: "' + sink + '"\n'
-        
+
         macro_name = ''
         for char in self.macro_name:
             if char == '\\':
@@ -278,7 +279,7 @@ class MacroPin:
             self.str += print_placeholder('type', 'macro_pin')
         if (self.weight > 1):
             self.str += print_float('weight', self.weight)
-            
+
         self.str += print_float('x_offset', self.x_offset)
         self.str += print_float('y_offset', self.y_offset)
         self.str += print_float('x', self.x)
