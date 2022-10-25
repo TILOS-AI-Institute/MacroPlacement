@@ -1,0 +1,37 @@
+// Copyright 2021 ETH Zurich and University of Bologna.
+// Licensed under the Apache License, Version 2.0, see LICENSE for details.
+// SPDX-License-Identifier: Apache-2.0
+
+`verilator_config
+
+// Hierarchical verilation
+hier_block -module "mempool_tile"
+hier_block -module "mempool_group"
+
+// Hierarchical modules will be renamed by Verilator. Disable the DECLFILENAME
+// check for those right away
+lint_off -rule DECLFILENAME -file "*" -match "*mempool_tile_wrap*"
+lint_off -rule DECLFILENAME -file "*" -match "*mempool_group*"
+
+// Ignore unused output ports everywhere
+lint_off -rule PINCONNECTEMPTY -file "*" -match "*_o*"
+lint_off -rule PINCONNECTEMPTY -file "*" -match "*_no*"
+
+// Ignore scan ports everywhere
+lint_off -rule PINCONNECTEMPTY -file "*" -match "*scan_data*"
+
+// Deactivate some linters for the dependencies
+lint_off -rule PINCONNECTEMPTY -file "*/deps/*" -match "*"
+lint_off -rule DECLFILENAME -file "*/deps/*" -match "*"
+
+// Ignore unused RISCV instruction encoding parameters
+lint_off -rule UNUSED -file "*/deps/snitch/src/riscv_instr.sv" -match "*"
+
+// Ignore undriven scan chains
+lint_off -rule UNDRIVEN -file "*" -match "*scan_data*"
+
+// Priority case is implemented correctly
+lint_off -rule CASEOVERLAP -file "*/deps/axi/src/axi_id_remap.sv" -match "*"
+
+// Ignore underflow in parameter that will not be used in that case
+lint_off -rule LITENDIAN -file "*/deps/cluster_interconnect/rtl/variable_latency_interconnect/variable_latency_interconnect.sv" -match "*"

@@ -1,0 +1,38 @@
+# Copyright 2020 ETH Zurich and University of Bologna.
+# Solderpad Hardware License, Version 0.51, see LICENSE for details.
+# SPDX-License-Identifier: SHL-0.51
+
+package:
+  name: snitch
+  authors: [ "Florian Zaruba <zarubaf@iis.ee.ethz.ch>" ]
+
+dependencies:
+  common_cells: { git: "https://github.com/pulp-platform/common_cells.git", version: 1.19.0 }
+
+sources:
+  - defines:
+      SNITCH_ENABLE_PERF: 1
+    files:
+    # packages
+    - src/riscv_instr.sv
+    - src/snitch_pkg.sv
+    - src/snitch_axi_pkg.sv
+    - src/snitch_icache/snitch_icache_pkg.sv
+    # rest of RTL
+    - src/snitch.sv
+    - src/snitch_regfile_ff.sv
+    # - src/snitch_regfile_latch.sv
+    - src/snitch_lsu.sv
+    - src/snitch_ipu.sv
+    - src/snitch_shared_muldiv.sv
+    - src/snitch_demux.sv
+    - src/snitch_axi_adapter.sv
+    - src/snitch_icache/snitch_icache.sv
+    - src/snitch_icache/snitch_icache_l0.sv
+    - src/snitch_icache/snitch_icache_handler.sv
+    - src/snitch_icache/snitch_icache_lfsr.sv
+    - src/snitch_icache/snitch_icache_lookup_parallel.sv
+    - src/snitch_icache/snitch_icache_lookup_serial.sv
+    - src/snitch_icache/snitch_icache_refill.sv
+    - src/snitch_read_only_cache/snitch_axi_to_cache.sv
+    - src/snitch_read_only_cache/snitch_read_only_cache.sv

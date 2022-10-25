@@ -1,0 +1,58 @@
+# Copyright 2020 ETH Zurich and University of Bologna.
+# Licensed under the Apache License, Version 2.0, see LICENSE for details.
+# SPDX-License-Identifier: Apache-2.0
+
+# Run all lint checks
+name: lint
+on: [push, pull_request]
+
+jobs:
+
+  ################
+  # Verible Lint #
+  ################
+  verilog:
+    name: Verilog Sources
+    # This job runs on Linux (fixed ubuntu version)
+    runs-on: ubuntu-18.04
+    env:
+      VERIBLE_VERSION: 0.0-807-g10e7c71
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Verible
+      run: |
+        set -e
+        mkdir -p build/verible
+        cd build/verible
+        curl -Ls -o verible.tar.gz https://github.com/google/verible/releases/download/v$VERIBLE_VERSION/verible-v$VERIBLE_VERSION-Ubuntu-18.04-bionic-x86_64.tar.gz
+        sudo mkdir -p /tools/verible && sudo chmod 777 /tools/verible
+        tar -C /tools/verible -xf verible.tar.gz --strip-components=1
+        echo "PATH=$PATH:/tools/verible/bin" >> $GITHUB_ENV
+    # Run linter in hw/ip subdir
+    - name: Run Lint
+      run: |
+        echo "::add-matcher::.github/verible-lint-matcher.json"
+        find . -name "*sv" | xargs verible-verilog-lint --waiver_files lint/verible.waiver
+        echo "::remove-matcher owner=verible-lint-matcher::"
+
+  #####################
+  # Vendor Up-to-Date #
+  #####################
+  # Check that all vendored sources are up-to-date.
+  check-vendor:
+    name: Vendor Up-to-Date
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Install requirements
+      run: pip install hjson
+    - name: Re-vendor and diff
+      run: |
+        find . \
+            -name '*.vendor.hjson' \
+            | xargs -n1 util/vendor.py --verbose \
+            && git diff --exit-code
+

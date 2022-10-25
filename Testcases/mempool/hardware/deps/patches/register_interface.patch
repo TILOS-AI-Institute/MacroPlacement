@@ -1,0 +1,11 @@
+diff --git a/hardware/deps/register_interface/include/register_interface/assign.svh b/hardware/deps/register_interface/include/register_interface/assign.svh
+index 30c44ac..267dfab 100644
+--- a/hardware/deps/register_interface/include/register_interface/assign.svh
++++ b/hardware/deps/register_interface/include/register_interface/assign.svh
+@@ -43,4 +43,4 @@
+   assign lhs.error = rhs.error;           \
+   assign lhs.ready = rhs.ready;
+ 
+-`endif
+\ No newline at end of file
++`endif

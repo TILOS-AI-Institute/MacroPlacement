@@ -1,0 +1,108 @@
+// Copyright 2022 ETH Zurich and University of Bologna.
+// Solderpad Hardware License Version 0.51 see LICENSE for details.
+// SPDX-License-Identifier: SHL-0.51
+// Licensed under Solderpad Hardware License, Version 0.51, see LICENSE for details.
+
+{
+  name: "mempool_dma_frontend"
+  clock_primary: "clk_i"
+  reset_primary: "rst_ni"
+  bus_interfaces: [
+    { protocol: "reg_iface"
+      direction: "device"
+    }
+  ]
+  regwidth: 32
+  registers: [
+    { name: "src_addr"
+      desc: "Source Address"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        { bits: "31:0"
+          name: "src_addr"
+          desc: "Source Address"
+        }
+      ]
+    }
+    { name: "dst_addr"
+      desc: "Destination Address"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        { bits: "31:0"
+          name: "dst_addr"
+          desc: "Destination Address"
+        }
+      ]
+    }
+    { name: "num_bytes"
+      desc: "Transfer size in bytes"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        { bits: "31:0"
+          name: "num_bytes"
+          desc: "Transfer size in bytes"
+        }
+      ]
+    }
+    { name: "conf"
+      desc: "Configuration Register for DMA settings"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        { bits: "0"
+          name: "decouple"
+          desc: "Decouple enable"
+        }
+        { bits: "1"
+          name: "deburst"
+          desc: "Deburst enable"
+        }
+        { bits: "2"
+          name: "serialize"
+          desc: "Serialize enable"
+        }
+      ]
+    }
+    { name: "status"
+      desc: "DMA Status"
+      swaccess: "ro"
+      hwaccess: "hwo"
+      hwext: "true"
+      fields: [
+        { bits: "0"
+          name: "busy"
+          desc: "DMA busy"
+        }
+      ]
+    }
+    { name: "next_id"
+      desc: "Next ID launches transfer returns 0 if transfer not set up properly."
+      swaccess: "ro"
+      hwaccess: "hrw"
+      hwext: "true"
+      hwre: "true"
+      fields: [
+        { bits: "31:0"
+          name: "next_id"
+          desc: "Next ID launches transfer returns 0 if transfer not set up properly."
+        }
+      ]
+    }
+    { name: "done"
+      desc: "Get ID of finished transactions."
+      swaccess: "ro"
+      hwaccess: "hrw"
+      hwext: "true"
+      hwre: "true"
+      fields: [
+        { bits: "31:0"
+          name: "done"
+          desc: "Get ID of finished transactions."
+        }
+      ]
+    }
+  ]
+}

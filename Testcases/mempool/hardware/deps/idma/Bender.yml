@@ -1,0 +1,35 @@
+package:
+  name: idma
+  authors:
+    - "Thomas Benz <tbenz@iis.ee.ethz.ch>" # current maintainer
+
+dependencies:
+  common_cells: { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
+  common_verification: { git: "https://github.com/pulp-platform/common_verification.git", version: 0.2.0 }
+  axi: { git: "https://github.com/pulp-platform/axi.git", version: 0.29.1 }
+
+sources:
+  # Source files grouped in levels. Files in level 0 have no dependencies on files in this
+  # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
+  # levels 1 and 0, etc. Files within a level are ordered alphabetically.
+  # Level 0
+  - src/axi_dma_data_path.sv
+  # Level 1
+  - src/axi_dma_data_mover.sv
+  - src/axi_dma_burst_reshaper.sv
+  # Level 2
+  - src/axi_dma_backend.sv
+  # Level 3: MemPool
+  - src/midends/idma_split_midend.sv
+  - src/midends/idma_distributed_midend.sv
+  - src/frontends/mempool/mempool_dma_frontend_reg_pkg.sv
+  - src/frontends/mempool/mempool_dma_frontend_reg_top.sv
+  - src/frontends/mempool/mempool_dma.sv
+
+
+  - target: test
+    files:
+      # Level 0:
+      - test/fixture_axi_dma_backend.sv
+      # Level 1:
+      - test/tb_axi_dma_backend.sv
