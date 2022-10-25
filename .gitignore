@@ -5,9 +5,13 @@ Flows/util/__pycache__
 CodeElements/*/*/__pycache__
 CodeElements/Plc_client/test/
 CodeElements/Plc_client/test/*/*
-CodeElements/Plc_client/plc_client_os.py
 CodeElements/Plc_client/__pycache__/*
 CodeElements/Plc_client/proto_reader.py
 CodeElements/Plc_client/plc_client.py
 CodeElements/failed_proxy_plc/*
-CodeElements/CTModel/*
+CodeElements/EvalCT/saved_policy/*
+CodeElements/EvalCT/test/*
+CodeElements/EvalCT/snapshot*
+CodeElements/EvalCT/circuit_training
+CodeElements/EvalCT/__pycache__/
+CodeElements/EvalCT/eval_run*.plc

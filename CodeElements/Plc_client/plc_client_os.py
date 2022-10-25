@@ -1742,7 +1742,6 @@ class PlacementCost(object):
         [IGNORE] THIS DOES NOT AFFECT DENSITY. SHOULD WE IMPLEMENT THIS AT ALL?
         make soft macros as squares
         """
-        return
         for mod_idx in self.soft_macro_indices:
             mod = self.modules_w_pins[mod_idx]
             mod_area = mod.get_width() * mod.get_height()

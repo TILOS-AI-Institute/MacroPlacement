@@ -4,7 +4,6 @@ import pandas as pd
 import sys
 import os
 import traceback
-import argparse
 import math
 import re
 from random import randrange
@@ -56,6 +55,18 @@ Example:
             --marh 7.143\
             --marv 8.339\
             --smooth 2
+
+         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/g657_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt\
+            --plc ./Plc_client/test/g657_ub5_nruns10_c5_r3_v3_rc1/legalized.plc\
+            --width 1357.360\
+            --height 1356.880\
+            --col 22\
+            --row 30\
+            --rpmh 11.285\
+            --rpmv 12.605\
+            --marh 7.143\
+            --marv 8.339\
+            --smooth 0
         
         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/0P2M0m/netlist.pb.txt\
             --width 500\
@@ -252,6 +263,8 @@ class PlacementCostTest():
         self.plc.get_overlap_threshold()
         print("overlap_threshold default", self.plc.get_overlap_threshold())
 
+        # self.plc.make_soft_macros_square()
+
         if self.PLC_PATH:
             print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
@@ -263,23 +276,34 @@ class PlacementCostTest():
             self.plc.restore_placement(self.PLC_PATH)
         else:
             print("#[PLC FILE MISSING] Using only netlist info")
+        
+        # self.plc.make_soft_macros_square()
 
         self.plc.set_routes_per_micron(self.RPMH, self.RPMV)
         self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
 
+        # self.plc.make_soft_macros_square()
+
         self.plc.set_macro_routing_allocation(self.MARH, self.MARV)
         self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        # self.plc.make_soft_macros_square()
 
         self.plc.set_congestion_smooth_range(self.SMOOTH)
         self.plc_os.set_congestion_smooth_range(self.SMOOTH)
 
-        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        # self.plc.make_soft_macros_square()
+
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        # self.plc.make_soft_macros_square() #  in effect
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        
+
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        self.plc.make_soft_macros_square()
-        self.plc_os.make_soft_macros_square()
+        # self.plc.make_soft_macros_square()
+        # self.plc_os.make_soft_macros_square()
 
         # [IGNORE] create_blockage must be defined BEFORE set_canvas_size 
         # and set_placement_grid in order to be considered on the canvas
@@ -428,15 +452,6 @@ class PlacementCostTest():
         except Exception as e:
             print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
-            
-            # # if remove all soft macros
-            # soft_macro_indices = [
-            #     m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
-            # ]
-            # for mod_idx in soft_macro_indices:
-            #     self.plc_os.unplace_node(mod_idx)
-            #     self.plc.unplace_node(mod_idx)
-
             print("GL WIRELENGTH: ", self.plc.get_wirelength())
             print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
 
@@ -978,7 +993,7 @@ def main(args):
     Uncomment any available tests
     """
     # PCT.test_metadata()
-    PCT.test_proxy_cost()
+    # PCT.test_proxy_cost()
     # PCT.test_proxy_hpwl()
     # PCT.test_proxy_density()
     # PCT.test_proxy_congestion()
