@@ -19,7 +19,7 @@ $ python3 -m eval_ct --netlist ./test/ariane/netlist.pb.txt\
 The placement will be stored under `CodeElements/EvalCT/` and named as `eval_[RUN_DIR]_to_[TESTCASE].plc`.
 
 ## Trained Policy
-We are providing one of the run we trained from scratch using Google's Ariane testcase. **This is not a truthful representation of the potential of Circuit Training**. We are only providing these trained weights here for the sake of testing. Please feel free to load any of your own trained weights. You may find similar file structure under `./logs` after training.
+We are providing one of the run we trained from scratch using Google's Ariane testcase. **This should be taken as a representing the potential of Circuit Training**. We are only providing these trained weights here for the sake of testing. Please feel free to load any of your own trained weights. You may find similar file structure under `./logs` after training.
 
 ## View Your Result
 You can view the result by supplying this placement file into the open-sourced Plc_client testbench and use the `display_canvas` function.
