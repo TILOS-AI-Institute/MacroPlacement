@@ -7,6 +7,15 @@ First, make sure you are under `CodeElements/EvalCT/`. To run `eval_ct.py`, we n
 svn export -r 90 --force https://github.com/google-research/circuit_training.git/trunk/circuit_training
 ```
 
-Assume you have trained models (which usually can be found under `./logs`)
+Next, we need to prepare your trained policy and the testcase you want to evaluate on. Assume you have trained models (which usually can be found under `./logs`), copy the run folder into `saved_model` folder. Make sure your testcase is under `./test`.
 
-## Troubleshooting
+Finally, run the following command with path to netlist file, initial placement file and model run directory path.
+```
+$ python3 -m eval_ct --netlist ./test/ariane/netlist.pb.txt\
+            --plc ./test/ariane/initial.plc\
+            --rundir run_os_64128_g657_ub5_nruns10_c5_r3_v3_rc1
+```
+The placement will be stored under `CodeElements/EvalCT/` and named as `eval_[RUN_DIR]_to_[TESTCASE].plc`.
+
+## View Your Result
+You can view the result by supplying this placement file into the open-sourced Plc_client testbench and use the `display_canvas` function.
