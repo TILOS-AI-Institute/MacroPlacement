@@ -1,0 +1,10 @@
+# Copyright 2020 ETH Zurich and University of Bologna.
+# Solderpad Hardware License, Version 0.51, see LICENSE for details.
+# SPDX-License-Identifier: SHL-0.51
+#
+# waiver file for register_interface lint
+
+waive --rule=explicit-parameter-storage-type --location="src/prim_subreg.sv"
+waive --rule=explicit-parameter-storage-type --location="src/prim_subreg_arb.sv"
+waive --rule=explicit-parameter-storage-type --location="src/prim_subreg_shadow.sv"
+waive --rule=interface-name-style --location="src/reg_intf.sv"

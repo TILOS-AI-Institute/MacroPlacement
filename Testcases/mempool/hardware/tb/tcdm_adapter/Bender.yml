@@ -1,0 +1,21 @@
+# Copyright 2021 ETH Zurich and University of Bologna.
+# Licensed under the Apache License, Version 2.0, see LICENSE for details.
+# SPDX-License-Identifier: Apache-2.0
+
+package:
+  name: tcdm_adapter
+
+dependencies:
+  common_cells: { path: "../../deps/common_cells" }
+  axi:          { path: "../../deps/axi"          }
+  snitch:       { path: "../../deps/snitch"       }
+
+sources:
+  # Level 0
+  - ../../src/mempool_pkg.sv
+  - ../../src/tcdm_adapter.sv
+
+  - target: tcdm_vsim
+    files:
+      # Level 1
+      - tcdm_adapter_tb.sv

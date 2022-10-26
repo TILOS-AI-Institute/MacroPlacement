@@ -1,0 +1,49 @@
+register_interface:
+  vlog_opts:
+    - -L common_cells_lib
+    - -L axi_lib
+
+  incdirs:
+    - include
+    - ../axi/axi/include
+    - ../common_cells/include
+  files:
+    # Level 0
+    - src/reg_intf.sv
+    # Level 1
+    - src/apb_to_reg.sv
+    - src/axi_to_reg.sv
+    - src/periph_to_reg.sv
+    - src/reg_cdc.sv
+    - src/reg_demux.sv
+    - src/reg_mux.sv
+    - src/reg_to_mem.sv
+    - src/reg_uniform.sv
+    # Level 2
+    - src/axi_lite_to_reg.sv
+
+reggen_primitives:
+  vlog_opts:
+    - -L common_cells_lib
+    - -L axi_lib
+
+  incdirs:
+    - include
+    - ../axi/axi/include
+    - ../common_cells/include
+  files:
+    - vendor/lowrisc_opentitan/src/prim_subreg.sv
+    - vendor/lowrisc_opentitan/src/prim_subreg_arb.sv
+    - vendor/lowrisc_opentitan/src/prim_subreg_ext.sv
+    - vendor/lowrisc_opentitan/src/prim_subreg_shadow.sv
+
+register_interface_test:
+  vlog_opts:
+    - -L common_cells_lib
+    - -L axi_lib
+  incdirs:
+    - include
+  files:
+    - src/reg_test.sv
+  flags:
+    - skip_synthesis

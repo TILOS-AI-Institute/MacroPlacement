@@ -1,0 +1,91 @@
+package:
+  name: cluster_interconnect
+
+dependencies:
+  common_cells: { git: "https://github.com/pulp-platform/common_cells.git", version: 1.22.1 }
+
+workspace:
+  checkout_dir: "./deps"
+
+export_include_dirs:
+  - rtl/low_latency_interco
+  - rtl/peripheral_interco
+
+sources:
+  # Source files grouped in levels. Files in level 0 have no dependencies on files in this
+  # package. Files in level 1 only depend on files in level 0, files in level 2 on files in
+  # levels 1 and 0, etc. Files within a level are ordered alphabetically.
+  # Level 0
+  - rtl/tcdm_interconnect/tcdm_interconnect_pkg.sv
+  - rtl/tcdm_interconnect/addr_dec_resp_mux.sv
+  - rtl/tcdm_interconnect/amo_shim.sv
+  - rtl/variable_latency_interconnect/addr_decoder.sv
+  # Level 1
+  - rtl/tcdm_interconnect/xbar.sv
+  - rtl/variable_latency_interconnect/simplex_xbar.sv
+  # Level 2
+  - rtl/tcdm_interconnect/clos_net.sv
+  - rtl/tcdm_interconnect/bfly_net.sv
+  - rtl/variable_latency_interconnect/full_duplex_xbar.sv
+  # Level 3
+  - rtl/tcdm_interconnect/tcdm_interconnect.sv
+  - rtl/variable_latency_interconnect/variable_latency_bfly_net.sv
+  # Level 4
+  - rtl/variable_latency_interconnect/variable_latency_interconnect.sv
+
+  # Low-Latency Interco
+  - rtl/low_latency_interco/FanInPrimitive_Req.sv
+  - rtl/low_latency_interco/ArbitrationTree.sv
+  - rtl/low_latency_interco/MUX2_REQ.sv
+  - rtl/low_latency_interco/AddressDecoder_Resp.sv
+  - rtl/low_latency_interco/TestAndSet.sv
+  - rtl/low_latency_interco/RequestBlock2CH.sv
+  - rtl/low_latency_interco/RequestBlock1CH.sv
+  - rtl/low_latency_interco/FanInPrimitive_Resp.sv
+  - rtl/low_latency_interco/ResponseTree.sv
+  - rtl/low_latency_interco/ResponseBlock.sv
+  - rtl/low_latency_interco/AddressDecoder_Req.sv
+  - rtl/low_latency_interco/XBAR_TCDM.sv
+  - rtl/low_latency_interco/XBAR_TCDM_WRAPPER.sv
+  - rtl/low_latency_interco/TCDM_PIPE_REQ.sv
+  - rtl/low_latency_interco/TCDM_PIPE_RESP.sv
+  - rtl/low_latency_interco/grant_mask.sv
+  - rtl/low_latency_interco/priority_Flag_Req.sv
+
+  # Peripheral Interco
+  - rtl/peripheral_interco/AddressDecoder_PE_Req.sv
+  - rtl/peripheral_interco/AddressDecoder_Resp_PE.sv
+  - rtl/peripheral_interco/ArbitrationTree_PE.sv
+  - rtl/peripheral_interco/FanInPrimitive_Req_PE.sv
+  - rtl/peripheral_interco/RR_Flag_Req_PE.sv
+  - rtl/peripheral_interco/MUX2_REQ_PE.sv
+  - rtl/peripheral_interco/FanInPrimitive_PE_Resp.sv
+  - rtl/peripheral_interco/RequestBlock1CH_PE.sv
+  - rtl/peripheral_interco/RequestBlock2CH_PE.sv
+  - rtl/peripheral_interco/ResponseBlock_PE.sv
+  - rtl/peripheral_interco/ResponseTree_PE.sv
+  - rtl/peripheral_interco/XBAR_PE.sv
+
+  - target: tcdm_test
+    include_dirs:
+      - tb/common/
+      - tb/tb_tcdm_interconnect/hdl
+    files:
+      # Level 0
+      - tb/tb_tcdm_interconnect/hdl/tb_pkg.sv
+      # Level 2
+      - tb/tb_tcdm_interconnect/hdl/tcdm_interconnect_wrap.sv
+      # Level 2
+      - tb/tb_tcdm_interconnect/hdl/tb.sv
+
+  - target: variable_latency_test
+    include_dirs:
+      - tb/common/
+      - tb/tb_variable_latency_interconnect/hdl
+    files:
+      # Level 0
+      - tb/tb_variable_latency_interconnect/hdl/tb_pkg.sv
+      # Level 2
+      - tb/tb_variable_latency_interconnect/hdl/variable_latency_interconnect_wrap.sv
+      # Level 2
+      - tb/tb_variable_latency_interconnect/hdl/variable_latency_interconnect_tb.sv
