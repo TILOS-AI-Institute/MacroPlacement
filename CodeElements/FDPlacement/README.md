@@ -17,6 +17,14 @@ according to the weight×distance formula, causing tightly connected nodes to be
 We also introduce a repulsive force between overlapping nodes to reduce placement density. 
 After applying all forces, we move nodes in the direction of their force vector. To reduce oscillations, we set a maximum distance for each move.”
 
+For each pair of nodes $(u, v)$, there are two types of forces between them : attractive force $f_a(u,v)$ and repulsive force $f_r(u,v)$. The magnitude of attractive force can be expressed as $f_a(u, v) = k_a * distance(u, v)$, where $k_a$ is the attractive factor and $distance$ is the euclidean distance between node $u$ and node $v$; the magnitude of repulsive force can be expressed as $f_r(u, v) = k_r$.  Both attracive force and repulsive force are along the straight line joining the node $u$ and node $v$.
+
+During force-directed placement, all the hard macros and IO ports are fixed. Only the stanard-cell clusters can be moved.  Note that we need to consider the contribution from hard macros and IO ports when we calculate the total force exerted on a standard-cell cluster.  
+
+The standard-cell clusters are not placed onto the centers of gridcells.
+
+
+
 
 
 
