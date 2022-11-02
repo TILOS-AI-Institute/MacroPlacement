@@ -394,8 +394,9 @@ class FDPlacement:
         x_dist = self.objects[u].x - self.objects[v].x
         y_dist = self.objects[u].y - self.objects[v].y
         dist = sqrt(x_dist * x_dist + y_dist * y_dist)
-        if (dist <= 1e-5):
-            return 1e5, 1e5
+        
+        if (dist <= 1e-10):
+            return sqrt(self.repulsive_factor), sqrt(self.repulsive_factor)
         else:
             f_x = self.repulsive_factor * x_dist / dist
             f_y = self.repulsive_factor * y_dist / dist
