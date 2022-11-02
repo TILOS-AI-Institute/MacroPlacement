@@ -741,18 +741,6 @@ class PlacementCostTest():
             init_placement=self.PLC_PATH
         )
 
-        if self.PLC_PATH:
-            print("#[PLC FILE FOUND] Loading info from .plc file")
-            self.plc_util_os.set_canvas_boundary_check(False)
-            self.plc_util_os.restore_placement(self.PLC_PATH,
-                                               ifInital=True,
-                                               ifValidate=True,
-                                               ifReadComment=False)
-            self.plc_util.set_canvas_boundary_check(False)
-            self.plc_util.restore_placement(self.PLC_PATH)
-        else:
-            print("#[PLC FILE MISSING] Using only netlist info")
-
         self.extractor = observation_extractor.ObservationExtractor(
             plc=self.plc_util, observation_config=self._observation_config
         )
@@ -935,6 +923,24 @@ class PlacementCostTest():
         print("                  +++ TEST ENVIRONMENT: PASS +++")
         print("                  ++++++++++++++++++++++++++++++")
 
+    def test_fd_placement(self):
+        print("############################ TEST FDPLACEMENT ############################")
+        self.plc_util_os = placement_util.create_placement_cost(
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        # placement util is incapable of setting routing resources
+        self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_util_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
+
+        self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        placement_util.fd_placement_schedule(self.plc_util_os)
 
 def parse_flags(argv):
     parser = argparse_flags.ArgumentParser(
@@ -1003,6 +1009,7 @@ def main(args):
     # PCT.test_observation_extractor()
     PCT.view_canvas()
     # PCT.test_environment()
+    # PCT.test_fd_placement()
 
 
 if __name__ == '__main__':

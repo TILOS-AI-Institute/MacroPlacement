@@ -487,7 +487,7 @@ class PlacementCost(object):
             elif all(it in line_item for it in ['MACROs'])\
                 and len(line_item) == 2:
                 _macros_cnt = int(line_item[1])
-            elif all(re.match(r'[0-9NEWS\.\-]+', it) for it in line_item)\
+            elif all(re.match(r'[0-9FNEWS\.\-]+', it) for it in line_item)\
                 and len(line_item) == 5:
                 # [node_index] [x] [y] [orientation] [fixed]
                 _node_plc[int(line_item[0])] = line_item[1:]
@@ -561,6 +561,7 @@ class PlacementCost(object):
         
         # restore placement for each module
         try:
+            # print(sorted(list(info_dict['node_plc'].keys())))
             assert sorted(self.port_indices +\
                 self.hard_macro_indices +\
                 self.soft_macro_indices) == sorted(list(info_dict['node_plc'].keys()))
@@ -2378,6 +2379,216 @@ class PlacementCost(object):
 
         plt.show()
         plt.close('all')
+    
+    '''
+    FD Placement below shares the same functionality as the FDPlacement/fd_placement.py
+    '''
+    def __repulsive_force(self, repel_factor, node_i, node_j):
+        '''
+        Calculate repulsive force between two nodes node_i, node_j
+        '''
+        if repel_factor == 0.0:
+            return 0.0, 0.0
+        
+        # retrieve module instance
+        mod_i = self.modules_w_pins[node_i]
+        mod_j = self.modules_w_pins[node_j]
+
+        # retrieve module position
+        x_i, y_i = mod_i.get_pos()
+        x_j, y_j = mod_j.get_pos()
+        
+        # get dist between x and y
+        x_dist = x_i - x_j
+        y_dist = y_i - y_j
+
+        # get dist of hypotenuse
+        hypo_dist = math.sqrt(x_dist**2 + y_dist**2)
+        
+        # compute force in x and y direction
+        if hypo_dist <= 1e-5:
+            return 1e5, 1e5
+        else:
+            f_x = repel_factor * x_dist / hypo_dist
+            f_y = repel_factor * y_dist / hypo_dist
+            return f_x, f_y
+
+    def __attractive_force(self, io_factor, attract_factor, node_i, node_j, io_flag = True, attract_exponent = 1):
+        '''
+        Calculate repulsive force between two nodes node_i, node_j
+        '''
+        # retrieve module instance
+        mod_i = self.modules_w_pins[node_i]
+        mod_j = self.modules_w_pins[node_j]
+
+        # retrieve module position
+        x_i, y_i = mod_i.get_pos()
+        x_j, y_j = mod_j.get_pos()
+        
+        # get dist between x and y
+        x_dist = x_i - x_j
+        y_dist = y_i - y_j
+
+        # get dist of hypotenuse
+        hypo_dist = math.sqrt(x_dist**2 + y_dist**2)
+
+        # compute force in x and y direction
+        if hypo_dist <= 0.0:
+            return 0.0, 0.0
+        else:
+            if io_flag:
+                temp_f = io_factor * (hypo_dist ** attract_exponent)
+            else:
+                temp_f = attract_factor * (hypo_dist ** attract_exponent)
+            
+            f_x = x_dist / hypo_dist * temp_f
+            f_y = y_dist / hypo_dist * temp_f
+            return f_x, f_y
+    
+    def __centralize(self, mod_id):
+        '''
+        Pull the modules to the nearest center of the gridcell
+        '''
+        mod = self.modules_w_pins[mod_id]
+        mod_x, mod_y = mod.get_pos()
+
+        # compute grid cell col
+        # why / 2.0?
+        col = round((mod_x - self.grid_width / 2.0) / self.grid_width)
+        if (col < 0):
+            col = 0
+        elif col > self.grid_col - 1:
+            col = self.grid_col - 1
+        
+        row = round((mod_y - self.grid_height / 2.0) / self.grid_height)
+        if (row < 0):
+            row = 0
+        elif row > self.grid_row - 1:
+            row = self.grid_row - 1
+
+        mod.set_pos((col + 0.5) * self.grid_width, (row + 0.5) * self.grid_height)
+
+    def __boundary_check(self, mod_id):
+        '''
+        Make sure all the clusters are placed within the canvas
+        '''
+        mod = self.modules_w_pins[mod_id]
+        mod_x, mod_y = mod.get_pos()
+        
+        if mod_x < 0.0:
+            mod_x = 0.0
+        
+        if mod_x > self.width:
+            mod_x = self.width
+
+        if mod_y < 0.0:
+            mod_y = 0.0
+
+        if mod_y > self.height:
+            mod_y = self.height
+
+        mod.set_pos(mod_x, mod_y)
+
+    def __fd_placement(self, io_factor, max_displacement, attract_factor, repel_factor):
+        '''
+        Force-directed Placement for standard-cell clusters
+        ''' 
+        # store x/y displacement for all soft macro disp
+        soft_macro_disp = {}
+        for mod_idx in self.soft_macro_indices:
+            soft_macro_disp[mod_idx] = [0.0, 0.0]
+        
+        def add_displace(mod_id, x_disp, y_disp):
+            soft_macro_disp[mod_id][0] += x_disp
+            soft_macro_disp[mod_id][1] += y_disp
+
+        # limit the displacement. max_displace is the threshold
+        def limit_displace(max_displace, mod_id):
+            if max_displace <= 0.0:
+                soft_macro_disp[mod_id][0] = 0.0
+                soft_macro_disp[mod_id][1] = 0.0
+            
+            # get dist of hypotenuse
+            hypo_dist = math.sqrt(soft_macro_disp[mod_id][0]**2 + soft_macro_disp[mod_id][1]**2)
+            if hypo_dist > max_displace:
+                soft_macro_disp[mod_id][0] = soft_macro_disp[mod_id][0] / hypo_dist * max_displace
+                soft_macro_disp[mod_id][1] = soft_macro_disp[mod_id][1] / hypo_dist * max_displace
+
+        def update_location(mod_id, x_disp, y_disp):
+            x_pos, y_pos = self.modules_w_pins[mod_id].get_pos()
+            # logging.info("{} {} {} {}".format(x_pos, y_pos, x_disp, y_disp))
+            self.modules_w_pins[mod_id].set_pos(x_pos + x_disp, y_pos + y_disp)
+
+        # calculate the repulsive forces
+        # repulsive forces between stdcell clusters
+        for mod_i in self.soft_macro_indices:
+            for mod_j in self.soft_macro_indices:
+                if (mod_i <= mod_j):
+                    continue
+                repul_x, repul_y = self.__repulsive_force(repel_factor=repel_factor,
+                                                            node_i=mod_i, node_j=mod_j)
+                add_displace(mod_i, repul_x, repul_y)
+                add_displace(mod_j, -1.0 * repul_x, -1.0 * repul_y)
+        
+        # repulsive forces between stdcell clusters and macros
+        for mod_i in self.soft_macro_indices:
+            for mod_j in self.hard_macro_indices:
+                repul_x, repul_y = self.__repulsive_force(repel_factor=repel_factor,
+                                                            node_i=mod_i, node_j=mod_j)
+                add_displace(mod_i, repul_x, repul_y)
+        
+        # calculate the attractive force
+        # traverse each edge
+        # the adj_matrix is a symmetric matrix
+        for driver_pin_idx, driver_pin in enumerate(self.modules_w_pins):
+            # only for soft macro
+            if driver_pin_idx in self.soft_macro_pin_indices and driver_pin.get_sink():
+                driver_mod_idx = self.get_ref_node_id(driver_pin_idx)
+                for sink_pin_name in driver_pin.get_sink().keys():
+                    sink_mod_idx = self.mod_name_to_indices[sink_pin_name]
+                    # print(self.modules_w_pins[sink_mod_idx].get_type())
+                    attrac_x, attrac_y = self.__attractive_force(io_factor=io_factor,
+                                                                    attract_factor=attract_factor,
+                                                                    node_i=driver_mod_idx,
+                                                                    node_j=sink_mod_idx
+                                                                )
+                    add_displace(driver_mod_idx, -1.0 * attrac_x, -1.0 * attrac_y)
+
+        for mod_idx in soft_macro_disp.keys():
+            # limit max displacement to threshold : max_displacement
+            limit_displace(max_displace=max_displacement, mod_id=mod_idx)
+            # push all the macros to the nearest center of gridcell
+            update_location(mod_idx, *soft_macro_disp[mod_idx])
+            # Moved to here to save a for loop
+            # Based on our understanding, the stdcell clusters can be placed
+            # at any place in the canvas instead of the center of gridcells
+            self.__boundary_check(mod_idx)
+        
+
+    def optimize_stdcells(self, use_current_loc, move_stdcells, move_macros,
+                        log_scale_conns, use_sizes, io_factor, num_steps,
+                        max_move_distance, attract_factor, repel_factor):
+
+        
+        # initialize the position for all the macros and stdcell clusters
+        # YW: here I will ignore centering Macros since CT placement does that
+        for mod_idx in self.soft_macro_indices:
+            self.__centralize(mod_id = mod_idx)
+
+        for epoch_id, iterations in enumerate(num_steps):
+            logging.info("#[OPTIMIZING STDCELs] at num_step {}:".format(str(epoch_id)))
+            print("[INFO] max_displaccment = ", max_move_distance[epoch_id])
+            print("[INFO] attractive_factor = ", attract_factor[epoch_id])
+            print("[INFO] repulsive_factor = ", repel_factor[epoch_id])
+            print("[INFO] io_factor = ", io_factor)
+            print("[INFO] number of iteration = ", iterations)
+            for iter in range(iterations):
+                logging.info("#     iteration {}:".format(str(iter)))
+                self.__fd_placement(io_factor=io_factor, 
+                                    max_displacement=max_move_distance[epoch_id],
+                                    attract_factor=attract_factor[epoch_id],
+                                    repel_factor=repel_factor[epoch_id])
+            self.save_placement('epoch_{}.plc'.format(str(epoch_id)))
 
     # Board Entity Definition
     class Port:
