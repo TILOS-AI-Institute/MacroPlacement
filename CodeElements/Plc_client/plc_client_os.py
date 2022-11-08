@@ -144,6 +144,7 @@ class PlacementCost(object):
         """
         private function: Protobuf Netlist Parser
         """
+        print("#[INFO] Reading from " + self.netlist_file)
         with open(self.netlist_file) as fp:
             line = fp.readline()
             node_cnt = 0
@@ -596,6 +597,7 @@ class PlacementCost(object):
         
         # set meta information
         if ifReadComment:
+            print("[INFO] Retrieving Meta information from .plc comments")
             self.set_canvas_size(info_dict['width'], info_dict['height'])
             self.set_placement_grid(info_dict['columns'], info_dict['rows'])
             self.set_block_name(info_dict['block'])
@@ -2407,7 +2409,7 @@ class PlacementCost(object):
         
         # compute force in x and y direction
         if hypo_dist <= 1e-5:
-            return 1e5, 1e5
+            return math.sqrt(repel_factor), math.sqrt(repel_factor)
         else:
             f_x = repel_factor * x_dist / hypo_dist
             f_y = repel_factor * y_dist / hypo_dist

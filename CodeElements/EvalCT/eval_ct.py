@@ -29,7 +29,7 @@ from tf_agents.system import system_multiprocessing as multiprocessing
 Example
     At ./MacroPlacement/CodeElement/EvalCT, run the following command:
 
-        $ python3 -m eval_ct --netlist ./test/ariane/netlist.pb.txt\
+        $ cd EvalCT && python3 -m eval_ct --netlist ./test/ariane/netlist.pb.txt\
             --plc ./test/ariane/initial.plc\
             --rundir run_00\
             --ckptID policy_checkpoint_0000103984
