@@ -4,6 +4,7 @@
 #  Generated on:      Thu Sep 22 14:06:06 2022
 #  Design:            bsg_chip
 #  Command:           defOut -floorplan ./def/bsg_chip_fp_placed_macros.def
+#  User:              Sayak Kundu
 ###############################################################
 VERSION 5.8 ;
 DIVIDERCHAR "/" ;

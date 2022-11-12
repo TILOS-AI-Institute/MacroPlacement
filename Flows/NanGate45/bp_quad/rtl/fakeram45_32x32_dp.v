@@ -1,3 +1,4 @@
+// Dummy dual port memory using two single port memories
 module fakeram_32x32_dp
 (
   QA, 
