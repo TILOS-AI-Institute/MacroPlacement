@@ -4,15 +4,18 @@
 
 set libdir "../../../../../Enablements/NanGate45/lib"
 set lefdir "../../../../../Enablements/NanGate45/lef"
+set qrcdir "../../../../../Enablements/NanGate45/qrc"
 
 set_db init_lib_search_path { \
     ${libdir} \
     ${lefdir} \
 }
 
-set libworst "  
+set libworst "
     ${libdir}/NangateOpenCellLibrary_typical.lib \
     ${libdir}/fakeram45_256x32.lib \
+    ${libdir}/fakeram45_128x256.lib \
+    ${libdir}/fakeram45_128x32.lib \
     ${libdir}/fakeram45_64x64.lib \
     "
 
@@ -20,6 +23,8 @@ set libworst "
 set libbest " 
     ${libdir}/NangateOpenCellLibrary_typical.lib \
     ${libdir}/fakeram45_256x32.lib \
+    ${libdir}/fakeram45_128x256.lib \
+    ${libdir}/fakeram45_128x32.lib \
     ${libdir}/fakeram45_64x64.lib \
     "
 
@@ -27,13 +32,14 @@ set lefs "
     ${lefdir}/NangateOpenCellLibrary.tech.lef \
     ${lefdir}/NangateOpenCellLibrary.macro.mod.lef \
     ${lefdir}/fakeram45_256x32.lef \
+    ${lefdir}/fakeram45_128x256.lef \
+    ${lefdir}/fakeram45_128x32.lef \
     ${lefdir}/fakeram45_64x64.lef \
     "
 #
 # Ensures proper and consistent library handling between Genus and Innovus
 #set_db library_setup_ispatial true
 
-
-#set qrc_max "SigCmax/qrcTechFile"
-#set qrc_min "SigCmin/qrcTechFile"
+set qrc_max "${qrcdir}/NG45.tch"
+set qrc_min "${qrcdir}/NG45.tch"
 setDesignMode -process 45

@@ -10,4 +10,9 @@ CodeElements/Plc_client/__pycache__/*
 CodeElements/Plc_client/proto_reader.py
 CodeElements/Plc_client/plc_client.py
 CodeElements/Plc_client/failed_proxy_plc/*
+__pycache__/
+__pycache__
+run
+run*
 GF12/
+GF12

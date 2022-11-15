@@ -2,16 +2,16 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 
 set DESIGN bsg_chip
-set sdc  ./sdc/bsg_chip.sdc
+set sdc  ../../constraints/bsg_chip.sdc
 set rtldir ./rtl
 
 #
 # DEF file for floorplan initialization
 #
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
-    set floorplan_def ./def/bsg_chip_fp_placed_macros.def
+    set floorplan_def ../../def/bsg_chip_fp_placed_macros.def
 } else {
-    set floorplan_def ./def/bsg_chip_fp.def
+    set floorplan_def ../../def/bsg_chip_fp.def
 }
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage

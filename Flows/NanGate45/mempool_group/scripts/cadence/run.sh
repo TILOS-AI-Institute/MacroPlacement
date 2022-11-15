@@ -6,7 +6,12 @@ module load genus/21.1
 module unload innovus
 module load innovus/21.1
 
+#
+# To run the Physical Synthesis (iSpatial) flow - flow2
+export PHY_SYNTH=1
+export clk_period=3
+
 mkdir log -p
-genus -overwrite -log log/genus.log -no_gui -files run_genus.tcl
-innovus -64 -files run_invs.tcl -overwrite -log log/innovus.log
-../../../../util/run_grp_main.sh
+genus -overwrite -log log/genus.log -no_gui -files run_genus_hybrid.tcl
+innovus -64 -overwrite -log log/innovus.log -files run_invs.tcl
+#../../../../util/run_CodeFlow.sh
