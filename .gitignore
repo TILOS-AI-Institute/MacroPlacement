@@ -13,6 +13,6 @@ CodeElements/Plc_client/failed_proxy_plc/*
 __pycache__/
 __pycache__
 run
-run*
+run-*
 GF12/
 GF12
