@@ -32,9 +32,14 @@ Example
         $ cd EvalCT && python3 -m eval_ct --netlist ./test/ariane/netlist.pb.txt\
             --plc ./test/ariane/initial.plc\
             --rundir run_00\
-            --ckptID policy_checkpoint_0000103984
+            --ckptID policy_checkpoint_0000103984\
+            && cd -
 
 """
+# InfoMetric_wirelength = 0.09238692254177283
+# 		 InfoMetric_congestion = 0.9468230846211636
+# 		 InfoMetric_density = 0.5462616496124097
+
 
 class InfoMetric(py_metric.PyStepMetric):
     """Observer for graphing the environment info metrics."""
@@ -112,6 +117,10 @@ def evaulate(model_dir, ckpt_id, create_env_fn):
         exit(0)
 
     policy = policy_loader.load(policy_saved_model_path, policy_saved_chkpt_path)
+
+    policy.get_initial_state()
+
+    print(policy.variables()[0].numpy())
 
     train_step = train_utils.create_train_step()
 

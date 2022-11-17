@@ -29,10 +29,11 @@ PLC_DIR = "StatTest/test/flow2_68_1.3_ct"
 PLC_PATH_COLLECTION = []
 assert os.path.isdir(PLC_DIR)
 # Top X% of largest movement range
-TOP_X = 1
+TOP_X = 5
 
 # List to store every plc coordinate
 PLC_COORD = []
+# hold hard macro, soft macro, port count
 
 def init_method(plc_dir):
     """
@@ -60,16 +61,28 @@ def init_method(plc_dir):
                         and len(line_item) == 5:
                         # extract pos
                         temp_coord = np.append(temp_coord, np.array([[float(line_item[1]),float(line_item[2])]]), axis=0)
-            
+                    elif all(it in line_item for it in ['HARD', 'MACROs'])\
+                        and len(line_item) == 3:
+                        hard_macros_cnt = int(line_item[2])
+                    elif all(it in line_item for it in ['PORTs'])\
+                        and len(line_item) == 2:
+                        ports_cnt = int(line_item[1])
+                    elif all(it in line_item for it in ['SOFT', 'MACROs'])\
+                        and len(line_item) == 3:
+                        soft_macros_cnt = int(line_item[2])
+        
                 # remove header row
                 temp_coord = temp_coord[1:, :]
                 # make sure every plc is aligned
                 if PLC_COORD:
                     assert PLC_COORD[-1].shape == temp_coord.shape
+                    assert temp_coord.shape[0] == hard_macros_cnt + soft_macros_cnt + ports_cnt
 
                 PLC_COORD.append(temp_coord)
                 # print(temp_coord)
                 del temp_coord
+    
+    return ports_cnt, hard_macros_cnt, soft_macros_cnt
 
 def get_abs_dist():
     # store all pair-wise distance
@@ -93,25 +106,38 @@ def get_abs_dist():
     return abs_dist_plc[:, 1:]
 
 def main():
-    init_method(PLC_DIR)
+    ports_cnt, hard_macros_cnt, soft_macros_cnt = init_method(PLC_DIR)
     abs_dist_plc = get_abs_dist()
+    
+    print(hard_macros_cnt, ports_cnt, soft_macros_cnt)
+    hard_abs_dist_plc = abs_dist_plc[ports_cnt:(hard_macros_cnt+ports_cnt), :]
+    soft_abs_dist_plc = abs_dist_plc[ports_cnt+hard_macros_cnt:hard_macros_cnt+ports_cnt+soft_macros_cnt, :]
 
-    TOP_N =  int(math.floor(abs_dist_plc.shape[0] * (TOP_X/100.0)))
-    print("[INFO] Using TOP {}% Largest Macro Movement --- {} Macros in total.".format(TOP_X, TOP_N))
+    # PORT_IDX = list(range(0, ports_cnt, 1))
+    # HARD_MACRO_IDX = list(range(ports_cnt, hard_macros_cnt+ports_cnt, 1))
+    # SOFT_MACRO_IDX = list(range(hard_macros_cnt+ports_cnt, hard_macros_cnt+soft_macros_cnt+ports_cnt, 1))
 
-    ############ MACRO placement range maximum distance + visual ###############
+    # top n hard macro
+    HM_TOP_N =  int(math.floor(hard_abs_dist_plc.shape[0] * (TOP_X/100.0)))
+    # top n soft macro
+    SM_TOP_N =  int(math.floor(soft_abs_dist_plc.shape[0] * (TOP_X/100.0)))
+
+    print("[INFO] Using TOP {}% Largest Hard Macro Movement --- {} Macros in total.".format(TOP_X, HM_TOP_N))
+    print("[INFO] Using TOP {}% Largest Soft Macro Movement --- {} Macros in total.".format(TOP_X, SM_TOP_N))
+
+    ############ HARD MACRO placement range maximum distance + visual ###############
     # across all the plc diff, the max distance [row wise]
-    max_dist = np.amax(abs_dist_plc, axis=1)
+    hm_max_dist = np.amax(hard_abs_dist_plc, axis=1)
 
     # top-n max distance
-    topn_max_dist_idx = np.argpartition(max_dist, -TOP_N)[-TOP_N:]
-    topn_max_dist_val = np.take(max_dist, topn_max_dist_idx)
+    hm_topn_max_dist_idx = np.argpartition(hm_max_dist, -HM_TOP_N)[-HM_TOP_N:]
+    hm_topn_max_dist_val = np.take(hm_max_dist, hm_topn_max_dist_idx)
 
-    x = range(topn_max_dist_val.shape[0])
-    y = topn_max_dist_val
-    n = topn_max_dist_idx
+    x = range(hm_topn_max_dist_val.shape[0])
+    y = hm_topn_max_dist_val
+    n = hm_topn_max_dist_idx
     fig, ax = plt.subplots()
-    ax.set_title("Top {}% Maximum Placement Range".format(TOP_X))
+    ax.set_title("Top {}% Hard Macro Maximum Placement Range".format(TOP_X))
     ax.scatter(x, y, c = 'b')
     ax.set_xlabel("module index")
     ax.set_ylabel("distance")
@@ -119,11 +145,40 @@ def main():
         ax.annotate(txt, (x[i], y[i]))
     plt.show()
 
-    ######################## MACRO placement range box plot visual #############
-    abs_dist_plc_df = pd.DataFrame(data=abs_dist_plc)
-    topn_max_dist_df = abs_dist_plc_df.iloc[topn_max_dist_idx, :]
-    topn_max_dist_df.T.boxplot()
-    plt.title("Top {}% Placement Range".format(TOP_X))
+    ############ SOFT MACRO placement range maximum distance + visual ###############
+    # across all the plc diff, the max distance [row wise]
+    sm_max_dist = np.amax(soft_abs_dist_plc, axis=1)
+
+    # top-n max distance
+    sm_topn_max_dist_idx = np.argpartition(sm_max_dist, -SM_TOP_N)[-SM_TOP_N:]
+    sm_topn_max_dist_val = np.take(sm_max_dist, sm_topn_max_dist_idx)
+
+    x = range(sm_topn_max_dist_val.shape[0])
+    y = sm_topn_max_dist_val
+    n = sm_topn_max_dist_idx
+    fig, ax = plt.subplots()
+    ax.set_title("Top {}% Soft Macro Maximum Placement Range".format(TOP_X))
+    ax.scatter(x, y, c = 'b')
+    ax.set_xlabel("module index")
+    ax.set_ylabel("distance")
+    for i, txt in enumerate(n):
+        ax.annotate(txt, (x[i], y[i]))
+    plt.show()
+
+    ######################## HARD MACRO placement range box plot visual #############
+    hard_abs_dist_plc_df = pd.DataFrame(data=hard_abs_dist_plc)
+    hm_topn_max_dist_df = hard_abs_dist_plc_df.iloc[hm_topn_max_dist_idx, :]
+    hm_topn_max_dist_df.T.boxplot()
+    plt.title("Top {}% Hard Macro Placement Range".format(TOP_X))
+    plt.xlabel("module index")
+    plt.ylabel("distance")
+    plt.show()
+
+    ######################## SOFT MACRO placement range box plot visual #############
+    soft_abs_dist_plc_df = pd.DataFrame(data=soft_abs_dist_plc)
+    sm_topn_max_dist_df = soft_abs_dist_plc_df.iloc[sm_topn_max_dist_idx, :]
+    sm_topn_max_dist_df.T.boxplot()
+    plt.title("Top {}% Soft Macro Placement Range".format(TOP_X))
     plt.xlabel("module index")
     plt.ylabel("distance")
     plt.show()
