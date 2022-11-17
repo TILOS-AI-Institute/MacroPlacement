@@ -9,7 +9,7 @@ module load innovus/21.1
 #
 # To run the Physical Synthesis (iSpatial) flow - flow2
 export PHY_SYNTH=1
-export clk_period=2000
+export clk_period=1300
 
 mkdir log -p
 genus -overwrite -log log/genus.log -no_gui -files run_genus_hybrid.tcl
