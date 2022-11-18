@@ -2,7 +2,7 @@ set sdc_version 2.0
 set_units -time ns -resistance kOhm -capacitance fF -power mW -voltage V -current uA
 
 set clock_cycle $::env(clk_period)
-Set uncertainty [expr $clock_cycle*0.02]
+set uncertainty [expr $clock_cycle*0.02]
 set io_delay 0
 set maxFanout 16
 set maxTransition [expr $clock_cycle*0.01]
