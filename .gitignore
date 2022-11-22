@@ -12,6 +12,7 @@ CodeElements/Plc_client/plc_client.py
 CodeElements/Plc_client/failed_proxy_plc/*
 __pycache__/
 __pycache__
+try.ipynb
 run
 run-*
 GF12/

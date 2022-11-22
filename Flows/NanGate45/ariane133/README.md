@@ -84,7 +84,7 @@ The following screenshot shows the placed and routed Ariane133-NG45 design gener
 <img height="400" src="./screenshots/CT_Routing.png">
 </p>
 
-The following table shows the different metrics, when [Flow-2](../../figures/flow-2.PNG) is used when initial macro placement is generated using CT.  
+The following table shows the different metrics, when [Flow-2](../../figures/flow-2.PNG) is used and the initial macro placement is generated using CT.  
 | Physical Design Stage | Core Area (um^2) | Standard Cell Area (um^2) | Macro Area (um^2) | Total Power (mW) | Wirelength (um) | WS (ns) | TNS (ns) | Congestion (H) | Congestion (V) |
 |-----------------------|------------------|---------------------------|-------------------|------------------|-----------------|---------|----------|----------------|----------------|
 | postSynth             | 1814274          | 244614                    | 1018356           | 761.754          | 4884882         | -0.764  | -533.519 |                |                |
