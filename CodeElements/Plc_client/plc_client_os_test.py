@@ -79,6 +79,18 @@ Example:
             --marv 5\
             --smooth 2
 
+        $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane_fd/ariane.pb.txt\
+            --plc ./Plc_client/test/ariane_fd/ariane.plc\
+            --width 1599.99\
+            --height 1598.8\
+            --col 27\
+            --row 23\
+            --rpmh 70.330\
+            --rpmv 74.510\
+            --marh 51.790\
+            --marv 51.790\
+            --smooth 2
+
 Todo:
     * Clean up code
     * Extract argument from command line
@@ -247,6 +259,7 @@ class PlacementCostTest():
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         # show canvas
+        self.plc_os.make_soft_macros_square()
         self.plc_os.display_canvas(annotate=False, amplify=False)
         
 
@@ -854,6 +867,42 @@ class PlacementCostTest():
 
         self.plc_util_os.display_canvas(annotate=False)
 
+    def test_fd(self):
+        print("############################ TEST GOOGLE's FD Placer ############################")
+        self.plc_util = placement_util.create_placement_cost(
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        self.plc_util_os = placement_util.create_placement_cost(
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
+
+        self.plc_util.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_util_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc_util.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
+
+        self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        
+        placement_util.fd_placement_schedule(self.plc_util)
+
+        for node_index in placement_util.nodes_of_types(self.plc_util, ['MACRO']):
+            x_pos, y_pos = self.plc_util.get_node_location(node_index)
+            self.plc_util_os.set_soft_macro_position(node_index, x_pos, y_pos)
+        
+        self.plc_util_os.display_canvas(annotate=False, amplify=False)
+
     def test_environment(self):
         print("############################ TEST ENVIRONMENT ############################")
         env = environment.CircuitEnv(
@@ -942,6 +991,8 @@ class PlacementCostTest():
 
         placement_util.fd_placement_schedule(self.plc_util_os)
 
+        self.plc_util_os.display_canvas(annotate=False, amplify=False)
+
 def parse_flags(argv):
     parser = argparse_flags.ArgumentParser(
         description='An argparse + app.run example')
@@ -1007,9 +1058,10 @@ def main(args):
     # PCT.test_place_node()
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
-    PCT.view_canvas()
+    # PCT.view_canvas()
+    # PCT.test_fd()
     # PCT.test_environment()
-    # PCT.test_fd_placement()
+    PCT.test_fd_placement()
 
 
 if __name__ == '__main__':

@@ -19,4 +19,16 @@ CodeElements/EvalCT/saved_policy/run_00/111/train/*
 CodeElements/EvalCT/saved_policy/run_00/111/snapshot*.plc
 CodeElements/EvalCT/saved_policy/run_00/111/rl*.plc
 CodeElements/EvalCT/saved_policy/run_os_64128_g657_ub5_nruns10_c5_r3_v3_rc1
-
+CodeElements/epoch_*.plc
+CodeElements/FDPlacement/test/*
+CodeElements/Plc_client/placement_util*.py
+CodeElements/StatTest/test/ariane/*_vs_*
+CodeElements/StatTest/test/flow2_68_1.3_ct/*
+CodeElements/StatTest/test/ariane/*.plc
+CodeElements/*/__pycache__/*
+CodeElements/*.png
+CodeElements/StatTest/*.csv
+CodeElements/os.txt
+CodeElements/EvalCT/test/ariane/*.plc
+CodeElements/FDPlacement/fd.txt
+CodeElements/StatTest/test/ariane/*.pb.txt
