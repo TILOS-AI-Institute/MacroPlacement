@@ -1,3 +1,4 @@
+# [We copy and modify the below code from https://github.com/google-research/circuit_training. This is only for testing purposes.]
 # coding=utf-8
 # Copyright 2021 The Circuit Training Team Authors.
 #

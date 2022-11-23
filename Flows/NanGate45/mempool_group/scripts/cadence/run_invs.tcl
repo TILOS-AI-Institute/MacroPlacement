@@ -2,17 +2,13 @@
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
 source lib_setup.tcl
 source design_setup.tcl
+set handoff_dir  "syn_handoff"
+
+set netlist ${handoff_dir}/${DESIGN}.v
+set sdc ${handoff_dir}/${DESIGN}.sdc 
 source mmmc_setup.tcl
 
 setMultiCpuUsage -localCpu 16
-set util 0.3
-
-set netlist "../../netlist/$DESIGN.v"
-set sdc "../../constraints/$DESIGN.sdc"
-#set netlist "./syn_handoff/$DESIGN.v"
-#set sdc "./syn_handoff/$DESIGN.sdc"
-
-set site "FreePDK45_38x28_10R_NP_162NW_34O"
 
 set rptDir summaryReport/ 
 set encDir enc/
@@ -41,6 +37,8 @@ init_design -setup {WC_VIEW} -hold {BC_VIEW}
 set_power_analysis_mode -leakage_power_view WC_VIEW -dynamic_power_view WC_VIEW
 
 set_interactive_constraint_modes {CON}
+setAnalysisMode -reset
+setAnalysisMode -analysisType onChipVariation -cppr both
 
 clearGlobalNets
 globalNetConnect VDD -type pgpin -pin VDD -inst * -override
@@ -57,56 +55,42 @@ generateVias
 createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
-#floorPlan -r 1.0 $util 10 10 10 10
-defIn $floorplan_def 
+if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
+    defIn ${handoff_dir}/${DESIGN}.def
+    source ../../../../util/gen_pb.tcl
+    gen_pb_netlist
+} else {
+    defIn $floorplan_def
+    addHaloToBlock -allMacro $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH $HALO_WIDTH
+    place_design -concurrent_macros
+    refine_macro_place
+}
 
-## Macro Placement ##
-#redirect mp_config.tcl {source gen_mp_config.tcl}
-#proto_design -constraints mp_config.tcl 
-addHaloToBlock -allMacro 5 5 5 5
-place_design -concurrent_macros
-refine_macro_place
+### Write postSynth report ###
+echo "Physical Design Stage, Core Area (um^2), Standard Cell Area (um^2), Macro Area (um^2), Total Power (mW), Wirelength(um), WS(ns), TNS(ns), Congestion(H), Congestion(V)" > ${DESIGN}_DETAILS.rpt
+source ../../../../util/extract_report.tcl
+set rpt_post_synth [extract_report postSynth]
+echo "$rpt_post_synth" >> ${DESIGN}_DETAILS.rpt
+
+### Write out the def files ###
+source ../../../../util/write_required_def.tcl
+
+### Add power plan ###
+source ../../../../../Enablements/NanGate45/util/pdn_config.tcl
+source ../../../../util/pdn_flow.tcl
+
 saveDesign ${encDir}/${DESIGN}_floorplan.enc
 
-## Creating Pin Blcokage for lower and upper pin layers ##
-createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
-createPinBlkg -name side_top -edge 1
-createPinBlkg -name side_right -edge 2
-createPinBlkg -name side_bottom -edge 3
-
-
 setPlaceMode -place_detail_legalization_inst_gap 1
 setFillerMode -fitGap true
-setNanoRouteMode -routeTopRoutingLayer 10
-setNanoRouteMode -routeBottomRoutingLayer 2
-setNanoRouteMode -drouteVerboseViolationSummary 1
-setNanoRouteMode -routeWithSiDriven true
-setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeExpUseAutoVia true
-#setPlaceMode -placeIoPins true
+setDesignMode -topRoutingLayer $TOP_ROUTING_LAYER
+setDesignMode -bottomRoutingLayer 2 
 
 place_opt_design -out_dir $rptDir -prefix place
 saveDesign $encDir/${DESIGN}_placed.enc
 
-## Creating Pin Blcokage for lower and upper pin layers ##
-createPinBlkg -name Layer_1 -layer {metal2 metal3 metal9 metal10} -edge 0
-createPinBlkg -name Layer_2 -edge 1
-createPinBlkg -name Layer_3 -edge 2
-createPinBlkg -name Layer_4 -edge 3
-
-setPlaceMode -place_detail_legalization_inst_gap 1
-setFillerMode -fitGap true
-setNanoRouteMode -routeTopRoutingLayer 10
-setNanoRouteMode -routeBottomRoutingLayer 2
-setNanoRouteMode -drouteVerboseViolationSummary 1
-setNanoRouteMode -routeWithSiDriven true
-setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeExpUseAutoVia true
-setPlaceMode -placeIoPins true
-
-place_opt_design -out_dir $rptDir -prefix place
-saveDesign $encDir/${DESIGN}_placed.enc
-defOut -netlist -floorplan ${DESIGN}_placed.def
+set rpt_pre_cts [extract_report preCTS]
+echo "$rpt_pre_cts" >> ${DESIGN}_DETAILS.rpt
 
 set_ccopt_property post_conditioning_enable_routing_eco 1
 set_ccopt_property -cts_def_lock_clock_sinks_after_routing true
@@ -119,15 +103,17 @@ set_interactive_constraint_modes [all_constraint_modes -active]
 set_propagated_clock [all_clocks]
 set_clock_propagation propagated
 
+saveDesign $encDir/${DESIGN}_cts.enc
+set rpt_post_cts [extract_report postCTS]
+echo "$rpt_post_cts" >> ${DESIGN}_DETAILS.rpt
+
 # ------------------------------------------------------------------------------
 # Routing
 # ------------------------------------------------------------------------------
-setNanoRouteMode -routeTopRoutingLayer 10
-setNanoRouteMode -routeBottomRoutingLayer 2
 setNanoRouteMode -drouteVerboseViolationSummary 1
 setNanoRouteMode -routeWithSiDriven true
 setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeExpUseAutoVia true
+setNanoRouteMode -routeUseAutoVia true
 
 ##Recommended by lib owners
 # Prevent router modifying M1 pins shapes
@@ -136,7 +122,6 @@ setNanoRouteMode -routeWithViaOnlyForStandardCellPin "1:1"
 
 ## limit VIAs to ongrid only for VIA1 (S1)
 setNanoRouteMode -drouteOnGridOnly "via 1:1"
-setNanoRouteMode -dbCheckRule true
 setNanoRouteMode -drouteAutoStop false
 setNanoRouteMode -drouteExpAdvancedMarFix true
 setNanoRouteMode -routeExpAdvancedTechnology true
@@ -144,24 +129,26 @@ setNanoRouteMode -routeExpAdvancedTechnology true
 #SM suggestion for solving long extraction runtime during GR
 setNanoRouteMode -grouteExpWithTimingDriven false
 
-
 routeDesign
 saveDesign ${encDir}/${DESIGN}_route.enc
 defOut -netlist -floorplan -routing ${DESIGN}_route.def
 
-setDelayCalMode -reset 
-setDelayCalMode -SIAware true
-setExtractRCMode -engine postRoute -coupled true -tQuantusForPostRoute false
-setAnalysisMode -analysisType onChipVariation -cppr both
+set rpt_post_route [extract_report postRoute]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 
-# routeOpt
-#optDesign -postRoute -setup -hold -prefix postRoute -expandedViews
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
 
-#extractRC
-deselectAll
-selectNet -clock
-reportSelect  > summaryReport/clock_net_length.post_route
-deselectAll
+#route_opt_design
+optDesign -postRoute
+set rpt_post_route [extract_report postRouteOpt]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
+
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
+
 summaryReport -noHtml -outfile summaryReport/post_route.sum
 saveDesign ${encDir}/${DESIGN}.enc
 defOut -netlist -floorplan -routing ${DESIGN}.def

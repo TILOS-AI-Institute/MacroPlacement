@@ -1,0 +1,9 @@
+work
+*.rep
+transcript
+*.ini
+*.wlf
+*.log
+plots
+sim-results
+scripts/synth.tcl

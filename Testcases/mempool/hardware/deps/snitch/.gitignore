@@ -1,0 +1,29 @@
+# Copyright 2020 ETH Zurich and University of Bologna.
+# Solderpad Hardware License, Version 0.51, see LICENSE for details.
+# SPDX-License-Identifier: SHL-0.51
+
+*.o
+*.so
+*.log
+*.vcd
+.Trash*
+*.fsdb
+Bender.lock
+.bender/
+modelsim.ini
+trace_hart_*
+transcript
+vsim.wlf
+work/
+wave*
+*vstf
+wlf*
+.vlogansetup.args
+.vlogansetup.env
+AN.DB/
+csrc/
+simv
+simv.daidir/
+ucli.key
+vc_hdrs.h
+vlogan.txt

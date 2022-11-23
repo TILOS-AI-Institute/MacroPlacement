@@ -43,8 +43,8 @@ proc extract_from_power_rpt {power_rpt} {
 }
 
 proc extract_cell_area {} {
-    set macro_area [expr  [join [dbget [dbget top.insts.cell.name *ram* -p2 ].area ] +]]
-    set std_cell_area [expr  [join [dbget [dbget top.insts.cell.name *ram* -v -p2 ].area ] +]]
+    set macro_area [expr  [join [dbget [dbget top.insts.cell.subClass block -p2 ].area ] +]]
+    set std_cell_area [expr  [join [dbget [dbget top.insts.cell.subClass block -v -p2 ].area ] +]]
     return [list $macro_area $std_cell_area]
 }
 
@@ -62,9 +62,12 @@ proc extract_report {stage} {
        timeDesign -postCTS -prefix ${stage} 
     } elseif { $stage == "postRoute" } {
        timeDesign -postRoute -prefix ${stage}
-    } elseif { $stage == "postRouetOpt" } {
+    } elseif { $stage == "postRouteOpt" } {
        timeDesign -postRoute -prefix ${stage}
+    } elseif { $stage == "postSynth" } {
+       timeDesign -prePlace -prefix ${stage}
     }
+
     set rpt1 [extract_from_timing_rpt timingReports/${stage}.summary.gz]
     report_power > power_${stage}.rpt
     set rpt2 [extract_from_power_rpt power_${stage}.rpt]

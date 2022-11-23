@@ -1,0 +1,11 @@
+.bender
+work
+scripts/compile.tcl
+scripts/__pycache__
+*.wlf
+dma_trace*.log
+dma_trace*.txt
+dma_transfers*
+modelsim.ini
+transcript
+doc/build

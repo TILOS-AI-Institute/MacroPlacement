@@ -1,7 +1,7 @@
 set sdc_version 2.0
 set_units -time ns -resistance kOhm -capacitance fF -power mW -voltage V -current uA
 
-set clock_cycle 14
+set clock_cycle 14.8
 set uncertainty 0.08
 set io_delay 0
 set maxFanout 16
@@ -11,9 +11,9 @@ set clock_port_mempool_tile clk_i
 
 create_clock -name clk_i -period $clock_cycle [get_ports $clock_port_mempool_tile]
 set_clock_uncertainty $uncertainty [all_clocks]
-set_input_delay -clock [get_clocks clk_i] -add_delay -max $io_delay [get_ports * -filter "direction==in && is_on_clock_network==false"]
-set_output_delay -clock [get_clocks clk_i] -add_delay -max $io_delay [get_ports * -filter "direction==out && is_on_clock_network==false"]
-set_max_transition $maxTransition -clock_path [get_clocks clk_i]
+#set_input_delay -clock [get_clocks clk_i] -add_delay -max $io_delay [get_ports * -filter "direction==in && is_on_clock_network==false"]
+#set_output_delay -clock [get_clocks clk_i] -add_delay -max $io_delay [get_ports * -filter "direction==out && is_on_clock_network==false"]
+#set_max_transition $maxTransition -clock_path [get_clocks clk_i]
 set_clock_latency $pre_cts_clock_latency_estimate [get_clocks clk_i]
 #set_propagated_clock [get_clocks clk_i]
 

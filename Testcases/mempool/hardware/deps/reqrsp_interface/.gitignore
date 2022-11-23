@@ -1,0 +1,6 @@
+compile.tcl
+transcript
+*.log
+*.lock
+work
+Bender.lock

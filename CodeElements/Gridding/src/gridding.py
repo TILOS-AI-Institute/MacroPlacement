@@ -270,7 +270,7 @@ def Gridding(macro_width_list, macro_height_list,
 
 class GriddingLefDefInterface:
     def __init__(self, src_dir, design, setup_file = "setup.tcl", tolerance = 0.05,
-                 halo_width = 0.05, min_n_rows = 10, min_n_cols = 10, max_n_rows = 128,
+                 halo_width = 0.05, openroad_exe = "./openroad", min_n_rows = 10, min_n_cols = 10, max_n_rows = 128,
                  max_n_cols = 128, max_rows_times_cols = 2500,  min_rows_times_cols = 500,
                  max_aspect_ratio = 1.5):
         self.src_dir = src_dir
@@ -291,7 +291,7 @@ class GriddingLefDefInterface:
         self.chip_height = 0.0
         self.num_std_cells = 0
         self.extract_hypergraph_file = self.src_dir + '/utils/extract_hypergraph.tcl'
-        self.openroad_exe = self.src_dir + "/utils/openroad"
+        self.openroad_exe = openroad_exe
 
         self.GenerateHypergraph()
         self.ExtractInputs()

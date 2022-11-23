@@ -13,9 +13,6 @@ if __name__ == '__main__':
     parser.add_argument("--global_net_threshold",  help = "large net threshold", type = int, default = 500)
     parser.add_argument("--Nparts",  help = "number of clusters (only for hmetis, default  = 500)", type = int, default = 500)
     parser.add_argument("--setup_file", help = "setup file for openroad (default = setup.tcl)", type = str, default = "setup.tcl")
-    parser.add_argument("--RePlace", help = "Run RePlace for blob placement (default = True)", type = bool, default = False)
-    parser.add_argument("--placement_density", help = "Placement density for RePlace (default = 0.7)", type = float, default = 0.7)
-    parser.add_argument("--GUI", help = "Run OpenROAD in GUI Mode (default = True)", type = bool, default = False)
     args = parser.parse_args()
 
     design = args.design
@@ -25,18 +22,15 @@ if __name__ == '__main__':
     global_net_threshold = args.global_net_threshold
     Nparts = args.Nparts
     setup_file = args.setup_file
-    RePlace  = args.RePlace
-    placement_density = args.placement_density
-    GUI = args.GUI
-
 
     # To use the grouping function, you need to specify the directory of src file
     src_dir = "../src"
     result_dir = "./results"
+    n_cols = 27
+    n_rows = 23
+    openroad_exe = "./openroad"  # Please specify your own openroad exe file
 
-
-    Clustering(design, src_dir, fixed_file, global_net_threshold, Nparts, setup_file,
-               result_dir, RePlace, placement_density, GUI)
+    Clustering(design, src_dir, fixed_file, n_cols, n_rows, global_net_threshold, Nparts, setup_file, openroad_exe)
 
 
 

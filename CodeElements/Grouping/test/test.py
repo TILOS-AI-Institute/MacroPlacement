@@ -28,8 +28,9 @@ if __name__ == '__main__':
 
     # To use the grouping function, you need to specify the directory of src file
     src_dir = "../src"
+    openroad_exe = "./openroad"  # You need to specify your openroad exe
 
-    Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_threshold, src_dir)
+    Grouping(design, n_rows, n_cols, K_in, K_out, setup_file, global_net_threshold, src_dir, openroad_exe)
 
 
 

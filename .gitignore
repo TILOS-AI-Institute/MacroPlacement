@@ -32,3 +32,11 @@ CodeElements/os.txt
 CodeElements/EvalCT/test/ariane/*.plc
 CodeElements/FDPlacement/fd.txt
 CodeElements/StatTest/test/ariane/*.pb.txt
+CodeElements/Plc_client/failed_proxy_plc/*
+__pycache__/
+__pycache__
+try.ipynb
+run
+run-*
+GF12/
+GF12

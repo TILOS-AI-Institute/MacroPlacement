@@ -4,13 +4,14 @@
 ## **Our Latest Progress**
  - [Our Progress: A Chronology](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) provides latest updates and is periodically synched to [this Google Doc](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit).
  - Our [Proxy Cost](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/) documentation gives implementation details to enable reproduction of the wirelength, density and congestion costs used by [Circuit Training](https://github.com/google-research/circuit_training).
+ - Our [Code Elements](https://tilos-ai-institute.github.io/MacroPlacement/Docs/CodeElements/) documentation gives implementation details to enable reproduction of the gridding, grouping and clustering used by [Circuit Training](https://github.com/google-research/circuit_training).
 
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
   - [Testcases](#testcases) contains open-source designs such as Ariane, MemPool and NVDLA.
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
   - [Flows](#flows) contains tool setups and runscripts for both proprietary and open-source SP&R tools such as Cadence Genus/Innovus and OpenROAD.
-  - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding, Format translators required by Circuit Training flow.
+  - [Code Elements](#code-elements) contains implementation of engines such as Clustering, Grouping, Gridding as well as Format translators required by Circuit Training flow.
   - [Baseline for Circuit Training](#baseline-for-circuit-training) provides a baseline for [Google Brain's Circuit Training](https://github.com/google-research/circuit_training).
   - [FAQ](#faq)
   - [Related Links](#related-links)
@@ -25,6 +26,8 @@ The list of available [testcases](./Testcases) is as follows.
   - [RTL files for Mempool group design](./Testcases/mempool/)
 - NVDLA (RTL)
   - [RTL files for NVDLA Partition *c*](./Testcases/nvdla/)
+- BlackParrot (RTL)
+  - [RTL files for BlackParrot](./Testcases/bp_quad)
   
 In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. We outline the steps to instantiate the memories for Ariane 136 [here](./Testcases/ariane136/) and we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's memory macros count [here](./Testcases/ariane133/). 
   
@@ -54,9 +57,19 @@ We provide flop count, macro type and macro count for all the testcases in the t
     <td class="tg-0lax">(256x32-bit SRAM) x 16 + (64x64-bit SRAM) x 4</td>
   </tr>
   <tr>
+    <td class="tg-0lax"><a href="./Testcases/mempool">MemPool group</a></td>
+    <td class="tg-0lax">360724</td>
+    <td class="tg-0lax">(256x32-bit SRAM) x 256 + (64x64-bit SRAM) x 64 + (128x256-bit SRAM) x 2 + (128x32-bit SRAM) x 2</td>
+  </tr>
+  <tr>
     <td class="tg-0lax"><a href="./Testcases/nvdla">NVDLA</a></td>
     <td class="tg-0lax">45295</td>
     <td class="tg-0lax">(256x64-bit SRAM) x 128</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax"><a href="./Testcases/bp_quad">BlackParrot</a></td>
+    <td class="tg-0lax">214441</td>
+    <td class="tg-0lax">(512x64-bit SRAM) x 128 + (64x62-bit SRAM) x 32 + (32x32-bit SRAM) x 32 + (64x124-bit SRAM) x 16 + (128x16-bit SRAM) x 8 + (256x48-bit SRAM) x 4</td>
   </tr>
 </tbody>
 </table>
@@ -123,44 +136,59 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/ariane136">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane136">Link</a></td>
   </tr>
   <tr>
     <td class="tg-0lax">Ariane 133</td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/ariane133">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/ariane133">Link</a></td>
   </tr>
   <tr>
     <td class="tg-0lax">MemPool tile</td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_tile">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/mempool_tile">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/mempool_tile">Link</a></td>
     <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">MemPool group</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
-    <td class="tg-0lax"><a href="./Flows/SKY130HD/mempool_tile">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/mempool_group">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
   </tr>
   <tr>
@@ -168,13 +196,28 @@ In the following table, we provide the status details of each testcase on each o
     <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
-    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/nvdla">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
     <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/ASAP7/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
-    <td class="tg-0lax"><a href="./Flows/SKY130HD/nvdla">Link</a></td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">BlackParrot</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/bp_quad">Link</a></td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/bp_quad">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax"><a href="./Flows/NanGate45/bp_quad">Link</a></td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
+    <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
     <td class="tg-0lax">N/A</td>
   </tr>
