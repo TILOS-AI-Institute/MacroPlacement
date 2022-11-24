@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
 import traceback, sys
+import random
 
 """plc_client_os docstrings.
 
@@ -144,6 +145,7 @@ class PlacementCost(object):
         """
         private function: Protobuf Netlist Parser
         """
+        print("#[INFO] Reading from " + self.netlist_file)
         with open(self.netlist_file) as fp:
             line = fp.readline()
             node_cnt = 0
@@ -245,6 +247,7 @@ class PlacementCost(object):
                     if node_name == "__metadata__":
                         # skipping metadata header
                         logging.info('[INFO NETLIST PARSER] skipping invalid net input')
+                        
                     elif attr_dict['type'][1] == 'macro':
                         # soft macro
                         # check if all required information is obtained
@@ -387,7 +390,8 @@ class PlacementCost(object):
                         # store current node indx
                         self.port_indices.append(node_cnt-1)
 
-        # mapping connection degree to each macros
+        # 1. mapping connection degree to each macros
+        # 2. update offset based on Hard macro orientation
         self.__update_connection()
 
         # all hard macros are placed on canvas initially
@@ -439,6 +443,9 @@ class PlacementCost(object):
                 # Width and Height should be defined on the same one-line
                 _width = float(line_item[1])
                 _height = float(line_item[3])
+            elif all(it in line_item for it in ['Area', 'stdcell', 'macros']):
+                # Total core area of modules
+                _area = float(line_item[3])
             elif "Area" in line_item:
                 # Total core area of modules
                 _area = float(line_item[1])
@@ -482,7 +489,7 @@ class PlacementCost(object):
             elif all(it in line_item for it in ['MACROs'])\
                 and len(line_item) == 2:
                 _macros_cnt = int(line_item[1])
-            elif all(re.match(r'[0-9NEWS\.\-]+', it) for it in line_item)\
+            elif all(re.match(r'[0-9FNEWS\.\-]+', it) for it in line_item)\
                 and len(line_item) == 5:
                 # [node_index] [x] [y] [orientation] [fixed]
                 _node_plc[int(line_item[0])] = line_item[1:]
@@ -556,9 +563,10 @@ class PlacementCost(object):
         
         # restore placement for each module
         try:
+            # print(sorted(list(info_dict['node_plc'].keys())))
             assert sorted(self.port_indices +\
                 self.hard_macro_indices +\
-                self.soft_macro_indices) == list(info_dict['node_plc'].keys())
+                self.soft_macro_indices) == sorted(list(info_dict['node_plc'].keys()))
         except AssertionError:
             print('[ERROR PLC INDICES MISMATCH]', len(sorted(self.port_indices +\
                 self.hard_macro_indices +\
@@ -572,6 +580,7 @@ class PlacementCost(object):
                 mod_y = float(info_dict['node_plc'][mod_idx][1])
                 mod_orient = info_dict['node_plc'][mod_idx][2]
                 mod_ifFixed = int(info_dict['node_plc'][mod_idx][3])
+                
             except Exception as e:
                 print('[ERROR PLC PARSER] %s' % str(e))
 
@@ -589,6 +598,7 @@ class PlacementCost(object):
         
         # set meta information
         if ifReadComment:
+            print("[INFO] Retrieving Meta information from .plc comments")
             self.set_canvas_size(info_dict['width'], info_dict['height'])
             self.set_placement_grid(info_dict['columns'], info_dict['rows'])
             self.set_block_name(info_dict['block'])
@@ -618,6 +628,10 @@ class PlacementCost(object):
                 else:
                     print("[ERROR UPDATE CONNECTION] MACRO pins not found")
                     continue
+
+                # also update pin offset based on macro orientation
+                orientation = macro.get_orientation()
+                self.update_macro_orientation(macro_idx, orientation)
 
             # Soft macro
             elif self.is_node_soft_macro(macro_idx):
@@ -709,8 +723,9 @@ class PlacementCost(object):
         # Retrieve current pin node position
         pin_node = self.modules_w_pins[pin_idx]
         pin_node_x_offset, pin_node_y_offset = pin_node.get_offset()
-
+        # Google's Plc client DOES NOT compute (node_position + pin_offset) when reading input
         return (ref_node_x + pin_node_x_offset, ref_node_y + pin_node_y_offset)
+        # return pin_node.get_pos()
 
     def get_wirelength(self) -> float:
         """
@@ -726,6 +741,9 @@ class PlacementCost(object):
             x_coord = []
             y_coord = []
 
+            # default value of weight
+            weight_fact = 1.0
+
             # NOTE: connection only defined on PORT, soft/hard macro pins
             if curr_type == "PORT" and mod.get_sink():
                 # add source position
@@ -739,39 +757,47 @@ class PlacementCost(object):
                         # retrieve sink object
                         sink = self.modules_w_pins[sink_idx]
                         # only consider placed sink
-                        ref_sink = self.modules_w_pins[self.get_ref_node_id(sink_idx)]
-                        if not ref_sink.get_placed_flag():
-                            continue
-                        # retrieve location
+                        # ref_sink = self.modules_w_pins[self.get_ref_node_id(sink_idx)]
+                        # if not placed, skip this edge
+                        # if not ref_sink.get_placed_flag():
+                        #     x_coord.append(0)
+                        #     y_coord.append(0)
+                        # else:# retrieve location
                         x_coord.append(self.__get_pin_position(sink_idx)[0])
                         y_coord.append(self.__get_pin_position(sink_idx)[1])
+
             elif curr_type == "MACRO_PIN":
                 ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
-                if not ref_mod.get_placed_flag():
-                    continue
+                # # if not placed, skip this edge
+                # if not ref_mod.get_placed_flag():
+                #     continue
+                # get pin weight
+                weight_fact = mod.get_weight()
                 # add source position
                 x_coord.append(self.__get_pin_position(mod_idx)[0])
                 y_coord.append(self.__get_pin_position(mod_idx)[1])
 
                 if mod.get_sink():
-                    if mod.get_weight() != 0:
-                        norm_fact = mod.get_weight()
                     for input_list in mod.get_sink().values():
                         for sink_name in input_list:
                             # retrieve indx in modules_w_pins
                             input_idx = self.mod_name_to_indices[sink_name]
+
+                            # sink_ref_mod = self.modules_w_pins[self.get_ref_node_id(mod_idx)]
+                            # if not placed, skip this edge
+                            # if not sink_ref_mod.get_placed_flag():
+                            #     x_coord.append(0)
+                            #     y_coord.append(0)
+                            # else:
                             # retrieve location
                             x_coord.append(self.__get_pin_position(input_idx)[0])
                             y_coord.append(self.__get_pin_position(input_idx)[1])
 
             if x_coord:
-                if norm_fact != 1.0:
-                    total_hpwl += norm_fact * \
-                        (abs(max(x_coord) - min(x_coord)) + \
-                            abs(max(y_coord) - min(y_coord)))
-                else:
-                    total_hpwl += (abs(max(x_coord) - min(x_coord))\
-                         + abs(max(y_coord) - min(y_coord)))
+                total_hpwl += weight_fact * \
+                    (abs(max(x_coord) - min(x_coord)) + \
+                        abs(max(y_coord) - min(y_coord)))
+    
         return total_hpwl
 
     def abu(self, xx, n = 0.1):
@@ -988,8 +1014,8 @@ class PlacementCost(object):
             module = self.modules_w_pins[module_idx]
 
             # skipping unplaced module
-            if not module.get_placed_flag():
-                continue
+            # if not module.get_placed_flag():
+            #     continue
 
             module_h = module.get_height()
             module_w = module.get_width()
@@ -1720,7 +1746,6 @@ class PlacementCost(object):
         [IGNORE] THIS DOES NOT AFFECT DENSITY. SHOULD WE IMPLEMENT THIS AT ALL?
         make soft macros as squares
         """
-        return
         for mod_idx in self.soft_macro_indices:
             mod = self.modules_w_pins[mod_idx]
             mod_area = mod.get_width() * mod.get_height()
@@ -1944,6 +1969,47 @@ class PlacementCost(object):
             exit(1)
         
         mod.set_orientation(orientation)
+
+        macro = self.modules_w_pins[node_idx]
+        macro_name = macro.get_name()
+        hard_macro_pins = self.hard_macros_to_inpins[macro_name]
+        
+        orientation = macro.get_orientation()
+
+        # update all pin offset
+        for pin_name in hard_macro_pins:
+            pin = self.modules_w_pins[self.mod_name_to_indices[pin_name]]
+
+            x_offset, y_offset = pin.get_offset()
+            x_offset_org = x_offset
+            if orientation == "N":
+                pass
+            elif orientation == "FN":
+                x_offset = -x_offset
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "S":
+                x_offset = -x_offset
+                y_offset = -y_offset
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "FS":
+                y_offset = -y_offset
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "E":
+                x_offset = y_offset
+                y_offset = -x_offset_org
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "FE":
+                x_offset = -y_offset
+                y_offset = -x_offset_org
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "W":
+                x_offset = -y_offset
+                y_offset = x_offset_org
+                pin.set_offset(x_offset, y_offset)
+            elif orientation == "FW":
+                x_offset = y_offset
+                y_offset = x_offset_org
+                pin.set_offset(x_offset, y_offset)
 
     def update_port_sides(self):
         """
@@ -2316,6 +2382,356 @@ class PlacementCost(object):
 
         plt.show()
         plt.close('all')
+    
+    '''
+    FD Placement below shares the same functionality as the FDPlacement/fd_placement.py
+    '''
+    def __ifOverlap(self, u_i, v_i, ux=0, uy=0, vx=0, vy=0):
+        '''
+        Detect if the two modules are overlapping or not (w/o using block structure)
+        '''
+        # extract first macro
+        u_side = self.modules_w_pins[u_i].get_height()
+        u_x1 = self.modules_w_pins[u_i].get_pos()[0] + ux - u_side/2 # left
+        u_x2 = self.modules_w_pins[u_i].get_pos()[0] + ux + u_side/2 # right
+        u_y1 = self.modules_w_pins[u_i].get_pos()[1] + uy + u_side/2 # top
+        u_y2 = self.modules_w_pins[u_i].get_pos()[1] + uy - u_side/2 # bottom
+
+        # extract second macro
+        v_side = self.modules_w_pins[v_i].get_height()
+        v_x1 = self.modules_w_pins[v_i].get_pos()[0] + vx - v_side/2 # left
+        v_x2 = self.modules_w_pins[v_i].get_pos()[0] + vx + v_side/2 # right
+        v_y1 = self.modules_w_pins[v_i].get_pos()[1] + vy + v_side/2 # top
+        v_y2 = self.modules_w_pins[v_i].get_pos()[1] + vy - v_side/2 # bottom
+
+        return u_x1 < v_x2 and u_x2 > v_x1 and u_y1 > v_y2 and u_y2 < v_y1
+    
+    def __repulsive_force(self, repel_factor, node_i, node_j):
+        '''
+        Calculate repulsive force between two nodes node_i, node_j
+        '''
+        if repel_factor == 0.0:
+            return 0.0, 0.0
+        
+        # retrieve module instance
+        mod_i = self.modules_w_pins[node_i]
+        mod_j = self.modules_w_pins[node_j]
+
+        # retrieve module position
+        x_i, y_i = mod_i.get_pos()
+        x_j, y_j = mod_j.get_pos()
+        
+        # get dist between x and y
+        x_dist = x_i - x_j
+        y_dist = y_i - y_j
+
+        # get dist of hypotenuse
+        hypo_dist = math.sqrt(x_dist**2 + y_dist**2)
+        
+        # compute force in x and y direction
+        if hypo_dist <= 1e-10:
+            return math.sqrt(repel_factor), math.sqrt(repel_factor)
+        else:
+            f_x = repel_factor * x_dist / hypo_dist
+            f_y = repel_factor * y_dist / hypo_dist
+            return f_x, f_y
+    
+    def __repulsive_force_hard_macro(self, repel_factor, h_node_i, s_node_j):
+        '''
+        Calculate repulsive force between hard macro and soft macro
+        '''
+        if repel_factor == 0.0:
+            return 0.0, 0.0
+        
+        # retrieve module instance
+        h_mod_i = self.modules_w_pins[h_node_i]
+        s_mod_j = self.modules_w_pins[s_node_j]
+
+        # retrieve module position
+        x_i, y_i = h_mod_i.get_pos()
+        x_j, y_j = s_mod_j.get_pos()
+        
+        # get dist between x and y
+        x_dist = x_i - x_j
+        y_dist = y_i - y_j
+
+        # get dist of hypotenuse
+        hypo_dist = math.sqrt(x_dist**2 + y_dist**2)
+        
+        # compute force in x and y direction
+        if hypo_dist <= 1e-10 or self.__ifOverlap(h_node_i, s_node_j):
+            return x_dist/hypo_dist * (h_mod_i.get_height()/2 + s_mod_j.get_height()/2),\
+                    y_dist/hypo_dist * (h_mod_i.get_height()/2 + s_mod_j.get_height()/2)
+        else:
+            return 0.0, 0.0
+
+    def __attractive_force(self, io_factor, attract_factor, node_i, node_j, io_flag = True, attract_exponent = 1):
+        '''
+        Calculate repulsive force between two nodes node_i, node_j
+        '''
+        # retrieve module instance
+        mod_i = self.modules_w_pins[node_i]
+        mod_j = self.modules_w_pins[node_j]
+
+        # retrieve module position
+        x_i, y_i = mod_i.get_pos()
+        x_j, y_j = mod_j.get_pos()
+        
+        # get dist between x and y
+        x_dist = x_i - x_j - mod_i.get_height()/2 - mod_j.get_height()/2
+        y_dist = y_i - y_j - mod_i.get_height()/2 - mod_j.get_height()/2
+
+        # get dist of hypotenuse
+        hypo_dist = math.sqrt(x_dist**2 + y_dist**2)
+
+        # compute force in x and y direction
+        if hypo_dist <= 0.0 or self.__ifOverlap(u_i=node_i, v_i=node_j):
+            return 0.0, 0.0
+        else:
+            if io_flag:
+                temp_f = io_factor * (hypo_dist ** attract_exponent)
+            else:
+                temp_f = attract_factor * (hypo_dist ** attract_exponent)
+            
+            f_x = x_dist / hypo_dist * temp_f
+            f_y = y_dist / hypo_dist * temp_f
+            return f_x, f_y
+    
+    def __centralize(self, mod_id):
+        '''
+        Pull the modules to the nearest center of the gridcell
+        '''
+        mod = self.modules_w_pins[mod_id]
+        mod_x, mod_y = mod.get_pos()
+
+        # compute grid cell col
+        # why / 2.0?
+        col = round((mod_x - self.grid_width / 2.0) / self.grid_width)
+        if (col < 0):
+            col = 0
+        elif col > self.grid_col - 1:
+            col = self.grid_col - 1
+        
+        row = round((mod_y - self.grid_height / 2.0) / self.grid_height)
+        if (row < 0):
+            row = 0
+        elif row > self.grid_row - 1:
+            row = self.grid_row - 1
+
+        mod.set_pos((col + 0.5) * self.grid_width, (row + 0.5) * self.grid_height)
+    
+    def __centeralize_circle(self, mod_id):
+        '''
+        Pull the modules to a randomized unit circle in the center of the canvas
+        '''
+        r = 1 * math.sqrt(random.random())
+        theta = random.random() * 2 * math.pi
+        centerX = self.width / 2
+        centerY = self.height / 2
+        self.modules_w_pins[mod_id].set_pos(centerX + r * math.cos(theta), centerY + r * math.sin(theta))
+
+    def __boundary_check(self, mod_id):
+        '''
+        Make sure all the clusters are placed within the canvas
+        '''
+        mod = self.modules_w_pins[mod_id]
+        mod_x, mod_y = mod.get_pos()
+        
+        if mod_x < 0.0:
+            mod_x = 0.0
+        
+        if mod_x > self.width:
+            mod_x = self.width
+
+        if mod_y < 0.0:
+            mod_y = 0.0
+
+        if mod_y > self.height:
+            mod_y = self.height
+
+        mod.set_pos(mod_x, mod_y)
+
+    def __fd_placement(self, io_factor, max_displacement, attract_factor, repel_factor):
+        '''
+        Force-directed Placement for standard-cell clusters
+        ''' 
+        # store x/y displacement for all soft macro disp
+        soft_macro_disp = {}
+        for mod_idx in self.soft_macro_indices:
+            soft_macro_disp[mod_idx] = [0.0, 0.0]
+        
+        def add_displace(mod_id, x_disp, y_disp):
+            '''
+            Add the displacement
+            '''
+            soft_macro_disp[mod_id][0] += x_disp
+            soft_macro_disp[mod_id][1] += y_disp
+
+        def update_location(mod_id, x_disp, y_disp):
+            '''
+            Update the displacement to the coordiante
+            '''
+            x_pos, y_pos = self.modules_w_pins[mod_id].get_pos()
+            # logging.info("{} {} {} {}".format(x_pos, y_pos, x_disp, y_disp))
+            self.modules_w_pins[mod_id].set_pos(x_pos + x_disp, y_pos + y_disp)
+
+        def piecewise_sigmoid(x, shift = 50):
+            if x >= 0:
+                return 1/(math.exp(-x+shift) + 1)
+            else:
+                return -1/(math.exp(x+shift) + 1)
+
+        ##SOFT_SOFT REPEL###############################################################################################
+        # calculate the repulsive forces
+        # repulsive forces between stdcell clusters
+        if repel_factor != 0.0:
+            # temp storing the soft macro count
+            xr_collection = [0] * len(self.modules_w_pins)
+            yr_collection = [0] * len(self.modules_w_pins)
+
+            # repulsive forces between stdcell clusters and stdcell clusters
+            for mod_i in self.soft_macro_indices:
+                for mod_j in self.soft_macro_indices:
+                    if (mod_i <= mod_j):
+                        continue
+                    repul_x, repul_y = self.__repulsive_force(repel_factor=repel_factor,
+                                                                node_i=mod_i, node_j=mod_j)
+                    xr_collection[mod_i] += 1.0 * repul_x
+                    yr_collection[mod_i] += 1.0 * repul_y
+                    xr_collection[mod_j] += -1.0 * repul_x
+                    yr_collection[mod_j] += -1.0 * repul_y
+        
+            # finding max x y displacement
+            max_x_disp, max_y_disp = (0.0, 0.0)
+            for xr, yr in zip(xr_collection, yr_collection):
+                if xr != 0.0:
+                    max_x_disp = max(max_x_disp, abs(xr))
+                if yr != 0.0:
+                    max_y_disp = max(max_y_disp, abs(yr))
+            
+            # prevent zero division
+            if max_x_disp == 0.0:
+                max_x_disp = 1.0
+            if max_y_disp == 0.0:
+                max_y_disp = 1.0
+
+            scaling = 2.0
+            for mod_idx in self.soft_macro_indices:
+                add_displace(mod_idx, scaling * xr_collection[mod_idx] / max_x_disp, scaling * yr_collection[mod_idx] / max_y_disp)
+
+        ##SOFT_HARD REPEL###############################################################################################
+        if repel_factor != 0.0:
+            # temp storing the soft macro count
+            xr_collection = [0] * len(self.modules_w_pins)
+            yr_collection = [0] * len(self.modules_w_pins)
+
+            # repulsive forces between stdcell clusters and macros
+            for mod_i in self.soft_macro_indices:
+                for mod_j in self.hard_macro_indices:
+                    repul_x, repul_y = self.__repulsive_force_hard_macro(repel_factor=repel_factor,
+                                                                h_node_i=mod_i, s_node_j=mod_j)
+                    xr_collection[mod_i] += 1.0 * repul_x
+                    yr_collection[mod_i] += 1.0 * repul_y
+            
+            # finding max x y displacement
+            max_x_disp, max_y_disp = (0.0, 0.0)
+            for xr, yr in zip(xr_collection, yr_collection):
+                if xr != 0.0:
+                    max_x_disp = max(max_x_disp, abs(xr))
+                if yr != 0.0:
+                    max_y_disp = max(max_y_disp, abs(yr))
+        
+            # prevent zero division
+            if max_x_disp == 0.0:
+                max_x_disp = 1.0
+            if max_y_disp == 0.0:
+                max_y_disp = 1.0
+
+            scaling = 4.0
+            for mod_idx in self.soft_macro_indices:
+                add_displace(mod_idx, scaling * xr_collection[mod_idx] / max_x_disp, scaling * yr_collection[mod_idx] / max_y_disp)
+
+        ##NET ATTRACT###################################################################################################
+        if attract_factor != 0.0:
+            # temp storing the soft macro count
+            xr_collection = [0] * len(self.modules_w_pins)
+            yr_collection = [0] * len(self.modules_w_pins)
+            # calculate the attractive force
+            # traverse each edge
+            # the adj_matrix is a symmetric matrix
+            for driver_pin_idx, driver_pin in enumerate(self.modules_w_pins):
+                # only for soft macro
+                if driver_pin_idx in self.soft_macro_pin_indices and driver_pin.get_sink():
+                    driver_mod_idx = self.get_ref_node_id(driver_pin_idx)
+                    for sink_pin_name in driver_pin.get_sink().keys():
+                        sink_mod_idx = self.mod_name_to_indices[sink_pin_name]
+                        # if overlapped, dont attract further
+                        if self.__ifOverlap(driver_mod_idx, sink_mod_idx):
+                            continue
+                        attrac_x, attrac_y = self.__attractive_force(io_factor=io_factor,
+                                                                        attract_factor=attract_factor,
+                                                                        node_i=driver_mod_idx,
+                                                                        node_j=sink_mod_idx
+                                                                    )
+                        # if overlapped, dont attract further
+                        if self.__ifOverlap(driver_mod_idx, sink_mod_idx, attrac_x, attrac_y):
+                            continue
+
+                        xr_collection[driver_mod_idx] += piecewise_sigmoid(-1.0 * attrac_x)
+                        yr_collection[driver_mod_idx] += piecewise_sigmoid(-1.0 * attrac_y)
+
+            # finding max x y displacement
+            max_x_disp, max_y_disp = (0.0, 0.0)
+            for xr, yr in zip(xr_collection, yr_collection):
+                if xr != 0.0:
+                    max_x_disp = max(max_x_disp, abs(xr))
+                if yr != 0.0:
+                    max_y_disp = max(max_y_disp, abs(yr))
+        
+            # prevent zero division
+            if max_x_disp == 0.0:
+                max_x_disp = 1.0
+            if max_y_disp == 0.0:
+                max_y_disp = 1.0
+            
+                # not too much attract
+            scaling = 0.1
+            for mod_idx in self.soft_macro_indices:
+                add_displace(mod_idx, scaling * xr_collection[mod_idx] / max_x_disp, scaling * yr_collection[mod_idx] / max_y_disp)
+            
+        for mod_idx in soft_macro_disp.keys():
+            # push all the macros to the nearest center of gridcell
+            update_location(mod_idx, *soft_macro_disp[mod_idx])
+            # Moved to here to save a for loop
+            # Based on our understanding, the stdcell clusters can be placed
+            # at any place in the canvas instead of the center of gridcells
+            self.__boundary_check(mod_idx)
+        
+
+    def optimize_stdcells(self, use_current_loc, move_stdcells, move_macros,
+                        log_scale_conns, use_sizes, io_factor, num_steps,
+                        max_move_distance, attract_factor, repel_factor):
+
+        
+        # initialize the position for all the macros and stdcell clusters
+        # YW: here I will ignore centering Macros since CT placement does that
+        for mod_idx in self.soft_macro_indices:
+            self.__centeralize_circle(mod_id = mod_idx)
+
+        for epoch_id, iterations in enumerate(num_steps):
+            logging.info("#[OPTIMIZING STDCELs] at num_step {}:".format(str(epoch_id)))
+            print("[INFO] max_displaccment = ", max_move_distance[epoch_id])
+            print("[INFO] attractive_factor = ", attract_factor[epoch_id])
+            print("[INFO] repulsive_factor = ", repel_factor[epoch_id])
+            print("[INFO] io_factor = ", io_factor)
+            print("[INFO] number of iteration = ", iterations)
+            for iter in range(iterations):
+                logging.info("#     iteration {}:".format(str(iter)))
+                self.__fd_placement(io_factor=io_factor, 
+                                    max_displacement=max_move_distance[epoch_id],
+                                    attract_factor=attract_factor[epoch_id],
+                                    repel_factor=repel_factor[epoch_id])
+            self.save_placement('epoch_{}.plc'.format(str(epoch_id)))
 
     # Board Entity Definition
     class Port:
@@ -2336,6 +2752,12 @@ class PlacementCost(object):
         
         def get_orientation(self):
             return self.orientation
+        
+        def get_height(self):
+            return 0
+
+        def get_width(self):
+            return 0
 
         def add_connection(self, module_name):
             # NOTE: assume PORT names does not contain slash
@@ -2699,6 +3121,10 @@ class PlacementCost(object):
 
         def get_offset(self):
             return self.x_offset, self.y_offset
+        
+        def set_offset(self, x_offset, y_offset):
+            self.x_offset = x_offset
+            self.y_offset = y_offset
 
         def get_name(self):
             return self.name
@@ -2733,19 +3159,6 @@ class PlacementCost(object):
 
         def get_type(self):
             return "MACRO_PIN"
-
-    # TODO finish this
-    # class StandardCell:
-    #     def __init__(   self, name,
-    #                     x = 0.0, y = 0.0, weight = 1.0):
-    #         self.name = name
-    #         self.x = float(x)
-    #         self.y = float(y)
-    #         self.x_offset = 0.0 # not used
-    #         self.y_offset = 0.0 # not used
-    #         self.macro_name = macro_name
-    #         self.weight = weight
-    #         self.sink = {}
 
 def main():
     test_netlist_dir = './Plc_client/test/'+\

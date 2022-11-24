@@ -4,7 +4,6 @@ import pandas as pd
 import sys
 import os
 import traceback
-import argparse
 import math
 import re
 from random import randrange
@@ -56,6 +55,18 @@ Example:
             --marh 7.143\
             --marv 8.339\
             --smooth 2
+
+         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/g657_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt\
+            --plc ./Plc_client/test/g657_ub5_nruns10_c5_r3_v3_rc1/legalized.plc\
+            --width 1357.360\
+            --height 1356.880\
+            --col 22\
+            --row 30\
+            --rpmh 11.285\
+            --rpmv 12.605\
+            --marh 7.143\
+            --marv 8.339\
+            --smooth 0
         
         $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/0P2M0m/netlist.pb.txt\
             --width 500\
@@ -66,6 +77,18 @@ Example:
             --rpmv 10\
             --marh 5\
             --marv 5\
+            --smooth 2
+
+        $ python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/ariane_fd/ariane.pb.txt\
+            --plc ./Plc_client/test/ariane_fd/ariane.plc\
+            --width 1599.99\
+            --height 1598.8\
+            --col 27\
+            --row 23\
+            --rpmh 70.330\
+            --rpmv 74.510\
+            --marh 51.790\
+            --marv 51.790\
             --smooth 2
 
 Todo:
@@ -214,7 +237,7 @@ class PlacementCostTest():
         print("                  +++ TEST METADATA: PASS +++")
         print("                  +++++++++++++++++++++++++++")
 
-    def view_canvas(self, ifInital, ifReadComment):
+    def view_canvas(self, ifInital=False, ifReadComment=False):
         print("############################ VIEW CANVAS ############################")
         self.plc_os = plc_client_os.PlacementCost(netlist_file=self.NETLIST_PATH,
                                                   macro_macro_x_spacing=50,
@@ -229,8 +252,16 @@ class PlacementCostTest():
                                           ifInital=ifInital,
                                           ifValidate=False,
                                           ifReadComment=ifReadComment)
+        
+        self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_os.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
         # show canvas
+        self.plc_os.make_soft_macros_square()
         self.plc_os.display_canvas(annotate=False, amplify=False)
+        
 
     def test_proxy_cost(self):
         print("############################ TEST PROXY COST ############################")
@@ -245,6 +276,8 @@ class PlacementCostTest():
         self.plc.get_overlap_threshold()
         print("overlap_threshold default", self.plc.get_overlap_threshold())
 
+        # self.plc.make_soft_macros_square()
+
         if self.PLC_PATH:
             print("#[PLC FILE FOUND] Loading info from .plc file")
             self.plc_os.set_canvas_boundary_check(False)
@@ -256,23 +289,34 @@ class PlacementCostTest():
             self.plc.restore_placement(self.PLC_PATH)
         else:
             print("#[PLC FILE MISSING] Using only netlist info")
+        
+        # self.plc.make_soft_macros_square()
 
         self.plc.set_routes_per_micron(self.RPMH, self.RPMV)
         self.plc_os.set_routes_per_micron(self.RPMH, self.RPMV)
 
+        # self.plc.make_soft_macros_square()
+
         self.plc.set_macro_routing_allocation(self.MARH, self.MARV)
         self.plc_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        # self.plc.make_soft_macros_square()
 
         self.plc.set_congestion_smooth_range(self.SMOOTH)
         self.plc_os.set_congestion_smooth_range(self.SMOOTH)
 
-        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        # self.plc.make_soft_macros_square()
+
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        # self.plc.make_soft_macros_square() #  in effect
+        self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        
+
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        self.plc.make_soft_macros_square()
-        self.plc_os.make_soft_macros_square()
+        # self.plc.make_soft_macros_square()
+        # self.plc_os.make_soft_macros_square()
 
         # [IGNORE] create_blockage must be defined BEFORE set_canvas_size 
         # and set_placement_grid in order to be considered on the canvas
@@ -297,7 +341,7 @@ class PlacementCostTest():
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
             print("GL WIRELENGTH: ", self.plc.get_wirelength())
             print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
-            exit(1)
+            # exit(1)
 
         # Density
         try:
@@ -421,17 +465,9 @@ class PlacementCostTest():
         except Exception as e:
             print("[ERROR WIRELENGTH] Discrepancies found when computing wirelength -- GL {}, OS {}".format(
                 str(self.plc.get_cost()), self.plc_os.get_cost()))
-            
-            # if remove all soft macros
-            # soft_macro_indices = [
-            #     m for m in self.plc.get_macro_indices() if self.plc.is_node_soft_macro(m)
-            # ]
-            # for mod_idx in soft_macro_indices:
-            #     self.plc_os.unplace_node(mod_idx)
-            #     self.plc.unplace_node(mod_idx)
-
             print("GL WIRELENGTH: ", self.plc.get_wirelength())
             print("OS WIRELENGTH: ", self.plc_os.get_wirelength())
+
 
 
     def test_proxy_density(self):
@@ -718,18 +754,6 @@ class PlacementCostTest():
             init_placement=self.PLC_PATH
         )
 
-        if self.PLC_PATH:
-            print("#[PLC FILE FOUND] Loading info from .plc file")
-            self.plc_util_os.set_canvas_boundary_check(False)
-            self.plc_util_os.restore_placement(self.PLC_PATH,
-                                               ifInital=True,
-                                               ifValidate=True,
-                                               ifReadComment=False)
-            self.plc_util.set_canvas_boundary_check(False)
-            self.plc_util.restore_placement(self.PLC_PATH)
-        else:
-            print("#[PLC FILE MISSING] Using only netlist info")
-
         self.extractor = observation_extractor.ObservationExtractor(
             plc=self.plc_util, observation_config=self._observation_config
         )
@@ -843,6 +867,42 @@ class PlacementCostTest():
 
         self.plc_util_os.display_canvas(annotate=False)
 
+    def test_fd(self):
+        print("############################ TEST GOOGLE's FD Placer ############################")
+        self.plc_util = placement_util.create_placement_cost(
+            plc_client=plc_client,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        self.plc_util_os = placement_util.create_placement_cost(
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
+
+        self.plc_util.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_util_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc_util.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
+
+        self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        
+        placement_util.fd_placement_schedule(self.plc_util)
+
+        for node_index in placement_util.nodes_of_types(self.plc_util, ['MACRO']):
+            x_pos, y_pos = self.plc_util.get_node_location(node_index)
+            self.plc_util_os.set_soft_macro_position(node_index, x_pos, y_pos)
+        
+        self.plc_util_os.display_canvas(annotate=False, amplify=False)
+
     def test_environment(self):
         print("############################ TEST ENVIRONMENT ############################")
         env = environment.CircuitEnv(
@@ -912,6 +972,26 @@ class PlacementCostTest():
         print("                  +++ TEST ENVIRONMENT: PASS +++")
         print("                  ++++++++++++++++++++++++++++++")
 
+    def test_fd_placement(self):
+        print("############################ TEST FDPLACEMENT ############################")
+        self.plc_util_os = placement_util.create_placement_cost(
+            plc_client=plc_client_os,
+            netlist_file=self.NETLIST_PATH,
+            init_placement=self.PLC_PATH
+        )
+
+        # placement util is incapable of setting routing resources
+        self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_util_os.set_macro_routing_allocation(self.MARH, self.MARV)
+
+        self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
+
+        self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
+        placement_util.fd_placement_schedule(self.plc_util_os)
+
+        self.plc_util_os.display_canvas(annotate=False, amplify=False)
 
 def parse_flags(argv):
     parser = argparse_flags.ArgumentParser(
@@ -970,7 +1050,8 @@ def main(args):
     Uncomment any available tests
     """
     # PCT.test_metadata()
-    PCT.test_proxy_cost()
+    # PCT.test_proxy_cost()
+    # PCT.test_proxy_hpwl()
     # PCT.test_proxy_density()
     # PCT.test_proxy_congestion()
     # PCT.test_placement_util(keep_save_file=False)
@@ -978,7 +1059,9 @@ def main(args):
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     # PCT.view_canvas()
+    # PCT.test_fd()
     # PCT.test_environment()
+    PCT.test_fd_placement()
 
 
 if __name__ == '__main__':
