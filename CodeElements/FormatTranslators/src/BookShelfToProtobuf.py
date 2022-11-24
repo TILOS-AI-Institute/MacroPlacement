@@ -1009,5 +1009,3 @@ class canvas_object:
             fp.write(f"  {inst.name}  {px}  {py} : N {eol}\n")
         
         fp.close()
-
-

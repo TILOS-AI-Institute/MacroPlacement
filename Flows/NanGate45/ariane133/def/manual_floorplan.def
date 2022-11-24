@@ -1977,403 +1977,403 @@ GCELLGRID Y 140 DO 970 STEP 2800 ;
 GCELLGRID Y 0 DO 2 STEP 140 ;
 
 COMPONENTS 133 ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 13920 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 13920 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 136380 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 136380 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 258840 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 258840 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 381320 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 381320 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 13920 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 13920 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 136380 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 136380 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 258840 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 258840 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 381320 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[0\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 381320 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 136380 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[0\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 136380 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 258840 550480 ) N
+- i_cache_subsystem/i_icache/sram_block\[0\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 258840 550480 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[0\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 381320 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[0\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 381320 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 503780 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 503780 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 626240 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 626240 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 748700 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 748700 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 871160 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 871160 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 503780 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 503780 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 626240 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 626240 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 748700 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 748700 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 871160 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[1\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 871160 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 626240 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[1\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 626240 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 748700 550480 ) N
+- i_cache_subsystem/i_icache/sram_block\[1\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 748700 550480 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[1\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 871160 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[1\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 871160 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 993640 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 993640 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1116100 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1116100 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1238560 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1238560 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 1361020 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 1361020 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 993640 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 993640 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 1116100 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 1116100 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 1238560 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 1238560 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 1361020 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[2\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 1361020 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1116100 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[2\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1116100 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1238560 550480 ) N
+- i_cache_subsystem/i_icache/sram_block\[2\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1238560 550480 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[2\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1361020 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[2\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1361020 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1483480 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1483480 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1605940 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1605940 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1728420 11760 ) N
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1728420 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 1850880 11760 ) FN
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 1850880 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 1483480 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 1483480 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 1605940 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 1605940 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 1728420 281120 ) N
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 1728420 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 1850880 281120 ) FN
+- i_cache_subsystem/i_icache/sram_block\[3\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 1850880 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1605940 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[3\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1605940 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1728420 550480 ) N
+- i_cache_subsystem/i_icache/sram_block\[3\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1728420 550480 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_icache/sram_block\[3\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1850880 550480 ) FN
+- i_cache_subsystem/i_icache/sram_block\[3\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1850880 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 13920 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 13920 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 136380 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 136380 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 258840 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 258840 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 381320 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 381320 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 13920 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 13920 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 136380 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 136380 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 258840 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 258840 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 381320 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 381320 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 136380 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 136380 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 258840 1897280 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 258840 1897280 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[0\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 381320 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[0\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 381320 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 503780 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 503780 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 626240 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 626240 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 748700 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 748700 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 871160 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 871160 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 503780 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 503780 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 626240 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 626240 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 748700 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 748700 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 871160 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 871160 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 626240 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 626240 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 748700 1897280 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 748700 1897280 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[1\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 871160 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[1\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 871160 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 993640 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 993640 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1116100 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1116100 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1238560 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1238560 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 1361020 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 1361020 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 993640 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 993640 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 1116100 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 1116100 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 1238560 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 1238560 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 1361020 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 1361020 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1116100 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1116100 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1238560 1897280 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1238560 1897280 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[2\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1361020 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[2\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1361020 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1483480 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1483480 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1605940 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1605940 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1728420 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1728420 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 1850880 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 1850880 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 1483480 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 1483480 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 1605940 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 1605940 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 1728420 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 1728420 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 1850880 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 1850880 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1605940 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1605940 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 1728420 1897280 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 1728420 1897280 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[3\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1850880 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[3\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1850880 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1973340 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1973340 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2095800 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2095800 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2218260 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2218260 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 2340740 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 2340740 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 1973340 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 1973340 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 2095800 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 2095800 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 2218260 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 2218260 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 2340740 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 2340740 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 2095800 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 2095800 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2218260 1897280 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2218260 1897280 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[4\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2340740 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[4\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2340740 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 2463200 2436000 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 2463200 2436000 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2585660 2436000 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2585660 2436000 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2463200 2166640 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2463200 2166640 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 2585660 2166640 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 2585660 2166640 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 2463200 1897280 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 2463200 1897280 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 2585660 1897280 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 2585660 1897280 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 2463200 1627920 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 2463200 1627920 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 2585660 1627920 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 2585660 1627920 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 2340740 1358560 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 2340740 1358560 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2463200 1358560 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2463200 1358560 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[5\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2585660 1358560 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[5\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2585660 1358560 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1973340 11760 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1973340 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2095800 11760 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2095800 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2218260 11760 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2218260 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 2340740 11760 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 2340740 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 1973340 281120 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 1973340 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 2095800 281120 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 2095800 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 2218260 281120 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 2218260 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 2340740 281120 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 2340740 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 2585660 1089200 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 2585660 1089200 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2463200 1089200 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2463200 1089200 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[6\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2340740 1089200 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[6\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2340740 1089200 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 2463200 11760 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 2463200 11760 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2585660 11760 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2585660 11760 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 2463200 281120 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 2463200 281120 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + PLACED ( 2585660 281120 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[3\].i_ram fakeram45_256x16 + FIXED ( 2585660 281120 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + PLACED ( 2463200 550480 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[4\].i_ram fakeram45_256x16 + FIXED ( 2463200 550480 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + PLACED ( 2585660 550480 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[5\].i_ram fakeram45_256x16 + FIXED ( 2585660 550480 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + PLACED ( 2463200 819840 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[6\].i_ram fakeram45_256x16 + FIXED ( 2463200 819840 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + PLACED ( 2585660 819840 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].data_sram/macro_mem\[7\].i_ram fakeram45_256x16 + FIXED ( 2585660 819840 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 2218260 1089200 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].tag_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 2218260 1089200 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + PLACED ( 2095800 1089200 ) N
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].tag_sram/macro_mem\[1\].i_ram fakeram45_256x16 + FIXED ( 2095800 1089200 ) N
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/sram_block\[7\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + PLACED ( 1973340 1089200 ) FN
+- i_cache_subsystem/i_nbdcache/sram_block\[7\].tag_sram/macro_mem\[2\].i_ram fakeram45_256x16 + FIXED ( 1973340 1089200 ) FN
   + HALO 10000 10000 10000 10000
  ;
-- i_cache_subsystem/i_nbdcache/valid_dirty_sram/macro_mem\[0\].i_ram fakeram45_256x16 + PLACED ( 1850880 1089200 ) N
+- i_cache_subsystem/i_nbdcache/valid_dirty_sram/macro_mem\[0\].i_ram fakeram45_256x16 + FIXED ( 1850880 1089200 ) N
   + HALO 10000 10000 10000 10000
  ;
 END COMPONENTS
