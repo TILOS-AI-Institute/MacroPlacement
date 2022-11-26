@@ -192,15 +192,15 @@ class port:
         self.side = None
         self.px = None # Protobuf location
         self.py = None # Protobuf location
-    
+
     def connect_net(self, net_id, net_name, isInput):
         if self.net_id != None:
             print(f"[INFO] [ERROR-3] {self.name} is connected. Check Net: {net_name}")
-        
+
         self.net_id = net_id
         self.isInput = isInput
         return
-    
+
     def update_id(self, idx):
         self.id = idx
         return
@@ -209,7 +209,7 @@ class port:
         self.x = x
         self.y = y
         return
-    
+
     def update_side(self, pt_x, pt_y, dx, dy):
         cond1 = pt_x - pt_y
         cond2 = pt_x/dx + pt_y/dy - 1
@@ -241,21 +241,21 @@ class port:
         die_lly = coy - c2dy[0]
         die_dx = dx + sum(c2dx)
         die_dy = dy + sum(c2dy)
-        
+
         X = self.x - die_llx
         Y = self.y - die_lly
-        
+
         if self.side == None:
             self.update_side(X, Y, die_dx, die_dy)
-        
+
         co_urx = cox + dx
         co_ury = coy + dy
-        
+
         if self.side == "left":
             self.px = dd
         elif self.side == "right":
             self.px = dx - dd
-        
+
         if self.side in ["left", "right"]:
             if self.y <= coy:
                 ## Directly print py Considering Core origin (0, 0)
@@ -264,12 +264,12 @@ class port:
                 self.py = dy - dd
             else:
                 self.py = self.y - coy
-        
+
         if self.side == "top":
             self.py = dy - dd
         elif self.side == "bottom":
             self.py = dd
-        
+
         if self.side in ["top", "bottom"]:
             if self.x <= cox:
                 self.px = dd
@@ -295,7 +295,7 @@ class net:
         else:
             print(f"[INFO][ERROR-4] Net has the driver id:{did} type:{dtype}")
         return
-    
+
     def add_sink(self, stype, sid):
         if sid not in self.sids:
             self.sids.append(sid)
@@ -433,7 +433,7 @@ class canvas_object:
             _port.update_protobuf_location(self.c2dx, self.c2dy, self.core_llx,\
                 self.core_lly, self.core_dx, self.core_dy, 0.5/self.unit)
         return
-    
+
     def update_inst_type(self):
         for _inst in self.insts:
             _inst.update_isMacro(self.site_height)
@@ -456,18 +456,18 @@ class canvas_object:
         '''
         scl_fp = open(scl_file, 'r')
         row_id = 0
-    
+
         crow = None
         for line in scl_fp.readlines():
             if re.match(r"(^\s*#)|(^\s*UCLA\s*scl\s*1.0$)|(^\s*$)|(^\sEnd\s*$)", line):
                 continue
-            
-            if re.match("^\s*CoreRow\s*Horizontal\s*$", line):
+
+            if re.match(r"^\s*CoreRow\s*Horizontal\s*$", line):
                 self.rows.append(row(row_id))
                 crow = self.rows[row_id]
                 row_id += 1
                 continue
-            
+
             lly = re.findall(r"^\s*Coordinate\s*:\s*([0-9,-,\.]*)", line)
             sheight = re.findall(r"\s*Height\s*:\s*([0-9,-,\.]*)", line)
             swidth = re.findall(r"^\s*Sitewidth\s*:\s*([0-9,-,\.]*)", line)
@@ -479,32 +479,32 @@ class canvas_object:
             if lly and lly[0] != "" :
                 _lly = float(lly[0])/self.unit
                 crow.update_lly(_lly)
-            
+
             if sheight and sheight[0] != "":
                 if self.site_height == None:
                     self.site_height = float(sheight[0])/self.unit
                 elif self.site_height != float(sheight[0])/self.unit:
                     print(f"[INFO][ERROR-8] Row id:{row_id-1} site height is different")
-            
+
             if swidth and swidth[0] != "":
                 if self.site_width == None:
                     self.site_width = float(swidth[0])/self.unit
                 elif self.site_width != float(swidth[0])/self.unit:
                     print(f"[INFO][ERROR-9] Row id:{row_id-1} site width is different")
-            
+
             if sorient and sorient[0] != "":
                 crow.update_orient(sorient[0])
-            
+
             if llx and llx[0] != "":
                 _llx = float(llx[0])/self.unit
                 crow.update_llx(_llx)
-            
+
             if sspacing and sspacing[0] != "":
                 if self.site_spacing == None:
                     self.site_spacing = float(sspacing[0])/self.unit
                 elif self.site_spacing != float(sspacing[0])/self.unit:
                     print(f"[INFO][ERROR-10] Row id:{row_id-1} site spacing is different")
-            
+
             if numsites and numsites[0] != "":
                 crow.update_site_count(numsites[0])
         

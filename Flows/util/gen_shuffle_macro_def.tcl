@@ -45,7 +45,12 @@ generateVias
 createBasicPathGroups -expanded
 
 ## Generate the floorplan ##
-defIn ${handoff_dir}/${DESIGN}.def
+
+if {[info exist ::env(DEF_FILE)] && $::env(DEF_FILE) != ""} {
+    defIn $::env(DEF_FILE) 
+} else {
+    defIn ${handoff_dir}/${DESIGN}.def
+}
 
 #### Unplace the standard cells ###
 dbset [dbget top.insts.cell.subClass core -p2 ].pStatus unplaced
@@ -53,6 +58,7 @@ dbset [dbget top.insts.cell.subClass core -p2 ].pStatus unplaced
 source ../../../../util/shuffle_macro.tcl
 shuffle_macros $::env(SEED)
 
+dbset [dbget top.insts.cell.subClass block -p2 ].pStatus fixed
 defOut -floorplan ./${DESIGN}_fp_shuffled_macros.def
 
 exit
