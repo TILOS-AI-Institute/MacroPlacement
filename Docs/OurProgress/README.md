@@ -1,12 +1,13 @@
 # **Our Progress: A Chronology**
 ## Table of Contents
-  - [Introduction](#introduction)
-  - [Our progress](#our-progress) and major milestones
-    - [Publicly available commercial SP&R flow](#June6)
-    - [Ariane133 macro placement using Circuit Training](#circuit-training-baseline-result-on-our-ariane133-nangate45_51)
-    - [Replication of proxy cost](#August25)
-    - [NVDLA macro placement using Circuit Training](#circuit-training-baseline-result-on-our-nvdla-nangate45_68)
-  - [Pinned questions](#pinned-to-bottom-question-list)
+- [**Our Progress: A Chronology**](#our-progress-a-chronology)
+  - [Table of Contents](#table-of-contents)
+  - [**Introduction**](#introduction)
+  - [**Our Progress**](#our-progress)
+    - [Circuit Training Baseline Result on “Our Ariane133-NanGate45\_51”.](#circuit-training-baseline-result-on-our-ariane133-nangate45_51)
+    - [**Circuit Training Baseline Result on “Our Ariane133-NanGate45****\_68****".**](#circuit-training-baseline-result-on-our-ariane133-nangate45_68)
+    - [**Circuit Training Baseline Result on “Our NVDLA-NanGate45\_68”.**](#circuit-training-baseline-result-on-our-nvdla-nangate45_68)
+  - [**Pinned (to bottom) question list:**](#pinned-to-bottom-question-list)
 
 ## **Introduction**
 [MacroPlacement](../../) is an open, transparent effort to provide a public, baseline implementation of [Google Brain’s Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method.  In this repo,  we aim to achieve the following.  
@@ -4674,10 +4675,11 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 
 **November 27:**  
 <a id="Question3ext"></a>
-We have extended the experiment of [Question 3](#Question3) to check the quality of our testcases. As mentioned earlier, we take the CT generated macro placement and then randomly swap the same size macros. While swapping the macros we update macro orientation based on the swapped macro orientation. The following sections provide the details of macro shuffling experiments for different testcases.
+We have extended the experiment of [Question 3](#Question3) to check the quality of our testcases. As mentioned [here](#Question3), we take the CT generated macro placement and then randomly swap the same size macros. We use the [shuffle_macro.tcl](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/651a36626dd778018c5cf867b419e44f64fb103e/Flows/util/shuffle_macro.tcl#L29) script for this experiment. The following sections provide the details of macro shuffling experiments for different testcases.
 
 - **Ariane:**
 The target clock period of the shuffling experiment for Ariane133-NG45-68% shown [here](#Question3) is 4ns, which is very relaxed (See [here](#September18) for clock period sweep results). So we ran the same macro shuffling experiment for a tighter target clock period 1.3ns. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seeds where seed values are 111, 222, 333, 444, 555 and 666.
+  - For the shuffled designs, the total power increase by 1.4%, the wirelength increase by 16%, and the runtime increase by 9% on average.
 
 <table>
 <thead>
@@ -4851,6 +4853,7 @@ The target clock period of the shuffling experiment for Ariane133-NG45-68% shown
   
 - **BlackParrot (Quad-Core):**
 We have done similar macro shuffling experiment for BlackParrot (Quad-Core) design. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seeds where seed values are 111, 222, 333, 444, 555 and 666.
+  - For the shuffled designs, the total power increase by 6%, the wirelength increase by 33%, and the runtime increase by 16% on average.
 
 <table>
 <thead>
