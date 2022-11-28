@@ -4215,6 +4215,9 @@ We have trained CT to generate a macro placement for the [MemPool Group design](
 **November 25:**  
 <a id="November25"></a>
 We document two variant Evaluation Flows (taking macro placements through Innovus place-and-route) that we use, in this [Evaluation Flow document](https://docs.google.com/document/d/1xDGFSYxIE0AKsGAI3ccLz1EX3bLHOvDtwl3983G5kYk/edit?usp=sharing). Posted results up to now have been obtained with Evaluation Flow 2. The [Evaluation Flow document](https://docs.google.com/document/d/1xDGFSYxIE0AKsGAI3ccLz1EX3bLHOvDtwl3983G5kYk/edit?usp=sharing) shows that results and conclusions are nearly identical between Evaluation Flow 1 and Evaluation Flow 2. However, going forward we will report our macro placement assessments using Evaluation Flow 1.
+<p align="center">
+<img width="300" src="./images/EvaluationFlows.png" alg="EvaluationFlows">
+</p>
 
 **CT Results for Commercial Enablement**  
 We have run CT to generate macro placement for Ariane133, BlackParrot and MemPool Group designs on GLOBALFOUNDRIES 12nm (GF12) enablement. The following tables present the normalized design metrics. Core area, standard cell area and macro area are normalized with respect to the core area. Total power is normalized w.r.t. the reported preCTS total power when CMP is used. Similarly, we normalize the wirelength and congestion based on the reported preCTS wirelength and congestion when CMP is used. The timing numbers are normalized w.r.t. the target clock period.
