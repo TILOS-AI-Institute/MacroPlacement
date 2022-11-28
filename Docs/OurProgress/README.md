@@ -4679,7 +4679,7 @@ We have extended the experiment of [Question 3](#Question3) to check the quality
 
 - **Ariane:**
 The target clock period of the shuffling experiment for Ariane133-NG45-68% shown [here](#Question3) is 4ns, which is very relaxed (See [here](#September18) for clock period sweep results). So we ran the same macro shuffling experiment for a tighter target clock period 1.3ns. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seeds where seed values are 111, 222, 333, 444, 555 and 666.
-  - For the shuffled designs, the total power increase by 1.4%, the wirelength increase by 16%, and the runtime increase by 9% on average.
+  - For the shuffled designs, the total power increases by 1.4%, the wirelength increases by 16%, and the runtime increases by 9% on average.
 
 <table>
 <thead>
@@ -4853,7 +4853,7 @@ The target clock period of the shuffling experiment for Ariane133-NG45-68% shown
   
 - **BlackParrot (Quad-Core):**
 We have done similar macro shuffling experiment for BlackParrot (Quad-Core) design. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seeds where seed values are 111, 222, 333, 444, 555 and 666.
-  - For the shuffled designs, the total power increase by 6%, the wirelength increase by 33%, and the runtime increase by 16% on average.
+  - For the shuffled designs, the total power increases by 6%, the wirelength increases by 33%, and the runtime increases by 16% on average.
 
 <table>
 <thead>
@@ -5026,7 +5026,7 @@ We have done similar macro shuffling experiment for BlackParrot (Quad-Core) desi
 </table>
 
 - **MemPool Group:**
-We have tried to do similar macro shuffling experiment for MemPool Group, but non of our run completed.
+We have tried to do similar macro shuffling experiments for MemPool Group, but none of our run completed.
 
 ## **Pinned (to bottom) question list:**
   
