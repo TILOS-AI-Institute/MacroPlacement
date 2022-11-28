@@ -4675,10 +4675,10 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 
 **November 27:**  
 <a id="Question3ext"></a>
-We have extended the experiment of [Question 3](#Question3) to check the quality of our testcases. As mentioned [here](#Question3), we take the CT generated macro placement and then randomly swap the same size macros. We use the [shuffle_macro.tcl](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/651a36626dd778018c5cf867b419e44f64fb103e/Flows/util/shuffle_macro.tcl#L29) script for this experiment. The following sections provide the details of macro shuffling experiments for different testcases.
+We have extended the experiment of [Question 3](#Question3) to assess the difficulty of our testcases. As mentioned [here](#Question3), we take the CT-generated macro placement and then randomly swap the same-size macros. We use the [shuffle_macro.tcl](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/651a36626dd778018c5cf867b419e44f64fb103e/Flows/util/shuffle_macro.tcl#L29) script for this experiment. The following items provide  details of the macro shuffling experiments for different testcases.
 
 - **Ariane:**
-The target clock period of the shuffling experiment for Ariane133-NG45-68% shown [here](#Question3) is 4ns, which is very relaxed (See [here](#September18) for clock period sweep results). So we ran the same macro shuffling experiment for a tighter target clock period 1.3ns. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seeds where seed values are 111, 222, 333, 444, 555 and 666.
+The target clock period of the shuffling experiment for Ariane133-NG45-68% shown [here](#Question3) is 4ns, which is very relaxed (see [here](#September18) for clock period sweep results). Hence, we ran the same macro shuffling experiment for a tighter target clock period of 1.3ns. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seed values of 111, 222, 333, 444, 555 and 666.
   - For the shuffled designs, the total power increases by 1.4%, the wirelength increases by 16%, and the runtime increases by 9% on average.
 
 <table>
@@ -4852,7 +4852,7 @@ The target clock period of the shuffling experiment for Ariane133-NG45-68% shown
 </table>
   
 - **BlackParrot (Quad-Core):**
-We have done similar macro shuffling experiment for BlackParrot (Quad-Core) design. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seeds where seed values are 111, 222, 333, 444, 555 and 666.
+We have performed a similar macro shuffling experiment for the BlackParrot (Quad-Core) design. The following table shows the preCTS / postPlaceOpt and postRouteOpt metrics. We shuffled the macros using six different seed values of 111, 222, 333, 444, 555 and 666.  
   - For the shuffled designs, the total power increases by 6%, the wirelength increases by 33%, and the runtime increases by 16% on average.
 
 <table>
@@ -5026,7 +5026,7 @@ We have done similar macro shuffling experiment for BlackParrot (Quad-Core) desi
 </table>
 
 - **MemPool Group:**
-We have tried a similar macro shuffling experiment for MemPool Group, but none of our runs completed.
+We have tried a similar macro shuffling experiment for MemPool Group, but none of our runs completed (i.e., flow failure).
 
 ## **Pinned (to bottom) question list:**
   
