@@ -5026,7 +5026,7 @@ We have done similar macro shuffling experiment for BlackParrot (Quad-Core) desi
 </table>
 
 - **MemPool Group:**
-We have tried to do similar macro shuffling experiments for MemPool Group, but none of our run completed.
+We have tried a similar macro shuffling experiment for MemPool Group, but none of our runs completed.
 
 ## **Pinned (to bottom) question list:**
   
