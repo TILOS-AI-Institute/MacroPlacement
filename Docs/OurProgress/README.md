@@ -4216,7 +4216,7 @@ We have trained CT to generate a macro placement for the [MemPool Group design](
 <a id="November25"></a>
 We document two variant Evaluation Flows (taking macro placements through Innovus place-and-route) that we use, in this [Evaluation Flow document](https://docs.google.com/document/d/1xDGFSYxIE0AKsGAI3ccLz1EX3bLHOvDtwl3983G5kYk/edit?usp=sharing). Posted results up to now have been obtained with Evaluation Flow 2. The [Evaluation Flow document](https://docs.google.com/document/d/1xDGFSYxIE0AKsGAI3ccLz1EX3bLHOvDtwl3983G5kYk/edit?usp=sharing) shows that results and conclusions are nearly identical between Evaluation Flow 1 and Evaluation Flow 2. However, going forward we will report our macro placement assessments using Evaluation Flow 1.
 <p align="center">
-<img width="300" src="./images/EvaluationFlows.png" alg="EvaluationFlows">
+<img width="600" src="./images/EvaluationFlows.png" alg="EvaluationFlows">
 </p>
 
 **CT Results for Commercial Enablement**  
