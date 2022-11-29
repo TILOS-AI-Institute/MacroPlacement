@@ -1,5 +1,6 @@
 # This script was written and developed by ABKGroup students at UCSD. However, the underlying commands and reports are copyrighted by Cadence. 
 # We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
+setLibraryUnit -time 1ps
 
 create_library_set -name WC_LIB -timing $libworst
 create_library_set -name BC_LIB -timing $libbest

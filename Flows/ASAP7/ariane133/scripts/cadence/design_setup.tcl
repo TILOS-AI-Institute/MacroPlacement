@@ -20,5 +20,5 @@ set GEN_EFF medium
 set MAP_EFF high
 #
 set SITE "asap7sc7p5t"
-set HALO_WIDTH 2
+set HALO_WIDTH 1
 set TOP_ROUTING_LAYER 7
