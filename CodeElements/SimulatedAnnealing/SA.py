@@ -393,6 +393,11 @@ class PlcObject:
         else:
             return False
 
+    def UpdateSquare(self):
+        area = self.width * self.height
+        self.width = sqrt(self.width)
+        self.height = sqrt(self.height)
+
     def IsPort(self):
         if (self.pb_type == '"PORT"'):
             return True
@@ -804,6 +809,10 @@ class PBFNetlist:
                 self.ports.append(plc_object.node_id)
             else:
                 pass
+
+        for plc_object in self.objects:
+            if (plc_object.IsSoftMacro() == True):
+                plc_object.UpdateSquare()
 
         # Map macro pin with its macro
         for plc_object in self.objects:
