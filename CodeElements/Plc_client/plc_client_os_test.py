@@ -1057,7 +1057,7 @@ class PlacementCostTest():
                         move_distance_factors=(1.0,),
                         attract_factor=(100.0,),
                         repel_factor=(100.0,),
-                        use_current_loc=True,
+                        use_current_loc=False,
                         move_macros=False)
 
             self.plc_util_os.display_canvas(annotate=True, amplify=True, saveName=str(i))
