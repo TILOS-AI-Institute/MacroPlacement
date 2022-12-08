@@ -308,15 +308,14 @@ class PlacementCostTest():
         # self.plc.make_soft_macros_square()
 
         self.plc.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        # self.plc.make_soft_macros_square() #  in effect
+        self.plc.make_soft_macros_square() #  in effect
         self.plc.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         
 
         self.plc_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        # self.plc.make_soft_macros_square()
-        # self.plc_os.make_soft_macros_square()
+        self.plc_os.make_soft_macros_square()
 
         # [IGNORE] create_blockage must be defined BEFORE set_canvas_size 
         # and set_placement_grid in order to be considered on the canvas
@@ -867,7 +866,7 @@ class PlacementCostTest():
 
         self.plc_util_os.display_canvas(annotate=False)
 
-    def test_fd(self):
+    def test_google_fd(self):
         print("############################ TEST GOOGLE's FD Placer ############################")
         self.plc_util = placement_util.create_placement_cost(
             plc_client=plc_client,
@@ -875,33 +874,94 @@ class PlacementCostTest():
             init_placement=self.PLC_PATH
         )
 
+        self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
+        self.plc_util.set_macro_routing_allocation(self.MARH, self.MARV)
+        self.plc_util.set_congestion_smooth_range(self.SMOOTH)
+        self.plc_util.make_soft_macros_square()
+        self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+
         self.plc_util_os = placement_util.create_placement_cost(
             plc_client=plc_client_os,
             netlist_file=self.NETLIST_PATH,
             init_placement=self.PLC_PATH
         )
-
-        self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
         self.plc_util_os.set_routes_per_micron(self.RPMH, self.RPMV)
-
-        self.plc_util.set_macro_routing_allocation(self.MARH, self.MARV)
         self.plc_util_os.set_macro_routing_allocation(self.MARH, self.MARV)
-
-        self.plc_util.set_congestion_smooth_range(self.SMOOTH)
         self.plc_util_os.set_congestion_smooth_range(self.SMOOTH)
-
-        self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
-        self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        self.plc_util_os.make_soft_macros_square()
         self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
-        
-        placement_util.fd_placement_schedule(self.plc_util)
 
+        ## For final result
+        # placement_util.fd_placement_schedule(self.plc_util, 
+        #                 num_steps=(100,100),
+        #                 io_factor=1.0,
+        #                 move_distance_factors=(1.0,1.0),
+        #                 attract_factor=(100.0,100.0),
+        #                 repel_factor=(0.0,0.0),
+        #                 use_current_loc=True,
+        #                 move_macros=False)
+        # for node_index in placement_util.nodes_of_types(self.plc_util, ['MACRO']):
+        #         x_pos, y_pos = self.plc_util.get_node_location(node_index)
+        #         print(x_pos, y_pos)
+        #         self.plc_util_os.set_soft_macro_position(node_index, x_pos, y_pos)
+            
+        # self.plc_util_os.display_canvas(annotate=False, amplify=False)
+
+        # For Step-by-step result
+        temp_pos_collection= [[0,0]] * 10
         for node_index in placement_util.nodes_of_types(self.plc_util, ['MACRO']):
             x_pos, y_pos = self.plc_util.get_node_location(node_index)
+            if self.plc_util.is_node_soft_macro(node_index):
+                print(0, node_index,
+                        x_pos, 
+                        y_pos, 
+                        x_pos - temp_pos_collection[node_index][0], 
+                        y_pos - temp_pos_collection[node_index][1])
+                temp_pos_collection[node_index] = [x_pos, y_pos]
             self.plc_util_os.set_soft_macro_position(node_index, x_pos, y_pos)
         
-        self.plc_util_os.display_canvas(annotate=False, amplify=False)
+        # Step by step iteration
+        for i in range(1, 41):
+            # resetting the placement util
+            self.plc_util = placement_util.create_placement_cost(
+                plc_client=plc_client,
+                netlist_file=self.NETLIST_PATH,
+                init_placement=self.PLC_PATH
+            )
+
+            self.plc_util.set_routes_per_micron(self.RPMH, self.RPMV)
+            self.plc_util.set_macro_routing_allocation(self.MARH, self.MARV)
+            self.plc_util.set_congestion_smooth_range(self.SMOOTH)
+            self.plc_util.make_soft_macros_square()
+            self.plc_util.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+            self.plc_util.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+            
+            placement_util.fd_placement_schedule(
+                        self.plc_util, 
+                        num_steps=(i,),
+                        io_factor=1.0,
+                        move_distance_factors=(1.0,),
+                        attract_factor=(100.0,),
+                        repel_factor=(100.0,),
+                        use_current_loc=True,
+                        move_macros=False)
+            
+            # sync with plc_util_os for visualization
+            for node_index in placement_util.nodes_of_types(self.plc_util, ['MACRO']):
+                x_pos, y_pos = self.plc_util.get_node_location(node_index)
+                # print(temp_pos_collection)
+                if self.plc_util.is_node_soft_macro(node_index):
+                    print(i, node_index, 
+                            x_pos, 
+                            y_pos, 
+                            x_pos - temp_pos_collection[node_index][0], 
+                            y_pos - temp_pos_collection[node_index][1])
+                    temp_pos_collection[node_index] = [x_pos, y_pos]
+                self.plc_util_os.set_soft_macro_position(node_index, x_pos, y_pos)
+
+            self.plc_util_os.display_canvas(annotate=True, amplify=True, saveName=str(i))
 
     def test_environment(self):
         print("############################ TEST ENVIRONMENT ############################")
@@ -951,8 +1011,6 @@ class PlacementCostTest():
 
             env_os._plc.display_canvas(annotate=False)
 
-            exit(1)
-
         # check observation state
         obs_gl = env._get_obs()
         obs_os = env_os._get_obs()
@@ -974,6 +1032,7 @@ class PlacementCostTest():
 
     def test_fd_placement(self):
         print("############################ TEST FDPLACEMENT ############################")
+        # test FD placement in plc_client_os
         self.plc_util_os = placement_util.create_placement_cost(
             plc_client=plc_client_os,
             netlist_file=self.NETLIST_PATH,
@@ -989,9 +1048,42 @@ class PlacementCostTest():
         self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
         self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
 
-        placement_util.fd_placement_schedule(self.plc_util_os)
+        # placement_util.fd_placement_schedule(self.plc_util_os)
+        for i in range(1, 41):
+            placement_util.fd_placement_schedule(
+                        self.plc_util_os, 
+                        num_steps=(i,),
+                        io_factor=1.0,
+                        move_distance_factors=(1.0,),
+                        attract_factor=(100.0,),
+                        repel_factor=(100.0,),
+                        use_current_loc=True,
+                        move_macros=False)
 
-        self.plc_util_os.display_canvas(annotate=False, amplify=False)
+            self.plc_util_os.display_canvas(annotate=True, amplify=True, saveName=str(i))
+
+        # test FD placement under FDPlacement folder
+        # print(os.getcwd())
+        # os.system("cd FDPlacement/ && python3 fd_placement_exp.py --netlist .{} \
+        #     --width {} --height {} --col {} --row {} && cd -".format(
+        #         self.NETLIST_PATH, self.CANVAS_WIDTH, 
+        #         self.CANVAS_HEIGHT, self.GRID_COL, self.GRID_ROW
+        #     )
+        # )
+
+        # self.plc_util_os = placement_util.create_placement_cost(
+        #     plc_client=plc_client_os,
+        #     netlist_file=self.NETLIST_PATH + ".final",
+        # )
+        # print(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        # self.plc_util_os.set_canvas_size(self.CANVAS_WIDTH, self.CANVAS_HEIGHT)
+        # self.plc_util_os.set_placement_grid(self.GRID_COL, self.GRID_ROW)
+        # self.plc_util_os.make_soft_macros_square()
+        # print(self.plc_util_os.get_canvas_width_height())
+
+        # self.plc_util_os.display_canvas(annotate=True, amplify=True)
+
+        # os.chdir()
 
 def parse_flags(argv):
     parser = argparse_flags.ArgumentParser(
@@ -1059,9 +1151,9 @@ def main(args):
     # PCT.test_miscellaneous()
     # PCT.test_observation_extractor()
     # PCT.view_canvas()
-    # PCT.test_fd()
+    PCT.test_google_fd() # python3 -m Plc_client.plc_client_os_test --netlist ./Plc_client/test/1P1M2m/netlist.pb.txt --width 500 --height 500 --col 10 --row 10
     # PCT.test_environment()
-    PCT.test_fd_placement()
+    # PCT.test_fd_placement()
 
 
 if __name__ == '__main__':
