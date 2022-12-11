@@ -1,0 +1,11 @@
+{
+    "netlist" : "./ariane133/ariane.pb.txt",
+    "plc_file" : "./ariane133/ariane.plc",
+    "action_probs" :[[0.2, 0.2, 0.2, 0.2, 0.2]],
+    "num_actions(xn)" : [2, 3, 4, 5],
+    "max_temperature" : [5e-5, 7e-5, 1e-4, 5e-4, 1e-3],
+    "num_iters" : [10],
+    "seed" : [0, 1],
+    "num_cores" : 8,
+    "spiral_flag" : [ "True", "False"]
+}
