@@ -26,10 +26,10 @@ from visual_placement import VisualPlacement
 #
 # Check Here !!!
 #
-#sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/circuit_training')
-#sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/')
-sys.path.append('xxxxx/CT/circuit_training')
-sys.path.append('xxxxx/CT/')
+sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/circuit_training')
+sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/')
+#sys.path.append('xxxxx/CT/circuit_training')
+#sys.path.append('xxxxx/CT/')
 
 from absl import flags
 from circuit_training.grouping import grid_size_selection
@@ -1018,7 +1018,7 @@ class PBFNetlist:
         print("cost_wirelength = ", cost_wirelength, "cost_density = ", cost_density, "cost_congestion = ", cost_congestion)
         return self.w_wirelength * cost_wirelength + self.w_density * cost_density + self.w_congestion * cost_congestion
 
-    def FDPlacer(self, io_factor, num_steps, max_move_distance, attract_factor, repel_factor, debug_mode = True):
+    def FDPlacer(self, io_factor, num_steps, max_move_distance, attract_factor, repel_factor, use_current_loc,  debug_mode = True):
         # io_factor is a scalar
         # num_steps, max_move_distance, attract_factor, repel_factor are vectors of the same size
         if (debug_mode == True):
@@ -1026,7 +1026,8 @@ class PBFNetlist:
             print("Start Force-directed Placement")
             print("\n")
         # initialize
-        self.InitSoftMacros()
+        if (use_current_loc == False):
+            self.InitSoftMacros()
         for i in range(len(num_steps)):
             if (debug_mode == True):
                 print("************************************************")
@@ -1180,7 +1181,7 @@ class PBFNetlist:
 
 
 class FDPlacer:
-    def __init__(self, design_name, run_dir, netlist_file, plc_file, io_factor, num_steps, attract_factor, repel_factor, move_distance_factors):
+    def __init__(self, design_name, run_dir, netlist_file, plc_file, io_factor, num_steps, attract_factor, repel_factor, move_distance_factors, use_init_flag = False):
         self.design_name = design_name
         self.open_source_flag = False
         self.run_dir = run_dir
@@ -1191,6 +1192,7 @@ class FDPlacer:
         self.attract_factor = attract_factor
         self.repel_factor = repel_factor
         self.move_distance_factors = move_distance_factors
+        self.use_init_flag = use_init_flag
 
         # final plc file
         self.final_netlist_pbf_file =  self.run_dir + "/" + self.design_name + ".pb.txt.final"
@@ -1211,6 +1213,9 @@ class FDPlacer:
         #self.plc.unplace_all_nodes()
         #self.plc.restore_placement(self.temp_plc_file)
         self.plc.set_canvas_size(self.design.canvas_width, self.design.canvas_height)
+
+        self.PlotFromPlc(self.open_source_flag)
+
 
         self.FDPlacer(self.open_source_flag)
         self.final_netlist_pbf_file =  self.run_dir + "/" + self.design_name + ".pb.txt.final"
@@ -1275,8 +1280,6 @@ class FDPlacer:
         plt.xlim(lx, ux)
         plt.ylim(ly, uy)
         plt.axis("scaled")
-        plt.show()
-
 
         if (figure_file == None):
             plt.show()
@@ -1286,7 +1289,7 @@ class FDPlacer:
     ### Call the FD placer in Circuit Training
     def FDPlacer(self, open_source_flag = False):
         # parameter settings from Circuit Training
-        use_current_loc = False
+        use_current_loc = self.use_init_flag
         move_stdcells = True
         move_macros = False
         log_scale_conns = False
@@ -1300,7 +1303,7 @@ class FDPlacer:
         max_move_distance = [ f * canvas_size / s
                 for s, f in zip(num_steps, move_distance_factors)]
         if (open_source_flag == True):
-            self.design.FDPlacer(io_factor , num_steps, max_move_distance, attract_factor, repel_factor)
+            self.design.FDPlacer(io_factor , num_steps, max_move_distance, attract_factor, repel_factor, use_current_loc)
         else:
             self.plc.optimize_stdcells(use_current_loc, move_stdcells, move_macros,
                 log_scale_conns, use_sizes, io_factor, num_steps, max_move_distance, attract_factor, repel_factor)
@@ -1322,17 +1325,32 @@ class FDPlacer:
         self.plc.save_placement(plc_file_name, info[0:-1])
 
 
-
 if __name__ == "__main__":
+    # for simple testcases
+    design_name = "simple"
+    run_dir = "./simple_example" # please make sure this dir exists
+    netlist_file =  run_dir + "/" + design_name + ".pb.txt"
+    plc_file = run_dir + "/" + design_name + ".plc"
+    io_factor = 0
+    num_steps = [1]
+    attract_factor =  [0.0]
+    repel_factor = [1.0]
+    move_distance_factors = [0.1]  # set the max_displacement to 50
+    use_current_loc = True
+    placer = FDPlacer(design_name, run_dir, netlist_file, plc_file, io_factor, num_steps, attract_factor, repel_factor, move_distance_factors, use_current_loc)
+
+
+    # for ariane testcases
     design_name = "ariane"
     run_dir = "./ariane133" # please make sure this dir exists
     netlist_file =  run_dir + "/" + design_name + ".pb.txt"
     plc_file = run_dir + "/" + design_name + ".plc"
     io_factor = 1.0
-    num_steps = [10, 10, 10]
+    num_steps = [100, 100, 100]
     attract_factor = [100, 1.0e-3, 1.0e-5]
     repel_factor = [0, 1.0e6, 1.0e7]
     move_distance_factors = [1.0, 1.0, 1.0]
     placer = FDPlacer(design_name, run_dir, netlist_file, plc_file, io_factor, num_steps, attract_factor, repel_factor, move_distance_factors)
+
 
 

@@ -1,0 +1,138 @@
+node {
+  name: "M0"
+  attr {
+    key: "type"
+    value {
+      placeholder: "MACRO"
+    }
+  }
+  attr {
+    key: "height"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "orientation"
+    value {
+      placeholder: ""N""
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 201.0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 201.0
+    }
+  }
+}
+node {
+  name: "Grp_1"
+  attr {
+    key: "height"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 265.306122
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 265.306122
+    }
+  }
+}
+node {
+  name: "Grp_2"
+  attr {
+    key: "height"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 285.0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 285.0
+    }
+  }
+}
+node {
+  name: "Grp_3"
+  attr {
+    key: "height"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "type"
+    value {
+      placeholder: "macro"
+    }
+  }
+  attr {
+    key: "width"
+    value {
+      f: 50.0
+    }
+  }
+  attr {
+    key: "x"
+    value {
+      f: 400.0
+    }
+  }
+  attr {
+    key: "y"
+    value {
+      f: 400.0
+    }
+  }
+}

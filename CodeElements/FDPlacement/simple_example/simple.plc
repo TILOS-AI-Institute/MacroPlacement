@@ -1,0 +1,47 @@
+# Placement file for Circuit Training
+# Source input file(s) : ./output_ariane_NanGate45/23cols_28rows/g500_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt
+# This file : ./output_ariane_NanGate45/23cols_28rows/g500_ub5_nruns10_c5_r3_v3_rc1/initial.plc
+# Date : 2022-09-20 11:30:06
+# Columns : 23  Rows : 28
+# Width  : 500  Height : 500
+# Area : 1506097.566312155
+# Wirelength : 3610985.229
+# Wirelength cost : 0.0526
+# Congestion cost : 0.7721
+# Density cost : 0.7209
+# Project : circuit_training
+# Block : unset_block
+# Routes per micron, hor : 11.285  ver : 12.605
+# Routes used by macros, hor : 7.143  ver : 8.339
+# Smoothing factor : 2
+# Overlap threshold : 0.004
+# 
+# 
+# 
+# Counts of node types:
+# HARD_MACROs     :       133
+# HARD_MACRO_PINs :      7847
+# MACROs          :       943
+# MACRO_PINs      :     19658
+# PORTs           :       495
+# SOFT_MACROs     :       810
+# SOFT_MACRO_PINs :     11811
+# STDCELLs        :         0
+# 
+# User comments:
+# Original source netlist with standard cells: /home/zf4_projects/DREAMPlace/sakundu/ABK_MP/08162022_flow_scripts/MacroPlacement/Flows/NanGate45/ariane133/run-20220816-035413/flow2_1.3/ariane.pb.txt
+# Groups file: ./output_ariane_NanGate45/23cols_28rows/g500_ub5_nruns10_c5_r3_v3_rc1/groups.final
+# worst 10 spread
+# grp: 744 - spread: 278916.7518893204
+# grp: 50 - spread: 268009.6376835485
+# grp: 336 - spread: 223800.4868365636
+# grp: 535 - spread: 207184.36226282385
+# grp: 505 - spread: 197871.97286953646
+# grp: 586 - spread: 190713.73374938426
+# grp: 756 - spread: 184033.9279079139
+# grp: 532 - spread: 173094.29808680012
+# grp: 773 - spread: 170707.79035165644
+# grp: 347 - spread: 168578.0558490756
+# 
+# 
+# node_index x y orientation fixed
