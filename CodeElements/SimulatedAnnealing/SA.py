@@ -27,16 +27,14 @@ from visual_placement import VisualPlacement
 #
 # Check Here !!!
 #
-#sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/circuit_training')
-#sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/')
-sys.path.append('xxxxx/CT/circuit_training')
-sys.path.append('xxxxx/CT/')
+sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/circuit_training')
+sys.path.append('/home/zf4_projects/DREAMPlace/sakundu/GB/CT/')
+#sys.path.append('xxxxx/CT/circuit_training')
+#sys.path.append('xxxxx/CT/')
 
 from absl import flags
-from circuit_training.grouping import grid_size_selection
 from circuit_training.environment import plc_client
-from circuit_training.grouping import grouper
-
+from circuit_training.environment import placement_util
 
 # Descrption from Nature
 # In each SA iteration, we perform 2N macro actions (N = number of macros)
@@ -1264,7 +1262,7 @@ class SimulatedAnnealing:
         self.RunSA()
         self.FDPlacer(self.open_source_flag)
         self.WritePlcFile(self.final_plc_file)
-        self.PlotFromPlc(self.final_plc_fig)
+        self.PlotFromPlc(figure_file = self.final_plc_fig)
 
     def PlotFromPlc(self, open_source_flag = False, figure_file = None):
         plt.figure(constrained_layout= True, figsize=(8,5), dpi=600)
@@ -1313,8 +1311,9 @@ class SimulatedAnnealing:
         plt.xlim(lx, ux)
         plt.ylim(ly, uy)
         plt.axis("scaled")
-        plt.show()
-
+        title = figure_file.split('.')[-2]
+        title = "step = " + title
+        plt.title(title)
 
         if (figure_file == None):
             plt.show()
@@ -1366,7 +1365,12 @@ class SimulatedAnnealing:
                     row_id += dir_row[dir_id]
                     col_id += dir_col[dir_id]
 
+        # sort macros based on size in an non-increasing order
+        sort_macros_map = { }
         for macro in self.design.macros:
+            sort_macros_map[macro] = self.design.objects[macro].width * self.design.objects[macro].height
+        sort_macros = [k for k, v in sorted(sort_macros_map.items(), key = lambda item: item[1], reverse = True)]
+        for macro in sort_macros:
             for grid in grids:
                 if (grid.available == False):
                     continue # this grid has been occupied by other macros
@@ -1433,7 +1437,8 @@ class SimulatedAnnealing:
                     info += items[i] + " "
                 info += "\n"
         # write current location
-        self.plc.save_placement(plc_file_name, info[0:-1])
+        #self.plc.save_placement(plc_file_name, info[0:-1])
+        placement_util.save_placement(self.plc, plc_file_name)
 
     ### define operation set : Swap,  Shift, Flip
     # Swap:  Randomly pick two macros and swap them
@@ -1654,8 +1659,9 @@ class SimulatedAnnealing:
                 self.FDPlacer(self.open_source_flag)
                 temp_plc_file = self.temp_plc_file + "." + str(step)
                 temp_plc_fig = self.temp_plc_file + "." + str(step) + ".png"
-                self.WritePlcFile(temp_plc_file)
-                self.PlotFromPlc(temp_plc_fig)
+                #self.WritePlcFile(temp_plc_file)
+                placement_util.save_placement(self.plc, temp_plc_file)
+                self.PlotFromPlc(figure_file = temp_plc_fig)
 
         f = open(self.summary_file, "w")
         f.write("[INFO] Total Runtime : " + str(fd_runtime + action_runtime) + " s\n")
