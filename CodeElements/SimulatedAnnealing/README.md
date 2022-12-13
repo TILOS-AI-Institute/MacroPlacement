@@ -50,4 +50,26 @@ After setting the [config.json](https://github.com/TILOS-AI-Institute/MacroPlace
 python sa_multicore.py
 ```
 
+## **Experimental Results**
+We have tested our codes with the [ariane133](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/SimulatedAnnealing/ariane133) (NanGate45, utilization = 0.68, clock_period = 1.3ns).  Our configuration is as following:
+* **action_probs** : [0.2, 0.2, 0.2, 0.2, 0.2]
+* **num_actions(xn)** : 2
+* **max_temperature** : 5e-5
+* **num_iters** : 20000
+* **seed** : 1
+* **num_cores** : 8
+* **spiral_flag** : [False, True]
+The cost curve is shown below.  We can see that **Spiral placement** is better than **Greedy packer**.
+<p align="center">
+<img src="./images/net_model.png" width= "600"/>
+</p>
+<p align="center">
+ Figure 3.  Illustration of net model used in Circuit Training.  
+</p>
+
+
+
+
+
+
   
