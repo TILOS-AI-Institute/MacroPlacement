@@ -23,11 +23,12 @@ The implementation details of Simulated Annealing is presented as following.
 
 * The **cost** is defined as following:
   * $cost = w_{wirelength} \times cost_{wirelength} + w_{density} \times cost_{density} + w_{congestion} \times cost_{congestion}$
+  
   In our experiments, $w_{wirelength} = 1.0$, $w_{density} = 0.5$ and $w_{congestion} = 0.5$. The detailed explanation for the cost function is available [here](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/).  In our implementation, we use the [circuit training's API](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/aab48da703255548fbb48e27e88674f88e23fd81/CodeElements/SimulatedAnnealing/SA.py#L1390) to calculate the cost.
 * **Basic runtime metrics**
   * macro action + cost calculation : 0.006 second per time
   * FD placer : 0.74 second per time
-* We enable **lti-threading feature**o run massive SA runs. Multiple SA runs can be launched in parallel. But there is no communication between different SA runs. \[[code](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/aab48da703255548fbb48e27e88674f88e23fd81/CodeElements/SimulatedAnnealing/sa_multicore.py#L88)\]
+* We enable **multi-threading feature** to run massive SA runs. Multiple SA runs can be launched in parallel. But there is no communication between different SA runs. \[[code](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/aab48da703255548fbb48e27e88674f88e23fd81/CodeElements/SimulatedAnnealing/sa_multicore.py#L88)\]
   
 
 
@@ -36,9 +37,9 @@ We implement the Simulated Annealing based on the APIs of [Circuit Training](htt
 You can also change the default configurations by updating the [config.json](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/aab48da703255548fbb48e27e88674f88e23fd81/CodeElements/SimulatedAnnealing/config.json). 
 The [config.json](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/aab48da703255548fbb48e27e88674f88e23fd81/CodeElements/SimulatedAnnealing/config.json) has following parameters:
 * **netlist** : the protocol buffer netlist
-* **plc_file** : the plc file for macro and standard-cell locations
+* **plc_file** : the locations for plc objects
 * **action_probs** : the probablity of each action, following the order of swap, shift, mirror, move and shuffle
-* **num_actions(xn)** : the number of macro actions \[$\times N$\] in each SA iteration(step)
+* **num_actions(xn)** : the number of macro actions \[ $\times N$ \] in each SA iteration(step)
 * **max_temperature** : $t_{max}$
 * **num_iters** : $steps$. \[see  $t = t_{max}exp(log[(t_{max}/t_{min})(step / steps)])$ \]
 * **seed** : random seed
@@ -60,7 +61,7 @@ We have tested our codes with the [ariane133](https://github.com/TILOS-AI-Instit
 * **num_cores** : 8
 * **spiral_flag** : [False, True]
 
-The cost curve is shown below.  We can see that **Spiral placement** is better than **Greedy packer**.
+The cost curves are shown below.  We can see that **Spiral placement** is better than **Greedy packer**.
 <p align="center">
 <img src="./ariane133/cost_spiral_greedy.png" width= "600"/>
 </p>
