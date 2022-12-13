@@ -59,15 +59,23 @@ We have tested our codes with the [ariane133](https://github.com/TILOS-AI-Instit
 * **seed** : 1
 * **num_cores** : 8
 * **spiral_flag** : [False, True]
+
 The cost curve is shown below.  We can see that **Spiral placement** is better than **Greedy packer**.
 <p align="center">
-<img src="./images/net_model.png" width= "600"/>
+<img src="./ariane133/cost_spiral_greedy.png" width= "600"/>
 </p>
 <p align="center">
- Figure 3.  Illustration of net model used in Circuit Training.  
+ Figure 1. Cost curves of Simulated Annealing. The black and red curves respectively represent the results from spiral placement and greedy packer.
 </p>
 
+The processes of Simulated Annealing are shown below. The left figure represents the result from spiral placement and the right figure represents the result form greedy packer.
 
+<p align="center">
+<img src="./ariane133/cost_spiral_greedy.png" width= "300"/> <img src="./ariane133/cost_spiral_greedy.png" width= "300"/>
+</p>
+<p align="center">
+Figure 2. The processes of Simulated Annealing. The left figure represents the result from spiral placement and the right figure represents the result form greedy packer.
+</p>
 
 
 
