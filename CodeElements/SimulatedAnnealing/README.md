@@ -69,13 +69,13 @@ The cost curves are shown below.  We can see that **Spiral placement** is better
  Figure 1. Cost curves of Simulated Annealing. The black and red curves respectively represent the results from spiral placement and greedy packer.
 </p>
 
-The processes of Simulated Annealing are shown below. The left figure represents the result from spiral placement and the right figure represents the result form greedy packer.
+The processes of Simulated Annealing are shown below. The left figure represents the result from spiral placement and the right figure represents the result from greedy packer.
 
 <p align="center">
 <img src="./ariane133/movie_spiral.gif" width= "400"/> <img src="./ariane133/movie_greedy.gif" width= "400"/>
 </p>
 <p align="center">
-Figure 2. The processes of Simulated Annealing. The left figure represents the result from spiral placement and the right figure represents the result form greedy packer.
+Figure 2. The processes of Simulated Annealing. The left figure represents the result from spiral placement and the right figure represents the result from greedy packer.
 </p>
 
 
