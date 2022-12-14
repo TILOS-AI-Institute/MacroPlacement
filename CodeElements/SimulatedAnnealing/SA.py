@@ -1525,7 +1525,7 @@ class SimulatedAnnealing:
                 for i in range(len(random_macros)):
                     self.design.objects[random_macros[i]].x = loc_map[random_macros[i]][0]
                     self.design.objects[random_macros[i]].y = loc_map[random_macros[i]][1]
-                    return False
+                return False
 
         # update the macro in plc_client
         for macro in random_macros:
