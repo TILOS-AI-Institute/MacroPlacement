@@ -1,3 +1,15 @@
+########################## Details to use this script ##########################
+# Author: Sayak Kundu    email: sakundu@ucsd.edu
+# Date: 11-22-2022
+# This script converts LEF / DEF format to Protobuf format using OpenROAD.
+# Follow the below steps to generate protobuf netlist from LEF / DEF in the
+# OpenROAD shell:
+#   1. read_lef <tech lef>
+#   2. read_lef <standard cell and macro lef one by one>
+#   3. read_def <design def file>
+#   4. source <This script file>
+#   5. gen_pb_netlist <path of the output protobuf netlist>
+################################################################################
 #### Print the design header ####
 proc print_header { fp } {
   set design [[ord::get_db_block] getName]
