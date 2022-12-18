@@ -1,5 +1,14 @@
 '''
-This Code converts the BookShelf format to Proto buf format
+This Code converts the Bookshelf netlist to Protobuf netlist.
+Author: Sayak Kundu                 email: sakundu@ucsd.edu
+Follow the below steps to convert bookshelf netlist to protobuf netlist.
+    1. bs_design = canvas_object(<design_name>)
+    2. bs_desing(<bookshelf_dir>, <output_pb_netlist>)
+Here it expects <design_name>.scl, <design_name>.nets, <design_name>.nodes,
+<design_name>.wts, <design_name>.pl files are present in the <bookshelf_dir>
+
+<output_pb_netlist> is optional. If it is not provided then it will write out
+the <design_name>.pb.txt in the <bookshelf_dir> directory.
 '''
 import re
 import os
@@ -69,14 +78,14 @@ class instance:
         self.height = height
         self.width = width
         return
-    
+
     def update_location(self, x, y, orient, pstatus = "UNPLACED"):
         self.llx = float(x)
         self.lly = float(y)
         self.orient = orient.upper()
         self.pstatus = pstatus.upper()
         return
-    
+
     def update_center(self):
         self.cx = self.llx + self.width/2
         self.cy = self.lly + self.height/2
@@ -909,7 +918,11 @@ class canvas_object:
         for port in self.ports:
             port.name = port.name.replace("\\","")
         return
-
+    def __call__(self, bookshelf_dir, output_pb_netlist = None):
+        self.read_BookShelf(bookshelf_dir)
+        self.gen_pb_netlist(output_pb_netlist)
+        return
+    
     def read_pb(self, pb_netlist):
         fp = open(pb_netlist, 'r')
         lines = fp.readlines()

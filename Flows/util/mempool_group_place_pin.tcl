@@ -1,3 +1,17 @@
+#############################################################################
+# This script was written and developed by ABKGroup students at UCSD.
+# However, the underlying commands and reports are copyrighted by Cadence. 
+# We thank Cadence for granting permission to share our research to help 
+# promote and foster the next generation of innovators.
+# Author: Sayak Kundu (sakundu@ucsd.edu), ABKGroup, UCSD. 
+# Thanks to Matheus Cavalcante, ETH Zürich and Jiantao Liu (jil313@ucsd.edu) 
+# for providing the pin configuration.
+#
+# Usage: First source the script in Innovus shell. then use gen_pb_netlist
+# command to write out the netlist. The protobuf netlist will be available
+# as <design name>.pb.txt.
+#############################################################################
+
 setPinAssignMode -pinEditInBatch true
 set group_width [dbget top.fplan.box_sizex]
 set group_height [dbget top.fplan.box_sizey]
