@@ -60,13 +60,13 @@ node {
   attr {
     key: "x"
     value {
-      f: 265.306122
+      f: 300.0
     }
   }
   attr {
     key: "y"
     value {
-      f: 265.306122
+      f: 300.0
     }
   }
 }

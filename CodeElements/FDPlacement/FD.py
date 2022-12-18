@@ -1054,23 +1054,24 @@ class PBFNetlist:
         x_dir = 0
         y_dir = 0
         if (src_lx >= target_ux or src_ux <= target_lx or src_ly >= target_uy or src_uy <= target_ly):
+            # there is no overlap
             return None, None
         else:
             src_cx = (src_lx + src_ux) / 2.0
             src_cy = (src_ly + src_uy) / 2.0
             target_cx = (target_lx + target_ux) / 2.0
             target_cy = (target_ly + target_uy) / 2.0
-            x_dir = src_cx - target_cx
-            y_dir = src_cy - target_cy
-
-            # set the minimum value to 1e-12
-            min_dist = 1e-2
-            if (abs(x_dir) <= min_dist):
-                x_dir = -1 * min_dist
-            if (abs(y_dir) <= min_dist):
-                y_dir = -1 * min_dist
-            return x_dir, y_dir
-
+            if (src_cx == target_cx and src_cy == target_cy):
+                # fully overlap
+                x_dir = -1.0 / sqrt(2.0)
+                y_dir = -1.0 / sqrt(2.0)
+                return x_dir, y_dir
+            else:
+                x_dir = src_cx - target_cx
+                y_dir = src_cy - target_cy
+                dist = sqrt(x_dir * x_dir + y_dir * y_dir)
+                return x_dir / dist, y_dir / dist
+            
     # check the relative position
     # This is for attractive force
     def CheckRelativePos(self, src, target):
@@ -1092,11 +1093,11 @@ class PBFNetlist:
                 if (x_dir == None):  # No overlap
                     f_r_x = 0.0
                 else:
-                    f_r_x = repulsive_factor * 1.0 / x_dir
+                    f_r_x = repulsive_factor * 1.0 * max_displacement * x_dir
                 if (y_dir == None):  # No overlap
                     f_r_y = 0.0
                 else:
-                    f_r_y = repulsive_factor * 1.0 / y_dir
+                    f_r_y = repulsive_factor * 1.0 * max_displacement * y_dir
 
                 self.objects[src_macro].AddForce(f_r_x, f_r_y)
                 self.objects[target_macro].AddForce(-1 * f_r_x, -1 * f_r_y)
@@ -1214,7 +1215,7 @@ class FDPlacer:
         #self.plc.restore_placement(self.temp_plc_file)
         self.plc.set_canvas_size(self.design.canvas_width, self.design.canvas_height)
 
-        self.PlotFromPlc(self.open_source_flag)
+        #self.PlotFromPlc(self.open_source_flag)
 
 
         self.FDPlacer(self.open_source_flag)
@@ -1334,7 +1335,7 @@ if __name__ == "__main__":
     io_factor = 0
     num_steps = [1]
     attract_factor =  [0.0]
-    repel_factor = [1.0]
+    repel_factor = [10.0]
     move_distance_factors = [0.1]  # set the max_displacement to 50
     use_current_loc = True
     placer = FDPlacer(design_name, run_dir, netlist_file, plc_file, io_factor, num_steps, attract_factor, repel_factor, move_distance_factors, use_current_loc)
