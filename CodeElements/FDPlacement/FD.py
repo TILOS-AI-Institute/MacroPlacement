@@ -610,7 +610,9 @@ class PlcObject:
         elif (self.orientation == None):
             self.str += "N "
         else:
-            self.str += str(self.orientation) + " "
+            string = str(self.orientation).split('"')[0]
+            #self.str += str(self.orientation) + " "
+            self.str += string + " "
         self.str += "0\n"
         return self.str
 
@@ -1071,7 +1073,7 @@ class PBFNetlist:
                 y_dir = src_cy - target_cy
                 dist = sqrt(x_dir * x_dir + y_dir * y_dir)
                 return x_dir / dist, y_dir / dist
-            
+
     # check the relative position
     # This is for attractive force
     def CheckRelativePos(self, src, target):
@@ -1217,22 +1219,57 @@ class FDPlacer:
 
         #self.PlotFromPlc(self.open_source_flag)
 
-
+        start_time = time.time()
         self.FDPlacer(self.open_source_flag)
+        end_time = time.time()
         self.final_netlist_pbf_file =  self.run_dir + "/" + self.design_name + ".pb.txt.final"
         self.final_plc_file = self.run_dir + "/" + self.design_name + ".plc.final"
         self.final_plc_fig = self.run_dir + "/" + self.design_name + ".plc.final.png"
         self.design.WriteNetlist(self.final_netlist_pbf_file, self.final_plc_file)
         self.WritePlcFile(self.final_plc_file)
+        print("************************************************")
+        print("The results from Circuit Training")
+        self.CalCostPlc(self.final_plc_file, isPrint = True)
+        print("runtime : ", end_time - start_time)
+        print("\n")
         self.PlotFromPlc(self.open_source_flag, self.final_plc_fig)
 
+        start_time  = time.time()
         self.FDPlacer(not self.open_source_flag)
+        end_time = time.time()
         self.final_netlist_pbf_file =  self.run_dir + "/" + self.design_name + ".os.pb.txt.final"
         self.final_plc_file = self.run_dir + "/" + self.design_name + ".os.plc.final"
         self.final_plc_fig = self.run_dir + "/" + self.design_name + ".os.plc.final.png"
         self.design.WriteNetlist(self.final_netlist_pbf_file, self.final_plc_file)
+        print("************************************************")
+        print("The results from Our Implementation")
+        self.CalCostPlc(self.final_plc_file, isPrint = True)
+        print("runtime : ", end_time - start_time)
+        print("\n")
         self.PlotFromPlc(not self.open_source_flag, self.final_plc_fig)
 
+
+
+    ### Call the plc client for cost evulation
+    def CalCostPlc(self, plc_file, isPrint = True):
+        self.plc.restore_placement(plc_file)
+        self.plc.set_canvas_boundary_check(False)
+        self.plc.make_soft_macros_square()
+        self.plc.set_placement_grid(self.design.n_cols, self.design.n_rows)
+        self.plc.set_routes_per_micron(self.design.hroute_per_micro, self.design.vroute_per_micro)
+        self.plc.set_macro_routing_allocation(self.design.hrouting_alloc, self.design.vrouting_alloc)
+        self.plc.set_congestion_smooth_range(self.design.smooth_factor)
+        self.plc.set_overlap_threshold(self.design.overlap_threshold)
+        self.plc.set_canvas_size(self.design.canvas_width, self.design.canvas_height)
+
+        wl_cost = self.plc.get_cost()
+        den_cost = self.plc.get_density_cost()
+        cong_cost = self.plc.get_congestion_cost()
+        # the weight parameters are given by Circuit Training
+        proxy_cost = wl_cost + 0.5 * den_cost + 0.5 * cong_cost
+        if (isPrint == True):
+            print("WL cost : ", wl_cost, "Density cost : ", den_cost, "Congestion Cost : ", cong_cost, "Proxy cost : ", proxy_cost)
+        return proxy_cost
 
     def PlotFromPlc(self, open_source_flag = True, figure_file = None):
         plt.figure(constrained_layout= True, figsize=(8,5), dpi=600)
