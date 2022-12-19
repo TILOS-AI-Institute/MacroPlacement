@@ -31,11 +31,17 @@ After calculating all the attractive forces and repulsive forces, all the forces
 
 Here f_x_max (f_y_max) is the absolute value of f_x (f_y) which has the maximum absolute value.  max_move_distance is the maximum move distance specified by users. \[[code](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/5addfc904527d764ee67429811c868c5eeb605d4/CodeElements/FDPlacement/FD.py#L1137)\]
  
-After normalization, the standard-cell clusters are moved based on the forces exerted on them.  The move which will push the standard-cell clusters outside of canvas will be cancelled.
+After normalization, the standard-cell clusters are moved based on the forces exerted on them.  The move which will push the standard-cell clusters outside of canvas will be canceled.
 
 
 ## **Experimental results**
 We have tested our codes on the Ariane133 (NanGate45).  The experimental results are presented below.
+<p align="center">
+<img src="./ariane133/FD_result.png" width= "1200"/>
+</p>
+<p align="center">
+Figure 1. results for Ariane133 (NanGate45).  
+</p>
 
 
 
