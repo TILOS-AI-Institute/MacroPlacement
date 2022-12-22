@@ -5373,7 +5373,7 @@ We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based ma
 <table>
 <thead>
   <tr>
-    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns AutoDMP  (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</th>
+    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns AutoDMP  (<a href="../../Flows/NanGate45/bp_quad/README.md#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/bp_quad//README.md#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</th>
   </tr>
 </thead>
 <tbody>
