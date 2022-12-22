@@ -4378,6 +4378,84 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <img width="300" src="./images/Ariane133_GF12_CT_Route.png" alg="Ariane133_GF12_CT_Route">
 </p>
 
+<a id="Ariane133_GF12_AutoDMP"></a>
+- (Updated on December 20) The following table and screenshots provide details of Ariane133 GF12 implementation when AutoDMP is used to generate the macro placement.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10">Ariane-GF12-68% AutoDMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>]</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area</td>
+    <td>Standard Cell Area</td>
+    <td>Macro Area</td>
+    <td>Total Power</td>
+    <td>Wirelength</td>
+    <td>WS</td>
+    <td>TNS</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>1</td>
+    <td>0.136</td>
+    <td>0.555</td>
+    <td>0.9941</td>
+    <td>1.0214</td>
+    <td>-0.116</td>
+    <td>-204.181</td>
+    <td>0.00</td>
+    <td>0.50</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>1</td>
+    <td>0.138</td>
+    <td>0.555</td>
+    <td>1.1406</td>
+    <td>1.0337</td>
+    <td>-0.126</td>
+    <td>-114.774</td>
+    <td>0.00</td>
+    <td>1.00</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>1</td>
+    <td>0.138</td>
+    <td>0.555</td>
+    <td>1.1318</td>
+    <td>1.0670</td>
+    <td>-0.180</td>
+    <td>-187.204</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>1</td>
+    <td>0.137</td>
+    <td>0.555</td>
+    <td>1.1296</td>
+    <td>1.0681</td>
+    <td>-0.130</td>
+    <td>-90.493</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img width="300" src="./images/Ariane133_GF12_AutoDMP_Place.png" alg="Ariane133_GF12_AutoDMP_Place">
+<img width="300" src="./images/Ariane133_GF12_AutoDMP_Route.png" alg="Ariane133_GF12_AutoDMP_Route">
+</p>
+
 - The following table and screenshots provide details of BlackParrot (Quad Core) GF12 implementation when CMP is used to generate the macro placement.  
 <table>
 <thead>
@@ -4530,6 +4608,84 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <p align="center">
 <img width="300" src="./images/BP_Quad_GF12_CT_Place.png" alg="BP_Quad_GF12_CT_Place">
 <img width="300" src="./images/BP_Quad_GF12_CT_Route.png" alg="BP_Quad_GF12_CT_Route">
+</p>  
+
+<a id="bp_quad_GF12_AutoDMP"></a>
+- (Updated on December 20) The following table and screenshots provide details of BlackParrot (Quad-Core) GF12 implementation when AutoDMP is used to generate the macro placement.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10">BlackParrot-GF12-68% AutoDMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>]</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area</td>
+    <td>Standard Cell Area</td>
+    <td>Macro Area</td>
+    <td>Total Power</td>
+    <td>Wirelength</td>
+    <td>WS</td>
+    <td>TNS</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>1</td>
+    <td>0.176</td>
+    <td>0.501</td>
+    <td>1.0012</td>
+    <td>0.9891</td>
+    <td>0.001</td>
+    <td>0.000</td>
+    <td>1.0</td>
+    <td>1.0</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>1</td>
+    <td>0.178</td>
+    <td>0.501</td>
+    <td>1.1519</td>
+    <td>0.9967</td>
+    <td>0.000</td>
+    <td>0.000</td>
+    <td>1.0</td>
+    <td>1.2</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>1</td>
+    <td>0.178</td>
+    <td>0.501</td>
+    <td>1.1433</td>
+    <td>1.0199</td>
+    <td>-0.045</td>
+    <td>-12.419</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>1</td>
+    <td>0.178</td>
+    <td>0.501</td>
+    <td>1.1433</td>
+    <td>1.0202</td>
+    <td>0.000</td>
+    <td>0.000</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img width="300" src="./images/BP_Quad_GF12_AutoDMP_Place.png" alg="BP_Quad_GF12_AutoDMP_Place">
+<img width="300" src="./images/BP_Quad_GF12_AutoDMP_Route.png" alg="BP_Quad_GF12_AutoDMP_Route">
 </p>  
 
 - The following table and screenshots provide details of MemPool Group GF12 implementation when CMP is used to generate the macro placement.  
@@ -5138,7 +5294,7 @@ We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based ma
 <table>
 <thead>
   <tr>
-    <th colspan="10">Ariane133-NG45-68%-1.3ns AutoDMP (<a href="../../Flows/NanGate45/ariane133/README.md#flow-2-result-for-the-macro-placement-generated-by-cadence-concurrent-macro-placer">Link</a> to CMP result) (<a href="../../Flows/NanGate45/ariane133/README.md#macro-placement-generated-by-circuit-training-ct">Link</a> to CT result)</th>
+    <th colspan="10">Ariane133-NG45-68%-1.3ns AutoDMP (<a href="../../Flows/NanGate45/ariane133/README.md#macro-placement-generated-by-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/ariane133/README.md#flow-2-result-for-the-macro-placement-generated-by-cadence-concurrent-macro-placer">Link</a> to CMP result)</th>
   </tr>
 </thead>
 <tbody>
@@ -5283,6 +5439,11 @@ We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based ma
   </tr>
 </tbody>
 </table>
+
+<p align="center">
+<img width="300" src="./images/bp_quad_NG45_AutoDMP_Place.png" alg="bp_quad_NG45_AutoDMP_Place">
+<img width="300" src="./images/bp_quad_NG45_AutoDMP_Route.png" alg="bp_quad_NG45_AutoDMP_Route">
+</p>
 
 - **BlackParrot-GF12-68%**: [Link](#bp_quad_GF12_AutoDMP) to AutoDMP macro placement details of BlackParrot on GF12 enablement.
 
