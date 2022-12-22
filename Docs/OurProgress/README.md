@@ -5131,6 +5131,7 @@ The following table and screenshots provide details of Ariane133-NG45-68%-1.3ns 
 **<span style="color:blue">Question 12.</span>** How well does Simulated Annealing (SA) optimize the proxy cost?  
 Details of our SA implementation, which we denote as SA-UCSD, are [here](../../CodeElements/SimulatedAnnealing/). We have used SA-UCSD to generate macro placements for Ariane, BlackParrot (Quad-Core) and MemPool Group.
 
+<a id="Ariane133_NG45_SA_UCSD"></a>
 - **Ariane133-NG45-68%-1.3ns**: The configuration that results best proxy cost (wirelength cost: 0.0881, congestion cost: 0.8257, density cost: 0.5084, proxy cost: 0.75515): *action_probs: [0.2, 0.2, 0.2, 0.2, 0.2], num_actions: 3, max_temperature: 7e-5, num_iters: 50000, seed: 1, spiral_flag: True*
   - The following table and screenshots provide details of Ariane133-NG45-68%-1.3ns SA-UCSD macro placement.
 
@@ -5209,6 +5210,7 @@ Details of our SA implementation, which we denote as SA-UCSD, are [here](../../C
 <img width="300" src="./images/Ariane133_NG45_SA_Route.png" alg="Ariane133_NG45_SA_Route">
 </p>
 
+<a id="BP_QUAD_NG45_SA_UCSD"></a>
 - **BlackParrot (Quad-Core)-NG45-68%-1.3ns**: The configuration that results best proxy cost (wirelength cost: 0.0604, congestion cost: 0.9581, density cost: 0.7383, proxy cost: 0.90860): *action_probs: [0.2, 0.2, 0.2, 0.2, 0.2], num_actions: 1, max_temperature: 10e-5, num_iters: 20000, seed: 1, spiral_flag: False*
   - The following table and screenshots provide details of BlackParrot (Quad-Core)-NG45-68%-1.3ns SA-UCSD macro placement.
 
