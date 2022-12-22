@@ -4221,7 +4221,7 @@ We document two variant Evaluation Flows (taking macro placements through Innovu
 </p>
 
 **CT Results for Commercial Enablement**  
-We have run CT to generate macro placement for Ariane133, BlackParrot and MemPool Group designs on GLOBALFOUNDRIES 12nm (GF12) enablement. The following tables present the normalized design metrics. Core area, standard cell area and macro area are normalized with respect to the core area. Total power is normalized w.r.t. the reported preCTS total power when CMP is used. Similarly, we normalize the wirelength and congestion based on the reported preCTS wirelength and congestion when CMP is used. The timing numbers are normalized w.r.t. the target clock period.
+We have run CT to generate macro placement for Ariane133, BlackParrot and MemPool Group designs on GLOBALFOUNDRIES 12nm (GF12) enablement. The following tables present the **normalized design metrics**. Core area, standard cell area and macro area are normalized with respect to the core area. Total power is normalized w.r.t. the reported preCTS total power when CMP is used. Similarly, we normalize the wirelength and congestion based on the reported preCTS wirelength and congestion when CMP is used. The timing numbers are normalized w.r.t. the target clock period.
 
 - The following table and screenshots provide details of Ariane133 GF12 implementation when CMP is used to generate the initial macro placement.  
 <table>
@@ -4299,7 +4299,7 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <img width="300" src="./images/Ariane133_GF12_CMP_Route.png" alg="Ariane133_GF12_CMP_Route">
 </p>
 
-- The following table and screenshots provide details of Ariane133 GF12 implementation when CT is used to generate the initial macro placement.  
+- The following table and screenshots provide details of Ariane133 GF12 implementation when CT is used to generate the macro placement.  
 <table>
 <thead>
   <tr>
@@ -4375,7 +4375,7 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <img width="300" src="./images/Ariane133_GF12_CT_Route.png" alg="Ariane133_GF12_CT_Route">
 </p>
 
-- The following table and screenshots provide details of BlackParrot (Quad Core) GF12 implementation when CMP is used to generate the initial macro placement.  
+- The following table and screenshots provide details of BlackParrot (Quad Core) GF12 implementation when CMP is used to generate the macro placement.  
 <table>
 <thead>
   <tr>
@@ -4451,7 +4451,7 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <img width="300" src="./images/BP_Quad_GF12_CMP_Route.png" alg="BP_Quad_GF12_CMP_Route">
 </p>   
 
-- The following table and screenshots provide details of BlackParrot (Quad Core) GF12 implementation when CT is used to generate the initial macro placement.  
+- The following table and screenshots provide details of BlackParrot (Quad Core) GF12 implementation when CT is used to generate the macro placement.  
 <table>
 <thead>
   <tr>
@@ -4527,7 +4527,7 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <img width="300" src="./images/BP_Quad_GF12_CT_Route.png" alg="BP_Quad_GF12_CT_Route">
 </p>  
 
-- The following table and screenshots provide details of MemPool Group GF12 implementation when CMP is used to generate the initial macro placement.  
+- The following table and screenshots provide details of MemPool Group GF12 implementation when CMP is used to generate the macro placement.  
 <table>
 <thead>
   <tr>
@@ -4603,7 +4603,7 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <img width="300" src="./images/MemPool_Group_GF12_CMP_Route.png" alg="MemPool_Group_GF12_CMP_Route">
 </p>
 
-- The following table and screenshots provide details of MemPool Group GF12 implementation when CMP is used to generate the initial macro placement.  
+- The following table and screenshots provide details of MemPool Group GF12 implementation when CT is used to generate the macro placement.  
 <table>
 <thead>
   <tr>
@@ -5120,6 +5120,163 @@ We have performed a similar macro shuffling experiment for the BlackParrot (Quad
 
 - **MemPool Group:**
 We have tried a similar macro shuffling experiment for MemPool Group, but none of our runs completed (i.e., flow failure).
+
+<a id="December20"></a>
+**December 20:**  
+We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based macro placer that will be reported at ISPD-2023. We have generated macro placement of Ariane and BlackParrot using AutoDMP on NG45 and GF12 enablement. The results are as follows:
+
+- **Ariane133-NG45-68%-1.3ns**:  Following table and screenshots shows the macro placement result of Ariane133 on NG45, generated using AutoDMP.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10">Ariane133-NG45-68%-1.3ns AutoDMP (<a href="../../Flows/NanGate45/ariane133/README.md#flow-2-result-for-the-macro-placement-generated-by-cadence-concurrent-macro-placer">Link</a> to CMP result) (<a href="../../Flows/NanGate45/ariane133/README.md#macro-placement-generated-by-circuit-training-ct">Link</a> to CT result)</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>1814274</td>
+    <td>243431</td>
+    <td>1018356</td>
+    <td>783.810</td>
+    <td>3604121</td>
+    <td>-0.105</td>
+    <td>-140.503</td>
+    <td>0.00%</td>
+    <td>0.01%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>1814274</td>
+    <td>243612</td>
+    <td>1018356</td>
+    <td>821.621</td>
+    <td>3630937</td>
+    <td>-0.097</td>
+    <td>-47.167</td>
+    <td>0.03%</td>
+    <td>0.15%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>1814274</td>
+    <td>243612</td>
+    <td>1018356</td>
+    <td>821.558</td>
+    <td>3759529</td>
+    <td>-0.102</td>
+    <td>-75.677</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>1814274</td>
+    <td>243720</td>
+    <td>1018356</td>
+    <td>821.654</td>
+    <td>3763817</td>
+    <td>-0.095</td>
+    <td>-37.496</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img width="300" src="./images/Ariane_NG45_AutoDMP_Place.png" alg="Ariane_NG45_AutoDMP_Place">
+<img width="300" src="./images/Ariane_NG45_AutoDMP_Route.png" alg="Ariane_NG45_AutoDMP_Route">
+</p>
+
+- **Ariane133-GF12-68%**: [Link](#Ariane133_GF12_AutoDMP) to AutoDMP macro placement details of Ariane on GF12 enablement.
+
+- **BlackParrot-NG45-68%-(bp clock)1.3ns**: Following table and screenshots shows the macro placement result of BlackParrot (Quad-Core) on NG45, generated using AutoDMP.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns AutoDMP</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>8449457</td>
+    <td>1903521</td>
+    <td>3917822</td>
+    <td>4069.801</td>
+    <td>22483473</td>
+    <td>-0.183</td>
+    <td>-584.774</td>
+    <td>0.02%</td>
+    <td>0.07%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>8449457</td>
+    <td>1916465</td>
+    <td>3917822</td>
+    <td>4438.356</td>
+    <td>22616243</td>
+    <td>-0.145</td>
+    <td>-288.267</td>
+    <td>0.05%</td>
+    <td>0.09%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>8449457</td>
+    <td>1916465</td>
+    <td>3917822</td>
+    <td>4434.782</td>
+    <td>23349968</td>
+    <td>-0.195</td>
+    <td>-2164.900</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>8449457</td>
+    <td>1920024</td>
+    <td>3917822</td>
+    <td>4438.571</td>
+    <td>23376406</td>
+    <td>-0.190</td>
+    <td>-1183.100</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+- **BlackParrot-GF12-68%**: [Link](#bp_quad_GF12_AutoDMP) to AutoDMP macro placement details of BlackParrot on GF12 enablement.
 
 <a id="December21"></a>
 **December 21:**  
