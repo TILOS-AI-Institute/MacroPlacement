@@ -5131,7 +5131,7 @@ We have tried a similar macro shuffling experiment for MemPool Group, but none o
 
 <a id="December20"></a>
 **December 20:**  
-We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based macro placer that will be reported at ISPD-2023. We have generated macro placement of Ariane and BlackParrot using AutoDMP on NG45 and GF12 enablement. The results are as follows:
+We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based macro placer that will be reported at ISPD-2023. We have generated macro placements of Ariane and BlackParrot using AutoDMP, in both NG45 and GF12 enablements. The results are as follows:
 
 - **Ariane133-NG45-68%-1.3ns**:  Following table and screenshots shows the macro placement result of Ariane133 on NG45, generated using AutoDMP.
 
