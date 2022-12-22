@@ -5373,7 +5373,7 @@ We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based ma
 <table>
 <thead>
   <tr>
-    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns AutoDMP</th>
+    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns AutoDMP  (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</th>
   </tr>
 </thead>
 <tbody>
@@ -5623,7 +5623,7 @@ Details of our SA implementation, which we denote as SA-UCSD, are [here](../../C
 <table>
 <thead>
   <tr>
-    <th colspan="10">BlackParrot Quad-Core-NG45-68%-(bp clock)1.3ns SA-UCSD</th>
+    <th colspan="10">BlackParrot Quad-Core-NG45-68%-(bp clock)1.3ns SA-UCSD (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</th>
   </tr>
 </thead>
 <tbody>
@@ -5705,7 +5705,7 @@ We observe that human macro placements can achieve smaller wirelength than CT, w
 <table>
 <thead>
   <tr>
-    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns Human macro placement (not a gridded placement)</th>
+    <th colspan="10">BlackParrot Quad-Core-NG45-68%-1.3ns Human macro placement (not a gridded placement) (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/bp_quad#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</th>
   </tr>
 </thead>
 <tbody>
