@@ -5127,6 +5127,166 @@ The following table and screenshots provide details of Ariane133-NG45-68%-1.3ns 
 
 [Link](../../Flows/NanGate45/ariane133/README.md#macro-placement-generated-by-circuit-training-ct) to result of Ariane133-NG45-68%-1.3ns CT macro placement when [Flow-2](../../Flows/figures/flow-2.PNG) (CMP-Genus iSpatial) is used to generate the initial placement solution.
 
+<a id="Question12"></a>
+**<span style="color:blue">Question 12.</span>** How does Simulated Annealing (SA) perform in terms of optimizing the proxy cost?  
+Please find the details of our SA implementation [here](../../CodeElements/SimulatedAnnealing/). We have generated macro placement using SA for Ariane, BlackParrot (Quad-Core) and MemPool Group.
+
+- **Ariane133-NG45-68%-1.3ns**: The configuration that results best proxy cost (wirelength cost: 0.0881, congestion cost: 0.8257, density cost: 0.5084, proxy cost: 0.75515): *action_probs: [0.2, 0.2, 0.2, 0.2, 0.2], num_actions: 3, max_temperature: 7e-5, num_iters: 50000, seed: 1, spiral_flag: True*
+  - The following table and screenshots provide details of Ariane133-NG45-68%-1.3ns SA-UCSD macro placement.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10">Ariane133-NG45-68%-1.3ns SA-UCSD result (<a href="#Ariane133_NG45_1.3ns_CT">Link</a> to CT result) (<a href="#Ariane133_NG45_1.3ns_CMP">Link</a> to CMP result)</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>1814274</td>
+    <td>243604</td>
+    <td>1018356</td>
+    <td>786.182</td>
+    <td>3825529</td>
+    <td>-0.130</td>
+    <td>-187.073</td>
+    <td>0.01%</td>
+    <td>0.03%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>1814274</td>
+    <td>245443</td>
+    <td>1018356</td>
+    <td>827.698</td>
+    <td>3868208</td>
+    <td>-0.099</td>
+    <td>-52.565</td>
+    <td>0.02%</td>
+    <td>0.06%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>1814274</td>
+    <td>245443</td>
+    <td>1018356</td>
+    <td>827.546</td>
+    <td>3982401</td>
+    <td>-0.125</td>
+    <td>-114.924</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>1814274</td>
+    <td>245804</td>
+    <td>1018356</td>
+    <td>828.053</td>
+    <td>3986262</td>
+    <td>-0.112</td>
+    <td>-75.338</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img width="300" src="./images/Ariane133_NG45_SA_Place.png" alg="Ariane133_NG45_SA_Place">
+<img width="300" src="./images/Ariane133_NG45_SA_Route.png" alg="Ariane133_NG45_SA_Route">
+</p>
+
+- **BlackParrot (Quad-Core)-NG45-68%-1.3ns**: The configuration that results best proxy cost (wirelength cost: 0.0604, congestion cost: 0.9581, density cost: 0.7383, proxy cost: 0.90860): *action_probs: [0.2, 0.2, 0.2, 0.2, 0.2], num_actions: 1, max_temperature: 10e-5, num_iters: 20000, seed: 1, spiral_flag: False*
+  - The following table and screenshots provide details of BlackParrot (Quad-Core)-NG45-68%-1.3ns SA-UCSD macro placement.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10">BlackParrot Quad-Core-NG45-68%-(bp clock)1.3ns SA-UCSD</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>8449457</td>
+    <td>1921810</td>
+    <td>3917822</td>
+    <td>4185.031</td>
+    <td>30470310</td>
+    <td>-0.209</td>
+    <td>-863.535</td>
+    <td>0.08%</td>
+    <td>0.32%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>8449457</td>
+    <td>1934844</td>
+    <td>3917822</td>
+    <td>4560.519</td>
+    <td>30568687</td>
+    <td>-0.107</td>
+    <td>-267.191</td>
+    <td>0.09%</td>
+    <td>0.36%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>8449457</td>
+    <td>1934844</td>
+    <td>3917822</td>
+    <td>4539.416</td>
+    <td>31510301</td>
+    <td>-0.239</td>
+    <td>-6022.700</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>8449457</td>
+    <td>1943841</td>
+    <td>3917822</td>
+    <td>4547.886</td>
+    <td>31550599</td>
+    <td>-0.222</td>
+    <td>-3263.800</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img width="300" src="./images/bp_quad_NG45_SA_Place.png" alg="bp_quad_NG45_SA_Place">
+<img width="300" src="./images/bp_quad_NG45_SA_Route.png" alg="bp_quad_NG45_SA_Route">
+</p>
+
 
 ## **Pinned (to bottom) question list:**
   
@@ -5140,4 +5300,5 @@ The following table and screenshots provide details of Ariane133-NG45-68%-1.3ns 
 **<span style="color:blue">[Question 8](#Question8).</span>** How does the tightness of timing constraints affect the (relative) performance of CT?   
 **<span style="color:blue">[Question 9](#Question9).</span>** Are CT results stable? If not, how much does the outcome vary?  
 **<span style="color:blue">[Question 10](#Question10).</span>** What is the correlation between proxy cost and the postRouteOpt Table 1 metrics?  
-**<span style="color:blue">[Question 11](#Question10).</span>** How does the initial placement generated by different physical synthesis tools affect the CT solution?
+**<span style="color:blue">[Question 11](#Question11).</span>** How does the initial placement generated by different physical synthesis tools affect the CT solution?  
+**<span style="color:blue">[Question 12](#Question12).</span>** How does Simulated Annealing (SA) perform in terms of optimizing the proxy cost?  
