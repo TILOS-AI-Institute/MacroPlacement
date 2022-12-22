@@ -610,7 +610,9 @@ class PlcObject:
         elif (self.orientation == None):
             self.str += "N "
         else:
-            self.str += str(self.orientation) + " "
+            string = str(self.orientation).split('"')[0]
+            #self.str += str(self.orientation) + " "
+            self.str += string + " "
         self.str += "0\n"
         return self.str
 
@@ -1054,22 +1056,23 @@ class PBFNetlist:
         x_dir = 0
         y_dir = 0
         if (src_lx >= target_ux or src_ux <= target_lx or src_ly >= target_uy or src_uy <= target_ly):
+            # there is no overlap
             return None, None
         else:
             src_cx = (src_lx + src_ux) / 2.0
             src_cy = (src_ly + src_uy) / 2.0
             target_cx = (target_lx + target_ux) / 2.0
             target_cy = (target_ly + target_uy) / 2.0
-            x_dir = src_cx - target_cx
-            y_dir = src_cy - target_cy
-
-            # set the minimum value to 1e-12
-            min_dist = 1e-2
-            if (abs(x_dir) <= min_dist):
-                x_dir = -1 * min_dist
-            if (abs(y_dir) <= min_dist):
-                y_dir = -1 * min_dist
-            return x_dir, y_dir
+            if (src_cx == target_cx and src_cy == target_cy):
+                # fully overlap
+                x_dir = -1.0 / sqrt(2.0)
+                y_dir = -1.0 / sqrt(2.0)
+                return x_dir, y_dir
+            else:
+                x_dir = src_cx - target_cx
+                y_dir = src_cy - target_cy
+                dist = sqrt(x_dir * x_dir + y_dir * y_dir)
+                return x_dir / dist, y_dir / dist
 
     # check the relative position
     # This is for attractive force
@@ -1092,11 +1095,11 @@ class PBFNetlist:
                 if (x_dir == None):  # No overlap
                     f_r_x = 0.0
                 else:
-                    f_r_x = repulsive_factor * 1.0 / x_dir
+                    f_r_x = repulsive_factor * 1.0 * max_displacement * x_dir
                 if (y_dir == None):  # No overlap
                     f_r_y = 0.0
                 else:
-                    f_r_y = repulsive_factor * 1.0 / y_dir
+                    f_r_y = repulsive_factor * 1.0 * max_displacement * y_dir
 
                 self.objects[src_macro].AddForce(f_r_x, f_r_y)
                 self.objects[target_macro].AddForce(-1 * f_r_x, -1 * f_r_y)
@@ -1214,24 +1217,59 @@ class FDPlacer:
         #self.plc.restore_placement(self.temp_plc_file)
         self.plc.set_canvas_size(self.design.canvas_width, self.design.canvas_height)
 
-        self.PlotFromPlc(self.open_source_flag)
+        #self.PlotFromPlc(self.open_source_flag)
 
-
+        start_time = time.time()
         self.FDPlacer(self.open_source_flag)
+        end_time = time.time()
         self.final_netlist_pbf_file =  self.run_dir + "/" + self.design_name + ".pb.txt.final"
         self.final_plc_file = self.run_dir + "/" + self.design_name + ".plc.final"
         self.final_plc_fig = self.run_dir + "/" + self.design_name + ".plc.final.png"
         self.design.WriteNetlist(self.final_netlist_pbf_file, self.final_plc_file)
         self.WritePlcFile(self.final_plc_file)
+        print("************************************************")
+        print("The results from Circuit Training")
+        self.CalCostPlc(self.final_plc_file, isPrint = True)
+        print("runtime : ", end_time - start_time)
+        print("\n")
         self.PlotFromPlc(self.open_source_flag, self.final_plc_fig)
 
+        start_time  = time.time()
         self.FDPlacer(not self.open_source_flag)
+        end_time = time.time()
         self.final_netlist_pbf_file =  self.run_dir + "/" + self.design_name + ".os.pb.txt.final"
         self.final_plc_file = self.run_dir + "/" + self.design_name + ".os.plc.final"
         self.final_plc_fig = self.run_dir + "/" + self.design_name + ".os.plc.final.png"
         self.design.WriteNetlist(self.final_netlist_pbf_file, self.final_plc_file)
+        print("************************************************")
+        print("The results from Our Implementation")
+        self.CalCostPlc(self.final_plc_file, isPrint = True)
+        print("runtime : ", end_time - start_time)
+        print("\n")
         self.PlotFromPlc(not self.open_source_flag, self.final_plc_fig)
 
+
+
+    ### Call the plc client for cost evulation
+    def CalCostPlc(self, plc_file, isPrint = True):
+        self.plc.restore_placement(plc_file)
+        self.plc.set_canvas_boundary_check(False)
+        self.plc.make_soft_macros_square()
+        self.plc.set_placement_grid(self.design.n_cols, self.design.n_rows)
+        self.plc.set_routes_per_micron(self.design.hroute_per_micro, self.design.vroute_per_micro)
+        self.plc.set_macro_routing_allocation(self.design.hrouting_alloc, self.design.vrouting_alloc)
+        self.plc.set_congestion_smooth_range(self.design.smooth_factor)
+        self.plc.set_overlap_threshold(self.design.overlap_threshold)
+        self.plc.set_canvas_size(self.design.canvas_width, self.design.canvas_height)
+
+        wl_cost = self.plc.get_cost()
+        den_cost = self.plc.get_density_cost()
+        cong_cost = self.plc.get_congestion_cost()
+        # the weight parameters are given by Circuit Training
+        proxy_cost = wl_cost + 0.5 * den_cost + 0.5 * cong_cost
+        if (isPrint == True):
+            print("WL cost : ", wl_cost, "Density cost : ", den_cost, "Congestion Cost : ", cong_cost, "Proxy cost : ", proxy_cost)
+        return proxy_cost
 
     def PlotFromPlc(self, open_source_flag = True, figure_file = None):
         plt.figure(constrained_layout= True, figsize=(8,5), dpi=600)
@@ -1334,7 +1372,7 @@ if __name__ == "__main__":
     io_factor = 0
     num_steps = [1]
     attract_factor =  [0.0]
-    repel_factor = [1.0]
+    repel_factor = [10.0]
     move_distance_factors = [0.1]  # set the max_displacement to 50
     use_current_loc = True
     placer = FDPlacer(design_name, run_dir, netlist_file, plc_file, io_factor, num_steps, attract_factor, repel_factor, move_distance_factors, use_current_loc)
