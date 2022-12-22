@@ -1865,7 +1865,7 @@ The following table and screenshots show the CT result.
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_4ns_CMP"></a>TCP: 4.0ns [<a href="#Ariane133_NG45_4ns_CT">Link</a> to corresponding CT result]</p></th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_4ns_CMP"></a> Ariane133-NG45-68%-4.0ns CMP (<a href="#Ariane133_NG45_4ns_CT">Link</a> to CT result)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -1930,7 +1930,7 @@ The following table and screenshots show the CT result.
     <td></td>
   </tr>
   <tr>
-    <td colspan="10"><p align="center"><a id="Ariane133_NG45_1.5ns_CMP"></a>TCP: 1.5ns [<a href="#Ariane133_NG45_1.3ns_CT">Link</a> to corresponding CT result]</p></td>
+    <td colspan="10"><p align="center"><a id="Ariane133_NG45_1.5ns_CMP"></a> Ariane133-NG45-68%-1.5ns CMP (<a href="#Ariane133_NG45_1.3ns_CT">Link</a> to CT result]</p></td>
   </tr>
   <tr>
     <td>Physical Design Stage</td>
@@ -1993,7 +1993,7 @@ The following table and screenshots show the CT result.
     <td></td>
   </tr>
   <tr>
-    <td colspan="10"><p align="center"><a id="Ariane133_NG45_1.3ns_CMP"></a>TCP: 1.3ns [<a href="#Ariane133_NG45_1.3ns_CT">Link</a> to corresponding CT result]</p></td>
+    <td colspan="10"><p align="center"><a id="Ariane133_NG45_1.3ns_CMP"></a> Ariane133-NG45-68%-1.3ns CMP (<a href="#Ariane133_NG45_1.3ns_CT">Link</a> to CT result)</p></td>
   </tr>
   <tr>
     <td>Physical Design Stage</td>
@@ -2062,7 +2062,7 @@ The following table and screenshots show the CT result.
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.5ns_CT"></a>Ariane133-68-NG45 CT result for TCP:1.5ns [Corresponding CMP result <a href="#Ariane133_NG45_1.5ns_CMP">link</a>]</p></th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.5ns_CT"></a>Ariane133-NG45-68%-1.5ns CT (<a href="#Ariane133_NG45_1.5ns_CMP">Link</a> to CMP result)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -2137,7 +2137,7 @@ The following table and screenshots show the CT result.
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.3ns_CT"></a>Ariane133-68-NG45 CT result for TCP:1.3ns [Corresponding CMP result <a href="#Ariane133_NG45_1.3ns_CMP">link</a>]</p></th>
+    <th colspan="10"><p align="center"><a id="Ariane133_NG45_1.3ns_CT"></a>Ariane133-NG45-68%-1.3ns CT (<a href="#Ariane133_NG45_1.3ns_CMP">Link</a> to CMP result)</p></th>
   </tr>
 </thead>
 <tbody>
