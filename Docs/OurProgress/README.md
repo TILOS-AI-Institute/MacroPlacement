@@ -4220,14 +4220,16 @@ We document two variant Evaluation Flows (taking macro placements through Innovu
 <img width="600" src="./images/EvaluationFlows.png" alg="EvaluationFlows">
 </p>
 
-**CT Results for Commercial Enablement**  
-We have run CT to generate macro placement for Ariane133, BlackParrot and MemPool Group designs on GLOBALFOUNDRIES 12nm (GF12) enablement. The following tables present the **normalized design metrics**. Core area, standard cell area and macro area are normalized with respect to the core area. Total power is normalized w.r.t. the reported preCTS total power when CMP is used. Similarly, we normalize the wirelength and congestion based on the reported preCTS wirelength and congestion when CMP is used. The timing numbers are normalized w.r.t. the target clock period.
+<a id="GF12_Normalization"></a>
+**CT Results with a Commercial (GLOBALFOUNDRIES 12nm) Design Enablement**  
+We have run CT to generate macro placements for Ariane133, BlackParrot and MemPool Group designs on GLOBALFOUNDRIES 12nm (GF12) enablement. The following tables present the **normalized design metrics**. Core area, standard cell area and macro area are normalized with respect to the core area. Total power is normalized with respect to the reported preCTS total power **when CMP is used**. Similarly, we normalize the wirelength and congestion based on the reported preCTS wirelength and congestion **when CMP is used**. The timing numbers are normalized with respect to the target clock period.
 
-- The following table and screenshots provide details of Ariane133 GF12 implementation when CMP is used to generate the initial macro placement.  
+- The following table and screenshots provide details of the Ariane133 GF12 implementation when CMP is used to generate the macro placement.  
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">Ariane133-GF12-68% CMP</p></th>
+    <th colspan="10"><p align="center">Ariane133-GF12-68% CMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] </p></th>
   </tr>
 </thead>
 <tbody>
@@ -4303,7 +4305,8 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">Ariane133-GF12-68% CT (<a href="https://tensorboard.dev/experiment/PFZd6uMpS6yjbqZ3GqRcDA/">Link</a> to Tensorboard)</p></th>
+    <th colspan="10"><p align="center">Ariane133-GF12-68% CT [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] (<a href="https://tensorboard.dev/experiment/PFZd6uMpS6yjbqZ3GqRcDA/">Link</a> to Tensorboard)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -4379,7 +4382,8 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">BlackParrot-GF12-68% CMP</p></th>
+    <th colspan="10"><p align="center">BlackParrot-GF12-68% CMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] </p></th>
   </tr>
 </thead>
 <tbody>
@@ -4455,7 +4459,8 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">BlackParrot-GF12-68% CT (<a href="https://tensorboard.dev/experiment/6grbdijUQDe5m8KGfOSpnw/">Link</a> to Tensorboard)</p></th>
+    <th colspan="10"><p align="center">BlackParrot-GF12-68% CT [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] (<a href="https://tensorboard.dev/experiment/6grbdijUQDe5m8KGfOSpnw/">Link</a> to Tensorboard)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -4531,7 +4536,8 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">MemPool Group-GF12-68% CMP</p></th>
+    <th colspan="10"><p align="center">MemPool Group-GF12-68% CMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] </p></th>
   </tr>
 </thead>
 <tbody>
@@ -4607,7 +4613,8 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">MemPool Group-GF12-68% CT (<a href="https://tensorboard.dev/experiment/liqXGb6rSrqpf55G2OH2Fw/">Link</a> to Tensorboard)</p></th>
+    <th colspan="10"><p align="center">MemPool Group-GF12-68% CT [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] (<a href="https://tensorboard.dev/experiment/liqXGb6rSrqpf55G2OH2Fw/">Link</a> to Tensorboard)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -4685,7 +4692,8 @@ We have run CT to generate macro placement for Ariane133, BlackParrot and MemPoo
 <table>
 <thead>
   <tr>
-    <th colspan="10">MemPool Group-GF12-68% human macro placement</th>
+    <th colspan="10">MemPool Group-GF12-68% human macro placement [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+] </th>
   </tr>
 </thead>
 <tbody>
@@ -5527,11 +5535,11 @@ Details of our SA implementation, which we denote as SA-UCSD, are [here](../../C
 </p>
 
 <a id="Question13"></a>
-**<span style="color:blue">Question 13.</span>** How does human macro placement perform?  
-We observe human macro placement can achieve smaller wirelength than CT result with similar timing and power numbers. The details of human macro placement generated for BlackParrot (Quad-Core) and MemPool Group on NG45 enablement are as follows:
+**<span style="color:blue">Question 13.</span>** How good are human macro placements relative to Circuit Training?   
+We observe that human macro placements can achieve smaller wirelength than CT, with similar timing and power numbers. Details of human macro placements for BlackParrot (Quad-Core) and MemPool Group on NG45 enablement are as follows:
 <a id="bp_quad_NG45_Human_Place"></a>
 - **BalckParrot-NG45-68%-1.3ns**: We thank Dr. Jinwook Jung of IBM Research for providing his human macro placement of BlackParrot Quad-Core design as an alternative baseline. The following table and screenshots provide details of BlackParrot (Quad-Core)-NG45-68%-1.3ns human macro placement. [Link](../../Flows/NanGate45/bp_quad/def/manual_macro_placement/) to the script.
-  - Dr. Jung informed us that he spent about 0.5 hours learning about the design, 2.5 hours coming up with initial floorplan scripts and an additional 2.5 hours refining the initial version. Dr. Jung also informed us that the design includes 4 identical tiles, each with certain components, and he placed them in a specific arrangement to create more free space.  
+  - Dr. Jung informed us that he spent about 0.5 hours learning about the design, 2.5 hours coming up with initial floorplan scripts, and an additional 2.5 hours refining the initial version, for a total of 5.5 hours of effort. Dr. Jung also informed us that his floorplan design includes 4 identical tiles, and that these are arranged so as to create more free space.  
 
 <table>
 <thead>
@@ -5704,5 +5712,5 @@ We have also added
 **<span style="color:blue">[Question 9](#Question9).</span>** Are CT results stable? If not, how much does the outcome vary?  
 **<span style="color:blue">[Question 10](#Question10).</span>** What is the correlation between proxy cost and the postRouteOpt Table 1 metrics?  
 **<span style="color:blue">[Question 11](#Question11).</span>** How does the initial placement generated by different physical synthesis tools affect the CT solution?  
-**<span style="color:blue">[Question 12](#Question12).</span>** How well does Simulated Annealing (SA) optimize the proxy cost?  
-**<span style="color:blue">[Question 13](#Question13).</span>** How does human macro placement perform?  
+**<span style="color:blue">[Question 12](#Question12).</span>** How well does Simulated Annealing (SA) optimize Circuit Training's proxy cost?  
+**<span style="color:blue">[Question 13](#Question13).</span>** How good are human macro placements relative to Circuit Training?  
