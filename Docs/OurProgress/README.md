@@ -5372,7 +5372,7 @@ Details of our SA implementation, which we denote as SA-UCSD, are [here](../../C
 <a id="Question13"></a>
 **<span style="color:blue">Question 13.</span>** How does human macro placement perform?  
 We observe human macro placement can achieve smaller wirelength than CT result with similar timing and power numbers. The details of human macro placement generated for BlackParrot (Quad-Core) and MemPool Group on NG45 enablement are as follows:
-- **BalckParrot-NG45-68%-1.3ns**: We thank Dr. Jinwook Jung of IBM Research for providing his human macro placement of BlackParrot Quad-Core design as an alternative baseline. The following table and screenshots provide details of BlackParrot (Quad-Core)-NG45-68%-1.3ns human macro placement. (Link to script)
+- **BalckParrot-NG45-68%-1.3ns**: We thank Dr. Jinwook Jung of IBM Research for providing his human macro placement of BlackParrot Quad-Core design as an alternative baseline. The following table and screenshots provide details of BlackParrot (Quad-Core)-NG45-68%-1.3ns human macro placement. [Link](../../Flows/NanGate45/bp_quad/def/manual_macro_placement/) to the script.
   - Dr. Jung informed us that he spent about 0.5 hours learning about the design, 2.5 hours coming up with initial floorplan scripts and an additional 2.5 hours refining the initial version. Dr. Jung also informed us that the design includes 4 identical tiles, each with certain components, and he placed them in a specific arrangement to create more free space.  
 
 <table>
