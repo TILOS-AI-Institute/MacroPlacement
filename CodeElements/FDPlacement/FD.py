@@ -1055,24 +1055,38 @@ class PBFNetlist:
         target_lx, target_ly, target_ux, target_uy = self.objects[target_macro].GetBBox()
         x_dir = 0
         y_dir = 0
-        if (src_lx >= target_ux or src_ux <= target_lx or src_ly >= target_uy or src_uy <= target_ly):
+        src_width = src_ux - src_lx
+        src_height = src_uy - src_ly
+        
+        target_width = target_ux - target_lx
+        target_height = target_uy - target_ly
+        
+        src_cx = (src_lx + src_ux) / 2.0
+        src_cy = (src_ly + src_uy) / 2.0
+        target_cx = (target_lx + target_ux) / 2.0
+        target_cy = (target_ly + target_uy) / 2.0
+         
+        min_dist = 1e-4
+        x_min_dist = (src_width + target_width) / 2.0
+        y_min_dist = (src_height + target_height) / 2.0
+        if (abs(target_cx - src_cx) > (x_min_dist - min_dist)):
             # there is no overlap
             return None, None
+        if (abs(target_cy - src_cy) > (y_min_dist - min_dist)):
+            # there is no overlap
+            return None, None
+       
+        # there is no overlap 
+        if (src_cx == target_cx and src_cy == target_cy):
+            # fully overlap
+            x_dir = -1.0
+            y_dir = -1.0
+            return x_dir, y_dir
         else:
-            src_cx = (src_lx + src_ux) / 2.0
-            src_cy = (src_ly + src_uy) / 2.0
-            target_cx = (target_lx + target_ux) / 2.0
-            target_cy = (target_ly + target_uy) / 2.0
-            if (src_cx == target_cx and src_cy == target_cy):
-                # fully overlap
-                x_dir = -1.0 / sqrt(2.0)
-                y_dir = -1.0 / sqrt(2.0)
-                return x_dir, y_dir
-            else:
-                x_dir = src_cx - target_cx
-                y_dir = src_cy - target_cy
-                dist = sqrt(x_dir * x_dir + y_dir * y_dir)
-                return x_dir / dist, y_dir / dist
+            x_dir = src_cx - target_cx
+            y_dir = src_cy - target_cy
+            dist = sqrt(x_dir * x_dir + y_dir * y_dir)
+            return x_dir / dist, y_dir / dist
 
     # check the relative position
     # This is for attractive force
