@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.8)
+project(fd_placer)
+include_directories(./src)
+file(GLOB SOURCES "./src/*.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES})
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
