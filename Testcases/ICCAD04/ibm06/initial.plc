@@ -1,6 +1,6 @@
 # Placement file for Circuit Training
-# Source input file(s) : /home/zf4_projects/DREAMPlace/sakundu/ABK_MP/ICCAD04/CT_Prep/CT_Grouping/ibm06/28cols_26rows/g500_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt
-# This file : /home/zf4_projects/DREAMPlace/sakundu/ABK_MP/ICCAD04/CT_Prep/CT_Grouping/ibm06/28cols_26rows/g500_ub5_nruns10_c5_r3_v3_rc1/initial.plc
+# Source input file(s) : _path_/ICCAD04/CT_Prep/CT_Grouping/ibm06/28cols_26rows/g500_ub5_nruns10_c5_r3_v3_rc1/netlist.pb.txt
+# This file : _path_/ICCAD04/CT_Prep/CT_Grouping/ibm06/28cols_26rows/g500_ub5_nruns10_c5_r3_v3_rc1/initial.plc
 # Date : 2022-12-15 04:12:09
 # Columns : 28  Rows : 26
 # Width : 32.650  Height : 32.640
@@ -29,8 +29,8 @@
 # STDCELLs        :         0
 # 
 # User comments:
-# Original source netlist with standard cells: /home/zf4_projects/DREAMPlace/sakundu/ABK_MP/ICCAD04/CT_Prep/RePlAce/OUTPUT/ibm06/ibm06.pb.txt
-# Groups file: /home/zf4_projects/DREAMPlace/sakundu/ABK_MP/ICCAD04/CT_Prep/CT_Grouping/ibm06/28cols_26rows/g500_ub5_nruns10_c5_r3_v3_rc1/groups.final
+# Original source netlist with standard cells: _path_/ICCAD04/CT_Prep/RePlAce/OUTPUT/ibm06/ibm06.pb.txt
+# Groups file: _path_/ICCAD04/CT_Prep/CT_Grouping/ibm06/28cols_26rows/g500_ub5_nruns10_c5_r3_v3_rc1/groups.final
 # worst 10 spread
 # grp: 446 - spread: 791.7081985854211
 # grp: 107 - spread: 752.0325832958188
