@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import traceback, sys
 import random
+import textwrap
 import numpy as np
 from circuit_training.grouping import meta_netlist_data_structure as mnds
 from circuit_training.grouping import meta_netlist_convertor
@@ -34,9 +35,6 @@ proxy cost function for RL agent's reward signal at the end of each placement.
 Example:
     For testing, please refer to plc_client_os_test.py for more information.
     python3 setup.py build_ext --inplace
-
-Todo:
-    * Can numpy arrays be optimize further?
 
 """
 
@@ -94,7 +92,6 @@ cdef class PlacementCost:
     # modules look-up table
     cdef:
         dict mod_name_to_indices
-        dict indices_to_mod_name
         dict macro_id_to_indices
         dict port_id_to_indices
         object modules_w_pins
@@ -151,7 +148,6 @@ cdef class PlacementCost:
         # str as general purpose PyObject *
         # Check netlist existance
         self.netlist_file = netlist_file
-        assert os.path.isfile(self.netlist_file)
         self.macro_macro_x_spacing = macro_macro_x_spacing
         self.macro_macro_y_spacing = macro_macro_y_spacing
 
@@ -167,7 +163,6 @@ cdef class PlacementCost:
         self.nets = {}
 
         # modules to index look-up table
-        self.indices_to_mod_name = {}
         self.mod_name_to_indices = {}
         
         # Set meta information
@@ -239,6 +234,8 @@ cdef class PlacementCost:
         port_idx = 0
         # read netlist list into data structures
         for mod in self.meta_netlist.node:
+            # [MOD.NAME] => [MOD.ID]
+            self.mod_name_to_indices[mod.name] = mod.id
             if mod.type == mnds.Type.STDCELL:
                 # standard cell, not used
                 self.std_cell_cnt += 1
@@ -355,7 +352,7 @@ cdef class PlacementCost:
                 _routes_used_by_macros_ver = float(line_item[7])
             elif all(it in line_item for it in ['Smoothing', 'factor']):
                 # smoothing factor for routing congestion
-                _smoothing_factor = int(line_item[2])
+                _smoothing_factor = float(line_item[2])
             elif all(it in line_item for it in ['Overlap', 'threshold']):
                 # overlap
                 _overlap_threshold = float(line_item[2])
@@ -411,7 +408,7 @@ cdef class PlacementCost:
 
         return info_dict
 
-    def restore_placement(self, plc_pth: str, ifInital=True, ifValidate=False, ifReadComment = False):
+    def restore_placement(self, plc_pth: str, ifInital=True, ifValidate=False, ifReadComment = False, retrieveFD = False):
         """
             Read and retrieve .plc file information
             NOTE: DO NOT always set self.init_plc because this function is also 
@@ -429,8 +426,6 @@ cdef class PlacementCost:
         self.FLAG_UPDATE_CONGESTION = True
         self.FLAG_UPDATE_DENSITY = True
         self.FLAG_UPDATE_WIRELENGTH = True
-        
-        
         
         # extracted information from .plc file
         info_dict = self.__read_plc(plc_pth)
@@ -452,18 +447,6 @@ cdef class PlacementCost:
                     .format(line, text))
                 exit(1)
         
-        # restore placement for each module
-        # try:
-        #     # print(sorted(list(info_dict['node_plc'].keys())))
-        #     assert sorted(self.port_indices +\
-        #         self.hard_macro_indices +\
-        #         self.soft_macro_indices) == sorted(list(info_dict['node_plc'].keys()))
-        # except AssertionError:
-        #     print('[ERROR PLC INDICES MISMATCH]', len(sorted(self.port_indices +\
-        #         self.hard_macro_indices +\
-        #         self.soft_macro_indices)), len(list(info_dict['node_plc'].keys())))
-        #     exit(1)
-        
         for mod_idx in info_dict['node_plc'].keys():
             mod_x = mod_y = mod_orient = mod_ifFixed = None
             try:
@@ -477,8 +460,15 @@ cdef class PlacementCost:
             
             # extract mod object
             mod = self.meta_netlist.node[mod_idx]
-            mod.coord.x = mod_x
-            mod.coord.y = mod_y
+
+            # if retrieving FD placement result, then only update soft macros
+            if retrieveFD:
+                if mod.soft_macro:
+                    mod.coord.x = mod_x
+                    mod.coord.y = mod_y 
+            else:
+                mod.coord.x = mod_x
+                mod.coord.y = mod_y
             
             if mod_orient and mod_orient != '-':
                 if mod_orient == "N":
@@ -733,44 +723,16 @@ cdef class PlacementCost:
         col = math.floor(x_pos / self.grid_width)
         return row, col
 
-    # def __get_grid_location_position(self, col:int, row:int):
-    #     """
-    #     private function: for getting x y coord from grid cell row/col
-    #     """
-    #     self.grid_width = float(self.width/self.grid_col)
-    #     self.grid_height = float(self.height/self.grid_row)
-    #     x_pos = self.grid_width * col + self.grid_width / 2
-    #     y_pos = self.grid_height * row + self.grid_height / 2
-
-    #     return x_pos, y_pos
-    
-    # def __get_grid_cell_position(self, grid_cell_idx:int):
-    #     """
-    #     private function: for getting x y coord from grid cell row/col
-    #     """
-    #     row = grid_cell_idx // self.grid_col
-    #     col = grid_cell_idx % self.grid_col
-    #     assert row * self.grid_col + col == grid_cell_idx
-
-    #     return self.__get_grid_location_position(col, row)
-    
-    # def __place_node_mask(self, 
-    #                         grid_cell_idx:int,
-    #                         mod_width:float,
-    #                         mod_height:float
-    #                     ):
-    #     """
-    #     private function: for updating node mask after a placement
-    #     """
-    #     row = grid_cell_idx // self.grid_col
-    #     col = grid_cell_idx % self.grid_col
-    #     assert row * self.grid_col + col == grid_cell_idx
-
-    #     hor_pad, ver_pad = self.__node_pad_cell(mod_width=mod_width,
-    #                                             mod_height=mod_height)
-
-    #     self.node_mask[ row - ver_pad:row + ver_pad + 1, 
-    #                     col - hor_pad:col + hor_pad + 1] = 0
+    cpdef int get_grid_cell_of_node(self, float x_pos, float y_pos):
+        """
+        Returns the node's current location in terms of grid cell index
+        """
+        cdef:
+            int row
+            int col
+        
+        row, col = self.__get_grid_cell_location(x_pos=x_pos, y_pos=y_pos)
+        return row * self.grid_col + col
 
     cpdef float __overlap_area(self, object bbox_i, object bbox_j, bool return_pos=False):
         """
@@ -1492,7 +1454,7 @@ cdef class PlacementCost:
             print("[ERROR NODE INDEX] Node not found!")
             exit(1)
     
-    def get_node_mask(self, node_idx: int) -> list:
+    cpdef get_node_mask(self, node_idx: int):
         """
         Return node mask based on given node
         All legal positions must satisfy:
@@ -1553,7 +1515,10 @@ cdef class PlacementCost:
                              temp_node_mask[i][j] = 0
             
         return temp_node_mask.flatten()
-
+    
+    cpdef get_node_mask_by_name(self, str node_name):
+        node_idx = self.mod_name_to_indices[node_name]
+        return self.get_node_mask(node_idx)
 
     cpdef str get_node_type(self, int node_idx):
         """
@@ -1825,6 +1790,13 @@ cdef class PlacementCost:
         if not self.node_fix[node_idx]:
             mod.coord.x = x_pos
             mod.coord.y = y_pos
+    
+    cpdef void update_node_coords_by_name(self, str node_name, float x_pos, float y_pos):
+        """
+        Update Node location if node is 'MACRO', 'STDCELL', 'PORT'
+        """
+        node_idx = self.mod_name_to_indices[node_name]
+        self.update_node_coords(node_idx=node_idx, x_pos=x_pos, y_pos=y_pos)
 
     cpdef update_macro_orientation(self, int node_idx, str orientation):
         """ 
@@ -1844,6 +1816,13 @@ cdef class PlacementCost:
             exit(1)
         
         mod.orientation = mnds.Orientation[orientation]
+    
+    cpdef update_macro_orientation_by_name(self, str node_name, str orientation):
+        """ 
+        Update macro orientation if node is 'MACRO'
+        """
+        node_idx = self.mod_name_to_indices[node_name]
+        self.update_macro_orientation(node_idx=node_idx, orientation=orientation)
 
     def update_port_sides(self):
         pass
@@ -1869,8 +1848,23 @@ cdef class PlacementCost:
             exit(1)
         
         return mod.coord.x, mod.coord.y
+    
+    cpdef list get_node_locations(self, list node_indices):
+        """
+        Returns the (x, y) location of a list of nodes
+        """
+        cdef:
+            int node_idx
+            list node_locations = []
+        
+        for node_idx in node_indices:
+            node_locations.append(self.get_node_location(node_idx))
+        return node_locations
 
     cpdef get_macro_orientation(self, int node_idx):
+        """
+        Returns the orientation of the given node
+        """
         mod = None
 
         try:
@@ -1902,6 +1896,13 @@ cdef class PlacementCost:
             self.FLAG_UPDATE_CONGESTION = True
             self.FLAG_UPDATE_DENSITY = True
             self.FLAG_UPDATE_WIRELENGTH = True
+    
+    def place_node_by_name(self, node_name, grid_cell_idx):
+        """
+        Place the node into the center of the given grid_cell
+        """
+        node_idx = self.mod_name_to_indices[node_name]
+        self.place_node(node_idx=node_idx, grid_cell_idx=grid_cell_idx)
 
     def unplace_node(self, node_idx):
         """
@@ -1954,10 +1955,17 @@ cdef class PlacementCost:
         return self.netlist_file
 
     cpdef list get_blockages(self):
+        """
+        NOT IMPLEMENTED
+        """
         return self.blockages
 
-    # def create_blockage(self, minx, miny, maxx, maxy, blockage_rate):
-    #     self.blockages.append([minx, miny, maxx, maxy, blockage_rate])
+    cpdef create_blockage(self, minx, miny, maxx, maxy, blockage_rate):
+        """
+        NOT IMPLEMENTED
+        """
+        self.blockages.append([minx, miny, maxx, maxy, blockage_rate])
+        pass
 
     cpdef int get_ref_node_id(self, int node_idx):
         """
@@ -1967,6 +1975,12 @@ cdef class PlacementCost:
             return node_idx
         else:
             return self.meta_netlist.node[node_idx].ref_node_id
+    
+    cpdef list get_fan_outs_of_node(self, int node_idx):
+        """
+        Returns the vector of node indices that are driven by given node
+        """
+        return self.meta_netlist.node[node_idx].output_indices
 
     cpdef void save_placement(self, str filename, info=""):
         """
@@ -2008,6 +2022,51 @@ cdef class PlacementCost:
                         mod.coord.x, mod.coord.y,
                         mnds.Orientation(mod.orientation.value).name if mod.orientation else "-",
                         "1" if self.node_fix[mod_idx] else "0"))
+    
+    cpdef void __cache_placement(self, str filename):
+        """
+        private function: used to cache placement file for FD executable
+        """
+        cols, rows = self.get_grid_num_columns_rows()
+        width, height = self.get_canvas_width_height()
+        hor_routes, ver_routes = self.get_routes_per_micron()
+        hor_macro_alloc, ver_macro_alloc = self.get_macro_routing_allocation()
+        smooth = self.get_congestion_smooth_range()
+        info = textwrap.dedent("""\
+            Placement file for Circuit Training
+            Columns : {cols}  Rows : {rows}
+            Width : {width:.3f}  Height : {height:.3f}
+            Area : {area}
+            Wirelength : {wl:.3f}
+            Wirelength cost : {wlc:.4f}
+            Congestion cost : {cong:.4f}
+            Density cost : {density:.4f}
+            Project : {project}
+            Block : {block_name}
+            Routes per micron, hor : {hor_routes:.3f}  ver : {ver_routes:.3f}
+            Routes used by macros, hor : {hor_macro_alloc:.3f}  ver : {ver_macro_alloc:.3f}
+            Smoothing factor : {smooth}
+            Overlap threshold : {overlap_threshold}
+        """.format(
+            cols=cols,
+            rows=rows,
+            width=width,
+            height=height,
+            area=self.get_area(),
+            wl=self.get_wirelength(),
+            wlc=self.get_cost(),
+            cong=self.get_congestion_cost(),
+            density=self.get_density_cost(),
+            project=self.get_project_name(),
+            block_name=self.get_block_name(),
+            hor_routes=hor_routes,
+            ver_routes=ver_routes,
+            hor_macro_alloc=hor_macro_alloc,
+            ver_macro_alloc=ver_macro_alloc,
+            smooth=smooth,
+            overlap_threshold=self.get_overlap_threshold()))
+
+        self.save_placement(filename=filename, info=info)
 
     def display_canvas( self,
                         annotate=True, 
@@ -2072,269 +2131,15 @@ cdef class PlacementCost:
     
     '''
     FD Placement below shares the same functionality as the FDPlacement/fd_placement.py
-    '''
-    cpdef void __initialization(self):
-        '''
-        Initialize soft macros to the center
-        '''
-        for mod_idx in self.soft_macro_indices:
-            # put everyting at center, regardless the overlapping issue
-            mod = self.meta_netlist.node[mod_idx]
-            mod.coord.x = self.width/2
-            mod.coord.y = self.height/2
-    
-    cpdef (float, float) __check_OOB(self, int mod_id, float x_disp, float y_disp):
-        '''
-        Check if soft macro could move out-of-boundary
-        '''
-        mod = self.meta_netlist.node[mod_id]
-        cdef float mod_x = mod.coord.x
-        cdef float mod_y = mod.coord.y
-        cdef float mod_height = mod.dimension.height
-        cdef float mod_width = mod.dimension.width
-
-        # boundary after displacement
-        cdef float x_max = mod_x + mod_width/2 + x_disp
-        cdef float y_max = mod_y + mod_height/2 + y_disp
-        cdef float x_min = mod_x - mod_width/2 + x_disp
-        cdef float y_min = mod_y - mod_height/2 + y_disp
-
-        # print(x_max, x_min, y_max, y_min)
-        # determine if move
-        if x_min <= 0.0 or x_max >= self.width:
-            x_disp = 0.0
-        if y_min <= 0.0 or y_max >= self.height:
-            y_disp = 0.0
-
-        return x_disp, y_disp
-
-    cpdef (float, float, float, float) getBBox(self, int mod_id):
-        mod = self.meta_netlist.node[mod_id]
-        cdef float x = mod.coord.x
-        cdef float y = mod.coord.y
-        cdef float width = mod.dimension.width
-        cdef float height =  mod.dimension.height
-        cdef float lx = x - width / 2.0
-        cdef float ly = y - height / 2.0
-        cdef float ux = x + width / 2.0
-        cdef float uy = y + height / 2.0
-        return lx, ly, ux, uy
-
-    cpdef (float, float) _check_overlap(self, int mod_u, int mod_v):
-        cdef:
-            float u_lx
-            float u_ly
-            float u_ux
-            float u_uy
-            float u_cx
-            float u_cy
-            float v_lx
-            float v_ly
-            float v_ux
-            float v_uy
-            float v_cx
-            float v_cy
-            float x_dir
-            float y_dir
-            float dist
-
-        u_lx, u_ly, u_ux, u_uy = self.getBBox(mod_u)
-        v_lx, v_ly, v_ux, v_uy = self.getBBox(mod_v)
-
-        if (u_lx >= v_ux or u_ux <= v_lx or u_ly >= v_uy or u_uy <= v_ly):
-            # no overlap
-            return 0.0, 0.0
-        else:
-            u_cx = (u_lx + u_ux) / 2.0
-            u_cy = (u_ly + u_uy) / 2.0
-            v_cx = (v_lx + v_ux) / 2.0
-            v_cy = (v_ly + v_uy) / 2.0
-
-            if u_cx == v_cx and u_cy == v_cy:
-                # fully overlap
-                x_dir = -1.0 / math.sqrt(2.0)
-                y_dir = -1.0 / math.sqrt(2.0)
-                return x_dir, y_dir
-            else:
-                x_dir = u_cx - v_cx
-                y_dir = u_cy - v_cy
-                dist = math.sqrt(x_dir * x_dir + y_dir * y_dir)
-                return x_dir / dist, y_dir / dist
-    
-    cpdef void __add_displace(self, int mod_id, float x_disp, float y_disp):
-        '''
-        Add the displacement
-        '''
-        if self.meta_netlist.node[mod_id].soft_macro:
-            self.soft_macro_disp[mod_id][0] += x_disp
-            self.soft_macro_disp[mod_id][1] += y_disp
-
-    cpdef void __update_location(self, int mod_id, float x_disp, float y_disp):
-        '''
-        Update the displacement to the coordiante
-        '''
-        cdef:
-            float x_pos
-            float y_pos
-
-        mod = self.meta_netlist.node[mod_id]
-        x_pos = mod.coord.x
-        y_pos = mod.coord.y
-
-        x_disp, y_disp = self.__check_OOB(mod_id, x_disp, y_disp)
-        # for debug purpose
-        # if debug:
-        #     with open('os_debug.txt', 'a+') as the_file:
-        #         the_file.write("{} {} {} {} {}\n".format(
-        #             mod_id,
-        #             x_pos + x_disp, 
-        #             y_pos + y_disp, 
-        #             x_disp, y_disp
-        #             ))
-        mod.coord.x = x_pos + x_disp
-        mod.coord.y = y_pos + y_disp
-
-    cpdef void __move_soft_macros(self, float attract_factor, float repel_factor, float io_factor, float max_displacement):
-        '''
-        Compute all forces for one iteration
-        '''
-        cdef:
-            float max_x_disp = 0.0
-            float max_y_disp = 0.0
-
-        # map to soft macro index
-        for mod_idx in self.soft_macro_indices:
-            self.soft_macro_disp[mod_idx] = [0.0, 0.0]
-        self.__attractive_force(attract_factor, io_factor, max_displacement)
-        self.__repulsive_force(repel_factor, max_displacement)
-
-        for mod_idx in self.soft_macro_indices:
-            max_x_disp = max(max_x_disp, abs(self.soft_macro_disp[mod_idx][0]))
-            max_y_disp = max(max_y_disp, abs(self.soft_macro_disp[mod_idx][1]))
-        
-        # normalization
-        if max_x_disp > 0.0:
-            for mod_idx in self.soft_macro_indices:
-                self.soft_macro_disp[mod_idx][0] = (self.soft_macro_disp[mod_idx][0] / max_x_disp) * max_displacement
-        if max_y_disp > 0.0:
-            for mod_idx in self.soft_macro_indices:
-                self.soft_macro_disp[mod_idx][1] = (self.soft_macro_disp[mod_idx][1] / max_y_disp) * max_displacement
-        for mod_idx in self.soft_macro_indices:
-            self.__update_location(mod_idx, self.soft_macro_disp[mod_idx][0], self.soft_macro_disp[mod_idx][1])
-
-    cpdef (float, float) __checkPinRelativePos(self, int pin_u, int pin_v):
-        '''
-        compute relative pin location
-        '''
-        cdef:
-            float ux
-            float uy
-            float vx
-            float vy
-        ux, uy = self.__get_pin_position(pin_u)
-        vx, vy = self.__get_pin_position(pin_v)
-        return -1.0 * (ux - vx), -1.0 * (uy - vy)
-
-    cdef void __repulsive_force(self, float repel_factor, float max_displacement):
-        '''
-        compute repulsive force
-        '''
-        cdef:
-            float x_d
-            float y_d
-            float x_disp = 0.0
-            float y_disp = 0.0
-            int mod_u_idx
-            int mod_v_idx
-
-        for i in range(len(self.macro_indices)):
-            mod_u_idx = self.macro_indices[i]
-            for j in range(i + 1, len(self.macro_indices)):
-                mod_v_idx = self.macro_indices[j]
-                x_d, y_d = self._check_overlap(mod_u_idx, mod_v_idx)
-                # No overlap
-                if x_d == 0.0: 
-                    x_disp = 0.0
-                else:
-                    # x_disp = repel_factor * 1.0 / x_d
-                    x_disp = repel_factor * 1.0 * max_displacement * x_d
-                
-                # No overlap
-                if y_d == 0.0:
-                    y_disp = 0.0
-                else:
-                    # y_disp = repel_factor * 1.0 / y_d
-                    y_disp = repel_factor * 1.0 * max_displacement * y_d
-
-                # print("debugging: ", x_disp, y_disp)
-                self.__add_displace(mod_u_idx, x_disp, y_disp)
-                self.__add_displace(mod_v_idx, -1.0 * x_disp, -1.0 * y_disp)
-    
-    cpdef void __attractive_force(self, float attract_factor, float io_factor, float max_displacement):
-        '''
-        compute attractive force
-        '''
-        cdef:
-            float x_disp
-            float y_disp
-            float force
-            float x_d
-            float y_d
-            int driver_pin_idx
-            int driver_macro_idx
-            float weight_factor
-            int sink_pin_idx
-            int sink_macro_idx
-        
-        for driver_pin_idx in self.nets.keys():
-            # extract driver pin
-            driver_pin = self.meta_netlist.node[driver_pin_idx]
-            # extract driver macro
-            driver_macro_idx = self.get_ref_node_id(driver_pin_idx)
-            # extract net weight
-            weight_factor = driver_pin.weight
-            for sink_pin_idx in self.nets[driver_pin_idx]:
-                sink_macro_idx = self.get_ref_node_id(sink_pin_idx)
-                # compute directional vector
-                x_d, y_d = self.__checkPinRelativePos(driver_pin_idx, sink_pin_idx)
-                # if connection has port
-                if self.meta_netlist.node[sink_pin_idx].type == mnds.Type.PORT \
-                    or self.meta_netlist.node[driver_pin_idx].type == mnds.Type.PORT:
-                    force = weight_factor * io_factor * attract_factor
-                else:
-                    force = weight_factor * attract_factor
-                
-                x_disp = force * x_d
-                y_disp = force * y_d
-
-                # add displacement to driver/sink pin 
-                self.__add_displace(driver_macro_idx, x_disp, y_disp)
-                self.__add_displace(sink_macro_idx, -1.0 * x_disp, -1.0 * y_disp)
-    
-    cpdef __fd_placement(self, io_factor, tuple num_steps, tuple max_move_distance, tuple attract_factor, tuple repel_factor, bool use_current_loc, bool verbose=True):
-        '''
-        Force-directed Placement for standard-cell clusters
-        ''' 
-        # store x/y displacement for all soft macro disp
-        self.soft_macro_disp = {}
-            
-        if use_current_loc == False:
-            self.__initialization()
-        for i in range(len(num_steps)):
-            if verbose:
-                print("[OPTIMIZING STDCELs] at num_step {}".format(i))
-            attractive_factor = attract_factor[i]
-            repulsive_factor = repel_factor[i]
-            num_step = num_steps[i]
-            max_displacement = max_move_distance[i]
-
-            for j in range(num_step):
-                if verbose:
-                    print("[INFO] number of step {}".format(j))
-                self.__move_soft_macros(attractive_factor, repulsive_factor, io_factor, max_displacement)
-        
+    ''' 
     def optimize_stdcells(self, use_current_loc, move_stdcells, move_macros,
                         log_scale_conns, use_sizes, io_factor, num_steps,
                         max_move_distance, attract_factor, repel_factor):
-        
-        self.__fd_placement(io_factor, num_steps, max_move_distance, attract_factor, repel_factor, use_current_loc, verbose=True)
+        cache_plc = self.init_plc + ".cache"
+        self.__cache_placement(cache_plc)
+        os.system("./fd_placer {} {}".format(self.netlist_file, cache_plc))
+        fd_plc = self.init_plc + ".cache.new"
+        self.restore_placement(fd_plc, retrieveFD=True)
+        print("[INFO] FD ran successfully")
+
+        # self.__fd_placement(io_factor, num_steps, max_move_distance, attract_factor, repel_factor, use_current_loc, verbose=True)
