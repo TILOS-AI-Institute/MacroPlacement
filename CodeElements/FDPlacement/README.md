@@ -38,7 +38,7 @@ After normalization, the standard-cell clusters are moved based on the forces ex
 ## **Experimental results**
 We have tested our codes on the Ariane133 (NanGate45).  The experimental results are presented below.
 <p align="center">
-<img src="./ariane133/FD_result_1225.png" width= "1200"/>
+<img src="./ariane133/FD_result_20230112.png" width= "1200"/>
 </p>
 <p align="center">
 Figure 1. results for Ariane133 (NanGate45).  
