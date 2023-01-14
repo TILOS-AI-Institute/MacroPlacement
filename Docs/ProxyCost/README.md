@@ -139,7 +139,7 @@ The inputs are three pin grid locations and the net weight.
 4. If <b>j<sub>2</sub> == j<sub>3</sub></b>:
    1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub> -1, j<sub>1</sub>)</b>
    2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub> -1, j<sub>2</sub>)</b>
-   3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
+   3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
    4. Return
 5. Update congestion cost using <b>T<sub>routing</sub></b>.
 
