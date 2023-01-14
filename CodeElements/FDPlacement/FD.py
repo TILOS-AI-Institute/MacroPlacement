@@ -1057,15 +1057,15 @@ class PBFNetlist:
         y_dir = 0
         src_width = src_ux - src_lx
         src_height = src_uy - src_ly
-        
+
         target_width = target_ux - target_lx
         target_height = target_uy - target_ly
-        
+
         src_cx = (src_lx + src_ux) / 2.0
         src_cy = (src_ly + src_uy) / 2.0
         target_cx = (target_lx + target_ux) / 2.0
         target_cy = (target_ly + target_uy) / 2.0
-         
+
         min_dist = 1e-4
         x_min_dist = (src_width + target_width) / 2.0
         y_min_dist = (src_height + target_height) / 2.0
@@ -1075,8 +1075,8 @@ class PBFNetlist:
         if (abs(target_cy - src_cy) > (y_min_dist - min_dist)):
             # there is no overlap
             return None, None
-       
-        # there is no overlap 
+
+        # there is no overlap
         if (src_cx == target_cx and src_cy == target_cy):
             # fully overlap
             x_dir = -1.0

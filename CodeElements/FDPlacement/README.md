@@ -35,10 +35,38 @@ Here f_x_max (f_y_max) is the absolute value of f_x (f_y) which has the maximum 
 After normalization, the standard-cell clusters are moved based on the forces exerted on them.  The move which will push the standard-cell clusters outside of canvas will be canceled.
 
 
+## How to run our implementation
+We provide implementations in both [python](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/FDPlacement/FD.py) and [c++](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FDPlacement/src). 
+
+To run the FD placer implemented in python, you need to install all the dependencies of [Circuit Training](https://github.com/google-research/circuit_training.git).
+You can set the testcase and related parameters in [FD.py](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/449e837dc1c2ec927a08976ec7925ddfe53f9f04/CodeElements/FDPlacement/FD.py#L1395).
+Then you can our FD placer as following:
+```
+python FD.py
+```
+
+
+
+
+To run the FD placer implemented in c++, you need to compile c++ codes as following:
+```
+mkdir build
+cd build
+cmake ..
+```
+You can set the related parameters in [main.cpp](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/449e837dc1c2ec927a08976ec7925ddfe53f9f04/CodeElements/FDPlacement/src/main.cpp#L14) before you compile the codes.
+Then you can run FD placer as following:
+```
+./build/fd_placer ariane133/ariane.pb.txt ariane133/ariane.plc
+```
+
+
+
 ## **Experimental results**
 We have tested our codes on the Ariane133 (NanGate45).  The experimental results are presented below.
+The results from our python implementation and our c++ implementation are a little different.  This is due to the precision loss while converting from python codes to C++ codes.
 <p align="center">
-<img src="./ariane133/FD_result_1225.png" width= "1200"/>
+<img src="./ariane133/FD_result_20230112.png" width= "1200"/>
 </p>
 <p align="center">
 Figure 1. results for Ariane133 (NanGate45).  
