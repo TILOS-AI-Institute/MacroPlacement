@@ -41,7 +41,10 @@ def RunSA(run_id, dir, netlist, plc_file, action_probs, num_actions, max_tempera
 
     cmd = sa_path + " " + netlist + " " + plc_file + " " + str(num_actions) + " "
     cmd += str(max_temperature) + " " + str(num_iters) + " " + str(seed) + " "
-    cmd += str(spiral_flag) + " "
+    if (spiral_flag == True):
+        cmd += str(1) + " "
+    else:
+        cmd += str(0) + " "
     for action_prob in action_probs:
         cmd += str(action_prob) + " "
     cmd += design + " " + run_dir
