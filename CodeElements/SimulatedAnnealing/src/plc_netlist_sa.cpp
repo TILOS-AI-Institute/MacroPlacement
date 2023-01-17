@@ -453,6 +453,11 @@ void PBFNetlist::SimulatedAnnealing(std::vector<float> action_probs,
   float cur_cost = 0.0;
   std::vector<float> cost_list; // we need to plot the cost curve
   CallFDPlacer();
+  
+  std::ofstream f;
+  f.open(summary_file);
+  f.close();
+
   for (int num_iter = 0; num_iter < num_iters; num_iter++) {
     // call FDPlacer to update the cost
     CallFDPlacer();
@@ -472,13 +477,23 @@ void PBFNetlist::SimulatedAnnealing(std::vector<float> action_probs,
       }
       cost_list.push_back(cur_cost);
     }
+    
+    if ((num_iter + 1) % 5 == 0) {
+      f.open(summary_file, std::ios::out | std::ios::app);
+      for (auto& value : cost_list)
+        f << value << std::endl;
+      f.close(); 
+      cost_list.clear();    
+    }    
     // update the temperature
     t = max_temperature * std::exp(t_factor * num_iter / num_iters);
   }
 
-  std::ofstream f;
-  f.open(summary_file);
-  for (auto& value : cost_list)
-    f << value << std::endl;
-  f.close();
+  if (cost_list.size() > 0) {
+    f.open(summary_file, std::ios::out | std::ios::app);
+    for (auto& value : cost_list)
+      f << value << std::endl;
+    f.close(); 
+    cost_list.clear();        
+  }
 }
