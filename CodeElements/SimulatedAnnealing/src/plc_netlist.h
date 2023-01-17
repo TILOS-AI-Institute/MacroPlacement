@@ -58,7 +58,8 @@ class PBFNetlist {
                             unsigned int num_iters,
                             int seed, 
                             bool spiral_flag,
-                            std::string summary_file);
+                            std::string summary_file, 
+                            std::string plc_file);
     // calculate the cost
     float CalcCost(bool debug_mode = false);
 

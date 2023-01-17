@@ -35,10 +35,11 @@ int main(int argc, char* argv[]) {
   PBFNetlist design(netlist_file);
   std::string new_netlist_file = run_dir + "/" + design_name + ".pb.txt.final";
   std::string new_plc_file = run_dir + "/" + design_name + ".plc.final";
+  std::string sa_plc_file = run_dir + "/" + design_name;
   design.RestorePlacement(plc_file);
   auto start_timestamp_global = std::chrono::high_resolution_clock::now();
   design.SimulatedAnnealing(action_probs, num_actions, max_temperature,
-                            num_iters, seed, spiral_flag, summary_file);
+                            num_iters, seed, spiral_flag, summary_file, sa_plc_file);
   //design.CalcCost();
   auto end_timestamp_global = std::chrono::high_resolution_clock::now();
   double total_global_time
