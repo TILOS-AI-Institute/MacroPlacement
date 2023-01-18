@@ -79,7 +79,7 @@ For each entry of the adjacency matrix, it represents the total number of connec
 ## Congestion Cost Computation
 Congestion cost is computed from the horizontal congestion grid cells array and the vertical congestion grid cells array. After concatenating these two arrays, Google takes the top 5% of the most congested grid cells and compute the average of them to get the final congestion cost.
 
-To compute the congestion for each grid cell, a fast routing technique is applied which is detailed [here](https://docs.google.com/document/d/1hM7UbmANkhoGB3-UfFBp8TRDvvVjpmio7cyyjK4a5bI/edit?usp=sharing). After fast routing, we acquire the horizontal/vertical congestion due to net routing. This will be added with horiztonal/vertical congestion due to macro placement.
+To compute the congestion for each grid cell, a fast routing technique is applied which is detailed [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/ProxyCost#congestion-cost-computation). After fast routing, we acquire the horizontal/vertical congestion due to net routing. This will be added with horiztonal/vertical congestion due to macro placement.
 
 On a high level, for each grid cell, we compute the following:
 
