@@ -1,31 +1,32 @@
 # Utility Scripts details
+This directory contains three types of scripts: (1) TCL scripts, (2) Python scripts and (3) Shell scripts, as detailed below:
 - TCL Scripts:
-  - [extract_report.tcl](./extract_report.tcl): Contains procedure to extrac metrics (i.e., Core Area, Standard Cell Area, Macro Area, Total Power,Wire Length, WNS, TNS, Congestion) at different stage of P&R in Innovus shell. First source this file in the Innovus shell and then you can use the following commands:
+  - [extract_report.tcl](./extract_report.tcl): Contains procedure to extract metrics (i.e., Core Area, Standard Cell Area, Macro Area, Total Power, Wire Length, WNS, TNS, Congestion) at different stages of P&R in the Innovus shell. First source this file in the Innovus shell and then you can use the following commands:
     - *extract_report preCTS*: Use this command to extract metric after running the *place_opt_design* command.
     - *extract_report postCTS*: Use this command to extract metric after running the *ccopt_design* command. 
     - *extract_report postRoute*: Use this command to extract metric after running the *routeDesing* or *opt_desing -postRoute* command.
   - [gen_pb.tcl](./gen_pb.tcl): Contains procedure to write out flat netlist in protocol buffer format in Innovus shell. First source this file in the Innovus shell and then use gen_pb_netlist. 
-    - *gen_pb_netlist*: This command writes out flat netlist in protobuf format. The output file name is \<top desing\>.pb.txt.
-  - [pdn_flow.tcl](./pdn_flow.tcl): This script generates power delivery network (PDN) for Innovus implementation. It uses the PDN configuration file available in the [*./Enablements/\**](../../Enablements/) directory.
+    - *gen_pb_netlist*: This command writes out the flat netlist in the protobuf format. The output file name is \<top design\>.pb.txt.
+  - [pdn_flow.tcl](./pdn_flow.tcl): This script generates the power delivery network (PDN) for Innovus implementation. It uses the PDN configuration file available in the [*./Enablements/\**](../../Enablements/) directory.
     - [NanGate45 Config](../../Enablements/NanGate45/util/pdn_config.tcl)
     - [ASAP7 Config](../../Enablements/ASAP7/util/pdn_config.tcl)
     - [SKY130HD Fake Stack Config](../../Enablements/SKY130HD/util/pdn_config.tcl)
   - [place_pin.tcl](./place_pin.tcl): This script places all the top level design ports on the left boundary. Pins are spreaded over 65\% length around the center of the left boundary.
-  - [write_required_def.tcl](./write_required_def.tcl): This scripts writes out the def and netlist file from innovus. We use this def and netlist are used as inputs to CodeElement to generate the clustered netlist.
+  - [write_required_def.tcl](./write_required_def.tcl): This script writes out the def and netlist files from the Innovus shell. We use these def and netlist files as inputs to CodeElement to generate the clustered netlist.
 - Python Scripts:
-  - [flow.py](./flow.py): This script runs griding, grouping and clustering to generate the clustered netlist. It requires two inputs:
+  - [flow.py](./flow.py): This script runs gridding, grouping and clustering to generate the clustered netlist. It requires two inputs:
     - *run directory*: Provide the SP&R run directory path.
     - *output directory*: Provide the name of the output directory. In this directory the script will write out the clustered netlist.
     - **Example**: python flow.py \<run directory\> \<output directory\> 
-  - [gen_setup.py](./gen_setup.py): This is a helper script of [flow.py](./flow.py). This extracts the required inputs from the rundir to run the CodeElement. 
-  - [genJobList.py](./genJobList.py): It create a run directory to run Flow-1 and Flow-2 for each design on all platforms and writes out the job file. You can use this job file to submit a GNU Parallel job. 
+  - [gen_setup.py](./gen_setup.py): This is a helper script of [flow.py](./flow.py). This extracts the required inputs from the run directory to run the CodeElement. 
+  - [genJobList.py](./genJobList.py): It creates a run directory to run Flow-1 and Flow-2 for each design on all platforms and writes out the job file. You can use this job file to submit a GNU Parallel job. 
     - **Example**: python ./util/genJobList.py (ensure you are in the [Flows](../) directory.)
   - [plc_pb_to_placement_tcl.py](./plc_pb_to_placement_tcl.py): It writes out the *.plc file from the clustreed-protobuf netlist.
-  - [shuffle_macro.tcl](./shuffle_macro.tcl): It shuffle same type (having same reference name.) macros. First source this tcl file and then use shuffle_macros command to shuffle the macro location. This script randomly shuffle macros. If macro A moves to position of macro B then the orientation of macro A will be the initial orientation of macro B.
+  - [shuffle_macro.tcl](./shuffle_macro.tcl): It shuffles the same type (having the same reference name) macros. First source this tcl file and then use the *shuffle_macros* command to shuffle the macro locations. This script randomly shuffles macros. If macro A moves to the position of macro B then the orientation of macro A will be the initial orientation of macro B.
 - Shell Scripts:
-  - [run_CodeFlow.sh](./run_CodeFlow.sh): This runs the [flow.py](./flow.py) in the run directory to generate clustred netlist.
-    - **Example**: In the run directory just use *./run_CodeFlow.sh* command to generate the clustred netlist while using Flow-4. Make sure *PHY_SYNTH* is set to 1 or some greater value.
-  - [run_grp.sh](./run_grp.sh): This script generates clustered netlist using [CircuitTraining grouping code](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping). It uses the following environmental variabels:
+  - [run_CodeFlow.sh](./run_CodeFlow.sh): This runs the [flow.py](./flow.py) in the run directory to generate the clustered netlist.
+    - **Example**: In the run directory just use *./run_CodeFlow.sh* command to generate the clustered netlist while using Flow-4. Make sure *PHY_SYNTH* is set to 1.
+  - [run_grp.sh](./run_grp.sh): This script generates clustered netlist using [CircuitTraining grouping code](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping). It uses the following environmental variables:
     - *CT_PATH*: Provide the full path of Circuit Training (CT). This path is added to import the grouping module available in the CT repo.
     - *HMETIS_DIR*: Provide the path of the hMETIS binary directory.
     - *PLC_WRAPPER_MAIN*: Provide the path of the plc_wrapper_main binary.

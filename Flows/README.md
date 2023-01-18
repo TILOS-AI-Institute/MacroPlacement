@@ -3,6 +3,8 @@ The setup to run SP&R on the available test cases for the given enablements are 
 - [NanGate45](../Enablements/NanGate45/)
   - [Ariane136](./NanGate45/ariane136/)
   - [Ariane133](./NanGate45/ariane133/)
+  - [BlackParrot](./NanGate45/bp_quad/)
+  - [MemPool Group](./NanGate45/mempool_group/)
   - [MemPool tile](./NanGate45/mempool_tile/)
   - [NVDLA](./NanGate45/nvdla/)
 - [ASAP7](../Enablements/ASAP7/)

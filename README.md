@@ -95,7 +95,7 @@ We also provide the steps to generate the fakeram models for each of the enablem
 ## **Flows**
 We provide multiple flows for each of the testcases and enablements. They are: (1) a logical synthesis-based SP&R flow using Cadence Genus and Innovus ([Flow-1](./Flows/figures/flow-1.PNG)), (2) a physical synthesis-based SP&R flow using Cadence Genus iSpatial and Innovus ([Flow-2](./Flows/figures/flow-2.PNG)), (3) a logical synthesis-based SP&R flow using Yosys and OpenROAD ([Flow-3](./Flows/figures/flow-3.PNG)), and (4) creation of input data for Physical synthesis-based Circuit Training using Genus iSpatial ([Flow-4](./Flows/figures/flow-4.PNG)).
 
-The details of each flow are are given in the following.
+The details of each flow are given in the following.
 - **Flow-1:**  
   <img src="./Flows/figures/flow-1.PNG" alt="Flow-1" width="800"/>
 - **Flow-2:**  
