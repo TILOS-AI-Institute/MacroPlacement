@@ -61,36 +61,40 @@ We divide the congestion cost computation into six sub-stages:
 6. [Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.](#computation-of-the-final-congestion-cost)
   
 ### Computation of grid congestion due to net routing
-We divide this problem into three sub-problems.
-1. [Congestion due to two-pin nets.](#congestion-due-to-two-pin-nets)
-2. [Congestion due to three-pin nets.](#congestion-due-to-three-pin-nets)
-3. [Congestion due to multi-pin nets where the number of pins is greater than three.](#congestion-due-to-multi-pin-nets-where-the-number-of-pins-is-greater-than-three)
+We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). Only when net entities are placed into different grid cells, we compute the routing congestion as described in the following sections. In other words, if a three-pin net has a source pin in grid $g_i$ and two sink pins in the same grid $g_j$, we would consider this as a two-grid net.
+
+Note that we use n-grid net to describe the $n$ grid cells where the pins are located within a net.
+
+Given the above grid-base routing setting, we divide this problem into three sub-problems.
+1. [Congestion due to two-grid nets.](#congestion-due-to-two-grid-nets)
+2. [Congestion due to three-grid nets.](#congestion-due-to-three-grid-nets)
+3. [Congestion due to multi-grid nets where the number of grids is greater than three.](#congestion-due-to-multi-grid-nets-where-the-number-of-grids-is-greater-than-three)
 
 A grid location <b>(i, j)</b> is the intersection of the <b>i<sup>th</sup></b> column with the <b>j<sup>th</sup></b> row.
 
 For these three problems we consider that the horizontal routing cost due to a net-segment from <b>(i, j)</b> grid to <b>(i+1, j)</b> grid applies only to the grid <b>(i, j)</b>. Similarly the vertical routing cost due to a net-segment from <b>(i, j)</b> grid to <b>(i, j+1)</b> grid applies only to the grid <b>(i, j)</b>. Here the direction of the net does not matter. 
 
 Now we compute the congestion due to different nets:
-#### *Congestion due to two-pin nets*
-Two-pin net routing depends on the source and sink node. Consider 
+#### *Congestion due to two-grid nets*
+Two-grid net routing depends on the source and sink node. Consider 
 1. Source node is <b>(i<sub>1</sub>, j<sub>1</sub>)</b>
 2. Sink node is <b>(i<sub>2</sub>, j<sub>2</sub>)</b>
 
-##### **Procedure for congestion computation due to two-pin nets**
+##### **Procedure for congestion computation due to two-grid nets**
 1. <b>i<sub>min</sub> = min(i<sub>1</sub>, i<sub>2</sub>)</b>, <b>i<sub>max</sub> = max(i<sub>1</sub>, i<sub>2</sub>)</b>
 2. <b>w = net<span>&rarr;</span>weight</b>
-3. Add horizontal congestion cost (considering weight <b>w</b>) due this net to grids from <b>(i<sub>min</sub>, j<sub>1</sub>)</b> to <b>(i<sub>max</sub>-1, j<sub>1</sub>)</b>.
+3. Add horizontal congestion cost (considering weight <b>w</b>) due this grid from <b>(i<sub>min</sub>, j<sub>1</sub>)</b> to <b>(i<sub>max</sub>-1, j<sub>1</sub>)</b>.
 4. <b>j<sub>min</sub> = min(j<sub>1</sub>, j<sub>2</sub>)</b>, <b>j<sub>max</sub> = max(j<sub>1</sub>, j<sub>2</sub>)</b>
-5. Add vertical congestion cost (considering weight <b>w</b>) due to this net to grids from <b>(i<sub>2</sub>, j<sub>min</sub>)</b> to <b>(i<sub>2</sub>, j<sub>max</sub> - 1)</b>.
+5. Add vertical congestion cost (considering weight <b>w</b>) due to this grid from <b>(i<sub>2</sub>, j<sub>min</sub>)</b> to <b>(i<sub>2</sub>, j<sub>max</sub> - 1)</b>.
   
-In the following figure P2 is the source pin and P1 is the sink pin of the net. When the arrow crosses the top edge of the grid cell it contributes to the vertical congestion cost of the grid cell and when it crosses the right edge of the grid cell it contributes to the horizontal congestion cost of the grid cell.
+In the following figure P2 is the source grid and P1 is the sink grid of the net. When the arrow crosses the top edge of the grid cell it contributes to the vertical congestion cost of the grid cell and when it crosses the right edge of the grid cell it contributes to the horizontal congestion cost of the grid cell.
   
 <p align="center">
 <img width="600" src="./images/image14.png" alg="TwoPin1">
 </p>
 
-#### *Congestion due to three-pin nets*
-The Congestion cost of three-pin nets does not change when the locations of the pins are interchanged.
+#### *Congestion due to three-grid nets*
+The Congestion cost of three-grid nets does not change when the locations of the grids are interchanged.
   
 In the following figure, P3 is the source and P1 and P2 are the sinks. We see that interchanging the position does not change the route.
 
@@ -104,42 +108,42 @@ In the following figure, P3 is the source and P1 and P2 are the sinks. We see th
 <img width="600" src="./images/image7.png" alg="ThreePin3">
 </p>
 
-Consider the three pin locations are <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b>.
-We compute congestion due to three-pins using two functions:
+Consider the three grid locations are <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b>.
+We compute congestion due to three-grids using two functions:
 1. <b>L<sub>routing</sub></b>
 2. <b>T<sub>routing</sub></b>
 
 In the below function all congestion cost computation takes into account the weight.
 
-First we describe these two functions and then we describe how the congestion due to three pin nets are computed.
+First we describe these two functions and then we describe how the congestion due to three grid nets are computed.
 ##### **Congestion cost update using <b>L<sub>routing</sub></b>:**
-The inputs are three pin grid id and net weight. We consider pin grids are  <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>i<sub>1</sub> < i<sub>2</sub> < i<sub>3</sub></b> and <b>(j<sub>1</sub> < j<sub>2</sub> < j<sub>3</sub>)</b> or <b>(j<sub>1</sub> > j<sub>2</sub> > j<sub>3</sub>)</b>.
-1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
-2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub>-1, j<sub>2</sub>)</b>
-3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
-4. Add vertical congestion cost due to the net to grids from <b>(i<sub>3</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
+The inputs are three grid id and net weight. We consider the following grids are  <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>i<sub>1</sub> < i<sub>2</sub> < i<sub>3</sub></b> and <b>(j<sub>1</sub> < j<sub>2</sub> < j<sub>3</sub>)</b> or <b>(j<sub>1</sub> > j<sub>2</sub> > j<sub>3</sub>)</b>.
+1. Add horizontal congestion cost due to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
+2. Add horizontal congestion cost due to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub>-1, j<sub>2</sub>)</b>
+3. Add vertical congestion cost due to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
+4. Add vertical congestion cost due to grids from <b>(i<sub>3</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
 
 ##### **Congestion cost update using <b>T<sub>routing</sub></b>:**
-The inputs are three pin grid id and net weight. We consider pin grids as <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>(j<sub>1</sub> <= j<sub>2</sub> <= j<sub>3</sub> )</b> or <b>(j<sub>1</sub> >= j<sub>2</sub> >= j<sub>3</sub>)</b>.
+The inputs are three grid id and net weight. We consider the following grids as <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b> where <b>(j<sub>1</sub> <= j<sub>2</sub> <= j<sub>3</sub> )</b> or <b>(j<sub>1</sub> >= j<sub>2</sub> >= j<sub>3</sub>)</b>.
 1. <b>i<sub>min</sub> = min(i<sub>1</sub>, i<sub>2</sub>, i<sub>3</sub>)</b>, <b>i<sub>max</sub> = max(i<sub>1</sub>, i<sub>2</sub>, i<sub>3</sub>)</b>
-2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>min</sub>, j<sub>2</sub>)</b> to <b>(i<sub>max</sub> - 1, j<sub>2</sub>)</b>.
-3. Add vertical congestion cost due to the net to the grid from <b>(i<sub>1</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>1</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
-4. Add vertical congestion cost due to the net to the grid from <b>(i<sub>3</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
+2. Add horizontal congestion cost due to grids from <b>(i<sub>min</sub>, j<sub>2</sub>)</b> to <b>(i<sub>max</sub> - 1, j<sub>2</sub>)</b>.
+3. Add vertical congestion cost due to grids from <b>(i<sub>1</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>1</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
+4. Add vertical congestion cost due to grids from <b>(i<sub>3</sub>, min(j<sub>2</sub>, j<sub>3</sub>))</b> to <b>(i<sub>3</sub>, max(j<sub>2</sub>, j<sub>3</sub>) - 1)</b>.
 
-##### **Procedure congestion cost computation due to three-pin nets:**
-The inputs are three pin grid locations and the net weight.
-1. Sort the pin based on the column. After sorting pin locations are <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b>. As it is sorted based on column <b>i<sub>1</sub> <= i<sub>2</sub> <= i<sub>3</sub></b>.
+##### **Procedure congestion cost computation due to three-grid nets:**
+The inputs are three grid locations and the net weight.
+1. Sort the grid based on the column. After sorting grid locations are <b>(i<sub>1</sub>, j<sub>1</sub>)</b>, <b>(i<sub>2</sub>, j<sub>2</sub>)</b> and <b>(i<sub>3</sub>, j<sub>3</sub>)</b>. As it is sorted based on column <b>i<sub>1</sub> <= i<sub>2</sub> <= i<sub>3</sub></b>.
 2. If <b>i<sub>1</sub> < i<sub>2</sub></b> and <b>i<sub>2</sub> < i<sub>3</sub></b> and <b>min(j<sub>1</sub>, j<sub>3</sub>) < j<sub>2</sub></b> and <b>max(j<sub>1</sub>, j<sub>3</sub>) > j<sub>2</sub></b>:
    1. Update congestion cost using <b>L<sub>routing</sub></b>.
    2. Return.
 3. If <b>i<sub>2</sub> == i<sub>3</sub></b> and <b>i<sub>1</sub> < i<sub>2</sub></b> and <b>j<sub>1</sub> < min(j<sub>2</sub>, j<sub>3</sub>)</b>:
-   1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
-   2. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>, max(j<sub>2</sub>, j<sub>3</sub>) -1)</b>
+   1. Add horizontal congestion cost due to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>-1, j<sub>1</sub>)</b>
+   2. Add vertical congestion cost due to grids from <b>(i<sub>2</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub>, max(j<sub>2</sub>, j<sub>3</sub>) -1)</b>
    3. Return.
 4. If <b>j<sub>2</sub> == j<sub>3</sub></b>:
-   1. Add horizontal congestion cost due to the net to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub> -1, j<sub>1</sub>)</b>
-   2. Add horizontal congestion cost due to the net to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub> -1, j<sub>2</sub>)</b>
-   3. Add vertical congestion cost due to the net to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
+   1. Add horizontal congestion cost due to grids from <b>(i<sub>1</sub>, j<sub>1</sub>)</b> to <b>(i<sub>2</sub> -1, j<sub>1</sub>)</b>
+   2. Add horizontal congestion cost due to grids from <b>(i<sub>2</sub>, j<sub>2</sub>)</b> to <b>(i<sub>3</sub> -1, j<sub>2</sub>)</b>
+   3. Add vertical congestion cost due to grids from <b>(i<sub>2</sub>, min(j<sub>1</sub>, j<sub>2</sub>))</b> to <b>(i<sub>2</sub>, max(j<sub>1</sub>, j<sub>2</sub>) - 1)</b>.
    4. Return
 5. Update congestion cost using <b>T<sub>routing</sub></b>.
 
@@ -178,10 +182,10 @@ Figure corresponding to point four.
 Figure corresponding to point five.
 </p>
 
-#### *Congestion due to multi-pin nets where the number of pins is greater than three*
-1. Consider the net is a n-pin net where <b>n > 3</b>. 
-2. We break this net into **n-1** two pin nets where the source node is the common node.
-3. For each two pin nets we update congestion values.
+#### *Congestion due to multi-grid nets where the number of grids is greater than three*
+1. Consider the net is a n-grid net where <b>n > 3</b>. 
+2. We break this net into **n-1** two grid nets where the source grid is the common node.
+3. For each two grid nets we update congestion values.
 
 #### *Computation for Smoothing:*
 
@@ -202,7 +206,19 @@ Figure corresponding to point five.
 </p>
 
 #### *Computation for Macro Congestion:*
-When a macro overlaps with multiple gridcells, if any part of the module partially overlaps with the gridcell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0.
+When a macro overlaps with multiple gridcells, if any part of the module **partially overlaps** with the grid cell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0. We define partially overlaps as when a hard macro does not fully cover a grid cell. 
+
+**Vertical Partial Overlap** is when in vertical direction, a macro (purple) is not entirely all covering the grid cells it overlaps with. Shown in the picture below. In this case, we set the macro congestion of grid cells from the top row (red) to 0.
+<p align="center">
+<img width="300" src="./images/image15.png" alg="VPartialOverlap">
+</p>
+
+**Horizontal Partial Overlap** is when in horizontal direction, a macro (purple) is not entirely all covering the grid cells it overlaps with. Shown in the picture below. In this case, we set the macro congestion of grid cells from the right column (red) to 0.
+<p align="center">
+<img width="300" src="./images/image16.png" alg="HPartialOverlap">
+</p>
+
+Note that these two situations are mutually inclusive. We provide our computation steps and some examples below:
 
 - For each hard MACRO:
    - For each gridcell it overlaps with:
@@ -212,7 +228,7 @@ When a macro overlaps with multiple gridcells, if any part of the module partial
          3. Add to the corresponding gridcell
 
 - Example:
-  - Given a single hard macro HM_1 (pink rectangle in the figure below), we have two pins instantiated on the top-right and bottom-left, driven by the ports at “P_1” located at the bottom-left of the canvas.
+  - Given a single hard macro HM_1 (pink rectangle in the figure below), we have two grids instantiated on the top-right and bottom-left, driven by the ports at “P_1” located at the bottom-left of the canvas.
 
 <p align="center">
 <img width="300" src="./images/image8.png" alg="MacroCongestion1">
