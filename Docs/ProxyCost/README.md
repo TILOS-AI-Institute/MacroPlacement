@@ -218,7 +218,9 @@ When a macro overlaps with multiple gridcells, if any part of the module **parti
 <img width="300" src="./images/image16.png" alg="HPartialOverlap">
 </p>
 
-Note that these two situations are mutually inclusive. We provide our computation steps and some examples below:
+Note that these two situations are mutually inclusive. 
+
+Finally, we provide our computation stepsbelow:
 
 - For each hard MACRO:
    - For each gridcell it overlaps with:
@@ -226,21 +228,6 @@ Note that these two situations are mutually inclusive. We provide our computatio
          1. Find the dimension of overlap, multiply by macro routing allocation
          2. Divide by (the grid_cell dimension multiplied by routing per micron)
          3. Add to the corresponding gridcell
-
-- Example:
-  - Given a single hard macro HM_1 (pink rectangle in the figure below), we have two grids instantiated on the top-right and bottom-left, driven by the ports at “P_1” located at the bottom-left of the canvas.
-
-<p align="center">
-<img width="300" src="./images/image8.png" alg="MacroCongestion1">
-</p>
-<p align="center">
-<img width="300" src="./images/image6.png" alg="MacroCongestion2">
-</p>
-<p align="center">
-<img width="300" src="./images/image12.png" alg="MacroCongestion3">
-</p>
-
-  - Whenever there are gridcells partially overlapped, whether in horizontal or vertical direction, we set the vertical congestion of the top gridcells to 0 (if partially overlapped vertically) and we set the horizontal congestion of the right gridcells to 0 (if partially overlapped horizontally).
 
 #### *Computation of the final congestion cost:*
 - Adding the Macro allocation congestion and Net routing congestion together for both Vertical and Horizontal congestion map
