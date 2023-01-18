@@ -206,6 +206,8 @@ Figure corresponding to point five.
 </p>
 
 #### *Computation for Macro Congestion:*
+Macro congestion is induced by the location of hard macros over the grid cells. For each hard macro, we need to consider its dimension of overlapping over the grid cells and the macro routing resources given. 
+
 When a macro overlaps with multiple gridcells, if any part of the module **partially overlaps** with the grid cell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0. We define partially overlaps as when a hard macro does not fully cover a grid cell. 
 
 **Vertical Partial Overlap** is when in vertical direction, a macro (purple) is not entirely all covering the grid cells it overlaps with. Shown in the picture below. In this case, we set the macro congestion of grid cells from the top row (red) to 0.
