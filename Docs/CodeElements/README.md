@@ -7,19 +7,19 @@ All errors of understanding and implementation are the authors'.
 We will rectify such errors as soon as possible after being made aware of them.
 - [Gridding](../../CodeElements/Gridding/) determines a dissection of the layout canvas into some number of rows (*n_rows*) and some number of columns (*n_cols*) of _gridcells_. In Circuit Training, the purpose of gridding is to control the size of the macro placement solution space, 
 thus allowing RL to train within reasonable runtimes. Gridding enables hard macros to find locations consistent with high solution quality, while allowing soft macros (standard-cell clusters) to also find good locations. 
-- [Grouping](../../CodeElements/Grouping/) is to ensure that closely-related standard-cell logic, 
-which connect to the same macro or the same clump of IO (noted as IO cluster), belong to the same standard-cell clusters.
-- [Hypergraph clustering](../../CodeElements/Clustering/) clusters millions of standard cells into a few thousand clusters.  In Circuit Training, the purpose of clustering is to enable an approximate but fast standard cell placement that facilitates policy network optimization.
+- [Grouping](../../CodeElements/Grouping/)  ensures that closely-related standard-cell logic elements,
+which connect to the same macro or the same clump of IOs (denoted as an IO cluster), belong to the same standard-cell clusters.
+- [Hypergraph clustering](../../CodeElements/Clustering/) clusters millions of standard cells into a few thousand clusters.  In Circuit Training, the purpose of clustering is to enable an approximate but fast standard-cell placement that facilitates policy network optimization.
 
 We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub.
-However, these [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) scripts still rely on the wrapper functions of plc client, which is a black box for the community.  In this doc, we document the implementation details of gridding, grouping and clustering. We implement all the code elements from scratch using python scripts, and our results match exactly that of Circuit Training.
+However, these [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) scripts still rely on the wrapper functions of plc_client, which is a black box for the community.  In this doc, we document the implementation details of gridding, grouping and clustering. We implement all the code elements from scratch using python scripts, and our code produces results that exactly match those of Circuit Training.
 
 
-Note that we build our implementation on top of the [OpenROAD](https://github.com/ravi-varadarajan/OpenROAD.git) application, you need to build your own OpenROAD binary before you can run our scripts.  We also provide the [flow.py](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/CodeFlowIntegration/flow.py), which runs Gridding, Grouping and Hypergraph Clustering in sequence.
+Note that we build our implementation on top of the [OpenROAD](https://github.com/ravi-varadarajan/OpenROAD.git) application. You will need to build your own OpenROAD binary before you can run our scripts.  We also provide the [flow.py](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/CodeFlowIntegration/flow.py), which runs Gridding, Grouping and Hypergraph Clustering in sequence.
 
 
 
-## Table of Content
+## Table of Contents
   - [Gridding](#gridding)
   - [Grouping](#grouping)
   - [Hypergraph Clustering (soft macro definition)](#hypergraph-clustering-soft-macro-definition)
@@ -31,7 +31,7 @@ runtimes. Gridding enables hard macros to find locations consistent with high so
 
 Gridding determines a dissection of the layout canvas into some number of rows (*n_rows*) and some number of columns (*n_cols*) of _gridcells_.
 
-The choice of *n_rows* and *n_cols* is made **once** for each design.  Once the dimensions *(n_rows, n_cols)* have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design. The detailed algorithm is shown as following.
+The choice of *n_rows* and *n_cols* is made **once** for each design.  Once the dimensions *(n_rows, n_cols)* have been chosen, their values define a gridded canvas, or _grid_, and remain fixed throughout Circuit Training for the given design. The detailed algorithm is as follows (Algorithm 1).
 <p align="center">
 <img src="./images/Gridding Algorithm.png" width= "1600"/>
 </p>
@@ -44,12 +44,12 @@ Then, the gridding searches over combinations (*n_rows*, *n_cols*), with constra
 - *min_num_gridcells <= n_rows * n_cols <= max_num_grid_cells*
 - *grid_w / grid_h <= max_aspect_ratio* 
 - *grid_h / grid_w <= max_aspect_ratio* 
-- The macros can be packed sequentially on the gridcells. There are *n_rows * n_cols* gridcells in the canvas. \[Algorithm 1 Lines 11-22\]
+- The macros can be packed sequentially on the gridcells. There are *n_rows * n_cols* gridcells in the canvas. \[Algorithm 1 Lines 13-27\]
 
 where each gridcell has width of *grid_w = canvas_width / n_cols*
 and height of *grid_h = canvas_height / n_row*.
 The main idea is to search for a particular (*n_rows*, *n_cols*) combination
-that maximize the metric related to wasted space.
+that maximizes the metric related to wasted space.
 
 
 To evaluate *metric* for a given _grid_ (*n_rows*, *n_cols*), 
@@ -57,7 +57,7 @@ all macros are packed into the _gridcells_,
 and several terms (*empty_ratio*, *ver_waste* and *hor_waste*)
 that reflect wasted space are evaluated.
 #### **Packing**
-Macro packing is performed as follows \[Algorithm 1 Lines 11-22\]:
+Macro packing is performed as follows \[Algorithm 1 Lines 13-27\]:
 - Macros are placed in order of non-increasing macro area.
 - All macros are placed, one by one, into the (*n_rows*, *n_cols*) _gridcells_.
 If the current macro cannot be placed, then the _grid_ is infeasible and the next
@@ -68,20 +68,20 @@ candidate _grid_ is considered.
 #### **Metric**
 After macro packing, we can calculate the *empty_ratio* of current _grid_, i.e., 
 the number of empty _gridcells_ over the total number of _gridcells_ (*n_rows * n_cols*).
-A _gridcell_ is claimed as an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
-Next we calculate the *hor_waste* and *ver_waste* as described in following algorithm.
+A _gridcell_ is defined to be an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
+Next, we calculate the *hor_waste* and *ver_waste* as described in following algorithm.
 <p align="center">
 <img src="./images/Calculate Waste Ratio.png" width= "1600"/>
 </p>
 
 To calculate horizontal waste *hor_waste*, we calculate
-- *width_tot_macros* = the sum of widths of all macros in the design
+- *width_tot_macros* = the sum of widths of all macros in the design.
 - *width_tot_used_gridcells* = the sum of widths of all used _gridcells_ if we pack the macros along the x-axis one by one.
 
 Then, *hor_waste = 1.0 - width_tot_macros / width_tot_used_gridcells*.
 
 To calculate vertical waste *ver_waste*, we calculate
-- *height_tot_macros* = the sum of heights of all macros in the design
+- *height_tot_macros* = the sum of heights of all macros in the design.
 - *height_tot_used_gridcells* = the sum of heights of all used _gridcells_ if we pack the macros along the y-axis one by one.
 
 Then, *ver_waste = 1.0 - height_tot_macros / height_tot_used_gridcells*.
@@ -91,8 +91,8 @@ After calculating *empty_ratio*, *hor_waste* and *ver_waste*, the *metric* is de
 The _grid_ with best *metric* is noted as *n_rows_opt* and *n_cols_opt*.
 
 #### **Grid Simplification**
-Once we have found *n_rows_opt* and *n_cols_opt* as described above, 
-we seek a smaller _grid_ that has similar *metric* properties. \[Algorithm 1 Lines 33-39\]  
+Once we have found *n_rows_opt* and *n_cols_opt* as described above \[Algorithm 1 Lines 34-44\], 
+we seek a smaller _grid_ that has similar *metric* properties. \[Algorithm 1 Lines 45-54\]  
 Specifically, we find values of *n_rows_actual* and *n_cols_actual* such that 
 its *metric* is within some tolerance (5\% in Circuit Training) of the optimal *metric*, 
 and *n_rows_actual * n_cols_actual* is minimized. 
@@ -105,10 +105,10 @@ To our understanding, the foregoing procedure results in grids that are of simil
 Grouping is an important preprocessing step of clustering.
 The grouping step in Circuit Training requires as inputs:
 the post-synthesis gate-level netlist (standard cells and hard macros),
-placed IOs (ports, or terminals), typically at the borders of the chip canvas,
+placed IOs (ports, or terminals), typically at the borders of the chip canvas, and
 the grid of *n_rows* rows and *n_cols* columns of _gridcells_, which defines the gridded layout canvas.
-The purpose of grouping, to our understanding, is to ensure that closely-related standard-cell logic, 
-which connect to the same macro or the same clump of IO (noted as IO cluster), belong to the same standard-cell clusters.
+The purpose of grouping, to our understanding, is to ensure that closely-related standard-cell logic elements, 
+which connect to the same macro or the same clump of IOs (denoted as an IO cluster), belong to the same standard-cell clusters.
 
 
 #### **The Grouping Process**
@@ -152,7 +152,7 @@ in Circuit Training. However, other values might be applied.
 In our implementation, we traverse the netlist in a depth-first-search manner.
 All the elements (standard cell, macro pin or IO ports) with the same cluster id form a cluster.  Each cluster is recorded in the ".fix file" that is part of the input to the hMETIS hypergraph partitioner when the standard cells are grouped into soft macros. 
 The part id of each cluster is the same as its cluster id.
-Note that a macro does not belong to any cluster, thus is not fixed 
+Note that a macro does not belong to any cluster, and thus is not fixed 
 when we call the hMETIS hypergraph partitioner.
 
  
@@ -161,8 +161,8 @@ Each group is recorded in the “.fix file” that is part of the input to the h
 
 #### **How Grouping Scripts Are used**
 We provide [(an example)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/test.py) about the usage of our grouping scripts.
-Basically our grouping scripts take follows as inputs: (i) [(setup_file)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/setup.tcl)
-including enablement information (lefs/libs), synthesized gate-level netlist (*.v),  def file with placed IOs (*.def); (ii) n_rows and n_cols determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore such this net when we search "transitive" fanins and fanouts. After
+Basically, our grouping scripts take the following as inputs: (i) [(setup_file)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/setup.tcl)
+including enablement information (lefs/libs), synthesized gate-level netlist (*.v*), and def file with placed IOs (*.def*); (ii) *n_rows* and *n_cols* determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; and (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore such this net when we search "transitive" fanins and fanouts. After
 running grouping scripts,  you will get the **.fix** file.  
 
 
@@ -271,7 +271,7 @@ The following figure shows an example: the left part shows the cluster *c<sub>1<
 <p align="center">
 Figure 4.  Illustration of breaking up a cluster.  
 </p>
-Note that since the netlist is generated by physical-aware synthesis, we know the (x, y) coordinate for each instance. 
+Note that since the netlist is generated by physical-aware synthesis, we know the (x, y) coordinate for each instance. This was confirmed in July 2022 by Google, [here](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping#faq).
 
 
 #### **Recursively merge small adjacent clusters**
@@ -305,10 +305,10 @@ While [Gridding](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/
 we are still in the process of documenting and implementing such aspects as the following.
 
 * ***Pending clarification #1: Is the output netlist from synthesis modified before it enters (hypergraph clustering and) placement?***
-All methodologies that span synthesis and placement (of which we are aware) must make a fundamental decision with respect to the netlist that is produced by logic synthesis, as that netlist is passed on to placement: (A) delete buffers and inverters to avoid biasing the ensuing placement (spatial embedding) with the synthesis tool’s fanout clustering, or (B) leave these buffers and inverters in the netlist to maintain netlist area and electrical rules (load, fanout) sensibility.  We do not yet know Google’s choice in this regard. Our experimental runscripts will therefore support both (A) and (B).
+All methodologies that span synthesis and placement (of which we are aware) must make a fundamental decision with respect to the netlist that is produced by logic synthesis, as that netlist is passed on to placement: (A) delete buffers and inverters to avoid biasing the ensuing placement (spatial embedding) with the synthesis tool’s fanout clustering, or (B) leave these buffers and inverters in the netlist to maintain netlist area and electrical rules (load, fanout) sensibility.  We do not yet know Google’s choice in this regard. (However, Google's [public Ariane netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz) does contain buffers and inverters.) Our experimental runscripts support both (A) and (B).
 
 
-* **[June 13]** ***Update to Pending clarification #3:*** We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub. The new scripts refer to (x,y) coordinates of nodes in the netlist, which leads to further pending clarifications (noted [here](https://github.com/google-research/circuit_training/issues/25)). The solution space for how the input to hypergraph clustering is obtained has expanded. A first level of options is whether **(A) a non-physical synthesis tool** (e.g., Genus, DesignCompiler or Yosys), or **(B) a physical synthesis tool** (e.g., Genus iSpatial or DesignCompiler Topological (Yosys cannot perform physical synthesis)), is used to obtain the netlist from starting RTL and constraints. In the regime of (B), to our understanding the commercial physical synthesis tools are invoked with a starting .def that includes macro placement. Thus, we plan to also enable a second level of sub-options for determining this macro placement: **(B.1)** use the auto-macro placement result from the physical synthesis tool, and **(B.2)** use a human PD expert (or, [OpenROAD RTL-MP](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2)) macro placement. Some initial progress toward these clarifications has been posted as [Our Progress](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress).
+* **[June 13]** ***Update to Pending clarification #3:*** We are glad to see [grouping (clustering)](https://github.com/google-research/circuit_training/tree/main/circuit_training/grouping) added to the Circuit Training GitHub. The new scripts refer to (x,y) coordinates of nodes in the netlist, which leads to further pending clarifications (noted [here](https://github.com/google-research/circuit_training/issues/25)). The solution space for how the input to hypergraph clustering is obtained has expanded. A first level of options is whether **(A) a non-physical synthesis tool** (e.g., Genus, DesignCompiler or Yosys), or **(B) a physical synthesis tool** (e.g., Genus iSpatial or DesignCompiler Topological (Yosys cannot perform physical synthesis)), is used to obtain the netlist from starting RTL and constraints. In the regime of (B), to our understanding the commercial physical synthesis tools are invoked with a starting .def that includes macro placement. Thus, we plan to also enable a second level of sub-options for determining this macro placement: **(B.1)** use the auto-macro placement result from the physical synthesis tool, and **(B.2)** use a human PD expert (or, [OpenROAD RTL-MP](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2)) macro placement. We have posted a chronology of progress as we clarify these issues, in [Our Progress](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress). Based on [netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz) instance names, we believe that Google Brain used the DC-Topo tool for physical synthesis. 
 
 
 #### **Our Implementation of Hypergraph Clustering.**
@@ -330,5 +330,7 @@ i.e., according to Flow **(B.1)** above.
 
 ## **Thanks**
  
-We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 2022, that explained the hypergraph clustering method used in Circuit Training. All errors of understanding and implementation are the authors'. We will rectify such errors as soon as possible after being made aware of them.
+We thank Google engineers for Q&A in a shared document, as well as live discussions on May 19, 20
+
+, that explained the hypergraph clustering method used in Circuit Training. All errors of understanding and implementation are the authors'. We will rectify such errors as soon as possible after being made aware of them.
 
