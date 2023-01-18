@@ -7,7 +7,7 @@
     - [Replication of proxy cost](#August25)
     - [NVDLA macro placement using Circuit Training](#circuit-training-baseline-result-on-our-nvdla-nangate45_68)
     - [BlackParrot (Quad Core) macro placement using Circuit Training](#bp_quad_NG45_CT)
-    - [CT stability study](#Question9)
+    - [Circuit Training stability study](#Question9)
     - [Proxy cost correlation study](#Question10)
     - [MemPool Group macro placement using Circuit Training](#MemPoolGroup_NG45_68)
     - [Macro placement on GLOBALFOUNDRIES 12 nm enablement](#GF12_Normalization)
