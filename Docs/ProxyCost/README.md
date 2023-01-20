@@ -1,4 +1,6 @@
 # Proxy Cost Computation in Circuit Training
+<i>In this documentation, we use gridcell and grid interchangably. They both mean the grid system induced by the gridding process.</i>
+
 In Circuit Training, *proxy cost* is the weighted sum of wirelength, density, and congestion costs. It is used to determine the overall quality of the macro placement solution. 
 
 <p align="center">
@@ -204,7 +206,8 @@ Figure corresponding to point five.
 </p>
 
 #### *Computation for Macro Congestion:*
-Macro congestion is induced by the location of hard macros over the grid cells. For each hard macro, we need to consider its dimension of overlapping over the grid cells and the macro routing resources given. 
+Macro congestion is induced by the location of hard macros over the grid cells. For each hard macro, we need to consider its dimension of overlapping over the grid cells and the macro routing resources given. The computation of macro congestion is quite straightforward. We just need to add the rout-
+ing resources blocked by the macros to the corresponding boundaries of the gridcells.
 
 When a macro overlaps with multiple gridcells, if any part of the module **partially overlaps** with the grid cell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0. We define partially overlaps as when a hard macro does not fully cover a grid cell. 
 
