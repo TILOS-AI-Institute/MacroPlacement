@@ -1,17 +1,17 @@
 # Utility Scripts details
 This directory contains three types of scripts: (1) TCL scripts, (2) Python scripts and (3) Shell scripts, as detailed below:
 - TCL Scripts:
-  - [extract_report.tcl](./extract_report.tcl): Contains procedure to extract metrics (i.e., Core Area, Standard Cell Area, Macro Area, Total Power, Wire Length, WNS, TNS, Congestion) at different stages of P&R in the Innovus shell. First source this file in the Innovus shell and then you can use the following commands:
+  - [extract_report.tcl](./extract_report.tcl): Contains procedure to extract metrics (e.g., Core Area, Standard Cell Area, Macro Area, Total Power, Wire Length, WNS, TNS, Congestion) at different stages of P&R in the Innovus shell. First source this file in the Innovus shell and then you can use the following commands:
     - *extract_report preCTS*: Use this command to extract metric after running the *place_opt_design* command.
     - *extract_report postCTS*: Use this command to extract metric after running the *ccopt_design* command. 
     - *extract_report postRoute*: Use this command to extract metric after running the *routeDesing* or *opt_desing -postRoute* command.
-  - [gen_pb.tcl](./gen_pb.tcl): Contains procedure to write out flat netlist in protocol buffer format in Innovus shell. First source this file in the Innovus shell and then use gen_pb_netlist. 
+  - [gen_pb.tcl](./gen_pb.tcl): Contains procedure to write out a flat netlist in the [protocol buffer](https://github.com/google-research/circuit_training/blob/main/docs/NETLIST_FORMAT.md) format in the Innovus shell. First source this file in the Innovus shell and then use the *gen_pb_netlist* command. 
     - *gen_pb_netlist*: This command writes out the flat netlist in the protobuf format. The output file name is \<top design\>.pb.txt.
-  - [pdn_flow.tcl](./pdn_flow.tcl): This script generates the power delivery network (PDN) for Innovus implementation. It uses the PDN configuration file available in the [*./Enablements/\**](../../Enablements/) directory.
+  - [pdn_flow.tcl](./pdn_flow.tcl): This script generates the power delivery network (PDN) for the Innovus implementation. It uses the following PDN configuration file available in the [*./Enablements/\**](../../Enablements/) directory.
     - [NanGate45 Config](../../Enablements/NanGate45/util/pdn_config.tcl)
     - [ASAP7 Config](../../Enablements/ASAP7/util/pdn_config.tcl)
     - [SKY130HD Fake Stack Config](../../Enablements/SKY130HD/util/pdn_config.tcl)
-  - [place_pin.tcl](./place_pin.tcl): This script places all the top level design ports on the left boundary. Pins are spreaded over 65\% length around the center of the left boundary.
+  - [place_pin.tcl](./place_pin.tcl): This script places all the top-level design ports on the left boundary. Pins are spreaded over 65\% length around the center of the left boundary.
   - [write_required_def.tcl](./write_required_def.tcl): This script writes out the def and netlist files from the Innovus shell. We use these def and netlist files as inputs to CodeElement to generate the clustered netlist.
 - Python Scripts:
   - [flow.py](./flow.py): This script runs gridding, grouping and clustering to generate the clustered netlist. It requires two inputs:

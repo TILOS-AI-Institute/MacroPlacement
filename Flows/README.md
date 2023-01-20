@@ -17,8 +17,11 @@ The setup to run SP&R on the available test cases for the given enablements are 
   - [Ariane133](./SKY130HD/ariane133/)
   - [MemPool tile](./SKY130HD/mempool_tile/)
   - [NVDLA](./SKY130HD/nvdla/)
+- [Scripts](./scripts/)
+  - [Cadence](./scripts/cadence/)
+  - [DCTopo](./scripts/DCTopoFlow/)
 - [Utility](./util/)
-  - Contains utility scripts for SP&R runs.
+  - Contains utility scripts for SP&R runs. 
 
 Inside each directory are the following sub-directories that contain all of the files required to run the full SP&R flow.  
   - *constraints* directory contians the SDC constraint file for current design and enablement.
@@ -32,16 +35,18 @@ Inside each directory are the following sub-directories that contain all of the 
 The runscripts for all the flows are available in the *./\<enablement\>/\<testcase\>/scripts/* directory. Inside *script* directory are the following sub-directories.
 - *cadence* directory contains all the runscripts related to [Flow-1](./figures/flow-1.PNG), [Flow-2](./figures/flow-2.PNG). We will also add [Flow-4](./figures/flow-4.PNG) scripts here.
 - *OpenROAD* directory contains the *<testcase>.tar.gz* file, which includes all the required files to run [Flow-3](./figures/flow-3.PNG) using OpenROAD-flow-scripts ([ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/)).
+- We provide detailed scripts to run physical synthesis using Synopsys DCTopo. All the scripts are available in the [*./scripts/DCTopoFlow*](./scripts/DCTopoFlow/) directory. We also add the scripts required to generate the inputs for DCTopo along with the detailed description of each step.
 
 All the flows uses the *RTL* from the [*Testcases*](../Testcases/) directory and the *.lef*, *.lib* and *qrc* files from the [*Enablements*](../Enablements/) directory. The required SRAM models for each testcase are generated and also available under the [*Enablements*](../Enablements/) directory. The detailed steps for different tools are as follows.
   - [**Cadence tools**](#using-cadence-genus-and-innovus)
   - [**OpenROAD tools**](#using-openroad-flow-scripts)
   
+
 ## **Using Cadence Genus and Innovus:**
 All the required runscripts are available in the *./\<enablement\>/\<testcase\>/scripts/cadence/* directory. The steps to modify *run.sh* to launch SP&R runs for Flow-1 and Flow-2 are as follows.
 - To launch Flow-1 set the **PHY_SYNTH** environment variable to *0* in the *run.sh* file.  
 ``` export PHY_SYNTH=0 ```
-- To laucnh Flow-2 set the **PHY_SYNTH** environment variable to *1* in the *run.sh* file.  
+- To launch Flow-2 set the **PHY_SYNTH** environment variable to *1* in the *run.sh* file.  
 ``` export PHY_SYNTH=1 ```
 - To start the SP&R run use the following command.  
 ``` ./run.sh ```
