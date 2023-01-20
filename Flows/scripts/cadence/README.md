@@ -1,4 +1,4 @@
-# Synthesis, Place & Route (SP&R) using Cadence Genus and Innovus:**
+# **Synthesis, Place & Route (SP&R) using Cadence Genus and Innovus:**
 Here we provide all the required scripts to run logical synthesis, physical synthesis using Genus and Genus-iSpatial, and place and route using Innovus. The [run.sh](./run.sh) file can be modified to launch the SP&R run using Flow-1 and Flow-2. Use the following steps to
 - Launch Flow-1 set the **PHY_SYNTH** environment variable to *0* in the *run.sh* file  
 ``` export PHY_SYNTH=0 ```
