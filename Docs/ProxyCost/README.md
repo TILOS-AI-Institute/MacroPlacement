@@ -61,9 +61,7 @@ We divide the congestion cost computation into six sub-stages:
 6. [Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.](#computation-of-the-final-congestion-cost)
   
 ### Computation of grid congestion due to net routing
-We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). Only when net entities are placed into different grid cells, we compute the routing congestion as described in the following sections. In other words, if a three-pin net has a source pin in grid $g_i$ and two sink pins in the same grid $g_j$, we would consider this as a two-grid net.
-
-Note that we use n-grid net to describe the $n$ grid cells where the pins are located within a net.
+We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). More formally, we define a n-grid net as a net whose pins occupy n different grids. We also define the grid occupied by the source pin of a net as the source grid of the net, and remaining grids occupied by other pins of the net as sink grids. In other words, if a three-pin net has a source pin in grid g<b><sub>i<sub></b> and two sink pins in the same grid g<b><sub>j<sub></b>, we would consider this as a two-grid net.
 
 Given the above grid-base routing setting, we divide this problem into three sub-problems.
 1. [Congestion due to two-grid nets.](#congestion-due-to-two-grid-nets)
@@ -184,8 +182,8 @@ Figure corresponding to point five.
 
 #### *Congestion due to multi-grid nets where the number of grids is greater than three*
 1. Consider the net is a n-grid net where <b>n > 3</b>. 
-2. We break this net into **n-1** two grid nets where the source grid is the common node.
-3. For each two grid nets we update congestion values.
+2. We break this net using star model into **n-1** two-grid nets where the source grid is the common node.
+3. For each two-grid nets we update congestion values.
 
 #### *Computation for Smoothing:*
 
