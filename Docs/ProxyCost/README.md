@@ -11,7 +11,46 @@ Where <b>W<sub>wirelength</sub></b>, <b>W<sub>density</sub></b> and <b>W<sub>con
 
 Circuit Training repo provides the plc_wrapper_main binary to compute these cost functions. There is no available detailed description, or open-source implementation, of these cost functions. With feedback and confirmations from Google engineers, we have implemented all three cost functions; the source code is available [here](../../CodeElements/Plc_client/plc_client_os.py). In the following, we provide a detailed description of the implementation of these cost functions.
 
-A sample of the output in comparison with Circuit Training's binary executable based on Ariane can be found in our August 17th update [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress#our-progress).
+## Comparison with Google's Plc_client
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-c3ow">Testcase</th>
+    <th class="tg-baqh">Method</th>
+    <th class="tg-c3ow">HPWL Cost<br></th>
+    <th class="tg-baqh">Density Cost</th>
+    <th class="tg-baqh">Congestion Cost</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-c3ow" rowspan="2">Google's<br>Ariane</td>
+    <td class="tg-baqh">Google</td>
+    <td class="tg-c3ow">0.050186608</td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal">0.756401122</span></td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal">0.984565650</span></td>
+  </tr>
+  <tr>
+    <td class="tg-baqh">Our</td>
+    <td class="tg-c3ow">0.050186604</td>
+    <td class="tg-baqh">0.756401122</td>
+    <td class="tg-baqh">0.984565675</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" rowspan="2">Ariane<br>NanGate45</td>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal">Google</span></td>
+    <td class="tg-c3ow">0.387988658</td>
+    <td class="tg-baqh">0.500452106</td>
+    <td class="tg-baqh">2.448659090</td>
+  </tr>
+  <tr>
+    <td class="tg-baqh"><span style="font-weight:400;font-style:normal">Our</span></td>
+    <td class="tg-c3ow">0.387988659</td>
+    <td class="tg-baqh">0.500452101</td>
+    <td class="tg-baqh">2.448659182</td>
+  </tr>
+</tbody>
+</table>
 
 ## Table of Contents
   - [Wirelength cost computation](#wirelength-cost-computation)
