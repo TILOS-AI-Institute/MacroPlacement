@@ -9,6 +9,8 @@ Where <b>W<sub>wirelength</sub></b>, <b>W<sub>density</sub></b> and <b>W<sub>con
 
 Circuit Training repo provides the plc_wrapper_main binary to compute these cost functions. There is no available detailed description, or open-source implementation, of these cost functions. With feedback and confirmations from Google engineers, we have implemented all three cost functions; the source code is available [here](../../CodeElements/Plc_client/plc_client_os.py). In the following, we provide a detailed description of the implementation of these cost functions.
 
+A sample of the output in comparison with Circuit Training's binary executable based on Ariane can be found in our August 17th update [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress#our-progress).
+
 ## Table of Contents
   - [Wirelength cost computation](#wirelength-cost-computation)
   - [Density cost computation](#density-cost-computation)
