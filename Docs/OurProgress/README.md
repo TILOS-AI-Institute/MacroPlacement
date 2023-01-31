@@ -2425,6 +2425,7 @@ We have trained CT to generate a macro placement for the [bp_quad design](../../
 </p>
 
 **October 3:**  
+<a id="October3"></a>
 We shared the Ariane133-NG45-68% protobuf netlist and clustered netlist with Google engineers. They ran training on the clustered netlist, and the following table shows the Table 1 metrics and proxy cost. **Our training results resemble Google’s results**.
   
 <table>
