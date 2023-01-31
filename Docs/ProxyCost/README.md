@@ -1,4 +1,6 @@
 # Proxy Cost Computation in Circuit Training
+<i>In this documentation, we use gridcell and grid interchangably. They both mean the grid system induced by the gridding process.</i>
+
 In Circuit Training, *proxy cost* is the weighted sum of wirelength, density, and congestion costs. It is used to determine the overall quality of the macro placement solution. 
 
 <p align="center">
@@ -8,6 +10,47 @@ In Circuit Training, *proxy cost* is the weighted sum of wirelength, density, an
 Where <b>W<sub>wirelength</sub></b>, <b>W<sub>density</sub></b> and <b>W<sub>congestion</sub></b> are the weights. From the [Circuit Training repo](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/environment/environment.py#L61-L65), we found that <b>W<sub>wirelength</sub> = 1</b>, <b>W<sub>density</sub> = 1</b>, and <b>W<sub>congestion</sub> = 0.5</b>. From communication with Google engineers, we learned that in their internal flow, they use <b>W<sub>wirelength</sub> = 1</b>, <b>W<sub>density</sub> = 0.5</b>, and <b>W<sub>congestion</sub> = 0.5</b>.
 
 Circuit Training repo provides the plc_wrapper_main binary to compute these cost functions. There is no available detailed description, or open-source implementation, of these cost functions. With feedback and confirmations from Google engineers, we have implemented all three cost functions; the source code is available [here](../../CodeElements/Plc_client/plc_client_os.py). In the following, we provide a detailed description of the implementation of these cost functions.
+
+## Comparison with Google's Plc_client
+<table>
+<thead>
+  <tr>
+    <th>Testcase</th>
+    <th>Method</th>
+    <th>HPWL Cost<br></th>
+    <th>Density Cost</th>
+    <th>Congestion Cost</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td rowspan="2"><a href="https://github.com/google-research/circuit_training/tree/main/circuit_training/environment/test_data/ariane" target="_blank" rel="noopener noreferrer">Google's Ariane</a><br></td>
+    <td>Google</td>
+    <td>0.050186608</td>
+    <td>0.756401122</td>
+    <td>0.984565650</td>
+  </tr>
+  <tr>
+    <td>Our</td>
+    <td>0.050186604</td>
+    <td>0.756401122</td>
+    <td>0.984565675</td>
+  </tr>
+  <tr>
+    <td rowspan="2"><a href="https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Plc_client/test/ariane_ng45" target="_blank" rel="noopener noreferrer">Ariane-NanGate45</a><br></td>
+    <td>Google</td>
+    <td>0.387988658</td>
+    <td>0.500452106</td>
+    <td>2.448659090</td>
+  </tr>
+  <tr>
+    <td>Our</td>
+    <td>0.387988659</td>
+    <td>0.500452101</td>
+    <td>2.448659182</td>
+  </tr>
+</tbody>
+</table>
 
 ## Table of Contents
   - [Wirelength cost computation](#wirelength-cost-computation)
@@ -61,9 +104,7 @@ We divide the congestion cost computation into six sub-stages:
 6. [Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.](#computation-of-the-final-congestion-cost)
   
 ### Computation of grid congestion due to net routing
-We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). Only when net entities are placed into different grid cells, we compute the routing congestion as described in the following sections. In other words, if a three-pin net has a source pin in grid $g_i$ and two sink pins in the same grid $g_j$, we would consider this as a two-grid net.
-
-Note that we use n-grid net to describe the $n$ grid cells where the pins are located within a net.
+We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). More formally, we define a n-grid net as a net whose pins occupy n different grids. We also define the grid occupied by the source pin of a net as the source grid of the net, and remaining grids occupied by other pins of the net as sink grids. In other words, if a three-pin net has a source pin in grid g<b><sub>i<sub></b> and two sink pins in the same grid g<b><sub>j<sub></b>, we would consider this as a two-grid net.
 
 Given the above grid-base routing setting, we divide this problem into three sub-problems.
 1. [Congestion due to two-grid nets.](#congestion-due-to-two-grid-nets)
@@ -184,8 +225,8 @@ Figure corresponding to point five.
 
 #### *Congestion due to multi-grid nets where the number of grids is greater than three*
 1. Consider the net is a n-grid net where <b>n > 3</b>. 
-2. We break this net into **n-1** two grid nets where the source grid is the common node.
-3. For each two grid nets we update congestion values.
+2. We break this net using star model into **n-1** two-grid nets where the source grid is the common node.
+3. For each two-grid nets we update congestion values.
 
 #### *Computation for Smoothing:*
 
@@ -206,7 +247,8 @@ Figure corresponding to point five.
 </p>
 
 #### *Computation for Macro Congestion:*
-Macro congestion is induced by the location of hard macros over the grid cells. For each hard macro, we need to consider its dimension of overlapping over the grid cells and the macro routing resources given. 
+Macro congestion is induced by the location of hard macros over the grid cells. For each hard macro, we need to consider its dimension of overlapping over the grid cells and the macro routing resources given. The computation of macro congestion is quite straightforward. We just need to add the rout-
+ing resources blocked by the macros to the corresponding boundaries of the gridcells.
 
 When a macro overlaps with multiple gridcells, if any part of the module **partially overlaps** with the grid cell (either vertically, or horizontally), we set the top row (if vertical) or right column (if horizontal) to 0. We define partially overlaps as when a hard macro does not fully cover a grid cell. 
 
