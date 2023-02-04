@@ -4303,7 +4303,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
     <td></td>
   </tr>
 </tbody>
-</table>  
+</table>
 
 <p align="center">
 <img width="300" src="./images/Ariane133_GF12_CMP_Place.png" alg="Ariane133_GF12_CMP_Place">
@@ -4314,8 +4314,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">Ariane133-GF12-68% CT (results are normalized as described <a href=“#GF12_Normalization”>here</a>
-) (<a href="https://tensorboard.dev/experiment/PFZd6uMpS6yjbqZ3GqRcDA/">Link</a> to Tensorboard)</p></th>
+    <th colspan="10"><p align="center">Ariane133-GF12-68% CT (results are normalized as described <a href="#GF12_Normalization">here</a>) (<a href="https://tensorboard.dev/experiment/PFZd6uMpS6yjbqZ3GqRcDA/">Link</a> to Tensorboard)</p></th>
   </tr>
 </thead>
 <tbody>
