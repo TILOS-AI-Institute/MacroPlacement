@@ -4237,7 +4237,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">Ariane133-GF12-68% CMP (results are normalized as described <a href=“#GF12_Normalization”>here</a>
+    <th colspan="10"><p align="center">Ariane133-GF12-68% CMP (results are normalized as described <a href="#GF12_Normalization">here</a>
 ) </p></th>
   </tr>
 </thead>
@@ -4392,7 +4392,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10">Ariane-GF12-68% AutoDMP (results are normalized as described <a href=“#GF12_Normalization”>here</a>)</th>
+    <th colspan="10">Ariane-GF12-68% AutoDMP (results are normalized as described <a href="#GF12_Normalization">here</a>)</th>
   </tr>
 </thead>
 <tbody>
@@ -4468,7 +4468,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">BlackParrot-GF12-68% CMP (results are normalized as described <a href=“#GF12_Normalization”>here</a>) </p></th>
+    <th colspan="10"><p align="center">BlackParrot-GF12-68% CMP (results are normalized as described <a href="#GF12_Normalization">here</a>) </p></th>
   </tr>
 </thead>
 <tbody>
@@ -4544,7 +4544,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">BlackParrot-GF12-68% CT [results are normalized as described <a href=“#GF12_Normalization”>here</a>] (<a href="https://tensorboard.dev/experiment/6grbdijUQDe5m8KGfOSpnw/">Link</a> to Tensorboard)</p></th>
+    <th colspan="10"><p align="center">BlackParrot-GF12-68% CT [results are normalized as described <a href="#GF12_Normalization">here</a>] (<a href="https://tensorboard.dev/experiment/6grbdijUQDe5m8KGfOSpnw/">Link</a> to Tensorboard)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -4622,7 +4622,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10">BlackParrot-GF12-68% AutoDMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>]</th>
+    <th colspan="10">BlackParrot-GF12-68% AutoDMP [results are normalized as described <a href="#GF12_Normalization">here</a>]</th>
   </tr>
 </thead>
 <tbody>
@@ -4698,7 +4698,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">MemPool Group-GF12-68% CMP [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+    <th colspan="10"><p align="center">MemPool Group-GF12-68% CMP [results are normalized as described <a href="#GF12_Normalization">here</a>
 ] </p></th>
   </tr>
 </thead>
@@ -4775,7 +4775,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">MemPool Group-GF12-68% CT [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+    <th colspan="10"><p align="center">MemPool Group-GF12-68% CT [results are normalized as described <a href="#GF12_Normalization">here</a>
 ] (<a href="https://tensorboard.dev/experiment/liqXGb6rSrqpf55G2OH2Fw/">Link</a> to Tensorboard)</p></th>
   </tr>
 </thead>
@@ -4854,7 +4854,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10">MemPool Group-GF12-68% human macro placement [results are normalized as described <a href=“#GF12_Normalization”>here</a>
+    <th colspan="10">MemPool Group-GF12-68% human macro placement [results are normalized as described <a href="#GF12_Normalization">here</a>
 ] </th>
   </tr>
 </thead>
