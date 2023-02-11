@@ -2232,11 +2232,11 @@ The following table and screenshots show the CT result.
 
 **September 19:**
 We updated the detailed algorithm for [gridding](../../CodeElements/Gridding) in Circuit Training.
-In constrast to the open-source [grid_size_selection.py](https://github.com/google-research/circuit_training/blob/main/circuit_training/grouping/grid_size_selection.py) in Circuit Training repo, which still calls the wrapper functions of plc client, our python scripts implement
-the gridding from sractch and are easy to understand. The results of our scripts match exactly that of Circuit Training.
+In contrast to the open-source [grid_size_selection.py](https://github.com/google-research/circuit_training/blob/main/circuit_training/grouping/grid_size_selection.py) in Circuit Training repo, which still calls the wrapper functions of plc client, our python scripts implement
+the gridding from scratch and are easy to understand. The results of our scripts match exactly that of Circuit Training.
 
 **September 21:**
-We updated the detailed algorithm for [grouping](../../CodeElements/Grouping) and [Clustering](../../CodeElements/Clustering). Here we explictly shows how the netlist information such as net model is used during grouping and clustering, while the open-source Circuit Training implementation still calls the wrapper function of plc client to get netlist information.
+We updated the detailed algorithm for [grouping](../../CodeElements/Grouping) and [Clustering](../../CodeElements/Clustering). Here we explicitly show how the netlist information such as net model is used during grouping and clustering, while the open-source Circuit Training implementation still calls the wrapper function of the plc client to get netlist information.
 
 Among the more notable details that were not apparent from the Nature paper or the Circuit Training repo:
 - For the gridding, we summarized the detailed algorithm for the entire gridding process. We also provided the details for macro packing and metric calculation.
