@@ -268,8 +268,7 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 
 **What can others contribute?**
 - Our shopping list (updated August 2022) includes the following. Please join in!  
-  <!-- - simulated annealing on the gridded canvas: documentation and implementation
-  - force-directed placement: documentation and implementation -->
+  <!-- - simulated annealing on the gridded canvas: documentation and implementation - force-directed placement: documentation and implementation -->
   - donated cloud resources (credits) for experimental studies
   - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
   - improved "fakeram" generator for the ASAP7 research PDK
