@@ -41,4 +41,5 @@ run-*
 GF12/
 GF12
 build
-build/
+build/*
+CodeElements/SimulatedAnnealing/build
