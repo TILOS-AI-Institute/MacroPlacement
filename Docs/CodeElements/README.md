@@ -69,7 +69,7 @@ candidate _grid_ is considered.
 After macro packing, we can calculate the *empty_ratio* of current _grid_, i.e., 
 the number of empty _gridcells_ over the total number of _gridcells_ (*n_rows * n_cols*).
 A _gridcell_ is defined to be an empty _gridcell_ if the intersection area of placed macros with it is less than 0.00001 times its area.  
-Next, we calculate the *hor_waste* and *ver_waste* as described in following algorithm.
+Next, we calculate the *hor_waste* and *ver_waste* as described in the following algorithm.
 <p align="center">
 <img src="./images/Calculate Waste Ratio.png" width= "1600"/>
 </p>
@@ -130,7 +130,7 @@ We can see that the macro pins and the related macro are both basic elements in 
 </p>
 
 - Group the IOs that are within close proximity of each other, boundary by boundary, 
-following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span>  **RIGHT** <span>&rarr;</span> **BOTTOM**. For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, we sort the all the ports on the boundary based on their y (x) coordinates in a non-decreasing order. Starting from the first IO port on the boundary, we group the IO ports within each *grid_height* (*grid_width*) into an IO cluster. For example, in following figure, we have three IO clusters on the **TOP** boundary and two IO clusters on the **RIGHT** boundary. The *grid_width* and *grid_height* are calculated based on the *n_cols* and *n_rows*:
+following the order of **LEFT** <span>&rarr;</span> **TOP** <span>&rarr;</span>  **RIGHT** <span>&rarr;</span> **BOTTOM**. For the **LEFT**/**RIGHT**(**TOP**/**Bottom**) boundary, we sort all the ports on the boundary based on their y (x) coordinates in a non-decreasing order. Starting from the first IO port on the boundary, we group the IO ports within each *grid_height* (*grid_width*) into an IO cluster. For example, in the following figure, we have three IO clusters on the **TOP** boundary and two IO clusters on the **RIGHT** boundary. The *grid_width* and *grid_height* are calculated based on the *n_cols* and *n_rows*:
   - *grid_width = canvas_width / n_cols*
   - *grid_height = canvas_height / n_rows*
 <p align="center">
@@ -146,7 +146,7 @@ Suppose that we have a design with 100 clusters of macro pins (i.e., 100 macros)
 Before grouping the closely-related standard cells to these clusters of macro pins or IOs,
 we assign each cluster a cluster id from 0 to 119.
 Then, for each cluster, we traverse the netlist and assign the same cluster id to the "immediate fanins" and "immediate fanouts" of its element (macro pin or IO).
-Note that "immediate fanin" is equivalent to "transitive fanins up to level K_in = 1", and that "immediate fanouts" is equivalent to "transitive fanouts up to level K_out = 1".
+Note that "immediate fanins" is equivalent to "transitive fanins up to level K_in = 1", and that "immediate fanouts" is equivalent to "transitive fanouts up to level K_out = 1".
 It is our understanding that both K_in and K_out are always set to a default value of 1 
 in Circuit Training. However, other values might be applied. 
 In our implementation, we traverse the netlist in a depth-first-search manner.
@@ -162,7 +162,7 @@ Each group is recorded in the “.fix file” that is part of the input to the h
 #### **How Grouping Scripts Are used**
 We provide [(an example)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/test.py) about the usage of our grouping scripts.
 Basically, our grouping scripts take the following as inputs: (i) [(setup_file)](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/test/setup.tcl)
-including enablement information (lefs/libs), synthesized gate-level netlist (*.v*), and def file with placed IOs (*.def*); (ii) *n_rows* and *n_cols* determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; and (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore such this net when we search "transitive" fanins and fanouts. After
+including enablement information (lefs/libs), synthesized gate-level netlist (*.v*), and def file with placed IOs (*.def*); (ii) *n_rows* and *n_cols* determined by the [(Gridding)](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Gridding) step; (iii) K_in and K_out parameters; and (iv) global_net_threshold for ignoring global nets. If a net has more than global_net_threshold instances, we ignore these nets when we search "transitive" fanins and fanouts. After
 running grouping scripts,  you will get the **.fix** file.  
 
 
@@ -219,7 +219,7 @@ The hyperparameters given in Extended Data Table 3 of the [Nature paper](https:/
 (Additionally, Circuit Training explicitly sets reconst=1 and dbglvl=0.)
 
 * (2) The hypergraph that is fed to hMETIS consists of macros, macro pins, IO ports, and standard cells.
-The "fixed" file generated by [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md) process, is also fed as  .fix input file to hMETIS.
+The "fixed" file generated by the [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Grouping/README.md) process, is also fed as a .fix input file to hMETIS.
 
 
 * (3) All hypergraph partitioning applications in physical design (of which we are aware) perform some kind of thresholding to ignore large hyperedges.
@@ -275,9 +275,9 @@ Note that since the netlist is generated by physical-aware synthesis, we know th
 
 
 #### **Recursively merge small adjacent clusters**
-After breaking up clusters which span large distance,  there may be some small clusters with only tens of standard cells.
+After breaking up clusters which span over a large distance,  there may be some small clusters with only tens of standard cells.
 In this step, Circuit Training recursively merges small clusters to the most adjacent cluster if they are within a certain 
-distance *closeness* (*breakup_threshold* / 2.0),  thus reducing number of clusters.  A cluster is defined to be a small cluster 
+distance *closeness* (*breakup_threshold* / 2.0),  thus reducing the number of clusters.  A cluster is defined to be a small cluster 
 if the number of elements (macro pins, 
 macros, IO ports and standard cells) is less than or equal to *max_num_nodes*, where *max_num_nodes* = *number_of_vertices* // *number_of_clusters_after_breakup* // 4.  The merging process is as following:
 * flag = False
@@ -314,7 +314,7 @@ All methodologies that span synthesis and placement (of which we are aware) must
 #### **Our Implementation of Hypergraph Clustering.**
 Our implementation of hypergraph clustering takes the synthesized netlist and a .def file with placed IO ports as input, 
 then generates the clustered netlist (in lef/def format) using hMETIS (1998 binary). 
-In default mode, our implementation will generate the clustered netlist in protocol buffer format and cooresponding plc file.
+In default mode, our implementation will generate the clustered netlist in protocol buffer format and corresponding plc file.
 We implement the entire flow based on [OpenROAD APIs](https://github.com/ravi-varadarajan/OpenROAD.git).
 **Please refer to [the OpenROAD repo](https://github.com/ravi-varadarajan/OpenROAD.git) for explanation of each Tcl command.**
 
@@ -323,7 +323,7 @@ distribute any compiled binaries. You need to build your own OpenROAD binary bef
 
 Input file: [setup.tcl](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Clustering/test/setup.tcl) (you can follow the example to set up your own design) and [FixFile](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/CodeElements/Clustering/test/fix_files_grouping/ariane.fix.old) (This file is generated by our [Grouping](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Grouping) scripts)
 
-Output_files: the clustered netlist in protocol buffer format and cooresponding plc file.
+Output_files: the clustered netlist in protocol buffer format and corresponding plc file.
 
 Note that the [example](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/Clustering/test) that we provide is the ariane design implemented in NanGate45.  The netlist and corresponding def file with placed instances are generated by [Genus iSpatial](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Flows/NanGate45/ariane133) flow. Here the macro placement is automatically done by the Genus and Innovus tools,
 i.e., according to Flow **(B.1)** above.
