@@ -267,7 +267,7 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 - We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), updated [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
 
 **What can others contribute?**
-- Our shopping list (updated August 2022) includes the following. Please join in!  
+- Our shopping list (updated February 2023) includes the following. Please join in!  
   <!-- - simulated annealing on the gridded canvas: documentation and implementation - force-directed placement: documentation and implementation -->
   - donated cloud resources (credits) for experimental studies
   - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
