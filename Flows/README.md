@@ -1,5 +1,5 @@
 # Synthesis, Place & Route (SP&R):
-The setup to run SP&R on the available test cases for the given enablements are available in *./<enablement_name>/<testcase_name>/* directories.  
+The setups to run SP&R on the available testcases for the given enablements are available in *./\<enablement_name\>/\<testcase_name\>/* directories.  
 - [NanGate45](../Enablements/NanGate45/)
   - [Ariane136](./NanGate45/ariane136/)
   - [Ariane133](./NanGate45/ariane133/)
@@ -25,16 +25,16 @@ The setup to run SP&R on the available test cases for the given enablements are 
 
 Inside each directory are the following sub-directories containing all the files required to run the full SP&R flow.  
   - The *constraints* directory contains the SDC constraint file for current design and enablement.
-  - The *def* directory contains the floorplan DEF file used in the SP&R flow. We provide two DEF files one with just the core.
-    area and pin placements that is used for the logical synthesis flow [Flow-1](./figures/flow-1.PNG) and another DEF file that also inlcudes macro placements that
+  - The *def* directory contains the floorplan DEF file used in the SP&R flow. We provide two DEF files, one with just the core.
+    area and pin placements that are used for the logical synthesis flow [Flow-1](./figures/flow-1.PNG) and another DEF file that also includes macro placements that
     is used in the physical synthesis iSpatial flow [Flow-2](./figures/flow-2.PNG).
   - The *netlist* directory contains the synthesized netlist from [Flow-1](./figures/flow-1.PNG).
   - The *scripts* directory contains the setup and scripts to run the full SP&R flow using both commercial and open-source tools.
-  - The *run* directory is provided to peform the SP&R runs using the runscripts available in the *scripts* direcotry.
+  - The *run* directory is provided to perfom the SP&R runs using the runscripts available in the *scripts* directory.
 
 The runscripts for all the flows are available in the *./\<enablement\>/\<testcase\>/scripts/* directory. Inside the *script* directory are the following sub-directories.
 - The *cadence* directory contains all the runscripts related to [Flow-1](./figures/flow-1.PNG), [Flow-2](./figures/flow-2.PNG) and [Flow-4](./figures/flow-4.PNG).
-- *OpenROAD* directory contains the *<testcase>.tar.gz* file, which includes all the required files to run [Flow-3](./figures/flow-3.PNG) using OpenROAD-flow-scripts ([ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/)).
+- *OpenROAD* directory contains the *\<testcase\>.tar.gz* file, which includes all the required files to run [Flow-3](./figures/flow-3.PNG) using OpenROAD-flow-scripts ([ORFS](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/)).
 - We provide detailed scripts to run physical synthesis using Synopsys DCTopo. All the scripts are available in the [*./scripts/DCTopoFlow*](./scripts/DCTopoFlow/) directory. We also add the scripts required to generate the inputs for DCTopo, along with a detailed description of each step.
 
 All the flows use the *RTL* from the [*Testcases*](../Testcases/) directory and the *.lef*, *.lib*, and *qrc* files from the [*Enablements*](../Enablements/) directory. The required SRAM models for each testcase are generated and available under the [*Enablements*](../Enablements/) directory. The detailed steps for different tools are as follows.
@@ -85,7 +85,7 @@ genus -overwrite -log log/genus.log -no_gui -files run_genus_hybrid.tcl
 
 The command to launch the P&R run is as follows.  
 ```
-### Make sure you have run the synthesis synthesis step. run_invs.tcl uses the output files generated synthesis ###
+### Make sure you have run the synthesis step. run_invs.tcl uses the output files generated synthesis ###
 # export PHY_SYNTH=0   #For Flow-1 uncomment this line
 # export PHY_SYNTH=1   #For Flow-2 uncomment this line
 innovus -64 -init run_invs.tcl -log log/run.log
@@ -99,7 +99,7 @@ This script was written and developed by ABKGroup students at UCSD; however, the
 ## **Using OpenROAD-flow-scripts:**
 Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). Use the following steps to run SP&R using OpenROAD tools:  
 1. Copy *./\<enablement\>/\<testcase\>/scripts/OpenROAD/\<design\>.tar.gz* file to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/\<enablement\>* area.
-2. Use the command *tar -xvf \<design\>.tar.gz* to untar *\<design\>.tar.gz*. It will generate *\<design\>* directory, which contains all the files required to run SP&R using ORFS.
+2. Use the command *tar -xvf \<design\>.tar.gz* to untar *\<design\>.tar.gz*. It will generate a *\<design\>* directory, which contains all the files required to run SP&R using ORFS.
 3. To launch the SP&R job, go to the flow directory and use the make command
   ```
   make DESIGN_CONFIG=./designs/<enablement>/<design>/config_hier.mk
