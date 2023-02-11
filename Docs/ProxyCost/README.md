@@ -1,5 +1,5 @@
 # Proxy Cost Computation in Circuit Training
-<i>In this documentation, we use gridcell and grid interchangably. They both mean the grid system induced by the gridding process.</i>
+<i>In this documentation, we use gridcell and grid interchangeably. They both mean the grid system induced by the gridding process.</i>
 
 In Circuit Training, *proxy cost* is the weighted sum of wirelength, density, and congestion costs. It is used to determine the overall quality of the macro placement solution. 
 
@@ -89,7 +89,7 @@ The gridcell density of grid (i, j) is the ratio of the summation of all the ove
 2. <b>k = floor(n <span>&times;</span> 0.1)</b>
 3. if <b>k == 0</b>
    1. <b>k = 1</b>
-4. <b>Cost<sub>density<sub> =</b> (average density of top <b>k</b> densest gridcells) <b><span>&times;</span> 0.5</b>
+4. <b>Cost<sub>density</sub> =</b> (average density of top <b>k</b> densest gridcells) <b><span>&times;</span> 0.5</b>
 
 Notice that **0.5** is not the “**weight**” of this cost function, but simply another factor applied besides the weight factor from the cost function. Google engineers informed us “ the 0.5 is there to correct the [bloating of the std cell clusters](https://github.com/google-research/circuit_training/blob/9e7097fa0c2a82030f43b298259941fc8ca6b7ae/circuit_training/grouping/grouping.py#L370)”.
 
@@ -104,7 +104,7 @@ We divide the congestion cost computation into six sub-stages:
 6. [Finally, we concatenate the **Grid horizontal congestion** array and the **Grid vertical congestion** array and take the average of the top **5**% of the concatenated list.](#computation-of-the-final-congestion-cost)
   
 ### Computation of grid congestion due to net routing
-We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). More formally, we define a n-grid net as a net whose pins occupy n different grids. We also define the grid occupied by the source pin of a net as the source grid of the net, and remaining grids occupied by other pins of the net as sink grids. In other words, if a three-pin net has a source pin in grid g<b><sub>i<sub></b> and two sink pins in the same grid g<b><sub>j<sub></b>, we would consider this as a two-grid net.
+We first want to address that the following computation is **"grid-based"** (not to be confused with the conventional n-pin net) derived from gridding. The main differences are instead of looking at each pin location, we only look at grid cells subject to pin locations. This implies that if all net entities (source pin and sink pins) are within the same grid cell, no routing congestion will be computed (except for macro congestions). More formally, we define a n-grid net as a net whose pins occupy n different grids. We also define the grid occupied by the source pin of a net as the source grid of the net, and remaining grids occupied by other pins of the net as sink grids. In other words, if a three-pin net has a source pin in grid g<b><sub>i</sub></b> and two sink pins in the same grid g<b><sub>j</sub></b>, we would consider this as a two-grid net.
 
 Given the above grid-base routing setting, we divide this problem into three sub-problems.
 1. [Congestion due to two-grid nets.](#congestion-due-to-two-grid-nets)
@@ -225,7 +225,7 @@ Figure corresponding to point five.
 
 #### *Congestion due to multi-grid nets where the number of grids is greater than three*
 1. Consider the net is a n-grid net where <b>n > 3</b>. 
-2. We break this net using star model into **n-1** two-grid nets where the source grid is the common node.
+2. We break this net using the star model into **n-1** two-grid nets where the source grid is the common node.
 3. For each two-grid nets we update congestion values.
 
 #### *Computation for Smoothing:*
@@ -264,7 +264,7 @@ When a macro overlaps with multiple gridcells, if any part of the module **parti
 
 Note that these two situations are mutually inclusive. 
 
-Finally, we provide our computation stepsbelow:
+Finally, we provide our computation steps below:
 
 - For each hard MACRO:
    - For each gridcell it overlaps with:
