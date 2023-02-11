@@ -32,7 +32,7 @@ The list of available [testcases](./Testcases) is as follows.
   
 In the [Nature Paper](https://www.nature.com/articles/s41586-021-03544-w), the authors report results for an Ariane design with 133 memory (256x16, single ported SRAM) macros. We observe that synthesizing from the available Ariane RTL in the [lowRISC](https://github.com/lowRISC/ariane) GitHub repository using 256x16 memories results in an Ariane design that has 136 memory macros. We outline the steps to instantiate the memories for Ariane 136 [here](./Testcases/ariane136/) and we show how we convert the Ariane 136 design to an Ariane 133 design that matches Google's memory macros count [here](./Testcases/ariane133/). 
   
-We provide flop count, macro type and macro count for all the testcases in the the following table. 
+We provide flop count, macro type and macro count for all the testcases in the following table. 
 <table class="tg">
 <thead>
   <tr>
@@ -268,8 +268,8 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 
 **What can others contribute?**
 - Our shopping list (updated August 2022) includes the following. Please join in!  
-  - simulated annealing on the gridded canvas: documentation and implementation
-  - force-directed placement: documentation and implementation
+  <!-- - simulated annealing on the gridded canvas: documentation and implementation
+  - force-directed placement: documentation and implementation -->
   - donated cloud resources (credits) for experimental studies
   - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
   - improved "fakeram" generator for the ASAP7 research PDK
@@ -280,6 +280,7 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 
 
 ## **Related Links**
+- C.-K. Cheng, A. B. Kahng, S. Kundu, Y. Wang and Z. Wang, "Assessment of Reinforcement Learning for Macro Placement", ([.pdf](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf)), Proc. ACM/IEEE Intl. Symp. on Physical Design, 2023, to appear.
 - F. -C. Chang, Y. -W. Tseng, Y. -W. Yu, S. -R. Lee, A. Cioba, et al., 
 "Flexible multiple-objective reinforcement learning for chip placement",
 *arXiv:2204.06407*, 2022. \[[paper](https://arxiv.org/pdf/2204.06407.pdf)\]

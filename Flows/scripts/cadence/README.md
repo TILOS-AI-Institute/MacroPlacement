@@ -9,8 +9,8 @@ Here we provide all the required scripts to run logical synthesis, physical synt
   
 **Synthesis:** The [*run_genus_hybrid.tcl*](./run_genus_hybrid.tcl) is used to run the logical synthesis using Genus and physical synthesis using Genus iSpatial. It utilizes the **PHY_SYNTH** environment variable to determine the flow. Minor details of each synthesis flow are as follows.
 - Logical synthesis using Genus (Flow-1): We use the *elaborate*, *syn_generic*, *syn_map* and *syn_opt* commands to generate the synthesized netlist. This synthesized netlist is copied into the *netlist* directory.
-- Physical synthesis using Genus iSpatial (Flow-2): We use the *elaborate*, *syn_generic -physical*, *syn_map -physical* and *syn_opt -iSpatial* commands to generate the sunthesized netlist. In this step we provide the floorplan def with placed macros and pins as an additional input compared to Flow-1. This def file is generate in Flow-1.
-- Physical synthesis using Genus iSpatial for Circuit Training (Flow-4): This is same as Flow-2 synthesis flow. The only difference is that the input def file does not include macro placement information.
+- Physical synthesis using Genus iSpatial (Flow-2): We use the *elaborate*, *syn_generic -physical*, *syn_map -physical* and *syn_opt -iSpatial* commands to generate the synthesized netlist. In this step we provide the floorplan def with placed macros and pins as an additional input compared to Flow-1. This def file is generated in Flow-1.
+- Physical synthesis using Genus iSpatial for Circuit Training (Flow-4): This is the same as Flow-2 synthesis flow. The only difference is that the input def file does not include macro placement information.
 
 The command to launch only the synthesis run is as follows.
 ```
@@ -39,7 +39,7 @@ genus -overwrite -log log/genus.log -no_gui -files run_genus_hybrid.tcl
 
 The command to launch the P&R run is as follows.  
 ```
-### Make sure you have run the synthesis synthesis step. run_invs.tcl uses the output files generated synthesis ###
+### Make sure you have run the synthesis step. run_invs.tcl uses the output files generated synthesis ###
 # export PHY_SYNTH=0   #For Flow-1 uncomment this line
 # export PHY_SYNTH=1   #For Flow-2 uncomment this line
 innovus -64 -init run_invs.tcl -log log/run.log
