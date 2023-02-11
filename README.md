@@ -279,7 +279,7 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 
 
 ## **Related Links**
-- C.-K. Cheng, A. B. Kahng, S. Kundu, Y. Wang and Z. Wang, "Assessment of Reinforcement Learning for Macro Placement", ([.pdf](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf)), Proc. ACM/IEEE Intl. Symp. on Physical Design, 2023, to appear.
+- C.-K. Cheng, A. B. Kahng, S. Kundu, Y. Wang and Z. Wang, "Assessment of Reinforcement Learning for Macro Placement", ([.pdf](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf)), *Proc. ACM/IEEE Intl. Symp. on Physical Design*, 2023, to appear.
 - F. -C. Chang, Y. -W. Tseng, Y. -W. Yu, S. -R. Lee, A. Cioba, et al., 
 "Flexible multiple-objective reinforcement learning for chip placement",
 *arXiv:2204.06407*, 2022. \[[paper](https://arxiv.org/pdf/2204.06407.pdf)\]
