@@ -41,7 +41,7 @@ The [config.json](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/aab4
 * **action_probs** : the probablity of each action, following the order of swap, shift, mirror, move and shuffle
 * **num_actions(xn)** : the number of macro actions \[ $\times N$ \] in each SA iteration(step)
 * **max_temperature** : $t_{max}$
-* **num_iters** : $steps$. \[see  $t = t_{max}exp(log[(t_{max}/t_{min})(step / steps)])$ \]
+* **num_iters** : $steps$. \[see  $t = t_{max}exp(log[(t_{min}/t_{max})(step / steps)])$ \]
 * **seed** : random seed
 * **num_cores** : number of cores used
 * **spiral_flag** : use **Spiral placement** for initial macro placement if **spiral_flag** = true; otherwise, use **Greedy packer** for initial macro placement
