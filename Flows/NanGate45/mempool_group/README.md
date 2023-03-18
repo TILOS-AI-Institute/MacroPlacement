@@ -13,19 +13,7 @@ Innovus requires a configuration file to run the macro placement flow. For this 
 2. For each macro, valid orientation and spacing rules can be provided under the **MACRO** section. For example, we set valid macro orientation as *R0* for our run, horizontal spacing as *10um*, and vertical spacing as *5um*. Also, when you provide the cell name (ref name, not instance name) add the *isCell=true* option.
   
 Below is the screenshot of the mempool_tile SP\&R databse.  
-<img src="./screenshots/mempool_tile_Innovus.png" alt="mempool_tile_invs" width="400"/>
+<img src="./screenshots/mempool_group_invs_place.png" alt="mempool_group_invs_place" width="400"/>
 
 
 This script was written and developed by ABKGroup students at UCSD; however, the underlying commands and reports are copyrighted by Cadence. We thank Cadence for granting permission to share our research to help promote and foster the next generation of innovators.
-
-
-### **Using OpenROAD-flow-scripts:**
-Clone ORFS and build OpenROAD tools following the steps given [here](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts). To run SP&R using OpenROAD tools follow the below mentioned steps:  
-1. Copy [*./scripts/OpenROAD/mempool_tile.tar.gz*](./scripts/OpenROAD/mempool_tile.tar.gz) directory to *{ORFS Clone Directory}/OpenROAD-flow-scripts/flow/designs/nangate45* area.
-2. Use command *tar -xvf mempool_tile.tar.gz* to untar *mempool_tile.tar.gz*. This will generate *mempool_tile* directory which contains all the files required to run SP&R using ORFS.
-3. To launch the SP&R job go to the flow directory and use the below command
-  ```
-  make DESIGN_CONFIG=./designs/nangate45/mempool_tile/config.mk
-  ```
-Below is the screenshot of the mempool_tile SP\&R database.  
-<img src="./screenshots/mempool_tile_ORFS_SPNR.png" alt="mempool_tile_orfs" width="400"/>
