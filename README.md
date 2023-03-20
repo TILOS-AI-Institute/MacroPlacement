@@ -295,7 +295,7 @@ The above-mentioned matches between our CT runs and Google engineers’ CT runs 
   
 **5. Was Circuit Training intended by Google to provide the code that was used in the Nature paper?**  
 
-A. Google has stated this on a number of occasions. Of course, a key motivation for our MacroPlacement work has been that while code to reproduce Nature has been **partially** open-sourced in Circuit Training, the data used in Nature has not yet been made public.
+Google has stated this on a number of occasions. Of course, a key motivation for our MacroPlacement work has been that while code to reproduce Nature has been **partially** open-sourced in Circuit Training, the data used in Nature has not yet been made public.
 - CT README.md: “This framework reproduces the methodology published in the Nature 2021 paper” ([link](https://github.com/google-research/circuit_training/blob/main/README.md))
 - Author Correction (March 31, 2022) in the Nature paper: “The code used to generate these data is available in the following GitHub repository: [https://github.com/google-research/circuit_training](https://github.com/google-research/circuit_training)” ([link](https://www.nature.com/articles/s41586-022-04657-6))
 - VP at Google (Zoubin Ghahramani) (April 7, 2022): “Google stands by this work published in Nature on ML for Chip Design, which has been independently replicated, open-sourced, and used in production at Google.” ([Twitter](https://twitter.com/ZoubinGhahrama1/status/1512203509646741507))
