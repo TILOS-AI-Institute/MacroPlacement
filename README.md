@@ -262,20 +262,80 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 
 
 ## **FAQ**
-**Why are you doing this?**
+**1. Why are you doing this?**
 - The challenges of data and benchmarking in EDA research have, in our view, been contributing factors in the controversy regarding the Nature work. The mission of the [TILOS AI Institute](https://tilos.ai/) includes finding solutions to these challenges -- in high-stakes applied optimization domains (such as IC EDA), and at community-scale. We hope that our effort will become an existence proof for transparency, reproducibility, and democratization of research in EDA. [We applaud and thank Cadence Design Systems for allowing their tool runscripts to be shared openly by researchers, enabling reproducibility of results obtained via use of Cadence tools.]
 - We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), updated [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
 
-**What can others contribute?**
+**2. What can others contribute?**
 - Our shopping list (updated February 2023) includes the following. Please join in!  
   <!-- - simulated annealing on the gridded canvas: documentation and implementation - force-directed placement: documentation and implementation -->
   - donated cloud resources (credits) for experimental studies
-  - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared)
+  - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared) (note that scripts for the major EDA tools can be shared in GitHub for research purposes)
   - improved "fakeram" generator for the ASAP7 research PDK
 
-**What is your timeline?**
+**3. What is your timeline?**
 - We showed our [progress](https://open-source-eda-birds-of-a-feather.github.io/doc/slides/MacroPlacement-SpecPart-DAC-BOF-v5.pdf) at the Open-Source EDA and Benchmarking Summit birds-of-a-feather [meeting](https://open-source-eda-birds-of-a-feather.github.io/) on July 12 at DAC-2022.
 - We are now (late August 2022) studying benefits and limitations of the CT methodology itself, following a thread of experimental questions as noted [here](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit?usp=sharing) and [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit).
+
+
+### <span style="color:red"><b>New FAQs</b></span> after the release of our ISPD-2023 paper ([here](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf) and on [arXiv](https://arxiv.org/abs/2302.11014#))
+
+**4. How was the UCSD replication of CT validated?**  
+
+We obtained **two separate confirmations** from Google engineers that our running of CT was correct. These were received on August 10, 2022 and October 3, 2022.
+- **The first confirmation** was from Dr. Wenjie (Joe) Jiang on August 10, 2022.
+  - We ran CT for the [Ariane netlist](https://github.com/google-research/circuit_training/tree/main/circuit_training/environment/test_data/ariane) available in the CT repository and shared the tensorboard [link](https://tensorboard.dev/experiment/a9Hnp0I9RpqSobfJYpZvig/#scalars) and the final [plc file](https://drive.google.com/file/d/1hY_kg2qJUdHRlO5Y-zj0z2DrNo2Cvavs/view?usp=sharing) (which contains the macro locations of the final solution) with Google engineers. 
+  - **Our** proxy wirelength cost, proxy density cost and proxy congestion cost of the final solution are respectively 0.0913, 0.5290 and 0.9017. **The CT repo** gives this [link](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#circuit-training-for-ariane-risc-v) to Google’s training curve and final proxy cost for the same input netlist. The close match of training curves and final proxy cost values provided the desired confirmations.
+  - We received this comment from Dr. Jiang after sharing the final [plc file](https://drive.google.com/file/d/1hY_kg2qJUdHRlO5Y-zj0z2DrNo2Cvavs/view?usp=sharing): “This plc (wirelength 0.0913, density 0.5290 and congestion 0.9017) is very close to ours (assuming they use the default congestion_weight=0.5). With more resources, their RL result could potentially improve further. This plc view (added on doc) also looks reasonable.” Indeed, our training runs that were communicated to Google used congestion weight=0.5.
+- **The second confirmation** was from Mr. Guanhang Wu on October 3, 2022.
+  - We shared the clustered netlist of Ariane design with 68% floorplan utilization on NanGate45 with Guanhang. Here is the [link](./Docs/OurProgress/README.md#October3) to the details of Guanhang’s run and our run. The close match of training curves, final proxy cost values and the Nature Table 1 metrics provided the desired confirmations.
+  - We mention this confirmation in Slide 17 of the [ISPD-2023 talk](https://vlsicad.ucsd.edu/Publications/Conferences/396/396.pptx) and in Section 5.2.5 of [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf).  
+  
+The above-mentioned matches between our CT runs and Google engineers’ CT runs provided confirmation as of last Fall that our environment is correct. All of our code has been open-sourced and unchanged since mid-January 2023. There have been no suggestions that it is incorrect in any way.
+  
+**5. Was Circuit Training intended by Google to provide the code that was used in the Nature paper?**  
+
+A. Google has stated this on a number of occasions. Of course, a key motivation for our MacroPlacement work has been that while code to reproduce Nature has been **partially** open-sourced in Circuit Training, the data used in Nature has not yet been made public.
+- CT README.md: “This framework reproduces the methodology published in the Nature 2021 paper” ([link](https://github.com/google-research/circuit_training/blob/main/README.md))
+- Author Correction (March 31, 2022) in the Nature paper: “The code used to generate these data is available in the following GitHub repository: [https://github.com/google-research/circuit_training](https://github.com/google-research/circuit_training)” ([link](https://www.nature.com/articles/s41586-022-04657-6))
+- VP at Google (Zoubin Ghahramani) (April 7, 2022): “Google stands by this work published in Nature on ML for Chip Design, which has been independently replicated, open-sourced, and used in production at Google.” ([Twitter](https://twitter.com/ZoubinGhahrama1/status/1512203509646741507))
+- Jeff Dean at NeurIPS 2022 (Dec. 2): “... Andrew Kahng’s lab, a strong chip design research group, and they also reproduced the results” ([Link](https://slideslive.com/38994456/machine-learning-for-computer-systems-at-google))
+
+**6. Did you use pre-trained models? How much does pre-training matter?**  
+
+- In the Circuit Training repo, Google engineers write:  “Our results training from scratch are comparable or better than the reported results in the paper (on page 22) which used fine-tuning from a pre-trained model. We are training from scratch because we cannot publish the pre-trained model at this time and the released code can provide comparable results.” ([link](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#results))
+- The Stronger Baselines manuscript showed that a pre-trained model helped to improve proxy cost for the TPU blocks, but failed to improve HPWL and congestion for the ICCAD04 benchmarks. The SB authors pre-trained their model for 48 hours using 200 CPUs and 20 GPUs with a training dataset of 20 TPU blocks.
+- The Nature paper did not show benefits from pre-training for Table 1 metrics. The Nature paper only shows benefits (from the pre-trained model) in terms of runtime and final proxy cost.
+- Notes. (1) Jeff Dean in the above-cited NeurIPS-2022 talk has mentioned that “from scratch” is quite competitive. (2) The Nature paper describes use of 20 TPU blocks as the training set for generation of the pre-trained model. However, the training dataset has not been open-sourced. A 48-hour runtime for pre-training is mentioned in the paper.
+
+**7. What are the runtimes (wall times) of different macro placers that you studied?**  
+
+<p align="center">
+<img width="600" src="./Docs/OurProgress/images/Runtime.png" alg="Runtime">
+</p>
+
+- The above table is from Slide 29 of the [ISPD-2023 talk](https://vlsicad.ucsd.edu/Publications/Conferences/396/396.pptx). We note the following.
+- CT: only includes CT training time
+- SA: stopped after 12.5 hours automatically
+- CMP: only the runtime of place_design -concurrent_macros command
+- Resources required for different macro placers
+  - CT: Training and evaluation jobs run on (8 NVIDIA-V100 GPU, 96 CPU thread, Memory: 354 GB) machine and 13 collector jobs on each of two (96 CPU thread, Memory: 354 GB) machines
+  - SA: 320 parallel jobs where each job used 1 thread
+  - RePlAce: used 1 thread
+  - CMP: Innovus launched with 8 threads
+  - AutoDMP: run on NVIDIA DGX-A100 machine with two GPU workers
+
+**8. What do your results tell us about the use of RL in macro placement?**  
+
+- The solutions typically produced by human experts and SA are superior to those generated by the RL framework in the majority of cases we tested.
+
+**9. Did the work by Prof. David Pan show that Google open-source code was sufficient?**
+
+- No. The arXiv paper “Delving into Macro Placement with Reinforcement Learning” was published in September 2021, before the open-sourcing of Circuit Training. To our understanding, the work focused on use of DREAMPlace instead of force-directed placement.
+
+**10. Did you replicate results from Stronger Baselines?**
+  
+- We replicated RePlAce results and believe our SA obtains similar results. However, there is no code or data available to reproduce S.B.’s reported CT results, or proxy costs of SA results.
 
 
 ## **Related Links**
