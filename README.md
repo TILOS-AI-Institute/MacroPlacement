@@ -1,7 +1,7 @@
 # **MacroPlacement**
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the synthesis-place-and-route flow using both proprietary and open-source tools.
 
-## **Our Latest Progress**
+## **Useful Links**
  - [Our Progress: A Chronology](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) provides latest updates and is periodically synched to [this Google Doc](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit).
  - Our [Proxy Cost](https://tilos-ai-institute.github.io/MacroPlacement/Docs/ProxyCost/) documentation gives implementation details to enable reproduction of the wirelength, density and congestion costs used by [Circuit Training](https://github.com/google-research/circuit_training).
  - Our [Code Elements](https://tilos-ai-institute.github.io/MacroPlacement/Docs/CodeElements/) documentation gives implementation details to enable reproduction of the gridding, grouping and clustering used by [Circuit Training](https://github.com/google-research/circuit_training).
@@ -267,15 +267,16 @@ We provide a human-generated baseline for [Google Brain's Circuit Training](http
 - We do understand that Google has been working hard to complete the open-sourcing of Morpheus, and that this effort continues today. However, as pointed out in [this Doc](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit?usp=sharing), updated [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit?usp=sharing), it has been more than a year since "Data and Code Availability" was committed with publication of the [Nature paper](https://www.nature.com/articles/s41586-021-03544-w). We consider our work a "backstop" or "safety net" for Google's internal efforts, and a platform for researchers to build on. 
 
 **2. What can others contribute?**
-- Our shopping list (updated February 2023) includes the following. Please join in!  
+- Our shopping list (updated March 2023) includes the following. Please join in!  
   <!-- - simulated annealing on the gridded canvas: documentation and implementation - force-directed placement: documentation and implementation -->
-  - donated cloud resources (credits) for experimental studies
-  - relevant testcases with reference implementations and implementation flows (Cadence, OpenROAD preferred since scripts can be shared) (note that scripts for the major EDA tools can be shared in GitHub for research purposes)
-  - improved "fakeram" generator for the ASAP7 research PDK
+  - Donated cloud resources (credits) for experimental studies.
+  - Relevant testcases with reference implementations and implementation flows (note that scripts for major EDA tools can now be shared in GitHub for research purposes, enabling reproducibility of associated results).
+  - Improved "fakeram" generator for the [ASAP7](https://github.com/The-OpenROAD-Project/asap7) research PDK; design enablement for the recently-released [ASAP5](https://github.com/The-OpenROAD-Project/asap5) research PDK is also very welcome.
+  - Additional open experimental questions, along with experimental designs and/or efforts to resolve these questions.
 
 **3. What is your timeline?**
 - We showed our [progress](https://open-source-eda-birds-of-a-feather.github.io/doc/slides/MacroPlacement-SpecPart-DAC-BOF-v5.pdf) at the Open-Source EDA and Benchmarking Summit birds-of-a-feather [meeting](https://open-source-eda-birds-of-a-feather.github.io/) on July 12 at DAC-2022.
-- We are now (late August 2022) studying benefits and limitations of the CT methodology itself, following a thread of experimental questions as noted [here](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit?usp=sharing) and [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit).
+- During Summer 2022, we began studying benefits and limitations of the CT methodology itself, following a thread of experimental questions as noted [here](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit?usp=sharing) and [here](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit). Contributions of additional questions and efforts to resolve them are welcome.
 
 
 ### <span style="color:red"><b>New FAQs</b></span> after the release of our ISPD-2023 paper ([here](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf) and on [arXiv](https://arxiv.org/abs/2302.11014#))
@@ -307,7 +308,7 @@ We did not use pre-trained models in our study. Note that it is impossible to re
 - In the Circuit Training repo, Google engineers write:  “Our results training from scratch are comparable or better than the reported results in the paper (on page 22) which used fine-tuning from a pre-trained model. We are training from scratch because we cannot publish the pre-trained model at this time and the released code can provide comparable results.” ([link](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#results))
 - The Stronger Baselines manuscript showed that a pre-trained model helped to improve proxy cost for the TPU blocks, but failed to improve HPWL and congestion for the ICCAD04 benchmarks. The SB authors pre-trained their model for 48 hours using 200 CPUs and 20 GPUs with a training dataset of 20 TPU blocks.
 - The Nature paper did not show benefits from pre-training for Table 1 metrics. The Nature paper only shows benefits (from the pre-trained model) in terms of runtime and final proxy cost.
-- Notes. (1) Jeff Dean in the above-cited NeurIPS-2022 talk has mentioned that “from scratch” is quite competitive. (2) The Nature paper describes use of 20 TPU blocks as the training set for generation of the pre-trained model. However, the training dataset has not been open-sourced. A 48-hour runtime for pre-training is mentioned in the paper.
+- Note. As mentioned, the Nature paper describes use of 20 TPU blocks as the training set for generation of the pre-trained model. However, the training dataset has not been open-sourced. A 48-hour runtime for pre-training is mentioned in the paper.
 
 **7. What are the runtimes (wall times) of different macro placers that you studied?**  
 
