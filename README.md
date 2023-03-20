@@ -295,7 +295,7 @@ The above-mentioned matches between our CT runs and Google engineers’ CT runs 
   
 **5. Was Circuit Training intended by Google to provide the code that was used in the Nature paper?**  
 
-Google has stated this on a number of occasions. Of course, a key motivation for our MacroPlacement work has been that while code to reproduce Nature has been **partially** open-sourced in Circuit Training, the data used in Nature has not yet been made public.
+Google has stated this on a number of occasions. Of course, a key motivation for our MacroPlacement work has been that code to reproduce Nature has been only **partially** open-sourced in Circuit Training, and that the data used in Nature has not yet been made public.
 - CT README.md: “This framework reproduces the methodology published in the Nature 2021 paper” ([link](https://github.com/google-research/circuit_training/blob/main/README.md))
 - Author Correction (March 31, 2022) in the Nature paper: “The code used to generate these data is available in the following GitHub repository: [https://github.com/google-research/circuit_training](https://github.com/google-research/circuit_training)” ([link](https://www.nature.com/articles/s41586-022-04657-6))
 - VP at Google (Zoubin Ghahramani) (April 7, 2022): “Google stands by this work published in Nature on ML for Chip Design, which has been independently replicated, open-sourced, and used in production at Google.” ([Twitter](https://twitter.com/ZoubinGhahrama1/status/1512203509646741507))
@@ -303,6 +303,7 @@ Google has stated this on a number of occasions. Of course, a key motivation for
 
 **6. Did you use pre-trained models? How much does pre-training matter?**  
 
+We did not use pre-trained models in our study. Note that it is impossible to replicate the pre-training described in the Nature paper, since the data set used for pre-training consists of 20 TPU blocks.
 - In the Circuit Training repo, Google engineers write:  “Our results training from scratch are comparable or better than the reported results in the paper (on page 22) which used fine-tuning from a pre-trained model. We are training from scratch because we cannot publish the pre-trained model at this time and the released code can provide comparable results.” ([link](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#results))
 - The Stronger Baselines manuscript showed that a pre-trained model helped to improve proxy cost for the TPU blocks, but failed to improve HPWL and congestion for the ICCAD04 benchmarks. The SB authors pre-trained their model for 48 hours using 200 CPUs and 20 GPUs with a training dataset of 20 TPU blocks.
 - The Nature paper did not show benefits from pre-training for Table 1 metrics. The Nature paper only shows benefits (from the pre-trained model) in terms of runtime and final proxy cost.
