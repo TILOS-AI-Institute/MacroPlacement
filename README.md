@@ -145,7 +145,8 @@ BlackParrot and MemPool Group are larger and have multiple sizes of macros. They
 
 We also use the ICCAD04 academic benchmarks studied by Stronger Baselines; these are heavily used and well-known in the academic literature. All of these benchmarks are fully available for download. We welcome additional testcases that target criteria not covered by our existing testcases.
   
-**13. Are the resources used to run Circuit Training good enough to reproduce the Nature result?**
+**13. Are the resources used to run Circuit Training good enough to reproduce the Nature result?**  
+
 We believe the answer is Yes.  We refer to the ISPD-2022 paper by Google authors S. Yu, E. Songhori, W. Jiang, T. Boyd, A. Goldie, A. Mirhoseini and S. Guadarrama, “[Scalability and Generalization of Circuit Training for Chip Floorplanning](https://dl.acm.org/doi/pdf/10.1145/3505170.3511478)”.
 
 - **Training server.** In the ISPD-2022 paper, the authors state: “We think the 8-GPU setup is able to produce better results primarily because it uses a global batch size of 1024, which makes learning more stable and reduces the noise of the policy gradient estimator. Therefore, we recommend using the full batch size suggested in our open-source framework [2] in order to achieve optimal results.”
