@@ -3,7 +3,7 @@
 
 ## **Materials for the Broad Audience**
  - <a id="ForTheRecord"></a>A ["For the Record"](https://docs.google.com/document/d/1vkPRgJEiLIyT22AkQNAxO8JtIKiL95diVdJ_O4AFtJ8/edit) and ensuing series of updates ([#1](https://docs.google.com/document/d/1c-uweo3DHiCWZyBzAdNCqqcOrAbKq1sVIfY0_4bFCYE/edit), [#2](https://docs.google.com/document/d/1ibqf9LKQwR5BwYnWWLgvSwOz547VXoFhXHQzMzk7PbY/edit), [#3](https://docs.google.com/document/d/1IezovfF_Eq10Pumvl9Rb8oN7E9X7ALg73DFNsmoTlAc/edit)) have since June 2022 provided added context for our efforts.
- - [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf) and [arXiv version](https://vlsicad.ucsd.edu/Carver/Carver_Mead_BOOK.pdf)
+ - [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf) and [arXiv version](https://arxiv.org/abs/2302.11014)
  - ISPD-2023 short [video](https://vlsicad.ucsd.edu/Publications/Conferences/396/396short.mp4) and [pptx slides](https://vlsicad.ucsd.edu/Publications/Conferences/396/396short.pptx) (long [video](https://vlsicad.ucsd.edu/Publications/Conferences/396/396.mp4) and [pptx slides](https://vlsicad.ucsd.edu/Publications/Conferences/396/396.pptx))
  - [FAQs](#faqs)
  - [Our Progress: A Chronology](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) provides latest updates and is periodically synched to [this Google Doc](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit).
