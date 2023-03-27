@@ -142,7 +142,7 @@ We believe so. We developed new, modern testcases that are mapped to modern, ope
 
 BlackParrot and MemPool Group are larger and have multiple sizes of macros. They are significantly more challenging than the Ariane testcase used by Google, as confirmed by a shuffling experiment described in Section 5.2.6 of [our paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf).
 
-We also use the ICCAD04 academic benchmarks studied by Stronger Baselines; these are heavily used and well-known in the academic literature. All of these benchmarks are fully available for download. We welcome additional testcases that target criteria not covered by our existing testcases.
+We also use the ICCAD04 academic benchmarks studied by Stronger Baselines; these are heavily used and well-known in the academic literature. All the ICCAD04 and modern benchmarks are fully available for download. We welcome additional testcases that target criteria not covered by our existing testcases.
   
 **13. Are the resources used to run Circuit Training good enough to reproduce the Nature result?**  
 
