@@ -122,8 +122,8 @@ We did not use pre-trained models in our study. Note that it is impossible to re
 **10. Which conclusions did you confirm from the Nature paper and from Stronger Baselines?**
   
 - For the Nature paper: We confirmed that Circuit Training beats RePlAce **on modern testcases** with respect to both proxy cost and Nature Table 1 metrics. (Out of 6 head-to-head comparisons for each available metric, RePlAce wins only 3/6 routed wirelength comparisons and 2/6 total power comparisons.) But human experts and some other baselines beat CT.
-- For Stronger Baselines: We confirmed that SA beats Circuit Training on ICCAD04 benchmarks. (Out of 17 head-to-head comparisons for each available metric, Circuit Training wins 1/17 HPWL comparisons. 
-  - The results are mixed for modern testcases, e.g., SA beats Circuit Training 5/6 times for routed wirelength, but Circuit Training beats SA 4/6 times (BlackParrot GF12 is a tie) for timing, i.e., TNS.)
+- For Stronger Baselines: We confirmed that SA beats Circuit Training on ICCAD04 benchmarks. Out of 17 head-to-head comparisons for each available metric, Circuit Training wins 1/17 HPWL comparisons. 
+  - The results are mixed for modern testcases, e.g., SA beats Circuit Training 5/6 times for routed wirelength, but Circuit Training beats SA 4/6 times (BlackParrot GF12 is a tie) for timing, i.e., TNS.
 - For Stronger Baselines: We confirmed that RePlAce beats Circuit Training **on ICCAD04 benchmarks**. Out of 17 head-to-head comparisons for each available metric, Circuit Training did not win any proxy cost or HPWL comparisons.
 - We were not able to confirm other conclusions of Nature or Stronger Baselines.
 
