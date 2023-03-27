@@ -114,13 +114,18 @@ We did not use pre-trained models in our study. Note that it is impossible to re
 </tbody>
 </table>
 
+
 **9. Did the work by Prof. David Pan show that Google open-source code was sufficient?**
 
 - No. The arXiv paper “Delving into Macro Placement with Reinforcement Learning” was published in September 2021, before the open-sourcing of Circuit Training. To our understanding, the work focused on use of DREAMPlace instead of force-directed placement.
 
 **10. Did you replicate results from Stronger Baselines?**
   
-- We replicated RePlAce results and believe our SA obtains similar results. However, there is no code or data available to reproduce S.B.’s reported CT results, or proxy costs of SA results.
+- For the Nature paper: We confirmed that Circuit Training beats RePlAce **on modern testcases** with respect to both proxy cost and Nature Table 1 metrics. (Out of 6 head-to-head comparisons for each available metric, RePlAce wins only 3/6 routed wirelength comparisons and 2/6 total power comparisons.)
+- For Stronger Baselines: We confirmed that SA beats Circuit Training on ICCAD04 benchmarks. (Out of 17 head-to-head comparisons for each available metric, Circuit Training wins 1/17 HPWL comparisons. 
+  - The results are mixed for modern testcases, e.g., SA beats Circuit Training 5/6 times for routed wirelength, but Circuit Training beats SA 4/6 times (BlackParrot GF12 is a tie) for timing, i.e., TNS.)
+- For Stronger Baselines: We confirmed that RePlAce beats Circuit Training **on ICCAD04 benchmarks**. Out of 17 head-to-head comparisons for each available metric, Circuit Training did not win any proxy cost or HPWL comparisons.
+- We were not able to confirm other conclusions of Nature or Stronger Baselines.
 
 **11. Did it matter that Circuit Training used an initial placement from a physical synthesis tool?**  
   
@@ -128,6 +133,33 @@ Yes. Circuit Training benefits **substantially** from its use of the placement l
 - An ablation study is reported in Section 5.2.1 of our [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf). To test the effect of initial placement on CT outcomes, we generated three “vacuous” input placements for the Ariane-NG45 design. These three cases (1), (2) and (3) respectively have all standard cells and macros located at (600, 600), at the lower-left corner (0, 0), and at the upper-right corner (1347.1, 1346.8) of the layout canvas. For each case, we generate the clustered netlist, run CT and collect Nature Table 1 metrics ([Link](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress#Question1) to all three Nature Table 1 metrics). 
 - **We find that placement information in the input provides significant benefit to CT**. When given locations from (Cadence CMP + Genus iSpatial) physical synthesis, CT’s routed wirelength **decreases** by 10.32%, 7.24% and 8.17% compared to Cases (1), (2) and (3), respectively. See the [Link](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/Docs/OurProgress#circuit-training-baseline-result-on-our-ariane133-nangate45_68) to Nature Table 1 metrics.
 
+**12. Are the benchmarks (testcases) that you use adequate to test modern macro placement techniques?**  
+
+We believe so. We developed new, modern testcases that are mapped to modern, open technologies with full routing and timing information. The table below summarizes the numbers of flip-flops, macros, distinct macro sizes, and standard-cell instances in these testcases.
+
+<p align="center">
+<img width="600" src="./Docs/OurProgress/images/TestcasesFaqs.png" alg="Runtime">
+</p>
+
+BlackParrot and MemPool Group are larger and have multiple sizes of macros. They are significantly more challenging than the Ariane testcase used by Google, as confirmed by a shuffling experiment described in Section 5.2.6 of [our paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf).
+
+We also use the ICCAD04 academic benchmarks studied by Stronger Baselines; these are heavily used and well-known in the academic literature. All of these benchmarks are fully available for download. We welcome additional testcases that target criteria not covered by our existing testcases.
+  
+**13. Are the resources used to run Circuit Training good enough to reproduce the Nature result?**
+We believe the answer is Yes.  We refer to the ISPD-2022 paper by Google authors S. Yu, E. Songhori, W. Jiang, T. Boyd, A. Goldie, A. Mirhoseini and S. Guadarrama, “[Scalability and Generalization of Circuit Training for Chip Floorplanning](https://dl.acm.org/doi/pdf/10.1145/3505170.3511478)”.
+
+- **Training server.** In the ISPD-2022 paper, the authors state: “We think the 8-GPU setup is able to produce better results primarily because it uses a global batch size of 1024, which makes learning more stable and reduces the noise of the policy gradient estimator. Therefore, we recommend using the full batch size suggested in our open-source framework [2] in order to achieve optimal results.”
+- Circuit Training itself shows the use of an 8-GPU setup to reproduce their published Ariane results [[link](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#reproduce-results)].
+- We use eight NVIDIA-V100 GPUs to train the model for global batch size = 1024. The global batch size used in the Nature paper and the global batch size used in our runs are the same (i.e., global batch size = 1024). The Nature paper refers to the use of 16 GPUs. However, based on the statements given in Google’s ISPD-2022 paper, and what Circuit Training describes for “Reproduce results”, the final proxy cost achieved by our environment should not differ materially from what Nature’s environment achieves with 16 GPUs. 
+- **Collect servers.** Again in the ISPD-2022 paper, the Google authors state: “With distributed collection, the user can run many (10s-1000s) Actor workers with each collecting experience for a given policy, speeding up the data collection process.” and, “As mentioned in Section 2.2, data collection and multi-GPU training in our framework are independent processes which can be optimized separately.”
+- We use two collect servers each running 13 collect jobs, i.e., a total of 26 collect jobs are used for data collection. By contrast, the Nature authors run 512 collect jobs for data collection. The number of collect servers used to run 512 collect jobs is not clear from the description given in the Nature paper. We expect our runtimes to be higher than what Nature reports – **and we account for this in our experiments.**
+- Train steps per second is the indicator of the CT training speed. The left plot below indicates the CT training speed for [Ariane](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#results) in our environment, i.e., ~0.9 steps/second. The right plot indicates the CT training speed for Ariane that is [posted in the CT](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#results) repo, i.e., ~2.3 steps/second. From this we infer that our runtime is expected to be ~2.6x times larger than the runtime when the suggested resource ([mentioned in the CT repo](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#reproduce-results)) is used.
+- To make sure that we give the proper amount of resources to Circuit Training in our experiments, we observe from Google’s published [Tensorboard](https://tensorboard.dev/experiment/NRlmrDeOT2i4QV334hrywQ) that training of [Ariane](https://github.com/google-research/circuit_training/tree/main/circuit_training/environment) took **14** hours. We therefore give 14 * 2.6 = **~36** hours to our Circuit Training environment.  (This corresponds to 200 iterations, and this is [the number of iterations](https://github.com/google-research/circuit_training/blob/91e14fd1caa5b15d9bb1b58b6d5e47042ab244f3/circuit_training/learning/train_ppo.py#L55) that we uniformly give to Circuit Training in our experiments.)
+
+<p align="center">
+<img width="300" src="./Docs/OurProgress/images/Our_Train_Steps_Per_Second.png" alg="Our_train_step">
+<img width="300" src="./Docs/OurProgress/images/CT_Train_Steps_Per_Second.png" alg="CT_train_step">
+</p>
 
 ## **Testcases**  
 The list of available [testcases](./Testcases) is as follows.
