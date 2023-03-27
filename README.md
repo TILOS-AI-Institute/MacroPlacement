@@ -6,7 +6,6 @@
  - [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf) and [arXiv version](https://arxiv.org/abs/2302.11014)
  - ISPD-2023 short [video](https://vlsicad.ucsd.edu/Publications/Conferences/396/396short.mp4) and [pptx slides](https://vlsicad.ucsd.edu/Publications/Conferences/396/396short.pptx) (long [video](https://vlsicad.ucsd.edu/Publications/Conferences/396/396.mp4) and [pptx slides](https://vlsicad.ucsd.edu/Publications/Conferences/396/396.pptx))
  - [FAQs](#faqs)
- - [Our Progress: A Chronology](https://tilos-ai-institute.github.io/MacroPlacement/Docs/OurProgress/) provides latest updates and is periodically synched to [this Google Doc](https://docs.google.com/document/d/1HHZNcid5CZvvRqj_njzF7hBhtNSpmRn3fCYniWNYBiY/edit).
 
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
