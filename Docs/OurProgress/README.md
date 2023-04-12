@@ -6342,6 +6342,54 @@ We update the density weight from 0.5 to 0.0, then rerun CT-DREAMPlace for Arian
 
 We observe from the above results that CT+DREAMPlace achieves similar result for density weight 0 and 0.5.
 
+<a id="Question16"></a>
+**<span style="color:blue">Question 16.</span>** Why does your study (and, ISPD-2023 paper) use Cadence CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?
+
+We used Innovus version 21.1 since it was the latest version of our place-and-route **evaluator** of macro placement solutions. CMP 21.1 is part of Innovus 21.1. Using the latest version of CMP was also natural, given our starting assumption that RL from Nature would outperform the commercial state-of-the-art.
+
+We have now run further experiments using older versions of CMP and Innovus. We find that the macro placements produced by CMP across versions 19.1, 20.1 and 21.1 lead to the same qualitative conclusions. Additional details:
+
+- The Concurrent Macro Placer (CMP) was available in both the 19.1 and 20.1 versions of Cadence Innovus. Our published flow scripts can also be used to run Innovus 19.1 and 20.1 with a few lines commented out: [lines1](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/5c7e77b0068886903c0d5f3500aad64e9989f5db/Flows/NanGate45/ariane133/scripts/cadence/lib_setup.tcl#L9-L12) and [lines2](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/5c7e77b0068886903c0d5f3500aad64e9989f5db/Flows/NanGate45/ariane133/scripts/cadence/run_invs.tcl#L88-L89). 
+- For the Ariane133-NG45-68%-1.3ns testcase, we have run CMP + Innovus in two additional Cadence releases (19.1, 20.1). This corresponds to Steps “4” and “5” of the industrial evaluation flow in Figure 2 of our paper, and a “pure commercial tool flow”.
+- We assess the CT macro placement that is reported in Table 1 of our ISPD-2023 paper, using all three Innovus P&R versions. The CT post-P&R results are inferior to those obtained with corresponding CMP versions.
+- This new study reinforces the conclusion obtained using CMP + Innovus (21.1) in our paper. This can be independently verified using provided scripts. We do not provide additional numbers, in order to avoid benchmarking of the Cadence tool versions.
+
+Below are screenshots of Ariane-NG45-68%-1.3ns for (in order, top-down) CMP + P&R outcomes in Innovus 19.1, 20.1 and 21.1 versions. 
+
+- Ariane133-NG45-68%-1.3ns (CMP + Innovus 19.1)
+<p align="center">
+<img width="300" src="./images/Ariane_Place_CMP_19.1.png" alg="Place_CMP_19.1">
+<img width="300" src="./images/Ariane_Route_CMP_21.1.png" alg="Route_CMP_19.1">
+</p>  
+
+- Ariane133-NG45-68%-1.3ns (CMP + Innovus 20.1)
+<p align="center">
+<img width="300" src="./images/Ariane_Place_CMP_20.1.png" alg="Place_CMP_20.1">
+<img width="300" src="./images/Ariane_Route_CMP_20.1.png" alg="Route_CMP_20.1">
+</p>  
+
+- Ariane133-NG45-68%-1.3ns (CMP + Innovus 21.1 is the same as in Figure 3 of our paper)
+<p align="center">
+<img width="300" src="./images/Ariane_Place_CMP_21.1.png" alg="Place_CMP_21.1">
+<img width="300" src="./images/Ariane_Route_CMP_21.1.png" alg="Route_CMP_21.1">
+</p>
+
+- Left to right: CT macro placement from the ISPD-2023 paper, with P&R using Innovus 19.1, 20.1 and 21.1. (21.1 is the same as in Figure 3 of our paper.)
+<p align="center">
+<img width="200" src="./images/Ariane_Place_CT_19.1.png" alg="Place_CT_19.1">
+<img width="200" src="./images/Ariane_Place_CT_20.1.png" alg="Place_CT_20.1">
+<img width="200" src="./images/Ariane_Place_CT_21.1.png" alg="Place_CT_21.1">
+</p>
+<p align="center">
+<img width="200" src="./images/Ariane_Route_CT_19.1.png" alg="Route_CT_19.1">
+<img width="200" src="./images/Ariane_Route_CT_20.1.png" alg="Route_CT_20.1">
+<img width="200" src="./images/Ariane_Route_CT_21.1.png" alg="Route_CT_21.1">
+</p>
+
+
+
+
+
 ## **Pinned (to bottom) question list:**
   
 **<span style="color:blue">[Question 1](#Question1).</span>** How does having an initial set of placement locations (from physical synthesis) affect the (relative) quality of the CT result?  
@@ -6358,4 +6406,5 @@ We observe from the above results that CT+DREAMPlace achieves similar result for
 **<span style="color:blue">[Question 12](#Question12).</span>** How well does Simulated Annealing (SA) optimize Circuit Training's proxy cost?  
 **<span style="color:blue">[Question 13](#Question13).</span>** How good are human macro placements relative to Circuit Training?  
 **<span style="color:blue">[Question 14](#Question14).</span>** What is the impact on CT results when DREAMPlace is used instead of force-directed placement?  
-**<span style="color:blue">[Question 15](#Question15).</span>** Should we factor in density cost while using DREAMPlace for CT?
+**<span style="color:blue">[Question 15](#Question15).</span>** Should we factor in density cost while using DREAMPlace for CT?  
+**<span style="color:blue">[Question 16](#Question16).</span>** Why does your study (and, ISPD-2023 paper) use Cadence CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?

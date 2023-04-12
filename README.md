@@ -161,6 +161,12 @@ We believe the answer is Yes.  We refer to the ISPD-2022 paper by Google authors
 <img width="300" src="./Docs/OurProgress/images/CT_Train_Steps_Per_Second.png" alg="CT_train_step">
 </p>
 
+**14. The [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf) includes results from Cadence’s Concurrent Macro Placer (in Innovus 21.1). What is the reasoning behind your use of CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?**
+
+We used Innovus version 21.1 since it was the latest version of our place-and-route **evaluator** of macro placement solutions. CMP 21.1 is part of Innovus 21.1.
+- Using the latest version of CMP was also natural, given our starting assumption that RL from *Nature* would outperform the commercial state-of-the-art.
+- We have now run further experiments using older versions of CMP and Innovus. The macro placements produced by CMP across versions 19.1, 20.1 and 21.1 lead to the same qualitative conclusions. Details are given [here](./Docs/OurProgress#Question16).
+
 ## **Testcases**  
 The list of available [testcases](./Testcases) is as follows.
 - Ariane (RTL)
