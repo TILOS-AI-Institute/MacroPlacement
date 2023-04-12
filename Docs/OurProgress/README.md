@@ -6343,7 +6343,7 @@ We update the density weight from 0.5 to 0.0, then rerun CT-DREAMPlace for Arian
 We observe from the above results that CT+DREAMPlace achieves similar result for density weight 0 and 0.5.
 
 <a id="Question16"></a>
-**<span style="color:blue">Question 16.</span>** Why does your study (and, ISPD-2023 paper) use Cadence CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?
+**<span style="color:blue">Question 16.</span>** Why does your study (and, [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf)) use Cadence CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?
 
 We used Innovus version 21.1 since it was the latest version of our place-and-route **evaluator** of macro placement solutions. CMP 21.1 is part of Innovus 21.1. Using the latest version of CMP was also natural, given our starting assumption that RL from Nature would outperform the commercial state-of-the-art.
 
