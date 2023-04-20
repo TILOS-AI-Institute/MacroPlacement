@@ -166,6 +166,18 @@ We believe the answer is Yes.  We refer to the ISPD-2022 paper by Google authors
 We used Innovus version 21.1 since it was the latest version of our place-and-route **evaluator** of macro placement solutions. CMP 21.1 is part of Innovus 21.1.
 - Using the latest version of CMP was also natural, given our starting assumption that RL from *Nature* would outperform the commercial state-of-the-art.
 - We have now run further experiments using older versions of CMP and Innovus. The macro placements produced by CMP across versions 19.1, 20.1 and 21.1 lead to the same qualitative conclusions. Details are given [here](./Docs/OurProgress#Question16).
+  
+**15. What are the outcomes of CT when the training is continued until convergence?**  
+To put this question in perspective, training “until convergence” is not described in any of the guidelines provided by the CT GitHub repo for reproducing the results in the Nature paper. For the [ISPD 2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf), we adhere to the guidelines given in the [CT GitHub repo](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#train-job), use the same number of iterations for Ariane as Google engineers demonstrate in the [CT GitHub repo](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#train-job), and obtain results that closely align with Google's outcomes for Ariane. (See FAQs #4 and #13.)
+
+CT code **does not guarantee** convergence. This said, we have run CT training for an extended number (= 600, which is three times our default [value of 200](https://github.com/google-research/circuit_training/blob/main/docs/ARIANE.md#train-job)) of iterations, for each of Ariane, BlackParrot and MemPool Group, on NG45.  For MemPool Group, CT diverges (tensorboard [link](https://tensorboard.dev/experiment/w4txHNhAReCOV77LqvqkgQ/#scalars)). 
+
+When convergence can be attained, the impact on key chip metrics is mixed. For instance, for Ariane, the chip metrics remain similar. In the case of BlackParrot, the routed wirelength significantly improves, but the TNS and WNS degrade. For Ariane and BlackParrot, the proxy cost improves significantly, but does not correlate with timing metrics. For more details, see [here](./Docs/OurProgress#Question17).
+
+**In sum, training until convergence worsens some key chip metrics while improving others, highlighting the poor correlation between proxy cost and chip metrics. Overall, training until convergence does not qualitatively change comparisons to results of Simulated Annealing and human macro placements reported in the [ISPD 2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf).**
+
+**Note:** We have not studied what happens if SA is given triple the runtime used in our reported experiments.
+
 
 ## **Testcases**  
 The list of available [testcases](./Testcases) is as follows.
