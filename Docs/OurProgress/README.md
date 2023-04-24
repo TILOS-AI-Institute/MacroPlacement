@@ -6553,6 +6553,45 @@ The subsequent tables and figures present the Nature Table 1 metrics of Ariane a
 <img height="300" src="./images/BP_NG45_Route_itr_600.png" alg="BP_NG45_Route_itr600">
 </p> 
 
+<a id="Question18"></a>
+**<span style="color:blue">Question 18.</span>** To study the benefit that CT derives from use of a commercial placement solution, why do you compare with giving CT “impossible” initial placements, where all instances are placed at the same location?  
+  
+- Section 5.2.1 of our ISPD-2023 paper discusses the advantage that CT derives from its use of initial placement information from a commercial EDA tool. To measure this advantage, we study what happens when CT is deprived of this placement information.
+- In [Question 1, August 2022](#Question1) we used “vacuous” placements where the same (x,y) location is given for all instances. This corresponds to the use of placements that have as little information content as possible. However, after publication of our ISPD-2023 paper, comments were made that such placements are “impossible”.
+- We have now performed a second study that gradually perturbs the EDA tool’s placement and measures the effect on CT outcomes. In this second study, we always maintain legal placements: every placement that is fed to CT is “possible”. Our new study directly assesses how CT’s performance changes as the commercial EDA tool’s placement is degraded.
+  - Note 1: CT’s grouping flow requires (x,y) coordinates in the input.
+  - Note 2: We cannot use a “random, but possible” placement as input to CT. This leads to a blowup of the numbers of clusters and edges in the adjacency matrix. [E.g.: “<span style="color:red">IndexError: index 3500 is out of bounds for axis 0 with size [3500](https://github.com/google-research/circuit_training/blob/691105687d0cef453467e073bfd0843725302cb8/circuit_training/environment/observation_config.py#L73-L74)</span>” from CT. There is also a default limit of [42000](https://github.com/google-research/circuit_training/blob/691105687d0cef453467e073bfd0843725302cb8/circuit_training/environment/observation_config.py#L73-L74) edges in CT.]
+- The *gen_perturbed_placement* procedure below randomly perturbs the original placement solution from commercial physical synthesis, by shuffling the placed locations of a prescribed fraction of instances in the design. (E.g., when the parameter x = 0.05, the locations of 5% of the netlist will be shuffled.)
+  
+**Procedure *gen_perturbed_placement***  
+**Input:** `seed, x`
+```
+# x indicates the fraction of instances to be moved 0 < x < 1.0
+1. For w, h in {unique list of instance (width, height)}
+  a. instance_list = {list of instances with width = w and height = h}
+  b. instance_list = shuffle(instance_list, seed)
+  c. instance_count = length(shuffled_instance_list)
+  d. shuffled_instance_list = instance_list[:instance_count*x]
+  e. shuffle_placement(shuffled_instance_list, seed)
+```
+
+**Procedure *shuffle_placement***  
+**Input:** `instance_list, seed`
+```
+1. X, Y, Orient = {list of lower left coordinate and orientation of instances in the instance_list}
+2. shuffled_instance_list = shuffle(instance_list, seed)
+3. For i in range(length(instance_list)):
+  a. Update location and orientation of shuffled_instance_list[i] with (X[i], Y[i]) and Orient[i]
+```
+  
+- The table below shows what happens as the commercial EDA tool’s “possible” initial placement is degraded into other “possible” initial placements, for all combinations of x = {0.01, 0.05, 0.15} and seed  = {21, 42, 63}. The value x = 0.0 corresponds to the CT outcome that we report in Table 1 of our ISPD-2023 paper. We include the “Human” and “SA” rows from our Table 1 for ease of reference.
+- From the data, we observe that degrading the commercial placement information worsens all CT outcomes except for routed wirelength across all seed values. Runtime is also worsened, e.g., with x = 0.15 the CT runtime in our environment was 52.0 hours which is 1.6 times longer than when x = 0.0 (See #13 of our [FAQs](../../README.md#faqs).). This is at least in part because having more moving elements (soft macros) increases CT’s runtime in force-directed placement and proxy cost evaluation. 
+- For the nine perturbed placements, SA yields better proxy cost and chip metrics compared to CT in most cases.
+  - Note 3: We have not studied what happens if SA is given 1.6 times the runtime used in our previously-reported experiments.
+
+<p align="center">
+<img width="900" src="./images/PerturbedPlacementResult.png" alg="PerturbedPlacementResult">
+</p> 
 
 ## **Pinned (to bottom) question list:**
   
@@ -6572,4 +6611,5 @@ The subsequent tables and figures present the Nature Table 1 metrics of Ariane a
 **<span style="color:blue">[Question 14](#Question14).</span>** What is the impact on CT results when DREAMPlace is used instead of force-directed placement?  
 **<span style="color:blue">[Question 15](#Question15).</span>** Should we factor in density cost while using DREAMPlace for CT?  
 **<span style="color:blue">[Question 16](#Question16).</span>** Why does your study (and, [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf)) use Cadence CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?  
-**<span style="color:blue">[Question 17](#Question17).</span>** What are the outcomes of CT when the training is continued until convergence?
+**<span style="color:blue">[Question 17](#Question17).</span>** What are the outcomes of CT when the training is continued until convergence?  
+**<span style="color:blue">[Question 18](#Question18).</span>** To study the benefit that CT derives from use of a commercial placement solution, why do you compare with giving CT “impossible” initial placements, where all instances are placed at the same location?  
