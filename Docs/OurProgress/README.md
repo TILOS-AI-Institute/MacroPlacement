@@ -14,6 +14,7 @@
     - [Macro placement using AutoDMP](#December20)
     - [Macro placement generated using Simulated Annealing](#Question12)
     - [Macro placement by Human expert](#Question13)
+    - [Macro placement using Hier-RTLMP](#April272023)
   - [Pinned questions](#pinned-to-bottom-question-list)
 
 
@@ -6593,6 +6594,242 @@ The subsequent tables and figures present the Nature Table 1 metrics of Ariane a
 <img width="900" src="./images/PerturbedPlacementResult.png" alg="PerturbedPlacementResult">
 </p> 
 
+<a id="April272023"></a>
+**April 27, 2023:**  
+We have ran Hier-RTLMP macro placer described in this [arXiv paper](https://arxiv.org/abs/2304.11761) on our modern benchmarks. The results are as follows:
+
+- **Ariane133-NG45-68%-1.3ns**: Following table and screenshots shows the macro placement result of Ariane133 on NG45, generated using Hier-RTLMP.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10"><p align="center">Ariane133-NG45-68%-1.3ns Hier-RTLMP (<a href="../../Flows/NanGate45/ariane133#macro-placement-generated-by-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/ariane133#flow-2-result-for-the-macro-placement-generated-by-cadence-concurrent-macro-placer">Link</a> to CMP result)</p></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>1814274</td>
+    <td>246916</td>
+    <td>1018356</td>
+    <td>796.781</td>
+    <td>5087055</td>
+    <td>-0.149</td>
+    <td>-192.7</td>
+    <td>0.11%</td>
+    <td>0.08%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>1814274</td>
+    <td>247403</td>
+    <td>1018356</td>
+    <td>836.595</td>
+    <td>5136058</td>
+    <td>-0.110</td>
+    <td>-104.2</td>
+    <td>0.15%</td>
+    <td>0.10%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>1814274</td>
+    <td>247403</td>
+    <td>1018356</td>
+    <td>835.096</td>
+    <td>5291106</td>
+    <td>-0.178</td>
+    <td>-356.0</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>1814274</td>
+    <td>248296</td>
+    <td>1018356</td>
+    <td>836.002</td>
+    <td>5296879</td>
+    <td>-0.165</td>
+    <td>-223.4</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img height="300" src="./images/Ariane_NG45_HierRTLMP_Place.png" alg="Ariane133_Place_HierRTLMP">
+<img height="300" src="./images/Ariane_NG45_HierRTLMP_Route.png" alg="Ariane133_Route_HierRTLMP">
+</p>
+
+- **BlackParrot (Quad Core)-NG45-68%-1.3ns**: Following table and screenshots shows the macro placement result of BlackParrot (Quad-Core) on NG45, generated using Hier-RTLMP.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10"><p align="center">BlackParrot-NG45-68%-1.3ns Hier-RTLMP (<a href="../Flows/NanGate45/bp_quad/#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../Flows/NanGate45/bp_quad/#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</p></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>8449457</td>
+    <td>1908372</td>
+    <td>3917822</td>
+    <td>4148.534</td>
+    <td>27687847</td>
+    <td>-0.169</td>
+    <td>-455.5</td>
+    <td>0.13%</td>
+    <td>0.17%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>8449457</td>
+    <td>1923367</td>
+    <td>3917822</td>
+    <td>4522.966</td>
+    <td>27810361</td>
+    <td>-0.123</td>
+    <td>-181.5</td>
+    <td>0.15%</td>
+    <td>0.20%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>8449457</td>
+    <td>1923367</td>
+    <td>3917822</td>
+    <td>4509.596</td>
+    <td>28835670</td>
+    <td>-0.166</td>
+    <td>-906.8</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>8449457</td>
+    <td>1925012</td>
+    <td>3917822</td>
+    <td>4511.780</td>
+    <td>28865504</td>
+    <td>-0.150</td>
+    <td>-456.6</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img height="300" src="./images/BP_Quad_NG45_HierRTLMP_Place.png" alg="BP_Quad_Place_HierRTLMP">
+<img height="300" src="./images/BP_Quad_NG45_HierRTLMP_Route.png" alg="BP_Quad_Route_HierRTLMP">
+</p>
+
+- **MemPool Group-NG45-68%-4ns**: Following table and screenshots shows the macro placement result of MemPool Group on NG45, generated using Hier-RTLMP.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10"><p align="center">MemPool Group-NG45-68%-4ns Hier-RTLMP (62 DRCs) (<a href="#MemPoolGroup_NG45_68_CT">Link</a> to CT result) (<a href="#MemPoolGroup_NG45_68_CMP">Link</a> to CMP result)</p></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>11371934</td>
+    <td>4939447</td>
+    <td>3078071</td>
+    <td>2489.1</td>
+    <td>105739299</td>
+    <td>-0.016</td>
+    <td>-50.5</td>
+    <td>2.05%</td>
+    <td>1.03%</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>11371934</td>
+    <td>4895581</td>
+    <td>3078071</td>
+    <td>2671.4</td>
+    <td>106267958</td>
+    <td>-0.002</td>
+    <td>-0.1</td>
+    <td>2.31%</td>
+    <td>1.18%</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>11371934</td>
+    <td>4895581</td>
+    <td>3078071</td>
+    <td>2696.2</td>
+    <td>113924593</td>
+    <td>-0.503</td>
+    <td>-4743.7</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>11371934</td>
+    <td>4889459</td>
+    <td>3078071</td>
+    <td>2695.3</td>
+    <td>114073113</td>
+    <td>-0.062</td>
+    <td>-4.9</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+
+<p align="center">
+<img height="300" src="./images/MemPool_Group_NG45_HierRTLMP_Place.png" alg="MemPool_Group_Place_HierRTLMP">
+<img height="300" src="./images/MemPool_Group_NG45_HierRTLMP_Route.png" alg="MemPool_Group_Route_HierRTLMP">
+</p>
+
+
 ## **Pinned (to bottom) question list:**
   
 **<span style="color:blue">[Question 1](#Question1).</span>** How does having an initial set of placement locations (from physical synthesis) affect the (relative) quality of the CT result?  
@@ -6612,4 +6849,4 @@ The subsequent tables and figures present the Nature Table 1 metrics of Ariane a
 **<span style="color:blue">[Question 15](#Question15).</span>** Should we factor in density cost while using DREAMPlace for CT?  
 **<span style="color:blue">[Question 16](#Question16).</span>** Why does your study (and, [ISPD-2023 paper](https://vlsicad.ucsd.edu/Publications/Conferences/396/c396.pdf)) use Cadence CMP 21.1, which was not available to Google engineers when they wrote the Nature paper?  
 **<span style="color:blue">[Question 17](#Question17).</span>** What are the outcomes of CT when the training is continued until convergence?  
-**<span style="color:blue">[Question 18](#Question18).</span>** To study the benefit that CT derives from use of a commercial placement solution, why do you compare with giving CT “impossible” initial placements, where all instances are placed at the same location?  
+**<span style="color:blue">[Question 18](#Question18).</span>** To study the benefit that CT derives from use of a commercial placement solution, why do you compare with giving CT “impossible” initial placements, where all instances are placed at the same location?
