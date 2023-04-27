@@ -95,7 +95,21 @@ module tc_sram #(
 		fakeram45_64x64 fr_sp_instance1(.rd_out(rdata_o[0][127:64]), .clk(clk_i), .ce_in(~req_i), .we_in(we_i), .addr_in(addr_i), .wd_in(wdata_i[0][127:64]));
 		fakeram45_64x64 fr_sp_instance2(.rd_out(rdata_o[0][191:128]), .clk(clk_i), .ce_in(~req_i), .we_in(we_i), .addr_in(addr_i), .wd_in(wdata_i[0][191:128]));
 		fakeram45_64x64 fr_sp_instance3(.rd_out(rdata_o[0][255:192]), .clk(clk_i), .ce_in(~req_i), .we_in(we_i), .addr_in(addr_i), .wd_in(wdata_i[0][255:192]));
-	end	
+	end
+    else if (DataWidth == 256 && NumWords == 128) begin
+		fakeram45_128x256 sram_instance(.rd_out(rdata_o[0]), .clk(clk_i), .ce_in(~req_i), .we_in(we_i), .addr_in(addr_i), .wd_in(wdata_i[0]));
+    end   
+    else if (DataWidth == 23 && NumWords == 128) begin
+        logic [31:0]  wdata_aligned;
+        logic [31:0]  rdata_aligned;
+
+        always_comb begin : p_align
+            wdata_aligned ='0;
+            wdata_aligned[22:0] = wdata_i[0];
+            rdata_o[0] = rdata_aligned[22:0];
+        end
+		fakeram45_128x32 sram_instance(.rd_out(rdata_aligned), .clk(clk_i), .ce_in(~req_i), .we_in(we_i), .addr_in(addr_i), .wd_in(wdata_aligned));
+    end
     else begin
 	// memory array
 	data_t sram [NumWords-1:0];
