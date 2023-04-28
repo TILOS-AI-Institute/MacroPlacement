@@ -6596,7 +6596,7 @@ The subsequent tables and figures present the Nature Table 1 metrics of Ariane a
 
 <a id="April272023"></a>
 **April 27, 2023:**  
-We have ran Hier-RTLMP macro placer described in this [arXiv paper](https://arxiv.org/abs/2304.11761) on our modern benchmarks. The results are as follows:
+We have ran Hier-RTLMP macro placer, as described in the [arXiv paper](https://arxiv.org/abs/2304.11761), on our modern benchmarks. The code for Hier-RTLMP is open-sourced [here](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2). We use the default settings to generate the macro placement solutions. The results are as follows:
 
 - **Ariane133-NG45-68%-1.3ns**: Following table and screenshots shows the macro placement result of Ariane133 on NG45, generated using Hier-RTLMP.
 
@@ -6680,7 +6680,7 @@ We have ran Hier-RTLMP macro placer described in this [arXiv paper](https://arxi
 <table>
 <thead>
   <tr>
-    <th colspan="10"><p align="center">BlackParrot-NG45-68%-1.3ns Hier-RTLMP (<a href="../Flows/NanGate45/bp_quad/#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../Flows/NanGate45/bp_quad/#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</p></th>
+    <th colspan="10"><p align="center">BlackParrot-NG45-68%-1.3ns Hier-RTLMP (<a href="../../Flows/NanGate45/bp_quad/#macro-placement-generated-using-circuit-training-ct">Link</a> to CT result) (<a href="../../Flows/NanGate45/bp_quad/#macro-placement-generated-using-concurrent-macro-placer-cmp">Link</a> to CMP result)</p></th>
   </tr>
 </thead>
 <tbody>
