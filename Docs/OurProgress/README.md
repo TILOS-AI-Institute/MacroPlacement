@@ -5296,7 +5296,7 @@ We have tried a similar macro shuffling experiment for MemPool Group, but none o
 **December 20:**  
 We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based macro placer that will be reported at ISPD-2023. We have generated macro placements of Ariane and BlackParrot using AutoDMP, in both NG45 and GF12 enablements. The results are as follows:
 
-- **Ariane133-NG45-68%-1.3ns**:  Following table and screenshots shows the macro placement result of Ariane133 on NG45, generated using AutoDMP.
+- **Ariane133-NG45-68%-1.3ns**:  Following table and screenshots show the macro placement result of Ariane133 on NG45, generated using AutoDMP.
 
 <table>
 <thead>
@@ -5375,7 +5375,7 @@ We thank NVIDIA Research for access to AutoDMP, an autotuned DREAMPlace-based ma
 
 - **Ariane133-GF12-68%**: [Link](#Ariane133_GF12_AutoDMP) to AutoDMP macro placement details of Ariane on GF12 enablement.
 
-- **BlackParrot-NG45-68%-(bp clock)1.3ns**: Following table and screenshots shows the macro placement result of BlackParrot (Quad-Core) on NG45, generated using AutoDMP.
+- **BlackParrot-NG45-68%-(bp clock)1.3ns**: Following table and screenshots show the macro placement result of BlackParrot (Quad-Core) on NG45, generated using AutoDMP.
 
 <table>
 <thead>
@@ -6596,9 +6596,9 @@ The subsequent tables and figures present the Nature Table 1 metrics of Ariane a
 
 <a id="April272023"></a>
 **April 27, 2023:**  
-We have ran Hier-RTLMP macro placer, as described in the [arXiv paper](https://arxiv.org/abs/2304.11761), on our modern benchmarks. The code for Hier-RTLMP is open-sourced [here](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2). We use the default settings to generate the macro placement solutions. The results are as follows:
+We have run Hier-RTLMP macro placer, as described in the [arXiv paper](https://arxiv.org/abs/2304.11761), on our modern benchmarks. The code for Hier-RTLMP is open-sourced [here](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/mpl2). We use the default settings to generate the macro placement solutions. The results are as follows:
 
-- **Ariane133-NG45-68%-1.3ns**: Following table and screenshots shows the macro placement result of Ariane133 on NG45, generated using Hier-RTLMP.
+- **Ariane133-NG45-68%-1.3ns**: Following table and screenshots show the macro placement result of Ariane133 on NG45, generated using Hier-RTLMP.
 
 <table>
 <thead>
@@ -6675,7 +6675,7 @@ We have ran Hier-RTLMP macro placer, as described in the [arXiv paper](https://a
 <img height="300" src="./images/Ariane_NG45_HierRTLMP_Route.png" alg="Ariane133_Route_HierRTLMP">
 </p>
 
-- **BlackParrot (Quad Core)-NG45-68%-1.3ns**: Following table and screenshots shows the macro placement result of BlackParrot (Quad-Core) on NG45, generated using Hier-RTLMP.
+- **BlackParrot (Quad-Core)-NG45-68%-1.3ns**: Following table and screenshots show the macro placement result of BlackParrot (Quad-Core) on NG45, generated using Hier-RTLMP.
 
 <table>
 <thead>
@@ -6752,7 +6752,7 @@ We have ran Hier-RTLMP macro placer, as described in the [arXiv paper](https://a
 <img height="300" src="./images/BP_Quad_NG45_HierRTLMP_Route.png" alg="BP_Quad_Route_HierRTLMP">
 </p>
 
-- **MemPool Group-NG45-68%-4ns**: Following table and screenshots shows the macro placement result of MemPool Group on NG45, generated using Hier-RTLMP.
+- **MemPool Group-NG45-68%-4ns**: Following table and screenshots show the macro placement result of MemPool Group on NG45, generated using Hier-RTLMP.
 
 <table>
 <thead>
