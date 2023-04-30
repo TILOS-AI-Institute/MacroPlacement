@@ -4393,7 +4393,7 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <table>
 <thead>
   <tr>
-    <th colspan="10">Ariane-GF12-68% AutoDMP (results are normalized as described <a href="#GF12_Normalization">here</a>)</th>
+    <th colspan="10"><p align="center">Ariane-GF12-68% AutoDMP (results are normalized as described <a href="#GF12_Normalization">here</a>)</p></th>
   </tr>
 </thead>
 <tbody>
@@ -4463,6 +4463,84 @@ We have run CT to generate macro placements for Ariane133, BlackParrot and MemPo
 <p align="center">
 <img width="300" src="./images/Ariane133_GF12_AutoDMP_Place.png" alg="Ariane133_GF12_AutoDMP_Place">
 <img width="300" src="./images/Ariane133_GF12_AutoDMP_Route.png" alg="Ariane133_GF12_AutoDMP_Route">
+</p>
+  
+<a id="Ariane133_GF12_HierRTLMP"></a>
+- (Updated on April 30, 2023) The following table and screenshots provide details of Ariane133-GF12 implementation when Hier-RTLMP is used to generate the macro placement.
+
+<table>
+<thead>
+  <tr>
+    <th colspan="10"><p align="center">Ariane133-GF12-68% Hier-RTLMP (results are normalized as described <a href="#GF12_Normalization">here</a>) </p></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Physical Design Stage</td>
+    <td>Core Area (um^2)</td>
+    <td>Standard Cell Area (um^2)</td>
+    <td>Macro Area (um^2)</td>
+    <td>Total Power (mW)</td>
+    <td>Wirelength (um)</td>
+    <td>WS (ns)</td>
+    <td>TNS (ns)</td>
+    <td>Congestion (H)</td>
+    <td>Congestion (V)</td>
+  </tr>
+  <tr>
+    <td>preCTS</td>
+    <td>1</td>
+    <td>0.138</td>
+    <td>0.555</td>
+    <td>1.0218</td>
+    <td>1.3219</td>
+    <td>-0.144</td>
+    <td>-307.690</td>
+    <td>0</td>
+    <td>3.5</td>
+  </tr>
+  <tr>
+    <td>postCTS</td>
+    <td>1</td>
+    <td>0.140</td>
+    <td>0.555</td>
+    <td>1.1657</td>
+    <td>1.3389</td>
+    <td>-0.169</td>
+    <td>-190.458</td>
+    <td>0</td>
+    <td>3.5</td>
+  </tr>
+  <tr>
+    <td>postRoute</td>
+    <td>1</td>
+    <td>0.140</td>
+    <td>0.555</td>
+    <td>1.1557</td>
+    <td>1.3772</td>
+    <td>-0.270</td>
+    <td>-289.089</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>postRouteOpt</td>
+    <td>1</td>
+    <td>0.139</td>
+    <td>0.555</td>
+    <td>1.1541</td>
+    <td>1.3785</td>
+    <td>-0.181</td>
+    <td>-178.470</td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+  
+<p align="center">
+<img width="300" src="./images/Ariane133_GF12_HierRTLMP_Place.png" alg="Ariane133_GF12_HierRTLMP_Place">
+<img width="300" src="./images/Ariane133_GF12_HierRTLMP_Route.png" alg="Ariane133_GF12_HierRTLMP_Route">
 </p>
 
 - The following table and screenshots provide details of BlackParrot (Quad Core) GF12 implementation when CMP is used to generate the macro placement.  
