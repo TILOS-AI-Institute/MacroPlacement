@@ -2,7 +2,7 @@
 
 The Arizona State university's 7nm Predictive PDK (ASAP7) was developed at ASU in collaboration with ARM Research and it is available under BSD-3-Clause license.  
 
-As the ASAP7 enablement does not have memory generators, we use the FakeRAM2.0 memory generator available in the [FakeRAM2.0](https://github.com/ABKGroup/FakeRAM2.0) GitHub repo.
+As the ASAP7 enablement does not have memory generators, we use the FakeRAM2.0 memory generator available in the [FakeRAM2.0](https://github.com/ABKGroup/FakeRAM2.0/tree/3449b8c494f70b32d8c31cb94fc88bcf63983795) (commit hash: 3449b8c) GitHub repo.
 
 With this combined enablement, testcases with SRAMs can be synthesized, placed and routed using both proprietary (commercial) tools such as Cadence Genus/Innovus, and open-source tools such as OpenROAD.
 
