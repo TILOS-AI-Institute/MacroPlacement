@@ -7846,7 +7846,7 @@ We have run Hier-RTLMP macro placer, as described in the [arXiv paper](https://a
 **Protobuf to LEF/DEF and macro placement of CT-Ariane**
 We have released a **new Protobuf-to-LEF/DEF translator** in our repository;
 detailed information is available in
-[CodeElements/FormatTranslators](../CodeElements/FormatTranslators/README.md).
+[CodeElements/FormatTranslators](../../CodeElements/FormatTranslators/README.md).
 Using this translator, we have generated LEF/DEF files from the
 [Protobuf netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz)
 of the Ariane design (the only publicly available design disclosed by the
@@ -7877,7 +7877,7 @@ by Circuit Training (commit hash: 1e14fd1ca), RePlAce (OpenROAD, commit hash:
 ad808fd, command: *global_placement -density 0.8*) and Innovus CMP (version:
 21.1, command: *place_design -concurrent_macros*) for the CT-Ariane (original,
  “X1”) Protobuf. The corresponding LEF/DEF files are
- [here](../../CodeElements/FormatTranslators/test/CTAriane). Please note that we
+ [here]https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators/test/CTAriane). Please note that we
  report this data as part of our study of Circuit Training. It is not intended
  to “benchmark” any commercial EDA tool in any sense, and the data should not be
  interpreted as providing any sort of “benchmarking” comparison or value
