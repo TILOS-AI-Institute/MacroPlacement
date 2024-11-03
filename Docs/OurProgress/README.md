@@ -15,6 +15,7 @@
     - [Macro placement generated using Simulated Annealing](#Question12)
     - [Macro placement by Human expert](#Question13)
     - [Macro placement using Hier-RTLMP](#April272023)
+    - [Protobuf to LEF/DEF and macro placement of CT-Ariane](#Oct26102024)
   - [Pinned questions](#pinned-to-bottom-question-list)
 
 
@@ -7840,6 +7841,124 @@ We have run Hier-RTLMP macro placer, as described in the [arXiv paper](https://a
 </p>
 
 - **MemPool Group-GF12-68%**: [Link](#MemPool_Group_GF12_HierRTLMP) to the HierRTLMP macro placement details of MemPool Group on GF12 enablement.
+
+<a id="Oct26102024"></a>
+**Protobuf to LEF/DEF and macro placement of CT-Ariane**
+We have released a **new Protobuf-to-LEF/DEF translator** in our repository;
+detailed information is available in
+[CodeElements/FormatTranslators](../CodeElements/FormatTranslators/README.md).
+Using this translator, we have generated LEF/DEF files from the
+[Protobuf netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz)
+of the Ariane design (the only publicly available design disclosed by the
+authors of the Nature paper) available in the Circuit Training repository.
+We believe that, consistent with the **sub-10nm** characterization of testcases
+mentioned in the Nature paper, CT-Ariane corresponds to an implementation in
+TSMC 7nm technology. This belief is based on two aspects of the Protobuf netlist
+posted by Google Brain. (1) First, in the Protobuf header, we see
+“ariane_tsmc7_dc_09162019”, which suggests that the design is in the TSMC 7nm
+node. (2) Second, we find here that in TSMC 7nm technology, the standard-cell
+height is either 240nm or 300nm. All single-height standard cells in the
+CT-Ariane Protobuf posted by Google Brain have a height of 240nm (i.e., “HD”).
+The cell naming seen in Google’s posted Ariane testcase (e.g.,
+“NR2D1BWP240H8P57PDSVT”) matches conventions commonly seen with TSMC-based
+design enablement.
+  
+  
+With these generated LEF/DEF files, we have created macro placement solutions
+using Circuit Training (CT), RePlAce, and Innovus Concurrent Macro Placer (CMP).
+To evaluate these macro placement solutions, we use Innovus21.1. The evaluation
+flow is as follows: (1) we first legalize macro placement solutions using the
+*refine_macro_place* command; (2) we then place standard cells using the
+*place_design* command; and (3) finally, we report post-placement HPWL.
+  
+
+The figure below shows visualizations of the macro placement solutions generated
+by Circuit Training (commit hash: 1e14fd1ca), RePlAce (OpenROAD, commit hash:
+ad808fd, command: *global_placement -density 0.8*) and Innovus CMP (version:
+21.1, command: *place_design -concurrent_macros*) for the CT-Ariane (original,
+ “X1”) Protobuf. The corresponding LEF/DEF files are
+ [here](../../CodeElements/FormatTranslators/test/CTAriane). Please note that we
+ report this data as part of our study of Circuit Training. It is not intended
+ to “benchmark” any commercial EDA tool in any sense, and the data should not be
+ interpreted as providing any sort of “benchmarking” comparison or value
+ judgment regarding the commercial tool.
+
+<div style="display: flex; justify-content: center; align-items: center;">
+
+  <figure style="text-align: center; margin: 10px;">
+   <img src="./images/OR/ct_ariane_eval.png" alt="ct_ariane_eval" style="width: 200px;">
+   <figcaption>Tool: CT HPWL: 1,117,300um<br>Runtime: ~112824s<br>(using 8 NVIDIA-V100 GPU,<br>96 CPU thread, Memory: 354 GB machine)</figcaption>
+  </figure>
+
+  <figure style="text-align: center; margin: 10px;">
+   <img src="./images/OR/ariane_eval.png" alt="or_ariane_eval" style="width: 200px;">
+   <figcaption>Tool: RePlAce<br>HPWL: 922,344um<br>Runtime: 81s<br>(using 1 thread)</figcaption>
+  </figure>
+
+  <figure style="text-align: center; margin: 10px;">
+   <img src="./images/Invs/ariane_eval.png" alt="invs_ariane_eval" style="width: 200px;">
+   <figcaption>Tool: Innovus CMP (version 21.1)<br>HPWL: 746,816um<br>Runtime: 294s<br>(Innovus is launched with 8 threads)</figcaption>
+  </figure>
+
+</div>
+
+We have scaled the [Protobuf netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz) of the Ariane design in the Circuit Training repository into CT-Ariane-X2 and CT-Ariane-X4,  following the “quantified suboptimality” studies in the DAC-1995 paper, “[Quantified suboptimality of VLSI layout heuristics](https://dl.acm.org/doi/pdf/10.1145/217474.217532)”.  For a given testcase, self-scaling of additional copies can be performed in two basic ways: **shift** and **flip**. 
+    - The **shift** operation translates a given copy along the X and/or Y axis, relative to the original testcase.
+    - The **flip** operation mirrors the given copy along the X or Y axis.  
+  
+By combining these actions, it is possible to obtain variants of the X2 design using X-Shift (the second copy is placed to the right of the original copy), Y-Shift (the second copy is placed above the original copy), X-Flip (the second copy mirrors the original copy about the X axis), and Y-Flip (the second copy mirrors the original copy about the Y axis). Variants for the X4 design can be obtained by serial application of these actions, e.g., X-Shift-Y-Shift, X-Flip-Y-Flip, X-Shift-Y-Flip, X-Flip-Y-Shift, etc. However, considering that all I/O pins must be placed at the boundaries, two variants are of more interest for CT-Ariane-X4: X-Shift-Y-Flip and X-Flip-Y-Flip. 
+  
+Our naming convention is as follows: CT-Ariane-X4-X-Shift-Y-Flip indicates a design that is an X4 version of the original CT-Ariane design. It is generated by first shifting the X1 copy along the X-axis to obtain an X2 copy, then flipping the X2 copy along the Y-axis to create the X4 copy.  For the CT-Ariane-X2, we generate two versions:  CT-Ariane-X2-Y-Flip and CT-Ariane-X2-X-Shift.  For the CT-Ariane-X4, we generate two versions:  CT-Ariane–X4-X-Shift-Y-Flip and CT-Ariane-X4-X-Flip-Y-Flip.
+  
+The following figures show visualizations of the macro placement solutions for each version,  generated using RePlAce (OpenROAD, commit hash: ad808fd) and Innovus CMP (version 21.1).  HPWL and runtime values are also shown. The detailed command and evaluation flow are the same as those used for the original CT-Ariane (X1) study.
+  
+<p style="text-align: center; font-weight: bold;">X2 Versions: (CT-Ariane-X2-Y-Flip)</p>
+<div style="display: flex; justify-content: center; align-items: center;">
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/OR/ariane_r2c1_eval.png" alt="or_ariane_r2c1" style="height: 250px;">
+   <figcaption>Tool: RePlAce<br>HPWL: 1,851,241um<br>Runtime: 170s</figcaption>
+  </figure>
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/Invs/ariane_r2c1_eval.png" alt="invd_ariane_r2c1" style="height: 250px;">
+   <figcaption>Tool: CMP<br>HPWL: 1,510,131um<br>Runtime: 534s</figcaption>
+  </figure>
+</div>
+
+<p style="text-align: center; font-weight: bold;">X2 Versions: (CT-Ariane-X2-X-Shift)</p>
+<div style="display: flex; justify-content: center; align-items: center;">
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/OR/ariane_r1c2_no_flip_eval.png" alt="or_ariane_r1c2_no_flip" style="width: 250px;">
+   <figcaption>Tool: RePlAce<br>HPWL: 1,901,242um<br>Runtime: 193s</figcaption>
+  </figure>
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/Invs/ariane_r1c2_no_flip_eval.png" alt="invs_ariane_r1c2_no_flip" style="width: 250px;">
+   <figcaption>Tool: CMP<br>HPWL: 1,513,938um<br>Runtime: 597s</figcaption>
+  </figure>
+</div>
+
+<p style="text-align: center; font-weight: bold;">X4 Versions: (CT-Ariane-X4-X-Shift-Y-Flip)</p>
+<div style="display: flex; justify-content: center; align-items: center;">
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/OR/ariane_r2c2_eval.png" alt="or_ariane_r2c2" style="width: 250px;">
+   <figcaption>Tool: RePlAce<br>HPWL: 3,700,397um<br>Runtime: 361s</figcaption>
+  </figure>
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/Invs/ariane_r2c2_eval.png" alt="invs_ariane_r2c2" style="width: 250px;">
+   <figcaption>Tool: CMP<br>HPWL: 3,051,941um<br>Runtime: 1357s</figcaption>
+  </figure>
+</div>
+
+<p style="text-align: center; font-weight: bold;">X4 Versions: (CT-Ariane-X4-X-Flip-Y-Flip)</p>
+<div style="display: flex; justify-content: center; align-items: center;">
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/OR/ariane_r2c2_no_flip_eval.png" alt="or_ariane_r2c2_no_flip" style="width: 250px;">
+   <figcaption>Tool: RePlAce<br>HPWL: 3,742,491um<br>Runtime: 372s</figcaption>
+  </figure>
+  <figure style="text-align: center; margin: 20px;">
+   <img src="./images/Invs/ariane_r2c2_no_flip_eval.png" alt="invs_ariane_r2c2_no_flip" style="width: 250px;">
+   <figcaption>Tool: CMP<br>HPWL: 3,046,270um<br>Runtime: 1262s</figcaption>
+  </figure>
+</div>
 
 ## **Pinned (to bottom) question list:**
   

@@ -15,10 +15,38 @@ In this example, we use the *superblue19* testcase from [DAC 2012 Routability-Dr
 
 Note that we use part of the codes from [RosettaStone](https://github.com/ABKGroup/RosettaStone), which supports the integration of academic Bookshelf benchmarks into real open-source technologies (ASAP7, NanGate45, SKY130HD, SKY130HS). (See the branch **Bookshelf -> Lef/Def -> Protocol Buffer Format**)
 
+- **Protobuf -> LEF/DEF Format** : The Protobuf format captures connection
+ information and some physical information, such as cell sizes and locations,
+ port locations, and macro pin locations. However, when generating Protobuf from
+ LEF/DEF, we lose many pieces of information such as: (i) the specific standard
+ cell pins to which nets are connected, and their locations; (ii) if a standard
+ cell has multiple output pins, then all of them are merged into a single output
+ pin, and all the nets driven by these output pins are merged into a single net;
+ (iii) the Protobuf format does not include the cell-site definition; and
+ (iv) metal layer information. Therefore, when generating LEF/DEF from Protobuf,
+ we make the following assumptions: (i) all standard cell pins are placed at the
+ center of the corresponding cells, which does not induce any warning or error
+ messages due to pin overlap either in the commercial tools or in OpenROAD;
+ (ii) the smallest standard cell height is the row height;
+ (iii) the GCD (Greatest Common Divisor) of all standard cell widths is the site
+ width; (iv) the pitch of metal layers is the site height divided by 7.5 (in
+ other words, we assume (for now – whether 6 vs. 7.5 “matters” when there is no
+ publishable PDK for routing is perhaps “an exercise for the reader”) that
+ standard cells have a height of 7.5 tracks); (v) we add vias with the width and
+ spacing equal to half the pitch; and (vi) we repeat the layer definition
+ (mentioned in iv) with alternating vertical and horizontal directions and
+ create a 5-layer metal stack in our fake LEF.
+  - We have converted the
+  [Protobuf netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz)
+  of the Ariane design available in the Circuit Training repository to LEF/DEF
+  format. Below is a visualization of the converted netlist. Additionally, we
+  have generated CT-Ariane X2 and X4 versions in Protobuf format. The
+  corresponding Protobuf files are available [here](./test/CTAriane).
 
-
-
-
-
-
+  <div style="text-align: center;">
+    <img src="./test/CTAriane/CTAriane_LEFDEF_View.png" alt="CTAriane_LEFDEF_View" />
+    <p><strong>Visualization of the LEF/DEF generated from the Protobuf of
+    <a href="https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz">CT-Ariane</a>
+    available in the Circuit Training repository.</strong></p>
+  </div>
 
