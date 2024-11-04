@@ -1,6 +1,6 @@
 # LEF/DEF and Bookshelf (OpenDB, RosettaStone) translators
 
-Convert netlists in other formats (e.g. LEF/DEF or Bookshelf) to netlist in protocol buffer (Protobu) format. Also, convert Protobuf format to LEF/DEF.
+Convert netlists in other formats (e.g. LEF/DEF or Bookshelf) to netlist in protocol buffer (Protobuf) format. Also, convert Protobuf format to LEF/DEF.
 
 We initially implemented three different types of conversions based on [OpenDB](https://github.com/The-OpenROAD-Project/OpenROAD/tree/master/src/odb).
 
