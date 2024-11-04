@@ -7843,7 +7843,7 @@ We have run Hier-RTLMP macro placer, as described in the [arXiv paper](https://a
 - **MemPool Group-GF12-68%**: [Link](#MemPool_Group_GF12_HierRTLMP) to the HierRTLMP macro placement details of MemPool Group on GF12 enablement.
 
 <a id="Oct26102024"></a>
-**Protobuf to LEF/DEF and macro placement of CT-Ariane**
+**Protobuf to LEF/DEF and macro placement of CT-Ariane**  
 We have released a **new Protobuf-to-LEF/DEF translator** in our repository;
 detailed information is available in
 [CodeElements/FormatTranslators](../../CodeElements/FormatTranslators/README.md).
