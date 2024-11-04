@@ -45,7 +45,7 @@ As reported in the [IEEE DATC RDF-2024 paper](https://vlsicad.ucsd.edu/Publicati
   have generated CT-Ariane X2 and X4 versions in Protobuf format. The
   corresponding Protobuf files are available [here](./test/CTAriane).
 
-  <div style="text-align: center;">
+  <div align="center">
     <img src="./test/CTAriane/CTAriane_LEFDEF_View.png" alt="CTAriane_LEFDEF_View" />
     <p><strong>Visualization of the LEF/DEF generated from the Protobuf of
     <a href="https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz">CT-Ariane</a>
