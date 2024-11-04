@@ -17,7 +17,7 @@ Note that we use part of the codes from [RosettaStone](https://github.com/ABKGro
 
 As reported in the [IEEE DATC RDF-2024 paper](https://vlsicad.ucsd.edu/Publications/Conferences/412/c412.pdf) [https://doi.org/10.1145/3676536.3697136](https://doi.org/10.1145/3676536.3697136), a fourth conversion is from Protobuf to LEF/DEF.
 
-- **Protobuf -> LEF/DEF Format** : The Protobuf format captures connection
+- **Protobuf -> LEF/DEF Format**: The Protobuf format captures connection
  information and some physical information, such as cell sizes and locations,
  port locations, and macro pin locations. However, when generating Protobuf from
  LEF/DEF, we lose many pieces of information such as: (i) the specific standard
