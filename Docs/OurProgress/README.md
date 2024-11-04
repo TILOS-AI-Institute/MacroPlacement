@@ -7877,7 +7877,7 @@ by Circuit Training (commit hash: 1e14fd1ca), RePlAce (OpenROAD, commit hash:
 ad808fd, command: *global_placement -density 0.8*) and Innovus CMP (version:
 21.1, command: *place_design -concurrent_macros*) for the CT-Ariane (original,
  “X1”) Protobuf. The corresponding LEF/DEF files are
- [here]https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators/test/CTAriane). Please note that we
+ [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/main/CodeElements/FormatTranslators/test/CTAriane). Please note that we
  report this data as part of our study of Circuit Training. It is not intended
  to “benchmark” any commercial EDA tool in any sense, and the data should not be
  interpreted as providing any sort of “benchmarking” comparison or value
