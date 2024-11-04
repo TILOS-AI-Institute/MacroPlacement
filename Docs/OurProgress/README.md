@@ -7896,7 +7896,7 @@ ad808fd, command: *global_placement -density 0.8*) and Innovus CMP (version:
 We have scaled the [Protobuf netlist](https://storage.googleapis.com/rl-infra-public/circuit-training/netlist/ariane.circuit_graph.pb.txt.gz) of the Ariane design in the Circuit Training repository into CT-Ariane-X2 and CT-Ariane-X4,  following the “quantified suboptimality” studies in the DAC-1995 paper, “[Quantified suboptimality of VLSI layout heuristics](https://dl.acm.org/doi/pdf/10.1145/217474.217532)”.  For a given testcase, self-scaling of additional copies can be performed in two basic ways: **shift** and **flip**. 
 
 - The **shift** operation translates a given copy along the X and/or Y axis, relative to the original testcase.
-- The **flip** operation mirrors the given copy along the X or Y axis.  
+- The **flip** operation mirrors the given copy about the X or Y axis.  
   
 By combining these actions, it is possible to obtain variants of the X2 design using X-Shift (the second copy is placed to the right of the original copy), Y-Shift (the second copy is placed above the original copy), X-Flip (the second copy mirrors the original copy about the X axis), and Y-Flip (the second copy mirrors the original copy about the Y axis). Variants for the X4 design can be obtained by serial application of these actions, e.g., X-Shift-Y-Shift, X-Flip-Y-Flip, X-Shift-Y-Flip, X-Flip-Y-Shift, etc. However, considering that all I/O pins must be placed at the boundaries, two variants are of more interest for CT-Ariane-X4: X-Shift-Y-Flip and X-Flip-Y-Flip. 
   
