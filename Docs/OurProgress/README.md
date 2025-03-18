@@ -7962,10 +7962,18 @@ scratch, and fine-tuning of AlphaChip.
 Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
 <table><thead>
   <tr>
-    <th>Design</th>
+    <th rowspan="2">Design<br>(Iterations)</th>
     <th colspan="2">CT-Scratch</th>
     <th colspan="2">CT-AC</th>
     <th colspan="2">CT-Ours</th>
+  </tr>
+  <tr>
+    <th>200</th>
+    <th>400</th>
+    <th>200</th>
+    <th>400</th>
+    <th>200</th>
+    <th>400</th>
   </tr></thead>
 <tbody>
   <tr>
@@ -7979,8 +7987,8 @@ Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
   </tr>
   <tr>
     <td>BlackParrot-NG45</td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_AC">Link</a> </td>
     <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_AC">Link+</a> </td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_SCRATCH_1">Link</a> </td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_SCRATCH_2">Link+</a></td>
     <td></td>
@@ -8006,8 +8014,8 @@ Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
   </tr>
   <tr>
     <td>BlackParrot-ASAP7</td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_SCRATCH">Link</a> </td>
     <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_SCRATCH">Link+</a> </td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_AC_1">Link</a> </td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_AC_2">Link+</a></td>
     <td></td>
@@ -8015,8 +8023,8 @@ Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
   </tr>
   <tr>
     <td>MemPoolGroup-ASAP7</td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_SCRATCH">Link </a></td>
     <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_SCRATCH">Link+</a></td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_AC_1">Link </a></td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_AC_2">Link+</a></td>
     <td></td>
@@ -8033,10 +8041,10 @@ Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
   </tr>
   <tr>
     <td>BlackParrot-GF12</td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_gf12_SCRATCH">Link </a></td>
     <td></td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_gf12_AC">Link </a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_gf12_SCRATCH">Link+</a></td>
     <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_gf12_AC">Link+</a></td>
     <td></td>
     <td></td>
   </tr>
@@ -8062,8 +8070,8 @@ Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
     <td>CT-Ariane-X2</td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_SCRATCH">Link </a></td>
     <td></td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_AC">Link </a></td>
     <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_AC">Link+</a></td>
     <td></td>
     <td></td>
   </tr>
@@ -8071,8 +8079,8 @@ Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
     <td>CT-Ariane-X4</td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_SCRATCH">Link</a> </td>
     <td></td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_AC">Link</a> </td>
     <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_AC">Link+</a></td>
     <td></td>
     <td></td>
   </tr>
