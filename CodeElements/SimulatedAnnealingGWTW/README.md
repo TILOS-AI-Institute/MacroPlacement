@@ -40,7 +40,7 @@ singularity build mp_sa_rocky8.sif docker-daemon://mp_sa:rocky8
 Our SA code is deterministic, meaning that if you run it twice with the same 
 input (and `IS_ASYNC=0`), you will get the same output. We have tested our
 code in an identical environment on both an Intel(R) Xeon(R) Gold and an AMD
-EPYC 7763 CPU, and both produced the exact same results for our test cases.
+EPYC 7763 CPU, and both produced the exact same results for our testcases.
   
 Therefore, we expect that using a Singularity image or Docker image will ensure
 the reproducibility of our experimental results for the given testcases.
