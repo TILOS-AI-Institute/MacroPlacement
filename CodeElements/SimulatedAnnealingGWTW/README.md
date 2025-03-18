@@ -62,8 +62,8 @@ All nine testcases and corresponding run scripts are available in the `test` dir
 
 #### Available Testcases:
 - **Ariane**: [NG45](./test/ariane133_ng45), [ASAP7](./test/ariane_asap7/)
-- **BP Quad**: [NG45](./test/bp_ng45/), [ASAP7](./test/bp_asap7/)
-- **MemPool Group**: [NG45](./test/mempool_group_ng45/), [ASAP7](./test/mempool_group_asap7/)
+- **BlackParrot (Quad-Core)**: [NG45](./test/bp_ng45/), [ASAP7](./test/bp_asap7/)
+- **MemPoolGroup**: [NG45](./test/mempool_group_ng45/), [ASAP7](./test/mempool_group_asap7/)
 
 #### Scaled Versions of Ariane (from Circuit Training):
 - [Ariane](./test/ariane/)  
@@ -99,7 +99,7 @@ docker run -v $(pwd):/workdir -v ${REPO_DIR}:/mp_sa mp_sa:rocky8 /workdir/run.sh
 
 #### Recommended Iterations
 To ensure runtime stays within 12 hours, use the following iteration counts:
-- Ariane (18K), BP_Quad (5K), MemPoolGroup (4K), Ariane_X2 (6K), Ariane_X4 (4.5K)
+- Ariane (18K), BlackParrot (5K), MemPoolGroup (4K), Ariane_X2 (6K), Ariane_X4 (4.5K)
 
 #### Asynchronous Mode
 Set `IS_ASYNC=1` in the run script to enable asynchronous mode.  
