@@ -239,7 +239,7 @@ lead to different proxy cost outcomes.
 ---
 ### Running Evaluation
 Once you have the final plc files from the SA run, you can run evaluation using 
-the Circuit Training plc\_client. Where you will place the soft macros using the
+the Circuit Training plc\_client, where you will place the soft macros using the
 CT-FD placer and report the proxy cost value. The evaluation code is located in
 the [util](./util/) directory.
 
