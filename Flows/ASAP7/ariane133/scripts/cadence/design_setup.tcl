@@ -6,9 +6,9 @@ set sdc  ../../constraints/${DESIGN}.sdc
 set rtldir ../../rtl
 
 if {[info exist ::env(PHY_SYNTH)] && $::env(PHY_SYNTH) == 1} {
-    set floorplan_def ../../def/ariane133_fp_placed_macros.def
+    set floorplan_def ../../def/ariane_fp_placed_macros.def 
 } else {
-    set floorplan_def ../../def/ariane133_fp.def
+    set floorplan_def ../../def/ariane_fp.def
 }
 #
 # Effort level during optimization in syn_generic -physical (or called generic) stage
@@ -21,4 +21,4 @@ set MAP_EFF high
 #
 set SITE "asap7sc7p5t"
 set HALO_WIDTH 1
-set TOP_ROUTING_LAYER 7
+set TOP_ROUTING_LAYER 9

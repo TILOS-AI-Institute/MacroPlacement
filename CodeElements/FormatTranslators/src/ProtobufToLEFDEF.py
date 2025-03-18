@@ -541,13 +541,13 @@ def write_def(db, def_file:str):
     ## Write out the nets
     hyper_edges = get_hyperedges(db)
     fp.write(f"NETS {len(hyper_edges)} ;\n")
-    net_id = 0
     net = f"n{net_id}"
     for hyper_edge in hyper_edges:
         ## Check if any port node is there or not
         is_port = False
         cc = 0
         pin_details = ""
+        net_id = 0
         for node in hyper_edge:
             if node.get_attr('type') == 'port':
                 is_port = True

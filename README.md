@@ -22,6 +22,11 @@
   - [Other Links](#other-links)
 
 ## **Recent Updates**
+- **17 March 2024**: We have updated our ASAP7 tescases, SA implementation for faster and better results and generated macro placement solutions using the latest CircuitTraining (dubbed as AlphaChip). The details are as follows.
+  - Updated ASAP7 tech lef (following the update in OpenROAD-flow-scripts) to enable routing till M9. We rerun [Ariane133](./Flows/ASAP7/ariane133) testcases and added [BlackParrot](./Flows/ASAP7/bp_quad) and [MemPoolGroup](./Flows/ASAP7/mempool_group/) testcases.
+  - We strengthen our Simulated Annealing (SA) baseline by adding multithreading and a “go-with-the-winners” metaheuristic, while also ensuring reproducibility of its execution. We provide docker environment scripts to ensure reproducibility of the results obtained by SA. For more details, refer to the [SA README](CodeElements/SimulatedAnnealingGWTW/README.md).
+  - The hMETIS binary used in Circuit Training does not take any seed as input and the outputs are non-deterministic. We provide a CPP wrapper that uses hMETIS C API and calls the hMETIS library to cluster the netlist for a given seed ensuring reproducibility of the clustering results. For details please refer to the [Clustering README](CodeElements/Clustering/src/README.md).
+  
 - **3 Nov 2024**: We have posted a new [Protobuf-to-LEF/DEF converter](CodeElements/FormatTranslators/README.md), along with scaled versions of Google Brain's Ariane design in both Protobuf and LEF/DEF formats, as described in the [IEEE DATC RDF update paper](https://vlsicad.ucsd.edu/Publications/Conferences/412/c412.pdf) ([https://doi.org/10.1145/3676536.3697136](https://doi.org/10.1145/3676536.3697136)) at ICCAD-2024. Some [new calibration results](./Docs/OurProgress/README.md#Oct26102024) (HPWL and runtime) for RePlAce and Cadence CMP are also provided in our Our Progress chronology.
 
 ## **FAQs**

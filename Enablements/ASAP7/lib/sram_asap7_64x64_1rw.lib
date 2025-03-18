@@ -28,7 +28,6 @@ library(sram_asap7_64x64_1rw) {
     default_inout_pin_cap : 0.0;
     default_input_pin_cap : 0.0;
     default_output_pin_cap : 0.0;
-    default_input_pin_cap : 0.0;
     default_max_transition : 0.227;
 
     default_operating_conditions : tt_1.0_25.0;

@@ -26,7 +26,6 @@ library(sram_asap7_16x256_1rw) {
     default_cell_leakage_power : 0;
     default_fanout_load : 1;
     default_inout_pin_cap : 0.0;
-    default_input_pin_cap : 0.0;
     default_output_pin_cap : 0.0;
     default_input_pin_cap : 0.0;
     default_max_transition : 0.227;
