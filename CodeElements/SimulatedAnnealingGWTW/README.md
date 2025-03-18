@@ -1,4 +1,4 @@
-## MP-SA
+## Simulated Annealing with Go With The Winners (GWTW)
 
 This repository provides code to run **Simulated Annealing (SA)** wrapped
 with **Go With The Winners (GWTW)** meta-heuristic to minimize the **proxy cost**
@@ -6,7 +6,7 @@ for a given **clustered netlist**.
 
 ### Generating the Clustered Netlist
 1. First, generate the protobuf netlist from Innovus using this [script](https://github.com/TILOS-AI-Institute/MacroPlacement/blob/main/Flows/util/gen_pb.tcl) available in the **TILOS/MacroPlacement** repository for a placed design.
-2. Next, use the CircuitTraining grouping code to generate the clustered netlist.
+2. Next, use the Circuit Training grouping code to generate the clustered netlist.
 
 ### Code Overview
 - The SA code is implemented in **C++**.  
@@ -65,7 +65,7 @@ All nine testcases and corresponding run scripts are available in the `test` dir
 - **BP Quad**: [NG45](./test/bp_ng45/), [ASAP7](./test/bp_asap7/)
 - **MemPool Group**: [NG45](./test/mempool_group_ng45/), [ASAP7](./test/mempool_group_asap7/)
 
-#### Scaled Versions of Ariane (from CircuitTraining):
+#### Scaled Versions of Ariane (from Circuit Training):
 - [Ariane](./test/ariane/)  
 - [Ariane_X2](./test/ariane_X2_xflip/)  
 - [Ariane_X4](./test/ariane_X4_xflip_yflip/)
@@ -111,10 +111,10 @@ Set `IS_ASYNC=1` in the run script to enable asynchronous mode.
 We run our SA for `IS_ASYNC=0` on all testcases. In the table below, we
 provide two **proxy cost** values per testcase: (i) the proxy cost from our FD
 placer/evaluator that yields the best result when evaluated by the golden
-CircuitTraining evaluator, and (ii) the golden proxy cost value from the 
-CircuitTraining evaluator. Our FD placers do not yield the same results
-as the CircuitTraining FD placer. Although our evaluator computes proxy cost
-exactly as the CircuitTraining evaluator, discrepancies in the FD placers
+Circuit Training evaluator, and (ii) the golden proxy cost value from the 
+Circuit Training evaluator. Our FD placers do not yield the same results
+as the Circuit Training FD placer. Although our evaluator computes proxy cost
+exactly as the Circuit Training evaluator, discrepancies in the FD placers
 lead to different proxy cost outcomes.
 
 <table><thead>
@@ -239,12 +239,12 @@ lead to different proxy cost outcomes.
 ---
 ### Running Evaluation
 Once you have the final plc files from the SA run, you can run evaluation using 
-the CircuitTraining plc\_client. Where you will place the soft macros using the
+the Circuit Training plc\_client. Where you will place the soft macros using the
 CT-FD placer and report the proxy cost value. The evaluation code is located in
 the [util](./util/) directory.
 
 #### Prerequisites:
-- Download the **[CircuitTraining](https://github.com/google-research/circuit_training)** repository.  
+- Download the **[Circuit Training](https://github.com/google-research/circuit_training)** repository.  
 - Download **[plc_wrapper_main](https://storage.googleapis.com/rl-infra-public/circuit-training/placement_cost/plc_wrapper_main_0.0.4)**.  
 - Set up the **[Python environment](https://storage.googleapis.com/rl-infra-public/circuit-training/placement_cost/plc_wrapper_main_)**.
 
