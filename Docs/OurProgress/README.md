@@ -7948,7 +7948,234 @@ The following figures show visualizations of the macro placement solutions for e
 
 </div>
 
+<a id="03182025"></a>
+**Link to tensorboard for latest CT runs on all our testcases**
+We train Google’s AlphaChip from scratch, and fine-tune AlphaChip (from the
+pre-trained checkpoint released in September 2024), for all our testcases. A
+revised experimental protocol for both training from scratch and fine-tuning –
+affords more opportunity for CT to converge: we increase the number of
+iterations from 200 (noted as Link) to 400 (noted as Link+), and make multiple
+trials before declaring non-convergence. The table
+below provides the tensorboard links for pre-training, training from
+scratch, and fine-tuning of AlphaChip.
 
+Link to tensorboard for training/fine-tuning of CT-\{Scratch, AC, Ours\}
+<table><thead>
+  <tr>
+    <th>Design</th>
+    <th colspan="2">CT-Scratch</th>
+    <th colspan="2">CT-AC</th>
+    <th colspan="2">CT-Ours</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>Ariane-NG45</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_SCRATCH">Link</a> </td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_AC_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_AC_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_OURPT_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_OURPT_2">Link+</a></td>
+  </tr>
+  <tr>
+    <td>BlackParrot-NG45</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_AC">Link</a> </td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_SCRATCH_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_ng45_SCRATCH_2">Link+</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>MemPoolGroup-NG45</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_SCRATCH_1">Link </a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_AC_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_AC_2">Link+</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Ariane-ASAP7</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_SCRATCH_1">Link </a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_AC">Link </a></td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_OURS_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_OURS_2">Link+</a></td>
+  </tr>
+  <tr>
+    <td>BlackParrot-ASAP7</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_SCRATCH">Link</a> </td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_AC_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_asap7_AC_2">Link+</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>MemPoolGroup-ASAP7</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_SCRATCH">Link </a></td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_AC_1">Link </a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_asap7_AC_2">Link+</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Ariane-GF12</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_gf12_SCRATCH">Link</a> </td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_gf12_AC">Link</a> </td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_gf12_OURS_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_gf12_OURS_2">Link+</a></td>
+  </tr>
+  <tr>
+    <td>BlackParrot-GF12</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_gf12_SCRATCH">Link </a></td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/bp_quad_gf12_AC">Link </a></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>MemPoolGroup-GF12</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_SCRATCH_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_AC_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_AC_2">Link+</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>CT-Ariane</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_SCRATCH_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_AC_1">Link</a> </td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_AC_2">Link+</a></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>CT-Ariane-X2</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_SCRATCH">Link </a></td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_AC">Link </a></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>CT-Ariane-X4</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_SCRATCH">Link</a> </td>
+    <td></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_AC">Link</a> </td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</tbody></table>
+
+  
+Link to tensorboard for pre-training:
+<table><thead>
+  <tr>
+    <th>Technology</th>
+    <th>Ariane</th>
+    <th colspan="2">MemPoolGroup</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>NG45</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_PT">Link</a></td>
+    <td colspan="2"><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_7var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_5var_set1" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_5var_set2?nw=nwusermacroplacement" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_4var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_3var" target="_blank" rel="noopener noreferrer">Link</a></td>
+  </tr>
+  <tr>
+    <td>ASAP7</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_PT">Link</a></td>
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td>GF12</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_gf12_PT">Link</a></td>
+    <td colspan="2"><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_7var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_5var_set1" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_5var_set2" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_4var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_3var" target="_blank" rel="noopener noreferrer">Link</a></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>CT-Ariane</td>
+    <td>CT-Ariane-X2</td>
+    <td>CT-Ariane-X4</td>
+  </tr>
+  <tr>
+    <td>TSMC N7</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X1_overfit_PT">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_overfit_PT">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_PT" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_overfit_PT" target="_blank" rel="noopener noreferrer">Link</a></td>
+  </tr>
+</tbody></table>
+
+Link to tensorboard for CT-Scratch seed study of Ariane-ASAP7:
+<table><thead>
+  <tr>
+    <th>Seed</th>
+    <th colspan="2">RUN 1</th>
+    <th colspan="2">RUN 2</th>
+    <th colspan="2">RUN 3</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>111</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_111_run_1_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_111_run_1_ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_111_run_2_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_111_run_2_ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_111_run_3_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_111_run_3_ariane_asap7_SCRATCH_2">Link+</a></td>
+  </tr>
+  <tr>
+    <td>222</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_222_run_1_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_222_run_1_ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_222_run_2_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_222_run_2_ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_222_run_3_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_222_run_3_ariane_asap7_SCRATCH_2">Link+</a></td>
+  </tr>
+  <tr>
+    <td>333</td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_333_run_1_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_333_run_1_ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_333_run_2_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_333_run_2_ariane_asap7_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_333_run_3_ariane_asap7_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/seed_333_run_3_ariane_asap7_SCRATCH_2">Link+</a></td>
+  </tr>
+</tbody></table>
+
+Tensorboard for initial placement study of Ariane-ASAP7
+<table><thead>
+  <tr>
+    <th>Lower Left</th>
+    <th>Center</th>
+    <th>Upper Right</th>
+    <th>No Placement</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_lower_left_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_center_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_upper_right_SCRATCH_1">Link</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_no_break_merge_SCRATCH_1">Link</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_lower_left_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_center_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_upper_right_SCRATCH_2">Link+</a></td>
+    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_asap7_no_break_merge_SCRATCH_2">Link+</a></td>
+  </tr>
+</tbody></table>
 
 ## **Pinned (to bottom) question list:**
   
