@@ -22,7 +22,7 @@
   - [Other Links](#other-links)
 
 ## **Recent Updates**
-- **18 March 2024**: We have updated our ASAP7 tescases, SA implementation for faster and better results and generated macro placement solutions using the latest CircuitTraining (dubbed as AlphaChip). The details are as follows.
+- **18 March 2025**: We have updated our ASAP7 tescases, SA implementation for faster and better results and generated macro placement solutions using the latest CircuitTraining (dubbed as AlphaChip). The details are as follows.
   - Updated ASAP7 [tech lef](./Enablements/ASAP7/lef/asap7_tech_1x_201209.lef) (following the update in [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)) to enable routing till M9. We rerun [Ariane133](./Flows/ASAP7/ariane133) testcases and added [BlackParrot](./Flows/ASAP7/bp_quad) and [MemPoolGroup](./Flows/ASAP7/mempool_group/) testcases.
   - We strengthen our Simulated Annealing (SA) baseline by adding multithreading and a “go-with-the-winners” metaheuristic, while also ensuring reproducibility of its execution. We provide docker environment scripts to ensure reproducibility of the results obtained by SA. For more details, please refer to the [SA README](CodeElements/SimulatedAnnealingGWTW/README.md).
   - The hMETIS binary used in Circuit Training does not take any seed as input and the outputs are non-deterministic. We provide a CPP wrapper that uses hMETIS C API and calls the hMETIS library to cluster the netlist for a given seed ensuring reproducibility of the clustering results. For more details, please refer to the [Clustering README](CodeElements/Clustering/src/README.md).
