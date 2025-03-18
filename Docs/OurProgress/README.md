@@ -7951,7 +7951,7 @@ The following figures show visualizations of the macro placement solutions for e
 <a id="03182025"></a>
 **Link to tensorboard for latest CT runs on all our testcases**
 We train Google’s AlphaChip from scratch, and fine-tune AlphaChip (from the
-pre-trained checkpoint released in September 2024), for all our testcases. A
+pre-trained checkpoint released in August 2024), for all our testcases. A
 revised experimental protocol for both training from scratch and fine-tuning –
 affords more opportunity for CT to converge: we increase the number of
 iterations from 200 (noted as Link) to 400 (noted as Link+), and make multiple
