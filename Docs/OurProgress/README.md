@@ -8098,7 +8098,7 @@ Link to tensorboard for pre-training:
   <tr>
     <td>NG45</td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_ng45_PT">Link</a></td>
-    <td colspan="2"><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_7var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_5var_set1" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_5var_set2?nw=nwusermacroplacement" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_4var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_3var" target="_blank" rel="noopener noreferrer">Link</a></td>
+    <td colspan="2">(Shift, X/Y/XY-flip, Shift-X/Y/XY-flip)  <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_7var" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, XY-flip, Shift-X/Y/XY-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_5var_set1" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, X/Y-flip, Shift-X/Y-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_5var_set2?nw=nwusermacroplacement" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, X/Y-flip, Shift-XY-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_ng45_PT_4var" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, X/Y-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_3var" target="_blank" rel="noopener noreferrer">Link</a></td>
   </tr>
   <tr>
     <td>ASAP7</td>
@@ -8108,7 +8108,7 @@ Link to tensorboard for pre-training:
   <tr>
     <td>GF12</td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_gf12_PT">Link</a></td>
-    <td colspan="2"><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_7var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_5var_set1" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_5var_set2" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_4var" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_3var" target="_blank" rel="noopener noreferrer">Link</a></td>
+    <td colspan="2">(Shift, X/Y/XY-flip, Shift-X/Y/XY-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_7var" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, XY-flip, Shift-X/Y/XY-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_5var_set1" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, X/Y-flip, Shift-X/Y-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_5var_set2" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, X/Y-flip, Shift-XY-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_4var" target="_blank" rel="noopener noreferrer">Link</a><br>(Shift, X/Y-flip) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/mempoolgroup_gf12_PT_3var" target="_blank" rel="noopener noreferrer">Link</a></td>
   </tr>
   <tr>
     <td></td>
@@ -8120,7 +8120,7 @@ Link to tensorboard for pre-training:
     <td>TSMC N7</td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X1_overfit_PT">Link</a></td>
     <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X2_overfit_PT">Link</a></td>
-    <td><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_PT" target="_blank" rel="noopener noreferrer">Link</a><br><a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_overfit_PT" target="_blank" rel="noopener noreferrer">Link</a></td>
+    <td>(CT-Ariane-X1-{Shift, X/Y-flip}, CT-Ariane-X2-{Shift, X/Y-flip}) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_PT" target="_blank" rel="noopener noreferrer">Link</a><br>(CT-Ariane-X4) <a href="https://wandb.ai/vlsicad-ucsd/MacroPlacement/runs/ariane_X4_overfit_PT" target="_blank" rel="noopener noreferrer">Link</a></td>
   </tr>
 </tbody></table>
 
