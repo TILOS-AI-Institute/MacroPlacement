@@ -1,7 +1,7 @@
 ## Simulated Annealing with Go With The Winners (GWTW)
 
 This repository provides code to run **Simulated Annealing (SA)** wrapped
-with **Go With The Winners (GWTW)** meta-heuristic to minimize the **proxy cost**
+with **Go With The Winners (GWTW)** metaheuristic to minimize the **proxy cost**
 for a given **clustered netlist**.
 
 ### Generating the Clustered Netlist
@@ -16,7 +16,7 @@ for a given **clustered netlist**.
 <!-- <iframe src="./doc/MP_SA.pdf" width="100%" height="500px" style="border: none;"></iframe> -->
 
 ---
-### Pre-requisites
+### Prerequisites
 Ensure the following dependencies are installed:
 - **CMake**: [3.25.1](https://github.com/Kitware/CMake/archive/refs/tags/v3.25.1.tar.gz)  
 - **GCC-Toolset**: [11.2.0](https://ftp.gnu.org/gnu/gcc/gcc-11.2.0)  
@@ -57,7 +57,7 @@ make -j 10
 
 ---
 ### Testcases
-All nine testcases and corresponding run scripts are available in the `test` directory. The testcases span three enablements: **NG45**, **ASAP7**, and **GF12**.  
+Nine testcases and corresponding run scripts are available in the `test` directory. The testcases span three enablements: **NG45**, **ASAP7**, and **GF12**.  
 > **Note:** GF12 testcases are not uploaded due to NDA restrictions.
 
 #### Available Testcases:
