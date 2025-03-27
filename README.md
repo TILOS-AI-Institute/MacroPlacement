@@ -1,4 +1,14 @@
 # **MacroPlacement**
+
+## **What’s New?**
+- **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
+SA baseline implementation for faster and better results; and (3) generated
+macro placement solutions using the latest Circuit Training (dubbed as
+AlphaChip) for all of our testcases, including the scaled 7nm Ariane testcases
+announced on 3 Nov 2024. See the full release notes in the march_updates branch:
+[here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/march_updates?tab=readme-ov-file#recent-updates).
+
+## **Introduction**
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the synthesis-place-and-route flow using both proprietary and open-source tools.
 
 ## **Materials for the Broad Audience**
