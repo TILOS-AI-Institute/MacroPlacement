@@ -731,14 +731,14 @@ class ODB2ProBufFormat:
                     pin_name = inst_name + '/' + items[4 * i]
                     if (self.insts[inst_name].GetType() == "MACRO"):
                         offset = self.macro_pin_offset[pin_name]
-                        self.insts[inst_name].AddInputPin(MacroPin(pin_name, inst_name, offset[0], offset[1]))
+                        self.insts[inst_name].AddInputPin(MacroPin(pin_name, inst_name, offset[0], offset[1], "MACRO"))
                         sinks_name.append(pin_name)
                     else:
                         sinks_name.append(inst_name)
                 # Add sinks to driver
                 if (self.insts[driver_name].GetType() == "MACRO"):
                     offset = self.macro_pin_offset[driver_pin_name]
-                    macro_pin = MacroPin(driver_pin_name, driver_name, offset[0], offset[1])
+                    macro_pin = MacroPin(driver_pin_name, driver_name, offset[0], offset[1], "MACRO")
                     macro_pin.AddSinks(sinks_name)
                     self.insts[driver_name].AddOutputPin(macro_pin)
                 else:
