@@ -63,14 +63,14 @@ The [steps](https://github.com/google-research/circuit_training/tree/main?tab=re
 Below is a detailed description of the changes we made to run Circuit Training with DREAMPlace (CT-AC-DP) on our end.
 1. First install the linux environment packages (except python and pytorch) given [here](https://github.com/esonghori/DREAMPlace/tree/circuit_training?tab=readme-ov-file#dependency).
 2. **Creating conda environment:** Our installation is based on Python3.9 as “AlphaChip requires Python 3.9 or greater” and the official installation uses Python3.9 for [DREAMPlace installation](https://github.com/google-research/circuit_training?tab=readme-ov-file#install-dreamplace-2).
-```
+```bash
 conda create -y -p <your_env> python=3.9
 conda activate <your_env>
 ```
 3. **Building DREAMPlace (CT fork) and installing dependencies:** Our attempts to install Circuit Training with DREAMPlace using the official Docker environment were unsuccessful. Instead, we built the Circuit Training fork of DREAMPlace directly from source. Please refer to the instructions available [here](https://github.com/google-research/circuit_training?tab=readme-ov-file#install-dreamplace-2), but we recommend the following settings for a more reliable setup.  
    a. Environment setup
-   ```
-   pip install torch==1.13.1 ## Do NOT install PyTorch via conda (it drags in cudatoolkit and breaks DREAMPlace
+   ```bash
+   pip install torch==1.13.1 ## Do NOT install PyTorch via conda
    conda install itsmeludo::pyunpack
    conda install conda-forge::patool
    conda install matplotlib
@@ -115,7 +115,7 @@ conda activate <your_env>
 <a name="before-ct-fix"></a>
 After we have the fixed environment, we make the following changes in Circuit Training code to fix the error we get while running CT-AC-DP.
 1. The [plc_wrapper_main](https://github.com/google-research/circuit_training/tree/e7b2fcfc54c5173e2114ffb8b472293e47565b16?tab=readme-ov-file#install-tf-agents-and-the-placement-cost-binary) binary (used in plc_client) lacks the HasAreaConstraint function. We confirmed this issue with CT_VERSION=0.0.4, 0.0.3, and 0.0.2. Consequently, calls to this function in circuit_training/circuit_training/environment.py (lines [345](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L345) and [349](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L349)) result in errors. Our workaround is to comment out these calls and manually set regioning = False, as shown below:  
-```
+```bash
 # regioning = self._plc.has_area_constraint()  
 regioning = False
 ```
