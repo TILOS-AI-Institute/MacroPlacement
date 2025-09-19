@@ -1,6 +1,7 @@
 # **MacroPlacement**
 
 ## **What’s New?**
+- **13 September 2025**: We have added installation instructions and documented known issues for Circuit Training with DREAMPlace [here](#running-circuit-training-with-dreamplace).
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
 macro placement solutions using the latest Circuit Training (dubbed as
@@ -20,6 +21,7 @@ announced on 3 Nov 2024. See the full release notes in the march_updates branch:
 ## **Table of Contents**
   <!-- - [Reproducible Example Solutions](#reproducible-example-solutions) -->
   - [Recent Updates](#recent-updates)
+  - [Running Circuit Training with DREAMPlace](#running-circuit-training-with-dreamplace)
   - [FAQs](#faqs)
   - [Testcases](#testcases) contains open-source designs such as Ariane, MemPool and NVDLA.
   - [Enablements](#enablements) contains PDKs for open-source enablements such as NanGate45, ASAP7 and SKY130HD with FakeStack. Memories required by the designs are also included.
@@ -43,6 +45,88 @@ announced on 3 Nov 2024. The details are as follows.
   - We train Google’s AlphaChip from scratch, and fine-tune AlphaChip (from the pre-trained checkpoint released in August 2024), for all our testcases. A revised experimental protocol – for both training from scratch and fine-tuning – affords more opportunity for CT to converge: we increase the number of iterations from 200 to 400, and make multiple trials before declaring non-convergence. We provide the tensorboard links for the pre-training, training from scratch, and fine-tuning of AlphaChip [here](./Docs/OurProgress/README.md#03182025).
   
 - **3 Nov 2024**: We have posted a new [Protobuf-to-LEF/DEF converter](CodeElements/FormatTranslators/README.md), along with scaled versions of Google Brain's Ariane design in both Protobuf and LEF/DEF formats, as described in the [IEEE DATC RDF update paper](https://vlsicad.ucsd.edu/Publications/Conferences/412/c412.pdf) ([https://doi.org/10.1145/3676536.3697136](https://doi.org/10.1145/3676536.3697136)) at ICCAD-2024. Some [new calibration results](./Docs/OurProgress/README.md#Oct26102024) (HPWL and runtime) for RePlAce and Cadence CMP are also provided in our Our Progress chronology.
+
+## Running Circuit Training with DREAMPlace
+We ran Circuit Training with DREAMPlace (CT-AC-DP) on a few of our testcases, but encountered many challenges in setting CT-AC-DP up and running it. Below, we first list the challenges and then describe in detail how we overcame them to successfully run CT-AC-DP on our testcases.
+
+### Challenges in setting up Circuit Training with DREAMPlace
+The [steps](https://github.com/google-research/circuit_training/tree/main?tab=readme-ov-file#installation) given in Circuit Training repo to run Circuit Training with DREAMPlace (CT-AC-DP) does not work. The problems are as follows:
+1. The provided Docker environment fails to run CT-AC-DP. The Docker setup does not include required packages such as gin and gym. We have added these missing packages. In addition, within the Docker environment, the numpy and PyTorch versions are incompatible with each other; as a result, running DREAMPlace produces the following error message: “AttributeError: module dreamplace.PlaceDB has no attribute INT_MAX”. So, we abandoned the Docker setup and focused on a local setup to run CT-AC-DP. Details to install CT-AC-DP follow the steps given [here](#setting-up-circuit-training-with-dreamplace).
+2. “_regioning = self. plc.has_area_constraint()_” ([here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/environment.py#L345) and [here](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/environment.py#L349)) errors out because this function does not exist in the plc client. In December 2024, we raised [GitHub issue #78](https://github.com/google-research/circuit_training/blob/main/circuit_training/environment/environment.py#L349) in the CircuitTraining repo, but Nature authors have not responded in the eight months since. To bypass this error please see the first bullet [here](before-ct-fix).
+3. It is unclear whether DREAMPlace is run on a CPU or a GPU. CT-AC-DP as seen in the CT repo uses a [300 second timeout decorator](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/dreamplace/dreamplace_core.py#L60-L62) on all DREAMPlace calls. If this timeout is reached, the placement is aborted and the sample may be discarded. While the number of movable objects in any clustered netlist (i.e., consisting of soft and hard macros) that we study is small (at most 1662), a CPU-based DREAMPlace would be inherently slower and more likely to trigger this timeout. In our CT-AC-DP setup, we increase the timeout to 3000 seconds. However, we are unsure if the timeout is somehow intended to discard bad macro placements that typically lead to DREAMPlace divergence. See also the next items (#4 and #5).
+4. In the [environment.py](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py), the default target density is set to [0.425](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L161), which is incorrect, as the target density should be greater than the design utilization, and the utilization of each of our testcases is ∼0.68. To avoid extra runtime due to the incorrect target density, we set the target density to 1.0.
+5. Given that the Nature authors refer to the running of collector jobs solely on CPU servers, we use DREAMPlace with CPU. I.e., we run DREAMPlace data collection jobs on CPU servers. See also the next item (\#6).
+6. We have observed that DREAMPlace consumes significantly more computing resources than the FD placer, which slows down training for most of the testcases (except for CT-Ariane-X4). For example, the FD placer trains Ariane ASAP7 at 0.78 steps per second, whereas DREAMPlace achieves only 0.08 steps per second – a nearly 10× decrease on the exact same server. Although we use the computational resources recommended by the CT repo, we believe that more powerful resources are required to run CT-AC-DP efficiently – a fact not noted by either the CT repo or the Nature authors.
+
+### Setting up Circuit Training with DREAMPlace:
+Below is a detailed description of the changes we made to run Circuit Training with DREAMPlace (CT-AC-DP) on our end.
+1. First install the linux environment packages (except python and pytorch) given [here](https://github.com/esonghori/DREAMPlace/tree/circuit_training?tab=readme-ov-file#dependency).
+2. **Creating conda environment:** Our installation is based on Python3.9 as “AlphaChip requires Python 3.9 or greater” and the official installation uses Python3.9 for [DREAMPlace installation](https://github.com/google-research/circuit_training?tab=readme-ov-file#install-dreamplace-2).
+```
+conda create -y -p <your_env> python=3.9
+conda activate <your_env>
+```
+3. **Building DREAMPlace (CT fork) and installing dependencies:** Our attempts to install Circuit Training with DREAMPlace using the official Docker environment were unsuccessful. Instead, we built the Circuit Training fork of DREAMPlace directly from source. Please refer to the instructions available [here](https://github.com/google-research/circuit_training?tab=readme-ov-file#install-dreamplace-2), but we recommend the following settings for a more reliable setup.  
+   a. Environment setup
+   ```
+   pip install torch==1.13.1 ## Do NOT install PyTorch via conda (it drags in cudatoolkit and breaks DREAMPlace
+   conda install itsmeludo::pyunpack
+   conda install conda-forge::patool
+   conda install matplotlib
+   conda install shapely
+   conda install absl-py
+   conda install gin-config ## Not mentinoed in CT report
+   conda install cairocffi
+   conda install pkgconfig
+   conda install setuptools
+   conda install scipy
+   pip install timeout-decorator
+   pip install numpy==1.26.4 ## to avoid mismatches with TF/Torch
+   pip install dm-reverb[tensorflow] ## install this first to match tensorflow version
+   pip install tf_keras==2.18.0
+   pip install tf-agents[reverb]==0.19.0	 ## not mentioned by CT Repo
+   pip install gym  ## Not mentinoed in CT report
+   ```  
+   b. Fork the CT version of DREAMPlace from [here](https://github.com/esonghori/DREAMPlace/tree/circuit_training) and follow the build instructions given [here](https://github.com/esonghori/DREAMPlace/tree/circuit_training?tab=readme-ov-file#build-without-docker).  
+   c. To ensure CT can correctly call DREAMPlace, make sure your file structure matches the following:
+   ```bash
+   circuit_training/ 	## Run all commands under this main folder
+   ├─ dreamplace/
+   │  ├─ Placer.py
+   │  ├─ BasicPlace.py
+   │  ├─ EvalMetrics.py
+   │  ├─ NesterovAcceleratedGradientOptimizer.py
+   │  ├─ NonLinearPlace.py/
+   │  ├─ Params.py
+   │  ├─ *.py
+   ├─ circuit_training/
+   │  ├─ dreamplace/
+   │  ├─ environment/
+   │  ├─ grouping/
+   │  ├─ .../
+   ```
+   d.  `circuit_training/dreamplace` contains the installation of the CT-specific DREAMPlace fork, while `circuit_training/circuit_training` contains the core Circuit Training code. The directory `circuit_training/circuit_training/dreamplace` provides the function calls that interface with `circuit_training/dreamplace` to perform placement operations.  
+   e. When running Circuit Training, always execute commands from the `circuit_training` directory using the syntax:
+    ```bash
+    python -m <module>.py
+    ```
+  
+<a name="before-ct-fix"></a>
+After we have the fixed environment, we make the following changes in Circuit Training code to fix the error we get while running CT-AC-DP.
+1. The [plc_wrapper_main](https://github.com/google-research/circuit_training/tree/e7b2fcfc54c5173e2114ffb8b472293e47565b16?tab=readme-ov-file#install-tf-agents-and-the-placement-cost-binary) binary (used in plc_client) lacks the HasAreaConstraint function. We confirmed this issue with CT_VERSION=0.0.4, 0.0.3, and 0.0.2. Consequently, calls to this function in circuit_training/circuit_training/environment.py (lines [345](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L345) and [349](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L349)) result in errors. Our workaround is to comment out these calls and manually set regioning = False, as shown below:  
+```
+# regioning = self._plc.has_area_constraint()  
+ 	regioning = False
+```
+2. In circuit_training/circuit_training/environment.py (line [161](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L161)), Circuit Training sets the default target density to 0.425. This is incorrect when the floorplan utilization exceeds 42.5%. To avoid any error for our CT-AC-DP runs, we update this value to 1.0:
+`dp_target_density: float = 1.0`
+3. On CPUs, DREAMPlace runs much slower than on GPUs. Circuit Training enforces a timeout on all DREAMPlace calls (circuit_training/circuit_training/dreamplace/dreamplace_util.py, lines [60–62](https://github.com/google-research/circuit_training/blob/main/circuit_training/dreamplace/dreamplace_core.py#L60-L62)) with a default of 300 seconds. In practice, this limit is too short for larger testcases and causes premature termination. To avoid this issue with CPU-based placement, we recommend increasing the timeout, for example:
+```
+@timeout_decorator.timeout( 
+        seconds=5 * 600, exception_message='SoftMacroPlacer place() timed out.'  
+    )
+```
+
 
 ## **FAQs**
 **1. Why are you doing this?**
