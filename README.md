@@ -34,6 +34,7 @@ announced on 3 Nov 2024. See the full release notes in the march_updates branch:
   - [Other Links](#other-links)
 
 ## **Recent Updates**
+- **13 September 2025**: We have added installation instructions and documented known issues for Circuit Training with DREAMPlace [here](#running-circuit-training-with-dreamplace).
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
 macro placement solutions using the latest Circuit Training (dubbed as
