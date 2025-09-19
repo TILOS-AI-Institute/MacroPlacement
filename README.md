@@ -116,7 +116,7 @@ After we have the fixed environment, we make the following changes in Circuit Tr
 1. The [plc_wrapper_main](https://github.com/google-research/circuit_training/tree/e7b2fcfc54c5173e2114ffb8b472293e47565b16?tab=readme-ov-file#install-tf-agents-and-the-placement-cost-binary) binary (used in plc_client) lacks the HasAreaConstraint function. We confirmed this issue with CT_VERSION=0.0.4, 0.0.3, and 0.0.2. Consequently, calls to this function in circuit_training/circuit_training/environment.py (lines [345](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L345) and [349](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L349)) result in errors. Our workaround is to comment out these calls and manually set regioning = False, as shown below:  
 ```
 # regioning = self._plc.has_area_constraint()  
- 	regioning = False
+regioning = False
 ```
 2. In circuit_training/circuit_training/environment.py (line [161](https://github.com/google-research/circuit_training/blob/e7b2fcfc54c5173e2114ffb8b472293e47565b16/circuit_training/environment/environment.py#L161)), Circuit Training sets the default target density to 0.425. This is incorrect when the floorplan utilization exceeds 42.5%. To avoid any error for our CT-AC-DP runs, we update this value to 1.0:
 `dp_target_density: float = 1.0`
