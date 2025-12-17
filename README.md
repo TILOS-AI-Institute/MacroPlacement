@@ -1,12 +1,18 @@
 # **MacroPlacement**
 
 ## **What’s New?**
+- **16 December 2025**: Our updated assessment paper, “An Updated Assessment of
+Reinforcement Learning for Macro Placement,” has been accepted for publication
+in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
+and is now available via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304). For a brief summary,
+please see the [Recent Updates](#recent-updates) section.
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
 macro placement solutions using the latest Circuit Training (dubbed as
 AlphaChip) for all of our testcases, including the scaled 7nm Ariane testcases
 announced on 3 Nov 2024. See the full release notes in the march_updates branch:
 [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/march_updates?tab=readme-ov-file#recent-updates).
+
 
 ## **Introduction**
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the synthesis-place-and-route flow using both proprietary and open-source tools.
@@ -32,6 +38,20 @@ announced on 3 Nov 2024. See the full release notes in the march_updates branch:
   - [Other Links](#other-links)
 
 ## **Recent Updates**
+- **16 December 2025**: Our updated assessment paper, “An Updated Assessment of
+Reinforcement Learning for Macro Placement,” has been accepted for publication
+in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
+and is now available via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304).
+  - This paper addresses all the concerns of our ISPD23 paper: (i) absence of
+  peer review; (ii) lack of RL pre-training; (iii) potential non-convergence
+  of training for some testcases; (iv) use of 45 nm and 12 nm technologies
+  versus sub-10 nm (TSMC 7 nm, corresponding to TPU v4) in CT; and
+  (v) insufficiency of compute resources used. Our updated assessment reconfirms
+  the conclusions of our [ISPD23 paper](https://dl.acm.org/doi/10.1145/3569052.3578926).
+  - Our Simulated Annealing (SA) continues to outperform pre-trained CT, both in
+  terms of the metrics it optimizes directly and overall chip metrics. Our SA
+  results have been replicated by one of the anonymous reviewers and by students
+  from [Prof. S.-K. Lim’s group](https://ece.gatech.edu/directory/sung-kyu-lim) at Georgia Tech.
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
 macro placement solutions using the latest Circuit Training (dubbed as
