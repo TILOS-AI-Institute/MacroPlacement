@@ -1,12 +1,18 @@
 # **MacroPlacement**
 
 ## **What’s New?**
+- **16 December 2025**: Our journal paper, “An Updated Assessment of
+Reinforcement Learning for Macro Placement,” has been accepted for publication
+in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
+and is now available to the public via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304). For a brief summary,
+please see the [Recent Updates](#recent-updates) section.
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
 macro placement solutions using the latest Circuit Training (dubbed as
 AlphaChip) for all of our testcases, including the scaled 7nm Ariane testcases
 announced on 3 Nov 2024. See the full release notes in the march_updates branch:
 [here](https://github.com/TILOS-AI-Institute/MacroPlacement/tree/march_updates?tab=readme-ov-file#recent-updates).
+
 
 ## **Introduction**
 **MacroPlacement** is an open, transparent effort to provide a public, baseline implementation of [Google Brain's Circuit Training](https://github.com/google-research/circuit_training) (Morpheus) deep RL-based placement method. We will provide (1) testcases in open enablements, along with multiple EDA tool flows; (2) implementations of missing or binarized elements of Circuit Training; (3) reproducible example macro placement solutions produced by our implementation; and (4) post-routing results obtained by full completion of the synthesis-place-and-route flow using both proprietary and open-source tools.
@@ -32,6 +38,30 @@ announced on 3 Nov 2024. See the full release notes in the march_updates branch:
   - [Other Links](#other-links)
 
 ## **Recent Updates**
+- **16 December 2025**: Our journal paper, “An Updated Assessment of
+Reinforcement Learning for Macro Placement,” has been accepted for publication
+in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
+and is now available via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304).
+  - This peer-reviewed paper addresses all the concerns raised about our [ISPD23 paper](https://dl.acm.org/doi/10.1145/3569052.3578926): 
+  (i) lack of RL pre-training; (ii) potential non-convergence
+  of training for some testcases; (iii) use of 45 nm and 12 nm technologies
+  versus sub-10 nm (TSMC 7 nm, corresponding to TPU v4) in CT; and
+  (iv) modest compute resources used. Our updated assessment reconfirms
+  the conclusions of our [ISPD23 paper](https://dl.acm.org/doi/10.1145/3569052.3578926).
+  - Our Simulated Annealing (SA) continues to outperform pre-trained CT, both in
+  terms of the metrics it optimizes directly and overall chip metrics. Our SA
+  results have been replicated by one of the anonymous reviewers and by students
+  from [Prof. S.-K. Lim’s group](https://ece.gatech.edu/directory/sung-kyu-lim) at Georgia Tech/USC.
+- **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
+SA baseline implementation for faster and better results; and (3) generated
+macro placement solutions using the latest Circuit Training (dubbed as
+AlphaChip) for all of our testcases, including the scaled 7nm Ariane testcases
+announced on 3 Nov 2024. The details are as follows.
+  - Updated ASAP7 [tech lef](./Enablements/ASAP7/lef/asap7_tech_1x_201209.lef) (following the update in [OpenROAD-flow-scripts](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts)) to enable routing up to M9. We have rerun the [Ariane133](./Flows/ASAP7/ariane133) testcases and added [BlackParrot](./Flows/ASAP7/bp_quad) and [MemPoolGroup](./Flows/ASAP7/mempool_group/) testcases.
+  - We strengthen our Simulated Annealing (SA) baseline by adding multithreading and a “go-with-the-winners” metaheuristic, while also ensuring reproducibility of its execution. We provide docker environment scripts to ensure reproducibility of the results obtained by SA. For more details, please refer to the [SA README](CodeElements/SimulatedAnnealingGWTW/README.md).
+  - The hMETIS binary used in Circuit Training does not take any seed as input and the outputs are non-deterministic. We provide a CPP wrapper that uses the hMETIS C API and calls the hMETIS library to cluster the netlist for a given seed, ensuring reproducibility of the clustering results. For more details, please refer to the [Clustering README](CodeElements/Clustering/src/README.md).
+  - We train Google’s AlphaChip from scratch, and fine-tune AlphaChip (from the pre-trained checkpoint released in August 2024), for all our testcases. A revised experimental protocol – for both training from scratch and fine-tuning – affords more opportunity for CT to converge: we increase the number of iterations from 200 to 400, and make multiple trials before declaring non-convergence. We provide the tensorboard links for the pre-training, training from scratch, and fine-tuning of AlphaChip [here](./Docs/OurProgress/README.md#03182025).
+  
 - **3 Nov 2024**: We have posted a new [Protobuf-to-LEF/DEF converter](CodeElements/FormatTranslators/README.md), along with scaled versions of Google Brain's Ariane design in both Protobuf and LEF/DEF formats, as described in the [IEEE DATC RDF update paper](https://vlsicad.ucsd.edu/Publications/Conferences/412/c412.pdf) ([https://doi.org/10.1145/3676536.3697136](https://doi.org/10.1145/3676536.3697136)) at ICCAD-2024. Some [new calibration results](./Docs/OurProgress/README.md#Oct26102024) (HPWL and runtime) for RePlAce and Cadence CMP are also provided in our Our Progress chronology.
 
 ## **FAQs**

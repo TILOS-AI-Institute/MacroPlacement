@@ -154,11 +154,18 @@ defOut -netlist -floorplan -routing ${DESIGN}_route.def
 
 #route_opt_design
 optDesign -postRoute
+saveDesign ${encDir}/${DESIGN}.enc
 set rpt_post_route [extract_report postRouteOpt]
 echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
 
+### Run DRC and LVS ###
+verify_connectivity -error 0 -geom_connect -no_antenna
+verify_drc -limit 0
+
+set rpt_post_route [extract_report postRoute]
+echo "$rpt_post_route" >> ${DESIGN}_DETAILS.rpt
+
 summaryReport -noHtml -outfile summaryReport/post_route.sum
-saveDesign ${encDir}/${DESIGN}.enc
 defOut -netlist -floorplan -routing ${DESIGN}.def
 
 exit

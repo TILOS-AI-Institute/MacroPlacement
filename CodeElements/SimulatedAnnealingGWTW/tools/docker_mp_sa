@@ -1,0 +1,31 @@
+# Use Rocky Linux 8 as the base image
+FROM rockylinux:8
+
+# Update system and install required packages
+RUN yum update -y && \
+    yum groupinstall -y "Development Tools" && \
+    yum install -y epel-release
+
+RUN yum install -y cmake gcc-toolset-11 git libgomp htop vim && \
+    yum clean all
+
+# Clone the cereal repository and copy its headers to /usr/local/include
+RUN git clone https://github.com/USCiLab/cereal.git /tmp/cereal && \
+    cp -r /tmp/cereal/include/* /usr/local/include/ && \
+    rm -rf /tmp/cereal
+
+# Set a default locale
+ENV LC_ALL=C
+
+# Enable the newer GCC in the environment
+ENV PATH="/opt/rh/gcc-toolset-11/root/usr/bin:${PATH}"
+ENV CC="/opt/rh/gcc-toolset-11/root/usr/bin/gcc"
+ENV CXX="/opt/rh/gcc-toolset-11/root/usr/bin/g++"
+
+
+# Set the working directory (optional)
+WORKDIR /workspace
+
+# Default command (optional)
+CMD ["/bin/bash"]
+
