@@ -99,7 +99,7 @@ report_messages > ${REPORTS_PATH}/${DESIGN}_messages.rpt
 # generate PPA reports
 report_gates > ${REPORTS_PATH}/${DESIGN}_gates.rpt
 report_power > ${REPORTS_PATH}/${DESIGN}_power.rpt
-report_area > ${REPORTS_PATH}/${DESIGN}_power.rpt
+report_area > ${REPORTS_PATH}/${DESIGN}_area.rpt
 write_reports -directory ${REPORTS_PATH} -tag final 
 
 #write_sdc >${HANDOFF_PATH}/${DESIGN}.sdc
