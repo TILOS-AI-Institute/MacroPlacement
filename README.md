@@ -1,10 +1,10 @@
 # **MacroPlacement**
 
 ## **What’s New?**
-- **16 December 2025**: Our updated assessment paper, “An Updated Assessment of
+- **16 December 2025**: Our journal paper, “An Updated Assessment of
 Reinforcement Learning for Macro Placement,” has been accepted for publication
 in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
-and is now available via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304). For a brief summary,
+and is now available to the public via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304). For a brief summary,
 please see the [Recent Updates](#recent-updates) section.
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
@@ -38,20 +38,20 @@ announced on 3 Nov 2024. See the full release notes in the march_updates branch:
   - [Other Links](#other-links)
 
 ## **Recent Updates**
-- **16 December 2025**: Our updated assessment paper, “An Updated Assessment of
+- **16 December 2025**: Our journal paper, “An Updated Assessment of
 Reinforcement Learning for Macro Placement,” has been accepted for publication
 in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
 and is now available via early access on [IEEE Xplore](https://ieeexplore.ieee.org/document/11300304).
-  - This paper addresses all the concerns of our ISPD23 paper: (i) absence of
-  peer review; (ii) lack of RL pre-training; (iii) potential non-convergence
-  of training for some testcases; (iv) use of 45 nm and 12 nm technologies
+  - This peer-reviewed paper addresses all the concerns raised about our [ISPD23 paper](https://dl.acm.org/doi/10.1145/3569052.3578926): 
+  (i) lack of RL pre-training; (ii) potential non-convergence
+  of training for some testcases; (iii) use of 45 nm and 12 nm technologies
   versus sub-10 nm (TSMC 7 nm, corresponding to TPU v4) in CT; and
-  (v) insufficiency of compute resources used. Our updated assessment reconfirms
+  (iv) modest compute resources used. Our updated assessment reconfirms
   the conclusions of our [ISPD23 paper](https://dl.acm.org/doi/10.1145/3569052.3578926).
   - Our Simulated Annealing (SA) continues to outperform pre-trained CT, both in
   terms of the metrics it optimizes directly and overall chip metrics. Our SA
   results have been replicated by one of the anonymous reviewers and by students
-  from [Prof. S.-K. Lim’s group](https://ece.gatech.edu/directory/sung-kyu-lim) at Georgia Tech.
+  from [Prof. S.-K. Lim’s group](https://ece.gatech.edu/directory/sung-kyu-lim) at Georgia Tech/USC.
 - **18 March 2025**: We have (1) updated our ASAP7 testcases; (2) improved our
 SA baseline implementation for faster and better results; and (3) generated
 macro placement solutions using the latest Circuit Training (dubbed as
