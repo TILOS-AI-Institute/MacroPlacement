@@ -1,6 +1,7 @@
 # **MacroPlacement**
 
 ## **What’s New?**
+- **5 January 2026:** During the course of review by IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, we performed, and communicated to the editor and reviewers, an additional evaluation of Circuit Training with DREAMPlace (CT-AC-DP) on modern benchmarks across NanGate45 and ASAP7 technology nodes. Please see [this page](Docs/CT_AC_DP_Results/README.md) for a description of our study and the results, as communicated to the editor and reviewers.
 - **16 December 2025**: Our journal paper, “An Updated Assessment of
 Reinforcement Learning for Macro Placement,” has been accepted for publication
 in IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems
