@@ -238,7 +238,9 @@ class PlacementCost(object):
 
                             # advance, expect value item
                             line = fp.readline()
-                            line_item = re.findall(r'\-*\w+\.*\/{0,1}\w*[\w+\/{0,1}\w*]*', line)
+                            # Fixed regex to handle scientific notation (e.g., 1.42109e-16)
+                            # Pattern matches: scientific notation OR identifiers/paths/numbers
+                            line_item = re.findall(r'[-+]?\d+\.?\d*[eE][-+]?\d+|[-]?\w+\.?[\w/]*', line)
 
                             attr_dict[key] = line_item
 
